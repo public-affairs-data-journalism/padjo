@@ -1,0 +1,33 @@
+footer class='woz'
+  div class='container'
+    div.row
+      div.col-sm-6
+        ul.list-unstyled
+          li: a href="/lectures/comm_273d/2014_fall/syllabus" Syllabus
+          li: a href="/tutorials" Tutorials
+          li: a href="/readings" Readings
+          li: a href="/datasets" Datasets
+          li: a href="https://github.com/public-affairs-data-journalism/padjo" Github
+          li: a href="/secret-menu" Secret menu
+
+      div.col-sm-6
+        h4
+          a href="/" Public Affairs Data Journalism I
+        div
+          ' taught by
+          a href="http://danwin.com" style="padding-right: 1.0em;" Dan Nguyen
+          a href="https://twitter.com/dancow" class="twitter-follow-button" data-show-count="false" data-dnt="true" Follow @dancow
+          javascript:
+            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+
+        div
+          ' at
+          a href="//journalism.stanford.edu" style="padding-right: 1.0em;"  Stanford Journalism
+          a href="https://twitter.com/StanfordJourn" class="twitter-follow-button" data-show-count="false" data-dnt="true" Follow @StanfordJourn
+          javascript:
+            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+
+/ Javascripts
+/ = javascript_include_tag '../bower_'
+
+= yield_content :ad_hoc

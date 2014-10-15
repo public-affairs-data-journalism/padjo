@@ -1,0 +1,12 @@
+= wrap_layout :layout
+  article.tutorial
+    div.container
+      section.top-matter
+        section.top-meta
+          h4.crumb => link_to 'Tutorials', '/tutorials'
+          h1 class="title" = current_article.title
+          div.description
+            p => current_page.data.description
+
+      section.content
+        = yield

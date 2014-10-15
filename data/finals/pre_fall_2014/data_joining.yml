@@ -1,0 +1,58 @@
+title: Data joining
+background: The ability to join different data sets upon a foreign key relation.
+
+
+questions:
+  - title: Basic join on a common foreign key
+    text: Create a new table that combines population data with each line item in the 1033 data.
+    answer:
+      SELECT * FROM census_data
+        INNER JOIN military_items
+          ON census_data.fips = military_items.fips
+
+
+  - title: Combine fields to create a foreign key
+    text: |
+      TK Table
+      Given a military_items table that doesn't have a fips listing, and given the fips_names table below:
+      TK Table
+
+      Join the two tables so that each military_items listing has a fips code
+
+    answer: |
+      ```sql
+        SELECT fips_listings.code, military_items.*
+          FROM fips_listings
+          INNER JOIN military_items
+            ON
+              military_items.state  = fips_listings.state AND
+              military_items.county = fips_listings.county
+      ```
+
+  - title: Joining and filtering
+    text: |
+      Given the military_items table and the census_data table, create a list of military items that were sent to counties with fewer than 6,000 people.
+
+  - title: Left joins basic
+    text: |
+      TK
+      Given two tables of military_items, except that one contains items only sent to the state of New York, and the other contains items sent to the state of California, list
+
+
+  - title: Left join filter on null
+    text: |
+      Given California and New York state military items, find all items that were sent to Kings County, New York, but *not* sent to Los Angeles County, California.
+
+  - title: Left join to find missing entries
+    background: Testing the use of LEFT JOIN. The class doesn't cover subqueries, so this problem can be solved by creating a new table and then joining against it.
+    text: Find all items that were shipped before 2007, but not shipped after 2011
+    answer: |
+      TK
+      SELECT pre_2007_items.item_name, pre_2007_items.ship_date, post_2011_items.ship_date
+      FROM  leso_npr_cleaned AS pre_2007_items
+      LEFT JOIN
+        (SELECT ship_date, item_name from leso_npr_cleaned WHERE ship_date >= '2010' group by item_name) as post_2011_items
+          ON post_2011_items.item_name = pre_2007_items.item_name
+      WHERE pre_2007_items.ship_date <= '2007'
+        AND post_2011_items.ship_date IS NULL
+      GROUP BY pre_2007_items.item_name

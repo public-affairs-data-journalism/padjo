@@ -1,0 +1,13 @@
+div.course-schedule.well
+  ul.list.list-unstyled
+    - current_course_schedule.lectures.each do |lecture|
+      li.lecture
+        div.meta
+          div.date => friendly_schedule_date lecture.date
+          h4.title
+            a href="#{{lecture.url}}" => lecture.title
+        div.description => lecture.description
+        div.topics
+          ul.list-inline-bullets
+            - lecture.topics.each do |t|
+              li => t

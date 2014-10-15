@@ -1,0 +1,27 @@
+{
+  "name": "middleman-sassyslim",
+  "version": "0.0.1",
+  "dependencies": {
+    "jquery": "~2.0",
+    "isotope": "~1.5.25",
+    "normalize-scss": "~2.1",
+    "modernizr": "~2.6.2",
+    "font-awesome": "~4.0.3",
+    "underscore": "~1.5.2",
+  },
+  "homepage": "https://github.com/dannguyen/middleman-sassyslim",
+  "authors": [
+    "dannguyen <dansonguyen@gmail.com>"
+  ],
+  "description": "Just my own flavor of middleman template",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "components",
+    "test",
+    "tests"
+  ]
+}

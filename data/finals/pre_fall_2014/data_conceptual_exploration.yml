@@ -1,0 +1,15 @@
+title: Conceptual understanding of data and tools
+background: The ability to understand how data might be parsed with different tools, and the strength and limitations of both.
+
+
+questions:
+  - title: Text editor
+    text: With the use of a text editor with a Find and Replace, and also, regular expressions, describe three interesting things you could discover from this dataset.
+
+
+  - title: Spreadsheet
+    text: With the use of a basic spreadsheet, describe interesting things about this dataset you could find.
+
+  - title: Database
+    text: Given a generic database, describe interesting things about this dataset. Exact SQL is not necessary.
+

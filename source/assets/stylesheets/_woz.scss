@@ -1,0 +1,137 @@
+body.woz{
+
+}
+
+blockquote{
+  font-size: 1.0em;
+}
+
+
+h1,h2{
+  font-family: $font-family-display;
+  font-weight: 400;
+}
+
+h3,h4,h5,h6{
+  font-family: $font-family-headers;
+}
+
+h4, h5{
+  font-weight: bold;
+}
+
+.home-title{
+
+  font-size: 3.5em;
+  color: #fff;
+  text-shadow: 1px 1px 2px #555;
+
+}
+
+footer.woz{
+  border-top: thin solid #b3aaa9;
+    color: white;
+
+  min-height: 300px;
+  margin-top: 1.0em;
+  padding-top: 3.0em;
+  padding-bottom: 5.0em;
+  background: $stanford-red;
+  a, a:link, a:visited{
+    color: $stanford-red-link;
+  }
+
+  h4{
+    display: inline;
+    font-size: 16px;
+  }
+}
+
+header.woz{
+  .title{
+    font-size: 1.1em;
+    color: white;
+    margin-top: 0.3em;
+    margin-bottom: 0.3em;
+  }
+  .navbar{
+    min-height: 1.5em;
+  }
+  .navbar-inverse{
+    background: $stanford-red;
+
+    a:link, a:visited{
+      color: white;
+    }
+  }
+}
+
+
+div.woz-aside{
+  position: fixed;
+  background: #eee;
+  width: 200px;
+  top: 100px;
+  right: 220px;
+}
+
+.list-inline-bullets{
+  @extend .list-inline;
+  li:before {
+    content:'\ffed';
+    margin-right:0.5em;
+  }
+}
+
+
+ol, ul{
+  padding-left: 1.0em;
+}
+
+
+.sec{
+  margin-top: 1.0em;
+  padding-top: 1.0em;
+
+  &.major{
+    margin-top: 5.0em;
+  }
+
+}
+
+
+.navbar{
+  margin-bottom: 0;
+}
+
+
+table.data-table{
+  tbody tr td{ text-align: right; }
+  max-width: 100%;
+  width: auto;
+}
+
+table.sql-table{
+  th, td{
+    text-align: left;
+    border: thin dashed #aaa;
+    font-family: $font-family-monospace;
+    padding: 2px 10px;
+  }
+
+  thead th{
+    border: thin solid black;
+    border-top: thin solid black !important;
+  }
+
+  max-width: 100%;
+  width: auto;
+}
+
+
+.video-wrap{
+    position: relative;
+    width: 765px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
+}

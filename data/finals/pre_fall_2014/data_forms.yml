@@ -1,0 +1,27 @@
+title: The forms of data
+background: |
+  The singular of data is anecdote. Or, as FiveThirtyEight's Nate Silver put it:
+
+  > Data does not have a virgin birth. It comes to us from somewhere. Someone set up a procedure to collect and record it.
+
+  These forms provide excellent insight into the possibilities and limitations of a dataset, even before you have it in front of you. Through research and forms, a good data journalist should be able to envision the "back-end" of the data collection process, in other words, the structure of the database (or spreadsheet) that is used for recordkeeping.
+
+text: |
+  The Pentagon's 1033 Program does not just randomly distribute surplus, but does so upon request by local law enforcement agencies (abbreviated as LEAs). LEAs must fill out several forms, which can be found here: http://www.dispositionservices.dla.mil/leso/Pages/Forms.aspx
+
+  For this exercise, consider the following forms that LEAs must complete in order to take part in the 1033 Program:
+
+  - [Application for participation](http://www.dispositionservices.dla.mil/leso/Documents/LESO%20Forms/application.pdf) ([instructions](http://www.dispositionservices.dla.mil/leso/Documents/LESO%20Forms/applicationinst.pdf))
+  - [Aircraft Request](http://www.dispositionservices.dla.mil/leso/Documents/LESO%20Forms/aircraftrequest.pdf) ([instructions](http://www.dispositionservices.dla.mil/leso/Documents/LESO%20Forms/aircraftrequestinst.pdf))
+  - [Aircraft Turn-in Request]
+
+questions:
+  - title: Summarize the potential of data
+    text: |
+      In a paragraph, write a summary to your news editor the scope and the value of the data that most assuredly exists, based on the 1033 Program forms.
+
+  - title: Questionable questions
+    text: What does the forms imply about the lack of knowledge the 1033 Programs have with their LEA counterparts? Where might there be gaps or inconsistencies?
+
+  - title: Data enumeration
+    text: List and describe 20 data fields that likely exists in a hypothetical database.

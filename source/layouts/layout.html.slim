@@ -1,0 +1,13 @@
+= partial "layouts/partials/site/header_meta"
+body.woz.scrollspy
+  - unless current_page.data[:layout] == 'home'
+    = partial "layouts/partials/site/header"
+
+  div#woz-content
+    = yield
+
+  / div.woz-aside
+  /   = partial "layouts/partials/site/article_nav"
+
+
+= partial "layouts/partials/site/footer"

@@ -1,0 +1,178 @@
+article{
+  img{
+    max-width: 100%;
+    border: thin solid #444;
+  }
+
+  pre code{
+
+  }
+
+  h4,h5,h6{
+    margin-top: 2.0em;
+  }
+}
+
+article.tutorial, article.lecture{
+  h2,h3{
+    margin-top: 2.5em;
+  }
+}
+
+article.tutorial{
+  section.content{
+    img{
+      max-width: 100%;
+      border: thin solid #444;
+    }
+
+    video{
+      margin-bottom: 2.0em;
+      border: thin solid $brand-primary;
+      border-top: 3px solid $brand-primary;
+    }
+
+    ol li img{
+      margin-top: 1.0em;
+      margin-bottom: 2.0em;
+    }
+
+      ol{
+        li{
+          margin-bottom: 2.0em;
+        }
+      }
+  }
+}
+
+
+article{
+  .top-matter{
+    .overview{
+      @extend .well;
+    }
+
+    .description{
+      font-style: italic;
+    }
+    h1.title{
+      margin-top: 2px;
+      margin-bottom: 2px;
+    }
+    h4.crumb{
+      margin-bottom: 1px;
+    }
+
+    h4{
+      margin-top: 1.0em;
+    }
+  }
+  .foot-matter{
+    border-top: thin solid #777;
+    margin-top: 4.0em;
+    padding-top: 3.0em;
+  }
+  .content{
+
+    img{
+      max-width: 100%;
+      border: thin solid #444;
+      margin-bottom: 1.0em;
+
+    }
+
+    hr{
+      margin-bottom: 2.0em;
+    }
+
+  }
+
+
+  #homework-details{
+    .assignment{
+      margin-bottom: 2.0em;
+      ul, ol{
+        margin-bottom: 1.0em;
+      }
+
+      .meta{
+        h4.title{
+          font-weight: bold;
+          margin-bottom: 0.1em;
+        }
+        margin-bottom: 0.5em;
+      }
+    }
+  }
+}
+
+article{
+  // hr{
+  //   margin-bottom: 3.0em;
+  //   margin-top: 2.0em;
+  //   padding-bottom: 3.0em;
+  //   padding-top: 3.0em;
+  //   page-break-before: always;
+  // }
+  hr{
+    margin-bottom: 2.0em;
+    margin-top: 2.0em;
+    padding-bottom: 2.0em;
+    page-break-before: always;
+  }
+
+  table{
+    @extend .table;
+    @extend .table-condensed;
+    @extend .table-striped;
+  }
+}
+
+
+article.readings, article.datasets{
+  .item{
+    >.name{
+      font-size: 1.3em;
+    }
+  }
+
+  blockquote.excerpt{
+    font-size: 1.0em;
+    font-style: italic;
+  }
+}
+
+
+.course-schedule{
+  .description{
+    margin-bottom: 2px;
+    margin-top: 1px;
+    font-style: italic;
+    font-size: 1.1em;
+  }
+
+  .lecture{
+    margin-bottom: 1.5em;
+    .date{ font-weight: bold}
+    .title{margin-top: 0.1em; margin-bottom: 0.2em;}
+  }
+
+  &.full{
+    .lecture{
+      border-bottom: 2px solid #aaa;
+      padding-top: 1.0em;
+      padding-bottom: 2.0em;
+    }
+  }
+}
+
+.homework .duedate{
+  font-style: italic;
+}
+
+.header_image{
+  img{
+    max-width: 100%;
+    min-width: 100%;
+  }
+}

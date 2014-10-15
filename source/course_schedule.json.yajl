@@ -1,0 +1,1 @@
+json = blog('lectures').articles.map(&:metadata)

@@ -1,0 +1,27 @@
+
+
+.sked-grid{
+
+  margin-bottom: 2.0em;
+
+  .box .item{
+    border-right: thin solid #aaa;
+    padding: 1.0em;
+    height: 200px;
+
+    .title{
+      margin-top: 1px;
+      margin-bottom: 1px;
+    }
+  }
+
+  .box:first-child .item{
+    border-left: thin solid #aaa;
+    border-right: thin solid #aaa;
+  }
+
+  .box:last-child .item{
+
+  }
+
+}

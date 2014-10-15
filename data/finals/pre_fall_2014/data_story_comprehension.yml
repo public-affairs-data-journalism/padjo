@@ -1,0 +1,38 @@
+title: Data story comprehension
+background: Students must be able to evaluate the "gist" of a claim made via data and how to critically test its claims. Students must also be able to find weaknesses in the data.
+text: |
+  The U.S. *Department of Defense Excess Property Program*, also known as the 1033 Program, provides surplus military equipment to aid civilian law enforcement &ndash; at the federal, state, and local level &ndash; in counter-terrorism and counter-narcotics operations.
+
+  The following two graphs are based off of records showing what military equipment counties received from the 1033 Program, from 2006 through April 2014. The first graph shows *total* number of guns sent to each county. The second graph shows that number as a *ratio of each county's population*, i.e. per 1,000 capita.
+
+  ![img](//placekitten.com/200/200)
+
+  ![img](//placekitten.com/200/200)
+
+  The top counties, in terms of military guns per population, are not counties traditionally associated with heavy terrorism or narcotics activity. Given their disproprotionate reliance on military weaponry, it is likely that these counties are abusing the 1033 Program and disproprtionately militarizing their police.
+
+
+questions:
+  - title: "Identify the nutgraph"
+    text: "What is the newsworthy value here, puportedly based on an analysis of data?"
+    answer: That several otherwise low-crime counties are receiving more than their fair share of military-grade weaponry, even though the 1033 Program is ostensibly designed to aid in counter-narcotics/counter-terrorism operations. This surprising analysis may result from the program having poor oversight.
+
+  - title: "Identify the data sources"
+    text: "Describe at least two different data sources needed to make this assertion."
+    answer: |
+      - The records of military equipment disbursed by the Defense Dept. to each county
+      - Population counts for each county, likely from the U.S. Census, in order to show the guns per capita ratio.
+      - Survey of local law enforcement agencies, showing amount of resources and personnel devoted to counter-terrorism or counter-narcotics operations. Who knows, maybe Hughes County in South Dakota is on high-alert for terrorism activity.
+
+  - title: "Identify shortcomings in the data sources"
+    text: |
+      From the given summary above, and without seeing the dataset for yourself, what are three questions possibly left unanswered in the data?
+    answer: |
+      - Does the data show guns by type? An AR-15 is different from handguns.
+      - Guns are a subset of all military surplus gear. How much of the total surplus do guns make? If it is insignificant, perhaps the focus on weaponry misses the forest for the trees. For example, that a county received a surplus tank would be more interesting than additional rifles.
+      - The 1033 Program distributes surplus to multiple levels of jurisdictions. There's no indication in the data that all weapons to Hughes County went to which local police department.
+
+  - title: "Examine the anomaly"
+    text: Assuming the possibility that local police in Hughes County, S.D. do not place a high priority on  Describe a possibility, due to the vagueness of the data, that could explain why a relatively rural area received a high concentration of military surplus weaponry.
+    answer: |
+      Hughes County contains the state capital of South Dakota. If the 1033 Program data only shows records by county, then it's possible weapons that went to state-wide agencies (which are often considered to be based in the capital). In other words, the picture of Hughes County sheriff's patrolling with heavy weaponry may not reflect the on-the-ground reality.

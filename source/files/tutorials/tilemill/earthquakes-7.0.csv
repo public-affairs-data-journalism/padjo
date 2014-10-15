@@ -1,0 +1,939 @@
+time,latitude,longitude,depth,mag,magType,nst,gap,dmin,rms,net,id,updated,place,type
+2014-06-23T20:53:09.700Z,51.8486,178.7352,109,7.9,mww,,22,0.133,0.71,us,usc000rki5,2014-09-19T17:23:18.000Z,"19km SE of Little Sitkin Island, Alaska",earthquake
+2014-04-19T13:28:00.810Z,-6.7547,155.0241,43.37,7.5,mww,,16,3.82,1.25,us,usb000pr89,2014-07-04T01:34:00.000Z,"70km SW of Panguna, Papua New Guinea",earthquake
+2014-04-18T14:27:24.920Z,17.397,-100.9723,24,7.2,mww,,46,2.25,1.2,us,usb000pq41,2014-07-04T01:33:39.000Z,"Guerrero, Mexico",earthquake
+2014-04-13T12:36:19.230Z,-11.4633,162.0511,39,7.4,mww,,17,2.885,1,us,usc000piqj,2014-07-01T02:38:04.000Z,"112km S of Kirakira, Solomon Islands",earthquake
+2014-04-12T20:14:39.300Z,-11.2701,162.1481,22.56,7.6,mww,,13,2.828,0.71,us,usc000phx5,2014-09-04T18:25:50.000Z,"93km SSE of Kirakira, Solomon Islands",earthquake
+2014-04-11T07:07:23.130Z,-6.5858,155.0485,60.53,7.1,mww,,21,3.729,0.88,us,usc000pft9,2014-07-01T02:37:56.000Z,"56km WSW of Panguna, Papua New Guinea",earthquake
+2014-04-03T02:43:13.110Z,-20.5709,-70.4931,22.4,7.7,mww,,44,1.029,0.82,us,usc000p27i,2014-09-28T18:04:44.500Z,"53km SW of Iquique, Chile",earthquake
+2014-04-01T23:46:47.260Z,-19.6097,-70.7691,25,8.2,mww,,23,0.609,0.66,us,usc000nzvd,2014-09-28T17:46:22.101Z,"94km NW of Iquique, Chile",earthquake
+2013-11-25T06:27:33.300Z,-53.9451,-55.0033,11.78,7,mww,,31,2.935,1.08,us,usb000l5zn,2014-02-11T02:25:27.101Z,"Falkland Islands region",earthquake
+2013-11-17T09:04:55.530Z,-60.2738,-46.4011,10,7.7,mww,,23,8.05,1.33,us,usb000l0gq,2014-09-04T17:40:06.000Z,"Scotia Sea",earthquake
+2013-10-25T17:10:19.710Z,37.1557,144.6611,35,7.1,mww,,10,3.968,1.01,us,usc000kn4n,2014-07-14T10:40:11.556Z,"Off the east coast of Honshu, Japan",earthquake
+2013-10-15T00:12:32.050Z,9.8796,124.1167,19.04,7.1,mww,,12,3.144,1.3,us,usb000kdb4,2014-09-04T17:31:01.000Z,"4km SE of Sagbayan, Philippines",earthquake
+2013-09-25T16:42:43.170Z,-15.8385,-74.5112,40,7.1,mww,,17,4.446,0.9,us,usb000jzma,2014-09-04T18:02:13.000Z,"46km SSE of Acari, Peru",earthquake
+2013-09-24T11:29:47.970Z,26.951,65.5009,15,7.7,mww,,17,7.241,0.93,us,usb000jyiv,2013-12-13T09:09:26.752Z,"61km NNE of Awaran, Pakistan",earthquake
+2013-08-30T16:25:02.300Z,51.537,-175.2297,29,7,mww,,53,0.624,0.89,us,usb000jdt7,2014-09-04T17:49:11.000Z,"101km SW of Atka, Alaska",earthquake
+2013-07-15T14:03:43.050Z,-60.8679,-25.1436,30.98,7.3,Mww,379,43,8.97,0.94,us,usb000ief9,2013-09-23T19:52:40.000Z,"218km SSE of Bristol Island, South Sandwich Islands",earthquake
+2013-07-07T18:35:30.800Z,-3.9234,153.9204,386.25,7.3,Mww,108,24,1.77,0.82,us,usb000i89z,2014-09-04T17:52:56.000Z,"115km ENE of Taron, Papua New Guinea",earthquake
+2013-05-24T05:44:49.600Z,54.874,153.281,608.9,8.3,Mw,166,18,3.14590012,0.92,us,usb000h4jh,2014-09-14T09:54:15.812Z,"Sea of Okhotsk",earthquake
+2013-05-23T17:19:04.000Z,-23.025,-177.109,171.4,7.4,Mw,63,72,6.23251144,1.44,us,usb000h3k3,2014-09-04T18:08:30.000Z,"282km SW of Vaini, Tonga",earthquake
+2013-04-19T03:05:52.800Z,46.224,150.783,112.2,7.2,Mw,767,10.8,5.57314802,0.84,us,usb000gbf8,2014-09-04T18:11:40.000Z,"251km ENE of Kuril'sk, Russia",earthquake
+2013-04-16T10:44:20.700Z,28.107,62.053,82,7.7,Mw,164,32.4,8.75947234,0.98,us,usb000g7x7,2014-09-04T18:11:14.000Z,"83km E of Khash, Iran",earthquake
+2013-04-06T04:42:35.700Z,-3.513,138.477,66,7,Mw,506,10.8,6.24239291,0.82,us,usb000g13s,2014-09-04T18:10:06.000Z,"240km E of Enarotali, Indonesia",earthquake
+2013-02-08T15:26:38.500Z,-10.932,166.021,21,7.1,Mw,267,28.8,6.15256138,0.85,us,usc000f40j,2014-09-04T17:34:52.000Z,"31km SE of Lata, Solomon Islands",earthquake
+2013-02-06T01:54:15.200Z,-10.479,165.772,9.8,7,Mw,414,18,5.82287967,1.37,us,usc000f1ts,2014-09-04T17:33:54.000Z,"27km NNW of Lata, Solomon Islands",earthquake
+2013-02-06T01:23:19.770Z,-11.2541,164.9323,10.14,7.1,Mww,560,17,5.23,1.39,us,usc000f1se,2014-09-04T17:33:53.000Z,"114km WSW of Lata, Solomon Islands",earthquake
+2013-02-06T01:12:27.000Z,-10.738,165.138,28.7,8,Mw,332,18,5.26412756,1.28,us,usc000f1s0,2014-09-04T17:33:51.000Z,"76km W of Lata, Solomon Islands",earthquake
+2013-01-05T08:58:19.330Z,55.394,-134.65,10,7.5,mww,659,28.5,,1.27,pde,pde20130105085819330_10,2014-09-04T17:42:16.000Z,"Southeastern Alaska",earthquake
+2012-12-10T16:53:08.770Z,-6.533,129.825,155,7.1,mww,517,8.7,,0.95,pde,pde20121210165308770_155,2014-09-04T17:16:21.000Z,"Banda Sea",earthquake
+2012-12-07T08:18:23.130Z,37.89,143.949,31,7.3,mww,918,14.8,,0.91,pde,pde20121207081823130_31,2014-09-04T17:15:50.000Z,"off the east coast of Honshu, Japan",earthquake
+2012-11-07T16:35:46.690Z,13.963,-91.854,24,7.4,mww,739,25.5,,1.14,pde,pde20121107163546690_24,2014-09-04T17:03:31.000Z,"offshore Guatemala",earthquake
+2012-10-28T03:04:08.820Z,52.788,-132.101,14,7.8,mww,807,42.7,,0.99,pde,pde20121028030408820_14,2014-09-04T17:01:40.000Z,"Haida Gwaii, Canada",earthquake
+2012-09-30T16:31:35.970Z,1.929,-76.362,170,7.3,mww,934,15.5,,0.87,pde,pde20120930163135970_170,2014-09-04T16:58:25.000Z,"Colombia",earthquake
+2012-09-05T14:42:07.800Z,10.085,-85.315,35,7.6,mww,703,34.3,,1.2,pde,pde20120905144207800_35,2014-09-04T16:55:15.000Z,"Costa Rica",earthquake
+2012-08-31T12:47:33.380Z,10.811,126.638,28,7.6,mww,682,10.2,,1.02,pde,pde20120831124733380_28,2014-09-04T16:50:28.000Z,"Philippine Islands region",earthquake
+2012-08-27T04:37:19.430Z,12.139,-88.59,28,7.3,mww,417,37,,1.3,pde,pde20120827043719430_28,2014-09-04T16:49:55.000Z,"off the coast of El Salvador",earthquake
+2012-08-14T02:59:38.460Z,49.8,145.064,583.2,7.7,mww,862,13.8,,0.83,pde,pde20120814025938460_583,2014-09-04T16:48:35.000Z,"Sea of Okhotsk",earthquake
+2012-04-12T07:15:48.500Z,28.696,-113.104,13,7,mww,474,95.9,,1.18,pde,pde20120412071548500_13,2014-09-04T17:07:41.000Z,"Baja California, Mexico",earthquake
+2012-04-11T10:43:10.850Z,0.802,92.463,25.1,8.2,mwc,341,14.9,,0.9,pde,pde20120411104310850_25,2014-09-04T17:07:33.000Z,"off the west coast of northern Sumatra",earthquake
+2012-04-11T08:38:36.720Z,2.327,93.063,20,8.6,mww,499,16.6,,1.33,pde,pde20120411083836720_20,2014-09-04T17:07:32.000Z,"off the west coast of northern Sumatra",earthquake
+2012-03-25T22:37:06.000Z,-35.2,-72.217,40.7,7.1,mww,553,15.2,,,pde,pde20120325223706000_40,2014-09-04T17:28:56.000Z,"Maule, Chile",earthquake
+2012-03-20T18:02:47.440Z,16.493,-98.231,20,7.4,mww,672,37.9,,0.98,pde,pde20120320180247440_20,2014-09-04T17:28:17.000Z,"Oaxaca, Mexico",earthquake
+2012-02-02T13:34:40.650Z,-17.827,167.133,23,7.1,mww,573,12,,1.07,pde,pde20120202133440650_23,2014-09-04T17:11:04.000Z,"Vanuatu",earthquake
+2012-01-10T18:36:59.080Z,2.433,93.21,19,7.2,mww,443,17,,1.09,pde,pde20120110183659080_19,2014-09-04T17:20:12.000Z,"off the west coast of northern Sumatra",earthquake
+2011-12-14T05:04:59.270Z,-7.561,146.804,140.9,7.1,mww,485,10.6,,0.77,pde,pde20111214050459270_140,2014-09-04T16:12:00.000Z,"eastern New Guinea region, Papua New Guinea",earthquake
+2011-10-23T10:41:22.930Z,38.722,43.513,16,7.1,mww,694,19.7,,0.94,pde,pde20111023104122930_16,2014-09-04T16:16:15.000Z,"eastern Turkey",earthquake
+2011-10-21T17:57:16.100Z,-28.993,-176.238,33,7.4,mww,707,14.8,,0.87,pde,pde20111021175716100_33,2014-09-04T16:16:05.000Z,"Kermadec Islands region",earthquake
+2011-09-15T19:31:04.080Z,-21.611,-179.528,644.6,7.3,mww,646,22.2,,1.06,pde,pde20110915193104080_644,2014-09-04T16:37:50.000Z,"Fiji region",earthquake
+2011-09-03T22:55:40.920Z,-20.671,169.716,185.1,7,mww,406,15.3,,0.99,pde,pde20110903225540920_185,2014-09-04T16:36:32.000Z,"Vanuatu",earthquake
+2011-08-24T17:46:11.650Z,-7.641,-74.525,147,7,mww,471,26.9,,0.87,pde,pde20110824174611650_147,2014-09-04T16:05:10.000Z,"northern Peru",earthquake
+2011-08-20T18:19:23.550Z,-18.311,168.218,28,7.1,mww,564,12.3,,1.07,pde,pde20110820181923550_28,2014-09-04T16:04:37.000Z,"Vanuatu",earthquake
+2011-08-20T16:55:02.810Z,-18.365,168.143,32,7.2,mww,280,18.4,,1.26,pde,pde20110820165502810_32,2014-09-04T16:04:33.000Z,"Vanuatu",earthquake
+2011-07-10T00:57:10.800Z,38.034,143.264,23,7,mww,531,12.4,,1.04,pde,pde20110710005710800_23,2014-09-04T16:22:04.000Z,"off the east coast of Honshu, Japan",earthquake
+2011-07-06T19:03:18.260Z,-29.539,-176.34,17,7.6,mww,567,33.5,,1.17,pde,pde20110706190318260_17,2014-09-04T16:21:11.000Z,"Kermadec Islands region",earthquake
+2011-06-24T03:09:39.470Z,52.05,-171.836,52,7.3,mww,791,15.3,,1.05,pde,pde20110624030939470_52,2014-09-04T16:20:00.000Z,"Fox Islands, Aleutian Islands, Alaska",earthquake
+2011-04-07T14:32:43.290Z,38.276,141.588,42,7.1,mww,446,17.7,,0.94,pde,pde20110407143243290_42,2014-09-04T16:40:16.000Z,"near the east coast of Honshu, Japan",earthquake
+2011-03-11T06:25:50.300Z,38.058,144.59,18.6,7.7,mwc,507,10.8,,0.85,pde,pde20110311062550300_18,2014-09-04T16:26:30.000Z,"off the east coast of Honshu, Japan",earthquake
+2011-03-11T06:15:40.280Z,36.281,141.111,42.6,7.9,mwc,163,48.4,,1.44,pde,pde20110311061540280_42,2014-09-04T16:26:29.000Z,"near the east coast of Honshu, Japan",earthquake
+2011-03-11T05:46:24.120Z,38.297,142.373,29,9,mww,541,9.5,,1.16,pde,pde20110311054624120_29,2014-09-04T16:26:28.000Z,"near the east coast of Honshu, Japan",earthquake
+2011-03-09T02:45:20.330Z,38.435,142.842,32,7.3,mww,550,17.4,,0.98,pde,pde20110309024520330_32,2014-09-04T16:26:05.000Z,"near the east coast of Honshu, Japan",earthquake
+2011-01-18T20:23:23.480Z,28.777,63.951,68,7.2,mww,372,25.3,,1.3,pde,pde20110118202323480_68,2014-09-04T16:08:38.000Z,"southwestern Pakistan",earthquake
+2011-01-13T16:16:41.540Z,-20.628,168.471,9,7,mww,578,13.3,,0.99,pde,pde20110113161641540_9,2014-09-04T16:07:48.000Z,"Loyalty Islands, New Caledonia",earthquake
+2011-01-02T20:20:17.780Z,-38.355,-73.326,24,7.2,mww,397,30.1,,1.1,pde,pde20110102202017780_24,2014-09-04T16:06:19.000Z,"Araucania, Chile",earthquake
+2011-01-01T09:56:58.120Z,-26.803,-63.136,576.8,7,mww,607,18.4,,0.85,pde,pde20110101095658120_576,2014-09-04T16:06:11.000Z,"Santiago Del Estero, Argentina",earthquake
+2010-12-25T13:16:37.000Z,-19.702,167.947,16,7.3,mwc,409,12,,1.17,pde,pde20101225131637000_16,2014-04-10T05:03:25.041Z,"Vanuatu region",earthquake
+2010-12-21T17:19:40.660Z,26.901,143.698,14,7.4,mwc,603,13,,0.99,pde,pde20101221171940660_14,2014-04-10T05:01:56.575Z,"Bonin Islands, Japan region",earthquake
+2010-10-25T14:42:22.460Z,-3.487,100.082,20.1,7.8,mwc,379,23,,1.17,pde,pde20101025144222460_20,2014-04-10T03:25:59.687Z,"Kepulauan Mentawai region, Indonesia",earthquake
+2010-09-29T17:11:25.940Z,-4.963,133.76,26,7,mwc,271,15.1,,1.31,pde,pde20100929171125940_26,2014-04-09T21:54:17.429Z,"near the south coast of Papua, Indonesia",earthquake
+2010-09-03T16:35:47.770Z,-43.522,171.83,12,7,mwc,365,15.8,,1.3,pde,pde20100903163547770_12,2013-03-16T01:50:32.086Z,"South Island of New Zealand",earthquake
+2010-08-12T11:54:15.580Z,-1.266,-77.306,206.7,7.1,mwc,672,12.4,,0.87,pde,pde20100812115415580_206,2014-04-10T02:59:26.498Z,"Ecuador",earthquake
+2010-08-10T05:23:44.980Z,-17.541,168.069,25,7.3,mwc,405,20.2,,1.25,pde,pde20100810052344980_25,2014-04-10T02:57:01.559Z,"Vanuatu",earthquake
+2010-08-04T22:01:43.620Z,-5.746,150.765,44,7,mww,396,12.7,,1.19,pde,pde20100804220143620_44,2014-04-10T02:49:29.703Z,"New Britain region, Papua New Guinea",earthquake
+2010-07-23T23:15:10.190Z,6.776,123.259,640.6,7.5,mwc,441,17.5,,0.82,pde,pde20100723231510190_640,2014-04-10T02:35:48.010Z,"Moro Gulf, Mindanao, Philippines",earthquake
+2010-07-23T22:51:11.840Z,6.497,123.48,578,7.6,mwc,340,15.1,,0.91,pde,pde20100723225111840_578,2014-04-10T02:35:29.094Z,"Moro Gulf, Mindanao, Philippines",earthquake
+2010-07-23T22:08:11.250Z,6.718,123.409,607.1,7.3,mwc,491,16.5,,0.91,pde,pde20100723220811250_607,2014-04-10T02:35:09.081Z,"Moro Gulf, Mindanao, Philippines",earthquake
+2010-07-18T13:34:59.360Z,-5.931,150.59,35,7.3,mwc,397,18.2,,1.16,pde,pde20100718133459360_35,2014-04-10T02:28:55.467Z,"New Britain region, Papua New Guinea",earthquake
+2010-06-16T03:16:27.550Z,-2.174,136.543,18,7,mwc,307,18.1,,1.27,pde,pde20100616031627550_18,2014-04-10T02:02:19.965Z,"near the north coast of Papua, Indonesia",earthquake
+2010-06-12T19:26:50.460Z,7.881,91.936,35,7.5,mwc,514,18.6,,1.1,pde,pde20100612192650460_35,2014-04-10T01:57:13.122Z,"Nicobar Islands, India region",earthquake
+2010-05-27T17:14:46.570Z,-13.698,166.643,31,7.2,mwc,327,11.7,,1.08,pde,pde20100527171446570_31,2014-04-10T01:44:20.007Z,"Vanuatu",earthquake
+2010-05-09T05:59:41.620Z,3.748,96.018,38,7.2,mwc,611,20.6,,0.92,pde,pde20100509055941620_38,2014-04-10T01:30:09.108Z,"northern Sumatra, Indonesia",earthquake
+2010-04-06T22:15:01.580Z,2.383,97.048,31,7.8,mwc,352,19.2,,1.19,pde,pde20100406221501580_31,2014-04-10T00:38:41.467Z,"northern Sumatra, Indonesia",earthquake
+2010-04-04T22:40:43.100Z,32.297,-115.278,4,7.2,mwc,406,24.2,,,pde,pde20100404224043100_4,2014-04-02T01:37:40.464Z,"Baja California, Mexico",earthquake
+2010-03-11T14:55:27.510Z,-34.326,-71.799,18,7,mwc,403,17.1,,1.02,pde,pde20100311145527510_18,2014-04-09T23:50:39.041Z,"Libertador General Bernardo O'Higgins, Chile",earthquake
+2010-02-27T08:01:23.010Z,-37.773,-75.048,35,7.4,mwc,409,17.6,,1.06,pde,pde20100227080123010_35,2013-03-16T01:48:44.541Z,"off the coast of Bio-Bio, Chile",earthquake
+2010-02-27T06:34:11.530Z,-36.122,-72.898,22.9,8.8,mwc,454,17.8,,1.09,pde,pde20100227063411530_22,2014-08-08T10:50:15.017Z,"offshore Bio-Bio, Chile",earthquake
+2010-02-26T20:31:26.970Z,25.93,128.425,25,7,mwc,487,15.7,,1.05,pde,pde20100226203126970_25,2014-03-18T12:03:35.803Z,"Ryukyu Islands, Japan",earthquake
+2010-01-12T21:53:10.060Z,18.443,-72.571,13,7,mwc,500,22.7,,0.97,pde,pde20100112215310060_13,2014-04-18T20:37:03.434Z,"Haiti region",earthquake
+2010-01-03T22:36:25.640Z,-8.783,157.354,10,7.1,mwc,377,15,,1.09,pde,pde20100103223625640_10,2014-04-09T22:13:51.570Z,"Solomon Islands",earthquake
+2009-11-09T10:44:55.110Z,-17.239,178.331,595,7.3,mwc,430,15,,0.87,pde,pde20091109104455110_595,2014-04-09T20:44:27.695Z,"Fiji",earthquake
+2009-10-07T23:13:48.160Z,-13.093,166.497,31.1,7.4,mwc,314,20.2,,0.96,pde,pde20091007231348160_31,2014-03-18T11:48:42.561Z,"Vanuatu",earthquake
+2009-10-07T22:18:51.240Z,-12.517,166.382,35,7.8,mwc,195,20.3,,0.97,pde,pde20091007221851240_35,2014-03-17T18:47:52.148Z,"Santa Cruz Islands",earthquake
+2009-10-07T22:03:14.470Z,-13.006,166.51,45,7.7,mww,283,23.2,,1.31,pde,pde20091007220314470_45,2014-04-09T20:39:39.973Z,"Vanuatu",earthquake
+2009-09-30T10:16:09.250Z,-0.72,99.867,81,7.6,mwc,498,14,,0.92,pde,pde20090930101609250_81,2014-04-09T20:38:24.576Z,"southern Sumatra, Indonesia",earthquake
+2009-09-29T17:48:10.990Z,-15.489,-172.095,18,8.1,mwc,520,20.8,,1.01,pde,pde20090929174810990_18,2014-04-09T20:38:16.436Z,"Samoa Islands region",earthquake
+2009-09-02T07:55:01.050Z,-7.782,107.297,46,7,mwc,312,16.3,,0.89,pde,pde20090902075501050_46,2014-03-18T11:45:49.193Z,"Java, Indonesia",earthquake
+2009-08-10T19:55:38.730Z,14.099,92.902,24,7.5,mwc,303,18.2,,1.03,pde,pde20090810195538730_24,2014-04-09T20:31:50.059Z,"Andaman Islands, India region",earthquake
+2009-08-09T10:55:55.110Z,33.167,137.944,292,7.1,mwc,447,14.2,,0.91,pde,pde20090809105555110_292,2014-04-09T20:31:42.198Z,"near the south coast of Honshu, Japan",earthquake
+2009-07-15T09:22:29.030Z,-45.762,166.562,12,7.8,mwc,434,16.8,,,pde,pde20090715092229030_12,2014-04-09T20:28:18.719Z,"off the west coast of the South Island of New Zealand",earthquake
+2009-05-28T08:24:46.560Z,16.731,-86.217,19,7.3,mwc,464,27.2,,1.12,pde,pde20090528082446560_19,2014-08-08T15:41:12.182Z,"offshore Honduras",earthquake
+2009-03-19T18:17:40.470Z,-23.043,-174.66,31,7.6,mwc,504,14,,1,pde,pde20090319181740470_31,2014-04-09T19:47:23.916Z,"Tonga region",earthquake
+2009-02-18T21:53:45.160Z,-27.424,-176.33,25,7,mwc,353,18.5,,0.95,pde,pde20090218215345160_25,2014-04-09T19:31:47.682Z,"Kermadec Islands region",earthquake
+2009-02-11T17:34:50.490Z,3.886,126.387,20,7.2,mwc,432,18.6,,1.14,pde,pde20090211173450490_20,2014-04-09T19:25:34.594Z,"Kepulauan Talaud, Indonesia",earthquake
+2009-01-15T17:49:39.070Z,46.857,155.154,36,7.4,mwc,522,15.6,,0.91,pde,pde20090115174939070_36,2014-04-09T18:25:26.812Z,"east of the Kuril Islands",earthquake
+2009-01-03T22:33:40.290Z,-0.691,133.305,23,7.4,mwc,314,21.1,,1.03,pde,pde20090103223340290_23,2014-04-09T18:19:28.857Z,"near the north coast of Papua, Indonesia",earthquake
+2009-01-03T19:43:50.650Z,-0.414,132.885,17,7.7,mwc,288,29.8,,1.27,pde,pde20090103194350650_17,2014-04-09T18:19:11.257Z,"near the north coast of Papua, Indonesia",earthquake
+2008-11-24T09:02:58.760Z,54.203,154.322,492.3,7.3,mwc,531,22.7,,0.77,pde,pde20081124090258760_492,2014-08-08T13:27:40.740Z,"Sea of Okhotsk",earthquake
+2008-11-16T17:02:32.700Z,1.271,122.091,30,7.4,mww,365,33.7,,1.1,pde,pde20081116170232700_30,2014-08-08T12:41:54.012Z,"Minahasa, Sulawesi, Indonesia",earthquake
+2008-09-29T15:19:31.590Z,-29.756,-177.683,36,7,mwc,524,17.4,,1.21,pde,pde20080929151931590_36,2014-04-09T18:02:38.223Z,"Kermadec Islands, New Zealand",earthquake
+2008-07-19T02:39:28.700Z,37.552,142.214,22,7,mwc,577,18.2,,0.84,pde,pde20080719023928700_22,2014-03-18T11:17:52.593Z,"off the east coast of Honshu, Japan",earthquake
+2008-07-05T02:12:04.480Z,53.882,152.886,632.8,7.7,mwc,777,13.5,,0.83,pde,pde20080705021204480_632,2014-08-08T08:53:10.064Z,"Sea of Okhotsk",earthquake
+2008-06-30T06:17:43.020Z,-58.227,-22.099,8,7,mwc,309,25.4,,1.36,pde,pde20080630061743020_8,2013-03-16T01:41:26.418Z,"South Sandwich Islands region",earthquake
+2008-05-12T06:28:01.570Z,31.002,103.322,19,7.9,mwc,774,11.3,,1.2,pde,pde20080512062801570_19,2014-08-09T00:13:53.493Z,"eastern Sichuan, China",earthquake
+2008-04-12T00:30:12.600Z,-55.664,158.453,16,7.1,mwc,541,34.9,,0.99,pde,pde20080412003012600_16,2013-03-16T01:40:08.467Z,"Macquarie Island region",earthquake
+2008-04-09T12:46:12.720Z,-20.071,168.892,33,7.3,mwc,486,13.4,,1.29,pde,pde20080409124612720_33,2014-03-18T11:08:50.089Z,"Loyalty Islands, New Caledonia",earthquake
+2008-03-20T22:32:57.930Z,35.49,81.467,10,7.2,mwc,532,25.9,,1.03,pde,pde20080320223257930_10,2014-08-08T14:00:06.232Z,"Xinjiang-Xizang border region",earthquake
+2008-02-25T08:36:33.030Z,-2.486,99.972,25,7.2,mwc,505,18.4,,1.22,pde,pde20080225083633030_25,2014-04-09T17:17:56.174Z,"Kepulauan Mentawai region, Indonesia",earthquake
+2008-02-20T08:08:30.520Z,2.768,95.964,26,7.4,mwc,607,16.4,,0.97,pde,pde20080220080830520_26,2014-08-08T01:53:04.948Z,"Simeulue, Indonesia",earthquake
+2007-12-19T09:30:27.930Z,51.36,-179.509,34,7.2,mwc,702,15.9,,0.96,pde,pde20071219093027930_34,2014-08-08T13:13:23.035Z,"Andreanof Islands, Aleutian Islands, Alaska",earthquake
+2007-12-09T07:28:20.820Z,-25.996,-177.514,152.5,7.8,mwc,512,11.8,,1.12,pde,pde20071209072820820_152,2014-08-08T23:04:44.505Z,"south of the Fiji Islands",earthquake
+2007-11-29T19:00:20.420Z,14.944,-61.274,156,7.4,mwb,663,13.4,,0.74,pde,pde20071129190020420_156,2014-03-18T10:54:51.063Z,"Martinique region, Windward Islands",earthquake
+2007-11-14T15:40:53.000Z,-22.247,-69.89,40,7.7,,,,,,atlas,atlas20071114154053,2014-04-09T16:05:19.220Z,"Antofagasta, Chile",earthquake
+2007-11-14T15:40:50.530Z,-22.247,-69.89,40,7.7,mwc,610,22.4,,1.11,pde,pde20071114154050530_40,2014-03-18T10:50:40.832Z,"Antofagasta, Chile",earthquake
+2007-10-31T03:30:15.960Z,18.9,145.388,207,7.2,mwb,461,19.4,,1.09,pde,pde20071031033015960_207,2014-08-08T04:28:51.162Z,"Pagan region, Northern Mariana Islands",earthquake
+2007-09-30T05:23:34.000Z,-49.29,164.09,10,7.4,mw,335,,,,centennial,centennial20070930052334,2014-08-08T23:01:02.069Z,"Auckland Islands, New Zealand region",earthquake
+2007-09-30T02:08:29.000Z,10.46,145.71,14,7,mw,302,,,,centennial,centennial20070930020829,2014-08-08T03:53:11.655Z,"south of the Mariana Islands",earthquake
+2007-09-28T13:38:59.000Z,21.96,142.7,277.5,7.5,mw,463,,,,centennial,centennial20070928133859,2014-08-08T03:55:01.253Z,"Mariana Islands region",earthquake
+2007-09-13T03:35:29.000Z,-2.15,99.61,27,7,mw,472,,,,centennial,centennial20070913033529,2014-04-09T15:45:11.734Z,"Kepulauan Mentawai region, Indonesia",earthquake
+2007-09-12T23:49:03.000Z,-2.66,100.83,37.3,7.9,mw,397,,,,centennial,centennial20070912234903,2014-03-18T10:44:13.733Z,"Kepulauan Mentawai region, Indonesia",earthquake
+2007-09-12T11:10:26.000Z,-4.44,101.37,34,8.5,mw,325,,,,centennial,centennial20070912111026,2014-04-09T15:44:00.396Z,"southern Sumatra, Indonesia",earthquake
+2007-09-02T01:05:18.000Z,-11.62,165.84,35,7.2,mw,271,,,,centennial,centennial20070902010518,2014-03-18T10:42:54.298Z,"Santa Cruz Islands",earthquake
+2007-08-15T23:40:57.000Z,-13.38,-76.61,39,8,mw,577,,,,centennial,centennial20070815234057,2014-04-09T15:31:29.176Z,"near the coast of central Peru",earthquake
+2007-08-08T17:05:04.920Z,-5.859,107.419,280,7.5,mwc,228,30.7,,1.13,pde,pde20070808170504920_280,2013-03-16T01:36:25.526Z,"Java, Indonesia",earthquake
+2007-08-08T17:04:57.000Z,-5.91,107.67,290,7.5,mw,404,,,,centennial,centennial20070808170457,2014-04-09T15:30:07.119Z,"Java, Indonesia",earthquake
+2007-08-01T17:08:51.000Z,-15.62,167.71,120,7.2,mw,349,,,,centennial,centennial20070801170851,2014-08-08T07:37:43.353Z,"Vanuatu",earthquake
+2007-04-01T20:39:56.000Z,-8.43,157.06,10,8.1,mw,370,,,,centennial,centennial20070401203956,2014-08-08T06:04:00.309Z,"Solomon Islands",earthquake
+2007-03-25T00:40:01.000Z,-20.62,169.41,34,7.1,mw,339,,,,centennial,centennial20070325004001,2014-08-08T05:52:23.243Z,"Vanuatu",earthquake
+2007-01-21T11:27:44.000Z,1.12,126.34,22,7.5,mw,382,,,,centennial,centennial20070121112744,2014-08-08T07:42:58.627Z,"Molucca Sea",earthquake
+2007-01-13T04:23:21.000Z,46.23,154.55,10,8.1,mw,588,,,,centennial,centennial20070113042321,2014-04-09T16:28:18.068Z,"east of the Kuril Islands",earthquake
+2006-12-26T12:26:22.000Z,21.78,120.54,22.5,7,mw,675,,,,centennial,centennial20061226122622,2014-04-09T15:11:54.099Z,"Taiwan region",earthquake
+2006-11-15T11:14:13.000Z,46.58,153.27,10,8.3,mw,561,,,,centennial,centennial20061115111413,2014-08-08T08:46:55.306Z,"Kuril Islands",earthquake
+2006-08-20T03:41:48.000Z,-61.02,-34.45,13,7,mw,291,,,,centennial,centennial20060820034148,2013-07-09T19:08:39.000Z,"Scotia Sea",earthquake
+2006-07-17T08:19:27.000Z,-9.32,107.33,24.3,7.7,mw,238,,,,centennial,centennial20060717081927,2014-08-08T02:47:52.023Z,"south of Java, Indonesia",earthquake
+2006-05-16T10:39:23.000Z,-31.83,-179.21,152,7.4,mw,588,,,,centennial,centennial20060516103923,2014-04-09T14:44:40.505Z,"Kermadec Islands region",earthquake
+2006-05-03T15:26:40.000Z,-20.15,-174.1,55,8,mw,525,,,,centennial,centennial20060503152640,2014-04-09T14:43:06.482Z,"Tonga",earthquake
+2006-04-20T23:25:02.000Z,60.94,167.14,22,7.6,mw,561,,,,centennial,centennial20060420232502,2014-03-17T18:38:13.346Z,"near the east coast of Koryakskiy Avtonomnyy Okrug, Russia",earthquake
+2006-02-22T22:19:08.000Z,-21.26,33.62,11,7,mw,385,,,,centennial,centennial20060222221908,2014-03-18T10:01:10.537Z,"Mozambique",earthquake
+2006-02-22T22:19:07.000Z,-21.209,33.359,11,7,,,,,,atlas,atlas20060222221907,2014-08-08T00:09:05.541Z,"Mozambique",earthquake
+2006-01-27T16:58:53.000Z,-5.45,128.17,397,7.6,mw,370,,,,centennial,centennial20060127165853,2014-04-09T14:31:29.216Z,"Banda Sea",earthquake
+2006-01-02T22:13:41.000Z,-19.94,-178.12,593,7.2,mw,566,,,,centennial,centennial20060102221341,2014-04-09T14:27:18.758Z,"Fiji region",earthquake
+2006-01-02T06:10:49.000Z,-60.91,-21.57,13,7.4,mw,196,,,,centennial,centennial20060102061049,2013-07-09T19:08:37.000Z,"east of the South Sandwich Islands",earthquake
+2005-11-14T21:38:52.000Z,38.11,144.91,17.4,7,mw,672,,,,centennial,centennial20051114213852,2014-04-09T13:47:53.100Z,"off the east coast of Honshu, Japan",earthquake
+2005-10-08T03:50:39.000Z,34.46,73.58,19.1,7.6,mw,633,,,,centennial,centennial20051008035039,2014-04-09T13:38:56.760Z,"Pakistan",earthquake
+2005-09-26T01:55:38.000Z,-5.71,-76.42,128.3,7.5,mw,650,,,,centennial,centennial20050926015538,2014-04-09T13:37:10.024Z,"northern Peru",earthquake
+2005-09-09T07:26:44.000Z,-4.54,153.49,93.8,7.6,mw,449,,,,centennial,centennial20050909072644,2014-08-08T09:24:17.842Z,"New Ireland region, Papua New Guinea",earthquake
+2005-08-16T02:46:28.000Z,38.27,142.03,40,7.2,mw,678,,,,centennial,centennial20050816024628,2014-04-02T01:15:30.940Z,"near the east coast of Honshu, Japan",earthquake
+2005-07-24T15:42:06.000Z,7.89,92.18,16,7.2,mw,636,,,,centennial,centennial20050724154206,2014-08-08T05:13:01.454Z,"Nicobar Islands, India region",earthquake
+2005-06-15T02:50:53.000Z,41.2,-125.98,9.9,7.2,mw,358,,,,centennial,centennial20050615025053,2014-04-09T14:25:38.336Z,"off the coast of Northern California",earthquake
+2005-06-13T22:44:32.000Z,-20,-69.19,105.5,7.8,mw,692,,,,centennial,centennial20050613224432,2014-04-09T14:25:22.474Z,"Tarapaca, Chile",earthquake
+2005-03-28T16:09:37.000Z,2.05,97.06,33.7,8.6,mw,901,,,,centennial,centennial20050328160937,2014-08-07T20:36:16.285Z,"northern Sumatra, Indonesia",earthquake
+2005-03-02T10:42:08.000Z,-6.59,129.85,175.7,7.1,mw,757,,,,centennial,centennial20050302104208,2014-04-09T14:08:51.001Z,"Banda Sea",earthquake
+2005-02-05T12:23:19.000Z,5.28,123.36,532.9,7.1,mw,827,,,,centennial,centennial20050205122319,2014-08-08T08:15:57.879Z,"Celebes Sea",earthquake
+2004-12-26T04:21:27.000Z,6.88,92.89,23.2,7.2,mw,798,,,,centennial,centennial20041226042127,2014-08-08T06:44:56.880Z,"Nicobar Islands, India region",earthquake
+2004-12-26T00:58:53.450Z,3.295,95.982,30,9.1,mw,601,22,,1.17,official,official20041226005853450_30,2014-03-03T20:53:08.029Z,"off the west coast of northern Sumatra",earthquake
+2004-12-23T14:59:03.000Z,-49.33,161.42,3.5,8.1,mw,604,,,,centennial,centennial20041223145903,2013-07-09T19:08:36.000Z,"north of Macquarie Island",earthquake
+2004-11-28T18:32:14.000Z,43.02,145.15,39,7,mw,999,,,,centennial,centennial20041128183214,2014-04-09T13:21:23.384Z,"Hokkaido, Japan region",earthquake
+2004-11-26T02:25:05.000Z,-3.61,135.42,24,7.1,mw,517,,,,centennial,centennial20041126022505,2014-03-18T09:17:32.565Z,"Papua, Indonesia",earthquake
+2004-11-22T20:26:26.000Z,-46.7,164.82,24,7.1,mw,795,,,,centennial,centennial20041122202626,2014-08-08T07:47:02.504Z,"off the west coast of the South Island of New Zealand",earthquake
+2004-11-15T09:06:56.000Z,4.72,-77.47,15,7.2,mw,999,,,,centennial,centennial20041115090656,2014-08-08T03:32:02.409Z,"near the west coast of Colombia",earthquake
+2004-11-11T21:26:41.000Z,-8.18,124.71,13,7.5,mw,524,,,,centennial,centennial20041111212641,2014-08-08T08:38:30.968Z,"Kepulauan Alor, Indonesia",earthquake
+2004-09-05T14:57:19.000Z,33.2,137.09,14,7.4,mw,999,,,,centennial,centennial20040905145719,2014-04-02T01:03:09.077Z,"near the south coast of Honshu, Japan",earthquake
+2004-09-05T10:07:07.000Z,33.08,136.7,15,7.2,mw,999,,,,centennial,centennial20040905100707,2014-04-07T21:18:49.004Z,"near the south coast of western Honshu, Japan",earthquake
+2004-07-25T14:35:18.000Z,-2.52,103.92,580.9,7.3,mw,999,,,,centennial,centennial20040725143518,2014-03-18T09:05:44.389Z,"southern Sumatra, Indonesia",earthquake
+2004-07-15T04:27:14.730Z,-17.656,-178.76,565.5,7.1,mwc,208,52.2,,0.93,pde,pde20040715042714730_565,2013-03-16T01:19:34.102Z,"Fiji region",earthquake
+2004-07-15T04:27:09.000Z,-17.83,-178.65,566,7,mw,385,,,,centennial,centennial20040715042709,2014-03-18T09:05:04.695Z,"Fiji region",earthquake
+2004-02-07T02:42:36.000Z,-4.05,135.05,20,7.3,mw,581,,,,centennial,centennial20040207024236,2014-03-18T08:57:19.067Z,"near the south coast of Papua, Indonesia",earthquake
+2004-02-05T21:05:04.000Z,-3.62,135.57,23,7,mw,529,,,,centennial,centennial20040205210504,2014-03-18T08:56:46.035Z,"Papua, Indonesia",earthquake
+2004-01-03T16:23:20.000Z,-22.27,169.75,19,7.1,mw,697,,,,centennial,centennial20040103162320,2013-07-09T19:08:35.000Z,"southeast of the Loyalty Islands",earthquake
+2003-12-27T16:01:03.000Z,-21.97,169.86,18,7.2,mw,419,,,,centennial,centennial20031227160103,2014-03-17T18:31:11.713Z,"southeast of the Loyalty Islands",earthquake
+2003-11-17T06:43:07.000Z,51.12,178.65,29.9,7.8,mw,999,,,,centennial,centennial20031117064307,2013-07-09T19:08:35.000Z,"Rat Islands, Aleutian Islands, Alaska",earthquake
+2003-10-31T01:06:31.000Z,37.87,142.59,20,7,mw,853,,,,centennial,centennial20031031010631,2014-03-18T08:51:55.694Z,"off the east coast of Honshu, Japan",earthquake
+2003-09-27T11:33:26.000Z,50.03,87.81,12.3,7.2,mw,999,,,,centennial,centennial20030927113326,2014-03-18T08:48:28.779Z,"southwestern Siberia, Russia",earthquake
+2003-09-25T21:08:02.000Z,41.8,143.55,37.9,7.3,mw,862,,,,centennial,centennial20030925210802,2014-04-07T21:16:02.080Z,"Hokkaido, Japan region",earthquake
+2003-09-25T19:50:08.000Z,41.86,143.87,27,8.3,mw,999,,,,centennial,centennial20030925195008,2014-04-02T00:57:41.450Z,"Hokkaido, Japan region",earthquake
+2003-08-21T12:12:51.000Z,-45.2,167.14,28,7.2,mw,638,,,,centennial,centennial20030821121251,2014-04-07T21:15:36.513Z,"South Island of New Zealand",earthquake
+2003-08-04T04:37:23.000Z,-60.57,-43.5,22,7.6,mw,449,,,,centennial,centennial20030804043723,2014-03-17T18:30:09.713Z,"Scotia Sea",earthquake
+2003-07-15T20:27:52.000Z,-2.66,68.33,10,7.5,mw,877,,,,centennial,centennial20030715202752,2013-07-09T19:08:34.000Z,"Carlsberg Ridge",earthquake
+2003-06-20T06:19:39.000Z,-7.64,-71.67,553,7,mw,999,,,,centennial,centennial20030620061939,2014-03-18T08:39:49.732Z,"Amazonas, Brazil",earthquake
+2003-05-26T09:24:34.000Z,38.86,141.5,68,7,mw,999,,,,centennial,centennial20030526092434,2014-04-02T00:52:47.156Z,"near the east coast of Honshu, Japan",earthquake
+2003-03-17T16:36:18.000Z,51.28,177.93,28,7,mw,999,,,,centennial,centennial20030317163618,2013-07-09T19:08:34.000Z,"Rat Islands, Aleutian Islands, Alaska",earthquake
+2003-01-22T02:06:36.000Z,18.9,-104.06,24,7.5,mw,858,,,,centennial,centennial20030122020636,2014-04-07T21:13:05.795Z,"offshore Colima, Mexico",earthquake
+2003-01-20T08:43:05.000Z,-10.49,160.88,21,7.2,mw,814,,,,centennial,centennial20030120084305,2014-03-18T08:29:18.389Z,"Solomon Islands",earthquake
+2002-11-17T04:53:53.540Z,47.824,146.209,459.1,7.3,mwc,326,,,1.02,pde,pde20021117045353540_459,2013-03-16T01:11:52.956Z,"northwest of the Kuril Islands",earthquake
+2002-11-17T04:53:48.000Z,47.95,146.39,459,7.3,mw,999,,,,centennial,centennial20021117045348,2013-07-09T19:08:33.000Z,"northwest of the Kuril Islands",earthquake
+2002-11-03T22:12:43.000Z,63.54,-147.73,19,7.8,mw,999,,,,centennial,centennial20021103221243,2014-08-09T00:16:55.023Z,"Central Alaska",earthquake
+2002-11-02T01:26:12.000Z,2.82,96.09,31.5,7.2,mw,888,,,,centennial,centennial20021102012612,2014-03-18T08:25:39.292Z,"Simeulue, Indonesia",earthquake
+2002-10-10T10:50:23.000Z,-1.7,134.23,16,7.5,mw,648,,,,centennial,centennial20021010105023,2014-03-18T08:21:46.983Z,"near the north coast of Papua, Indonesia",earthquake
+2002-09-08T18:44:25.000Z,-3.26,142.94,13,7.6,mw,580,,,,centennial,centennial20020908184425,2014-03-18T08:18:12.463Z,"near the north coast of New Guinea, Papua New Guinea",earthquake
+2002-08-19T11:08:25.000Z,-23.92,178.53,675,7.7,mw,438,,,,centennial,centennial20020819110825,2013-07-09T19:08:33.000Z,"south of the Fiji Islands",earthquake
+2002-08-19T11:01:01.000Z,-21.72,-179.36,580,7.6,mw,748,,,,centennial,centennial20020819110101,2013-07-09T19:08:33.000Z,"Fiji region",earthquake
+2002-06-28T17:19:31.000Z,43.76,130.68,566,7.3,mw,999,,,,centennial,centennial20020628171931,2014-03-18T08:14:41.375Z,"Jilin-Heilongjiang border region, China",earthquake
+2002-04-26T16:06:05.000Z,13.1,144.67,54,7,mw,463,,,,centennial,centennial20020426160605,2014-03-18T08:10:38.959Z,"Guam region",earthquake
+2002-03-31T06:52:52.000Z,24.3,122.14,34,7.1,mw,755,,,,centennial,centennial20020331065252,2014-03-18T08:08:00.698Z,"Taiwan region",earthquake
+2002-03-05T21:16:10.000Z,6.02,124.21,31,7.5,mw,436,,,,centennial,centennial20020305211610,2014-03-18T08:06:42.369Z,"Mindanao, Philippines",earthquake
+2002-03-03T12:08:19.740Z,36.502,70.482,225.6,7.4,mwc,138,,,1.06,pde,pde20020303120819740_225,2013-03-16T01:08:40.658Z,"Hindu Kush region, Afghanistan",earthquake
+2002-03-03T12:08:08.000Z,36.42,70.46,204.9,7.3,mw,722,,,,centennial,centennial20020303120808,2014-03-18T08:06:06.929Z,"Hindu Kush region, Afghanistan",earthquake
+2002-01-02T17:22:50.000Z,-17.59,167.97,21,7.2,mw,433,,,,centennial,centennial20020102172250,2014-03-18T07:59:56.933Z,"Vanuatu",earthquake
+2001-12-12T14:02:37.000Z,-42.83,124.65,15.8,7,mw,383,,,,centennial,centennial20011212140237,2013-07-09T19:08:33.000Z,"south of Australia",earthquake
+2001-11-14T09:26:12.000Z,35.88,90.58,15,7.8,mw,576,,,,centennial,centennial20011114092612,2014-04-07T21:05:43.681Z,"southern Qinghai, China",earthquake
+2001-10-19T03:28:45.000Z,-4.11,123.93,29,7.5,mw,343,,,,centennial,centennial20011019032845,2014-03-18T07:55:59.140Z,"Banda Sea",earthquake
+2001-10-12T15:02:18.000Z,12.75,145.04,37,7,mw,490,,,,centennial,centennial20011012150218,2014-03-18T07:55:48.036Z,"Guam region",earthquake
+2001-08-21T06:52:10.000Z,-36.81,-179.66,58,7.1,mw,597,,,,centennial,centennial20010821065210,2013-07-09T19:08:32.000Z,"east of the North Island of New Zealand",earthquake
+2001-07-07T09:38:42.000Z,-17.53,-71.93,14.1,7.6,mw,559,,,,centennial,centennial20010707093842,2014-03-18T07:52:45.597Z,"near the coast of southern Peru",earthquake
+2001-06-23T20:33:15.000Z,-16.38,-73.5,32,8.4,mw,683,,,,centennial,centennial20010623203315,2014-04-08T21:10:49.916Z,"near the coast of southern Peru",earthquake
+2001-06-03T02:41:58.000Z,-29.8,-178.46,187,7.1,mw,612,,,,centennial,centennial20010603024158,2013-07-09T19:08:32.000Z,"Kermadec Islands, New Zealand",earthquake
+2001-02-24T07:23:49.000Z,1.33,126.27,35,7,mw,468,,,,centennial,centennial20010224072349,2014-03-18T07:43:19.665Z,"Molucca Sea",earthquake
+2001-02-13T19:28:31.000Z,-4.83,102.32,34,7.3,mw,433,,,,centennial,centennial20010213192831,2014-03-18T07:41:35.134Z,"southern Sumatra, Indonesia",earthquake
+2001-01-26T03:16:41.000Z,23.4,70.28,16,7.6,mw,756,,,,centennial,centennial20010126031641,2014-03-20T18:10:52.959Z,"Gujarat, India",earthquake
+2001-01-13T17:33:31.000Z,13.07,-88.7,38,7.7,mw,544,,,,centennial,centennial20010113173331,2014-03-20T18:10:13.389Z,"offshore El Salvador",earthquake
+2001-01-09T16:49:29.000Z,-14.94,167.29,103,7,mw,396,,,,centennial,centennial20010109164929,2014-03-18T07:34:08.432Z,"Vanuatu",earthquake
+2001-01-01T06:57:05.000Z,6.88,126.69,36,7.4,mw,401,,,,centennial,centennial20010101065705,2014-03-18T07:33:08.587Z,"Mindanao, Philippines",earthquake
+2000-12-06T17:11:07.000Z,39.53,54.8,30,7,mw,600,,,,centennial,centennial20001206171107,2014-03-18T07:31:04.309Z,"Turkmenistan",earthquake
+2000-11-17T21:01:57.000Z,-5.49,151.88,29.7,7.8,mw,460,,,,centennial,centennial20001117210157,2014-03-18T07:28:40.862Z,"New Britain region, Papua New Guinea",earthquake
+2000-11-16T07:42:18.000Z,-5.19,153.12,30,7.8,mw,422,,,,centennial,centennial20001116074218,2014-03-18T07:28:01.931Z,"New Ireland region, Papua New Guinea",earthquake
+2000-11-16T04:54:57.000Z,-3.99,152.26,27.6,8,mw,326,,,,centennial,centennial20001116045457,2014-03-18T07:27:45.290Z,"New Ireland region, Papua New Guinea",earthquake
+2000-10-29T08:37:08.770Z,-4.766,153.945,50,7,mwc,60,,,0.96,pde,pde20001029083708770_50,2013-03-16T01:03:16.667Z,"New Ireland region, Papua New Guinea",earthquake
+2000-08-06T07:27:13.000Z,28.82,139.6,395,7.3,mw,742,,,,centennial,centennial20000806072713,2013-07-09T19:08:31.000Z,"Bonin Islands, Japan region",earthquake
+2000-06-18T14:44:13.000Z,-13.87,97.3,8.2,7.9,mw,566,,,,centennial,centennial20000618144413,2013-07-09T19:08:31.000Z,"South Indian Ocean",earthquake
+2000-06-04T16:28:27.000Z,-4.76,102.03,34.1,7.8,mw,603,,,,centennial,centennial20000604162827,2014-03-18T07:14:24.459Z,"southern Sumatra, Indonesia",earthquake
+2000-05-12T18:43:19.000Z,-23.75,-66.77,225,7.2,mw,623,,,,centennial,centennial20000512184319,2014-03-18T07:13:14.170Z,"Jujuy, Argentina",earthquake
+2000-05-04T04:21:17.000Z,-1.14,123.52,26,7.5,mw,443,,,,centennial,centennial20000504042117,2014-03-18T07:12:09.005Z,"Sulawesi, Indonesia",earthquake
+2000-03-28T11:00:20.000Z,22.26,143.68,102,7.6,mw,632,,,,centennial,centennial20000328110020,2013-07-09T19:08:31.000Z,"Volcano Islands, Japan region",earthquake
+2000-02-25T01:43:57.000Z,-19.5,173.97,14,7.1,mw,383,,,,centennial,centennial20000225014357,2013-07-09T19:08:30.000Z,"Vanuatu region",earthquake
+2000-01-08T16:47:18.000Z,-16.94,-174.09,155,7.2,mw,518,,,,centennial,centennial20000108164718,2014-03-17T18:20:12.728Z,"Tonga",earthquake
+1999-12-11T18:03:38.000Z,15.758,119.758,43.5,7.3,ms,445,,,,centennial,centennial19991211180338,2014-03-18T07:03:48.082Z,"Luzon, Philippines",earthquake
+1999-12-06T23:12:34.000Z,57.346,-154.519,58.5,7,ms,461,,,,centennial,centennial19991206231234,2014-03-17T18:19:48.068Z,"Kodiak Island region, Alaska",earthquake
+1999-11-26T13:21:15.000Z,-16.393,168.314,24.3,7.4,ms,194,,,,centennial,centennial19991126132115,2014-03-18T07:01:14.105Z,"Vanuatu",earthquake
+1999-11-19T13:56:49.000Z,-6.359,148.813,45.5,7,ms,238,,,,centennial,centennial19991119135649,2014-03-18T07:00:46.980Z,"New Britain region, Papua New Guinea",earthquake
+1999-11-15T05:42:45.000Z,-1.35,88.869,13.3,7,ms,452,,,,centennial,centennial19991115054245,2013-07-09T19:08:30.000Z,"South Indian Ocean",earthquake
+1999-11-12T16:57:21.000Z,40.782,31.213,10,7.2,ms,218,,,,centennial,centennial19991112165721,2014-03-20T18:09:41.306Z,"western Turkey",earthquake
+1999-10-16T09:46:48.000Z,34.517,-116.45,15,7.1,,,,,,atlas,atlas19991016094648,2014-04-08T21:09:02.179Z,"Southern California",earthquake
+1999-10-16T09:46:46.000Z,34.515,-116.435,5.1,7.2,ms,351,,,,centennial,centennial19991016094646,2014-08-08T21:36:36.336Z,"Southern California",earthquake
+1999-09-30T16:31:14.000Z,16.045,-96.869,40,7.5,ms,525,,,,centennial,centennial19990930163114,2014-03-18T06:55:57.985Z,"Oaxaca, Mexico",earthquake
+1999-09-20T17:47:19.000Z,23.789,120.954,31.3,7.7,ms,363,,,,centennial,centennial19990920174719,2014-03-20T18:07:41.260Z,"Taiwan",earthquake
+1999-08-17T00:01:40.000Z,40.747,29.938,17,7.6,ms,164,,,,centennial,centennial19990817000140,2014-03-20T18:06:31.034Z,"western Turkey",earthquake
+1999-06-15T20:42:06.000Z,18.362,-97.45,67.1,7,ms,390,,,,centennial,centennial19990615204206,2014-03-18T06:48:33.901Z,"Puebla, Mexico",earthquake
+1999-05-16T00:51:18.000Z,-4.709,152.612,46,7.1,ms,322,,,,centennial,centennial19990516005118,2014-03-18T06:47:05.799Z,"New Britain region, Papua New Guinea",earthquake
+1999-05-10T20:33:01.000Z,-5.158,150.975,124,7.1,ms,382,,,,centennial,centennial19990510203301,2014-03-18T06:46:36.578Z,"New Britain region, Papua New Guinea",earthquake
+1999-04-08T13:10:35.000Z,43.616,130.339,574.2,7.1,ms,623,,,,centennial,centennial19990408131035,2014-03-18T06:44:30.031Z,"Jilin-Heilongjiang border region, China",earthquake
+1999-04-05T11:08:03.000Z,-5.6,149.65,138,7.4,ms,206,,,,centennial,centennial19990405110803,2014-03-18T06:43:59.187Z,"New Britain region, Papua New Guinea",earthquake
+1999-03-04T08:52:02.000Z,5.421,121.875,28.6,7.1,ms,215,,,,centennial,centennial19990304085202,2014-03-18T06:41:02.556Z,"Sulu Archipelago, Philippines",earthquake
+1999-02-06T21:48:01.000Z,-12.818,166.779,90,7.3,ms,205,,,,centennial,centennial19990206214801,2014-03-18T06:38:36.166Z,"Santa Cruz Islands",earthquake
+1999-01-19T03:35:31.000Z,-4.553,153.406,75,7,ms,209,,,,centennial,centennial19990119033531,2014-03-18T06:36:30.235Z,"New Ireland region, Papua New Guinea",earthquake
+1998-11-29T14:10:31.000Z,-1.939,124.818,20.5,7.7,ms,338,,,,centennial,centennial19981129141031,2014-03-18T06:34:40.407Z,"Kepulauan Sula, Indonesia",earthquake
+1998-11-09T05:38:45.000Z,-6.976,128.928,31.1,7,ms,294,,,,centennial,centennial19981109053845,2014-03-18T06:33:16.093Z,"Banda Sea",earthquake
+1998-08-20T06:40:55.000Z,28.975,139.393,425,7.1,ms,640,,,,centennial,centennial19980820064055,2013-07-09T19:08:29.000Z,"Bonin Islands, Japan region",earthquake
+1998-08-04T18:59:20.000Z,-0.595,-80.31,25.9,7.2,ms,510,,,,centennial,centennial19980804185920,2014-03-18T06:27:05.734Z,"near the coast of Ecuador",earthquake
+1998-07-17T08:49:14.000Z,-2.975,142.692,10,7,ms,71,,,,centennial,centennial19980717084914,2014-03-20T18:05:28.989Z,"near the north coast of New Guinea, Papua New Guinea",earthquake
+1998-07-16T11:56:35.000Z,-11.033,166.267,93,7,ms,489,,,,centennial,centennial19980716115635,2014-03-18T06:25:08.822Z,"Santa Cruz Islands",earthquake
+1998-05-03T23:30:22.000Z,22.432,125.373,23.9,7.5,ms,621,,,,centennial,centennial19980503233022,2013-07-09T19:08:28.000Z,"southeast of Taiwan",earthquake
+1998-04-01T17:56:21.000Z,-0.564,99.195,32,7,ms,661,,,,centennial,centennial19980401175621,2014-03-18T06:18:23.383Z,"southern Sumatra, Indonesia",earthquake
+1998-03-29T19:48:16.000Z,-17.714,-178.912,538.3,7.2,ms,591,,,,centennial,centennial19980329194816,2014-03-18T06:18:13.251Z,"Fiji region",earthquake
+1998-03-25T03:12:28.000Z,-62.901,149.607,20.1,8.1,ms,460,,,,centennial,centennial19980325031228,2013-07-09T19:08:28.000Z,"Balleny Islands region",earthquake
+1998-01-30T12:16:10.000Z,-23.846,-70.149,41.4,7.1,ms,471,,,,centennial,centennial19980130121610,2014-03-18T06:15:50.853Z,"Antofagasta, Chile",earthquake
+1998-01-04T06:12:00.000Z,-22.247,171.014,100.4,7.5,ms,429,,,,centennial,centennial19980104061200,2013-07-09T19:08:28.000Z,"southeast of the Loyalty Islands",earthquake
+1997-12-22T02:05:52.000Z,-5.558,147.877,191.3,7.2,ms,569,,,,centennial,centennial19971222020552,2014-03-18T06:13:31.647Z,"eastern New Guinea region, Papua New Guinea",earthquake
+1997-12-05T11:48:41.000Z,54.417,162.26,28.3,7.3,ms,173,,,,centennial,centennial19971205114841,2014-03-17T18:15:33.762Z,"near the east coast of the Kamchatka Peninsula, Russia",earthquake
+1997-12-05T11:26:56.000Z,54.797,162.003,36.9,7.8,ms,688,,,,centennial,centennial19971205112656,2013-07-09T19:08:27.000Z,"near the east coast of the Kamchatka Peninsula, Russia",earthquake
+1997-11-25T12:14:35.000Z,1.204,122.485,24,7,ms,314,,,,centennial,centennial19971125121435,2014-03-18T06:11:46.547Z,"Minahasa, Sulawesi, Indonesia",earthquake
+1997-11-15T18:59:25.000Z,-15.113,167.438,126.9,7,ms,369,,,,centennial,centennial19971115185925,2014-03-18T06:11:02.577Z,"Vanuatu",earthquake
+1997-11-08T10:02:53.000Z,35.106,87.369,24,7.5,ms,477,,,,centennial,centennial19971108100253,2014-03-17T18:15:24.287Z,"western Xizang",earthquake
+1997-10-28T06:15:18.000Z,-4.355,-76.599,112,7.2,ms,635,,,,centennial,centennial19971028061518,2014-03-18T06:09:37.575Z,"northern Peru",earthquake
+1997-10-15T01:03:35.000Z,-30.891,-71.154,62.3,7.1,ms,394,,,,centennial,centennial19971015010335,2014-03-18T06:08:49.687Z,"Coquimbo, Chile",earthquake
+1997-10-14T09:53:18.000Z,-22.256,-176.627,163.4,7.7,ms,634,,,,centennial,centennial19971014095318,2014-03-17T18:15:12.088Z,"south of the Fiji Islands",earthquake
+1997-09-20T16:11:33.000Z,-28.795,-177.437,29.8,7,ms,564,,,,centennial,centennial19970920161133,2013-07-09T19:08:27.000Z,"Kermadec Islands region",earthquake
+1997-07-09T19:24:12.000Z,10.465,-63.532,9.8,7,ms,511,,,,centennial,centennial19970709192412,2014-03-20T18:02:31.802Z,"Sucre, Venezuela",earthquake
+1997-05-25T23:22:34.000Z,-32.255,179.928,340.8,7.1,ms,514,,,,centennial,centennial19970525232234,2013-07-09T19:08:26.000Z,"south of the Kermadec Islands",earthquake
+1997-05-10T07:57:31.000Z,33.833,59.797,12.1,7.2,ms,484,,,,centennial,centennial19970510075731,2014-03-20T17:59:57.690Z,"eastern Iran",earthquake
+1997-04-21T12:02:27.000Z,-12.562,166.796,28,7.7,ms,402,,,,centennial,centennial19970421120227,2014-03-18T05:55:37.382Z,"Santa Cruz Islands",earthquake
+1997-02-27T21:08:03.000Z,29.945,68.189,24.2,7.1,ms,535,,,,centennial,centennial19970227210803,2014-03-18T05:50:05.371Z,"Pakistan",earthquake
+1997-01-23T02:15:23.000Z,-22.044,-65.663,268.6,7.1,ms,430,,,,centennial,centennial19970123021523,2014-03-18T05:48:31.074Z,"Potosi, Bolivia",earthquake
+1997-01-11T20:28:27.000Z,18.181,-102.81,35,7.2,ms,488,,,,centennial,centennial19970111202827,2014-04-07T21:02:41.284Z,"Michoacan, Mexico",earthquake
+1996-11-12T16:59:44.000Z,-14.959,-75.562,21,7.7,,,,,,atlas,atlas19961112165944,2014-04-07T21:01:22.848Z,"near the coast of central Peru",earthquake
+1996-11-12T16:59:43.000Z,-14.96,-75.563,16.9,7.7,ms,461,,,,centennial,centennial19961112165943,2014-03-18T05:41:48.500Z,"near the coast of central Peru",earthquake
+1996-08-05T22:38:23.000Z,-20.8,-178.232,556.6,7.4,ms,697,,,,centennial,centennial19960805223823,2013-07-09T19:08:24.000Z,"Fiji region",earthquake
+1996-07-22T14:19:36.000Z,1.02,120.407,30.2,7,ms,341,,,,centennial,centennial19960722141936,2014-03-18T05:29:50.082Z,"Minahasa, Sulawesi, Indonesia",earthquake
+1996-06-17T11:22:19.000Z,-7.146,122.512,590.9,7.9,ms,544,,,,centennial,centennial19960617112219,2014-03-17T18:11:22.522Z,"Flores Sea",earthquake
+1996-06-11T18:22:58.000Z,12.68,125.124,38.5,7.1,ms,463,,,,centennial,centennial19960611182258,2014-03-18T05:27:53.706Z,"Samar, Philippines",earthquake
+1996-06-10T15:24:58.000Z,51.433,-176.841,27.3,7.3,ms,591,,,,centennial,centennial19960610152458,2013-07-09T19:08:24.000Z,"Andreanof Islands, Aleutian Islands, Alaska",earthquake
+1996-06-10T04:03:36.000Z,51.593,-177.588,28.7,7.9,ms,774,,,,centennial,centennial19960610040336,2013-07-09T19:08:24.000Z,"Andreanof Islands, Aleutian Islands, Alaska",earthquake
+1996-04-29T14:40:43.000Z,-6.538,155.104,48.9,7.2,ms,570,,,,centennial,centennial19960429144043,2014-03-18T05:25:10.556Z,"Bougainville region, Papua New Guinea",earthquake
+1996-04-16T00:30:55.000Z,-24.277,-176.904,109.6,7.2,ms,597,,,,centennial,centennial19960416003055,2013-07-09T19:08:24.000Z,"south of the Fiji Islands",earthquake
+1996-02-25T03:08:17.000Z,15.936,-98.114,21,7.1,,,,,,atlas,atlas19960225030817,2014-04-07T20:59:59.891Z,"offshore Oaxaca, Mexico",earthquake
+1996-02-25T03:08:16.000Z,15.934,-98.11,18.3,7.1,ms,371,,,,centennial,centennial19960225030816,2014-03-18T05:20:59.657Z,"offshore Oaxaca, Mexico",earthquake
+1996-02-21T12:51:04.000Z,-9.708,-79.845,15,7.5,ms,262,,,,centennial,centennial19960221125104,2014-04-07T20:59:28.119Z,"off the coast of northern Peru",earthquake
+1996-02-17T05:59:32.000Z,-0.919,136.975,35.9,8.2,ms,300,,,,centennial,centennial19960217055932,2014-04-07T20:58:33.842Z,"Biak region, Indonesia",earthquake
+1996-02-07T21:36:46.000Z,45.371,149.897,33.2,7.2,ms,674,,,,centennial,centennial19960207213646,2014-03-17T18:10:22.496Z,"Kuril Islands",earthquake
+1996-01-01T08:05:12.000Z,0.707,119.902,25.2,7.9,ms,417,,,,centennial,centennial19960101080512,2014-04-07T20:57:10.797Z,"Minahasa, Sulawesi, Indonesia",earthquake
+1995-12-25T04:43:25.000Z,-6.92,129.202,144.9,7.1,ms,489,,,,centennial,centennial19951225044325,2014-03-18T05:15:56.001Z,"Banda Sea",earthquake
+1995-12-03T18:01:09.000Z,44.706,149.26,25.9,7.9,ms,744,,,,centennial,centennial19951203180109,2013-07-09T19:08:23.000Z,"Kuril Islands",earthquake
+1995-11-22T04:15:13.000Z,28.761,34.806,12.5,7.2,ms,372,,,,centennial,centennial19951122041513,2014-04-07T20:55:39.829Z,"Egypt",earthquake
+1995-10-21T02:38:58.000Z,16.829,-93.466,161.7,7.2,ms,590,,,,centennial,centennial19951021023858,2014-03-18T05:11:00.722Z,"Chiapas, Mexico",earthquake
+1995-10-18T10:37:28.000Z,28.073,130.277,31.6,7.1,ms,652,,,,centennial,centennial19951018103728,2014-03-18T05:10:16.339Z,"Ryukyu Islands, Japan",earthquake
+1995-10-09T15:35:54.000Z,19.052,-104.208,25.6,8,ms,521,,,,centennial,centennial19951009153554,2014-03-18T05:09:26.109Z,"Colima, Mexico",earthquake
+1995-10-09T15:35:00.000Z,19.053,-104.208,26.4,8,,,,,,atlas,atlas19951009153500,2014-04-07T20:54:57.555Z,"Colima, Mexico",earthquake
+1995-10-03T01:51:25.000Z,-2.785,-77.822,23.6,7,ms,639,,,,centennial,centennial19951003015125,2014-03-18T05:07:31.968Z,"Peru-Ecuador border region",earthquake
+1995-09-14T14:04:33.000Z,16.852,-98.614,27.9,7.4,ms,476,,,,centennial,centennial19950914140433,2014-04-07T20:54:27.981Z,"Guerrero, Mexico",earthquake
+1995-08-23T07:06:04.000Z,18.818,145.295,607.3,7.1,ms,506,,,,centennial,centennial19950823070604,2014-03-18T05:04:35.651Z,"Pagan region, Northern Mariana Islands",earthquake
+1995-08-16T23:10:30.000Z,-5.771,154.354,74.9,7.2,ms,394,,,,centennial,centennial19950816231030,2014-03-18T05:03:52.764Z,"Bougainville region, Papua New Guinea",earthquake
+1995-08-16T10:27:28.000Z,-5.784,154.286,15.7,7.7,ms,485,,,,centennial,centennial19950816102728,2014-03-18T05:03:27.551Z,"Bougainville region, Papua New Guinea",earthquake
+1995-07-30T05:11:24.000Z,-23.336,-70.265,40.5,8,ms,461,,,,centennial,centennial19950730051124,2014-04-07T20:53:48.195Z,"Antofagasta, Chile",earthquake
+1995-07-03T19:50:52.000Z,-29.4,-177.445,40.5,7.2,ms,579,,,,centennial,centennial19950703195052,2013-07-09T19:08:22.000Z,"Kermadec Islands, New Zealand",earthquake
+1995-05-27T13:03:55.000Z,52.602,142.825,17.5,7.1,ms,717,,,,centennial,centennial19950527130355,2014-04-02T16:01:20.860Z,"Sakhalin, Russia",earthquake
+1995-05-16T20:12:45.000Z,-22.938,169.995,18.8,7.7,ms,540,,,,centennial,centennial19950516201245,2013-07-09T19:08:21.000Z,"southeast of the Loyalty Islands",earthquake
+1995-05-05T03:53:48.000Z,12.657,125.222,26.5,7.1,ms,367,,,,centennial,centennial19950505035348,2014-03-18T04:52:58.848Z,"Samar, Philippines",earthquake
+1995-04-21T00:34:49.000Z,12.1,125.447,34.6,7.2,ms,236,,,,centennial,centennial19950421003449,2014-03-18T04:50:41.764Z,"Samar, Philippines",earthquake
+1995-04-07T22:06:59.000Z,-15.337,-173.431,32.5,7.4,ms,518,,,,centennial,centennial19950407220659,2013-07-09T19:08:21.000Z,"Tonga",earthquake
+1995-02-05T22:51:08.000Z,-37.824,178.879,40.7,7.1,ms,524,,,,centennial,centennial19950205225108,2014-03-18T04:45:18.788Z,"off the east coast of the North Island of New Zealand",earthquake
+1995-01-06T22:37:36.000Z,40.346,142.216,27.5,7,ms,742,,,,centennial,centennial19950106223736,2014-03-18T04:43:53.264Z,"near the east coast of Honshu, Japan",earthquake
+1994-12-28T12:19:23.000Z,40.538,143.439,16.2,7.8,ms,582,,,,centennial,centennial19941228121923,2014-04-07T20:53:22.474Z,"off the east coast of Honshu, Japan",earthquake
+1994-11-14T19:15:32.000Z,13.54,121.059,28.2,7.1,,,,,,atlas,atlas19941114191532,2014-04-07T20:52:33.661Z,"Mindoro, Philippines",earthquake
+1994-11-14T19:15:31.000Z,13.54,121.059,28.2,7.1,ms,429,,,,centennial,centennial19941114191531,2014-03-18T04:40:24.356Z,"Mindoro, Philippines",earthquake
+1994-10-09T08:07:05.000Z,43.754,148.027,35.6,7.3,ms,411,,,,centennial,centennial19941009080705,2014-03-17T18:06:11.409Z,"east of the Kuril Islands",earthquake
+1994-10-09T07:55:41.000Z,43.967,147.893,34.2,7.3,ms,701,,,,centennial,centennial19941009075541,2014-03-18T04:38:28.589Z,"Kuril Islands",earthquake
+1994-10-04T16:01:04.000Z,43.78,148.032,18.2,7.1,ms,556,,,,centennial,centennial19941004160104,2014-03-17T18:06:05.545Z,"east of the Kuril Islands",earthquake
+1994-10-04T15:24:17.000Z,43.602,147.865,16.6,7.1,ms,534,,,,centennial,centennial19941004152417,2014-03-18T04:37:54.297Z,"Kuril Islands",earthquake
+1994-10-04T13:23:00.000Z,43.832,147.332,33.3,8.3,ms,721,,,,centennial,centennial19941004132300,2014-04-07T20:52:02.566Z,"Kuril Islands",earthquake
+1994-09-01T15:15:54.000Z,40.381,-125.776,10.1,7,ms,508,,,,centennial,centennial19940901151554,2014-04-07T20:50:54.743Z,"off the coast of Northern California",earthquake
+1994-07-21T18:36:32.000Z,42.314,132.871,472.3,7.3,ms,935,,,,centennial,centennial19940721183632,2014-03-18T04:33:57.816Z,"Primor'ye, Russia",earthquake
+1994-07-13T02:35:58.000Z,-16.597,167.537,34.5,7.2,ms,346,,,,centennial,centennial19940713023558,2014-03-18T04:32:58.899Z,"Vanuatu",earthquake
+1994-06-09T00:33:17.000Z,-13.877,-67.532,635.4,8.2,ms,574,,,,centennial,centennial19940609003317,2014-03-17T18:05:15.262Z,"La Paz, Bolivia",earthquake
+1994-06-02T18:17:52.000Z,-10.438,113.182,35,7.1,ms,52,,,,centennial,centennial19940602181752,2013-07-09T19:08:19.000Z,"south of Java, Indonesia",earthquake
+1994-06-02T18:17:38.000Z,-10.409,112.935,34.3,7.8,ms,149,,,,centennial,centennial19940602181738,2014-04-07T20:49:07.041Z,"south of Java, Indonesia",earthquake
+1994-03-14T04:30:17.000Z,-1.091,-23.553,4.8,7,ms,309,,,,centennial,centennial19940314043017,2013-07-09T19:08:19.000Z,"central Mid-Atlantic Ridge",earthquake
+1994-03-09T23:28:07.000Z,-17.971,-178.357,564.2,7.6,ms,539,,,,centennial,centennial19940309232807,2013-07-09T19:08:19.000Z,"Fiji region",earthquake
+1994-02-12T17:58:25.000Z,-20.545,169.47,29.6,7,ms,431,,,,centennial,centennial19940212175825,2014-03-18T04:19:51.168Z,"Vanuatu",earthquake
+1994-01-21T02:24:31.000Z,1.042,127.774,18.6,7,ms,257,,,,centennial,centennial19940121022431,2014-03-18T04:18:26.008Z,"Halmahera, Indonesia",earthquake
+1993-12-29T07:48:13.000Z,-20.243,169.924,16.6,7,ms,281,,,,centennial,centennial19931229074813,2014-03-18T04:14:25.562Z,"Vanuatu",earthquake
+1993-11-13T01:18:05.000Z,51.937,158.629,34.6,7,ms,708,,,,centennial,centennial19931113011805,2014-03-18T04:12:43.224Z,"near the east coast of the Kamchatka Peninsula, Russia",earthquake
+1993-09-10T19:12:56.000Z,14.762,-92.644,34.1,7.2,ms,452,,,,centennial,centennial19930910191256,2014-03-18T04:05:31.179Z,"offshore Chiapas, Mexico",earthquake
+1993-08-10T00:51:54.000Z,-45.219,167.007,28.8,7,ms,417,,,,centennial,centennial19930810005154,2014-04-07T20:48:00.109Z,"South Island of New Zealand",earthquake
+1993-08-09T12:42:48.000Z,36.327,70.874,210.6,7,ms,635,,,,centennial,centennial19930809124248,2014-03-18T04:03:49.151Z,"Hindu Kush region, Afghanistan",earthquake
+1993-08-08T08:34:25.000Z,12.999,144.872,57.1,7.8,ms,419,,,,centennial,centennial19930808083425,2014-08-08T08:10:44.664Z,"Guam region",earthquake
+1993-07-12T13:17:12.000Z,42.899,139.245,12,7.7,ms,750,,,,centennial,centennial19930712131712,2014-04-07T20:47:00.222Z,"Hokkaido, Japan region",earthquake
+1993-06-08T13:03:36.000Z,51.195,157.755,60.5,7.5,ms,687,,,,centennial,centennial19930608130336,2014-03-17T18:02:11.600Z,"near the east coast of the Kamchatka Peninsula, Russia",earthquake
+1993-05-24T23:51:26.000Z,-23.13,-66.473,218.1,7,ms,62,,,,centennial,centennial19930524235126,2014-03-18T04:01:01.411Z,"Jujuy, Argentina",earthquake
+1993-05-11T18:26:52.000Z,7.248,126.621,62,7,ms,486,,,,centennial,centennial19930511182652,2014-03-18T03:59:14.618Z,"Mindanao, Philippines",earthquake
+1993-03-06T03:05:52.000Z,-10.911,164.27,23.3,7.1,ms,306,,,,centennial,centennial19930306030552,2014-03-17T18:01:20.798Z,"Santa Cruz Islands region",earthquake
+1993-01-15T11:06:07.000Z,43.031,144.154,100.2,7.6,ms,240,,,,centennial,centennial19930115110607,2014-03-17T18:01:05.234Z,"Hokkaido, Japan region",earthquake
+1992-12-20T20:52:48.000Z,-6.594,130.404,76,7.3,ms,512,,,,centennial,centennial19921220205248,2014-03-18T03:52:52.081Z,"Banda Sea",earthquake
+1992-12-12T05:29:28.000Z,-8.495,121.833,33.1,7.8,ms,384,,,,centennial,centennial19921212052928,2014-03-20T17:46:18.566Z,"Flores region, Indonesia",earthquake
+1992-10-18T15:11:59.000Z,7.094,-76.763,3.3,7.1,ms,551,,,,centennial,centennial19921018151159,2014-03-18T03:47:27.595Z,"northern Colombia",earthquake
+1992-10-11T19:24:28.000Z,-19.26,169.025,135.8,7.4,ms,445,,,,centennial,centennial19921011192428,2014-03-18T03:46:21.204Z,"Vanuatu",earthquake
+1992-09-02T00:16:02.000Z,11.727,-87.386,39.9,7.7,ms,160,,,,centennial,centennial19920902001602,2014-03-18T03:44:52.485Z,"near the coast of Nicaragua",earthquake
+1992-08-19T02:04:38.000Z,42.111,73.588,17.1,7.2,,,,,,atlas,atlas19920819020438,2014-04-07T20:45:05.046Z,"Kyrgyzstan",earthquake
+1992-08-19T02:04:36.000Z,42.11,73.607,13,7.2,ms,609,,,,centennial,centennial19920819020436,2014-03-18T03:43:14.938Z,"Kyrgyzstan",earthquake
+1992-07-11T10:44:21.000Z,-22.471,-178.324,388.8,7.2,ms,528,,,,centennial,centennial19920711104421,2013-07-09T19:08:16.000Z,"south of the Fiji Islands",earthquake
+1992-06-28T11:57:39.000Z,34.19,-116.52,15,7.3,,,,,,atlas,atlas19920628115739,2014-04-07T20:43:42.000Z,"Southern California",earthquake
+1992-06-28T11:57:38.000Z,34.184,-116.532,11.1,7.3,ms,373,,,,centennial,centennial19920628115738,2014-08-08T23:47:20.225Z,"Southern California",earthquake
+1992-05-27T05:13:40.000Z,-11.077,165.29,19.8,7,ms,502,,,,centennial,centennial19920527051340,2014-03-18T03:38:53.973Z,"Santa Cruz Islands",earthquake
+1992-05-17T10:15:36.000Z,7.235,126.754,63.5,7.2,ms,406,,,,centennial,centennial19920517101536,2014-03-18T03:37:09.359Z,"Mindanao, Philippines",earthquake
+1992-05-17T09:49:20.000Z,7.326,126.667,35.5,7.1,ms,455,,,,centennial,centennial19920517094920,2014-03-18T03:36:53.059Z,"Mindanao, Philippines",earthquake
+1992-05-15T07:05:07.000Z,-6.064,147.618,65.7,7.2,ms,448,,,,centennial,centennial19920515070507,2014-03-18T03:35:45.250Z,"eastern New Guinea region, Papua New Guinea",earthquake
+1992-04-25T18:06:06.000Z,40.35,-124.068,18.5,7.2,ms,564,,,,centennial,centennial19920425180606,2014-04-09T11:26:26.995Z,"Northern California",earthquake
+1991-12-27T04:06:00.000Z,-55.973,-25.058,22.2,7.2,ms,329,,,,centennial,centennial19911227040600,2013-07-09T19:08:14.000Z,"South Sandwich Islands region",earthquake
+1991-12-22T08:43:15.000Z,45.591,151.035,24.7,7.6,ms,611,,,,centennial,centennial19911222084315,2013-07-09T19:08:14.000Z,"Kuril Islands",earthquake
+1991-11-19T22:28:53.000Z,4.549,-77.358,25,7.2,ms,461,,,,centennial,centennial19911119222853,2014-03-18T03:26:53.919Z,"near the west coast of Colombia",earthquake
+1991-11-19T22:28:52.000Z,4.552,-77.356,21,7.2,,,,,,atlas,atlas19911119222852,2014-04-07T20:41:13.496Z,"near the west coast of Colombia",earthquake
+1991-10-14T15:58:16.000Z,-9.051,158.555,38.3,7.2,ms,391,,,,centennial,centennial19911014155816,2014-03-18T03:24:23.463Z,"Solomon Islands",earthquake
+1991-09-30T00:21:47.000Z,-20.815,-178.504,567.1,7,ms,437,,,,centennial,centennial19910930002147,2013-07-09T19:08:14.000Z,"Fiji region",earthquake
+1991-08-17T22:17:14.000Z,41.748,-125.586,6.7,7.1,ms,407,,,,centennial,centennial19910817221714,2014-03-17T17:57:37.048Z,"off the coast of Northern California",earthquake
+1991-06-23T21:22:29.000Z,-26.776,-63.27,562.1,7.3,ms,555,,,,centennial,centennial19910623212229,2014-03-18T03:19:15.557Z,"Santiago Del Estero, Argentina",earthquake
+1991-06-20T05:18:54.000Z,1.206,122.772,32.5,7.5,ms,399,,,,centennial,centennial19910620051854,2014-03-18T03:19:01.009Z,"Minahasa, Sulawesi, Indonesia",earthquake
+1991-06-09T07:45:04.000Z,-20.238,-176.146,277.8,7,ms,583,,,,centennial,centennial19910609074504,2014-03-18T03:17:50.990Z,"Fiji region",earthquake
+1991-05-30T13:17:43.000Z,54.517,-161.709,28.5,7,ms,597,,,,centennial,centennial19910530131743,2014-03-17T17:57:02.510Z,"Alaska Peninsula",earthquake
+1991-04-29T09:12:49.000Z,42.426,43.667,13.4,7,,,,,,atlas,atlas19910429091249,2014-04-07T20:39:11.681Z,"Georgia (Sak'art'velo)",earthquake
+1991-04-29T09:12:48.000Z,42.434,43.673,7,7,ms,330,,,,centennial,centennial19910429091248,2014-03-18T03:14:49.508Z,"Georgia (Sak'art'velo)",earthquake
+1991-04-22T21:56:53.000Z,9.672,-83.072,13.2,7.6,ms,419,,,,centennial,centennial19910422215653,2014-04-07T20:38:39.823Z,"Costa Rica",earthquake
+1991-01-05T14:57:13.000Z,23.573,95.871,17.5,7,ms,438,,,,centennial,centennial19910105145713,2014-04-01T23:57:43.959Z,"Myanmar",earthquake
+1990-12-30T19:14:21.000Z,-5.093,151.022,187.8,7.5,ms,411,,,,centennial,centennial19901230191421,2014-03-18T03:05:26.672Z,"New Britain region, Papua New Guinea",earthquake
+1990-11-06T20:14:31.000Z,53.491,169.819,25.9,7.1,ms,646,,,,centennial,centennial19901106201431,2013-07-09T19:08:12.000Z,"Komandorskiye Ostrova, Russia region",earthquake
+1990-10-17T14:30:13.000Z,-11.032,-70.741,598.5,7,ms,580,,,,centennial,centennial19901017143013,2014-03-18T02:58:14.483Z,"Peru-Brazil border region",earthquake
+1990-08-12T21:25:23.000Z,-19.44,169.237,140.4,7.1,ms,409,,,,centennial,centennial19900812212523,2014-03-18T02:55:22.743Z,"Vanuatu",earthquake
+1990-07-27T12:38:00.000Z,-15.33,167.541,127,7.2,ms,396,,,,centennial,centennial19900727123800,2014-03-18T02:53:55.462Z,"Vanuatu",earthquake
+1990-07-16T07:26:35.000Z,15.723,121.18,23.8,7.7,ms,497,,,,centennial,centennial19900716072635,2014-03-20T17:43:20.640Z,"Luzon, Philippines",earthquake
+1990-06-20T21:00:13.000Z,37.008,49.213,18,7.4,ms,306,,,,centennial,centennial19900620210013,2014-03-20T17:40:53.400Z,"near the coast of northern Iran",earthquake
+1990-06-14T07:40:55.000Z,11.39,122.045,17.8,7.1,ms,325,,,,centennial,centennial19900614074055,2014-03-18T02:48:24.429Z,"Panay, Philippines",earthquake
+1990-05-30T10:40:07.000Z,45.852,26.646,89.8,7,ms,313,,,,centennial,centennial19900530104007,2014-03-20T17:39:16.786Z,"Romania",earthquake
+1990-05-24T20:09:24.000Z,-7.363,120.347,587.5,7.1,ms,419,,,,centennial,centennial19900524200924,2014-03-18T02:44:49.606Z,"Flores Sea",earthquake
+1990-05-24T20:00:09.000Z,5.343,31.84,15.6,7.1,ms,496,,,,centennial,centennial19900524200009,2014-03-18T02:44:29.017Z,"Sudan",earthquake
+1990-05-20T02:22:01.000Z,5.113,32.178,7.3,7.1,ms,534,,,,centennial,centennial19900520022201,2014-03-18T02:43:38.438Z,"Sudan",earthquake
+1990-05-12T04:50:10.000Z,48.985,141.865,613.3,7.2,ms,770,,,,centennial,centennial19900512045010,2013-07-09T19:08:11.000Z,"Tatar Strait, Russia",earthquake
+1990-04-18T13:39:22.000Z,1.195,122.815,37.4,7.6,ms,343,,,,centennial,centennial19900418133922,2014-03-18T02:39:12.759Z,"Minahasa, Sulawesi, Indonesia",earthquake
+1990-04-05T21:12:38.000Z,15.157,147.609,23.1,7.4,ms,354,,,,centennial,centennial19900405211238,2013-07-09T19:08:10.000Z,"Mariana Islands region",earthquake
+1990-03-25T13:22:57.000Z,9.94,-84.775,22.1,7.3,ms,479,,,,centennial,centennial19900325132257,2014-04-01T23:53:25.961Z,"Costa Rica",earthquake
+1990-03-25T13:16:09.000Z,9.847,-84.769,33.3,7.1,ms,377,,,,centennial,centennial19900325131609,2014-03-18T02:36:58.435Z,"Costa Rica",earthquake
+1990-03-05T16:38:14.000Z,-18.319,168.157,23.6,7,ms,278,,,,centennial,centennial19900305163814,2014-03-18T02:36:00.406Z,"Vanuatu",earthquake
+1990-03-03T12:16:29.000Z,-21.956,175.258,35.8,7.6,ms,325,,,,centennial,centennial19900303121629,2013-07-09T19:08:10.000Z,"south of the Fiji Islands",earthquake
+1989-12-15T18:43:47.000Z,8.366,126.687,24,7.5,ms,293,,,,centennial,centennial19891215184347,2014-03-18T02:30:59.704Z,"Mindanao, Philippines",earthquake
+1989-11-01T18:25:36.000Z,39.915,142.785,29.3,7.4,ms,606,,,,centennial,centennial19891101182536,2014-03-18T02:27:26.961Z,"near the east coast of Honshu, Japan",earthquake
+1989-09-04T13:14:59.000Z,55.591,-156.864,6.2,7.1,ms,620,,,,centennial,centennial19890904131459,2013-07-09T19:08:09.000Z,"south of Alaska",earthquake
+1989-05-23T10:54:46.000Z,-52.507,160.596,1.7,8.1,ms,427,,,,centennial,centennial19890523105446,2013-07-09T19:08:08.000Z,"Macquarie Island region",earthquake
+1989-05-05T18:28:40.000Z,-8.313,-71.402,593.2,7.1,ms,541,,,,centennial,centennial19890505182840,2014-03-18T02:15:16.578Z,"Acre, Brazil",earthquake
+1989-02-10T11:15:25.000Z,2.282,126.679,46.2,7.1,ms,417,,,,centennial,centennial19890210111525,2014-03-18T02:10:29.147Z,"Molucca Sea",earthquake
+1988-11-06T13:03:22.000Z,22.869,99.571,22.8,7,ms,476,,,,centennial,centennial19881106130322,2014-03-18T02:03:53.021Z,"Myanmar-China border region",earthquake
+1988-11-06T13:03:21.000Z,22.814,99.605,18,7,,,,,,atlas,atlas19881106130321,2014-04-07T20:31:26.855Z,"Myanmar-China border region",earthquake
+1988-10-08T04:46:26.000Z,-18.83,-172.318,41.4,7.1,ms,522,,,,centennial,centennial19881008044626,2013-07-09T19:08:06.000Z,"Tonga region",earthquake
+1988-08-10T04:38:28.000Z,-10.322,160.928,34,7.6,ms,326,,,,centennial,centennial19880810043828,2014-03-18T01:59:01.404Z,"Solomon Islands",earthquake
+1988-08-06T00:36:26.000Z,25.09,95.107,90.1,7.3,ms,665,,,,centennial,centennial19880806003626,2014-04-01T23:45:25.041Z,"Myanmar",earthquake
+1988-07-23T15:17:11.000Z,-6.534,152.812,31,7,ms,428,,,,centennial,centennial19880723151711,2013-07-09T19:08:06.000Z,"New Britain region, Papua New Guinea",earthquake
+1988-04-12T23:19:56.000Z,-17.254,-72.255,30.2,7.1,ms,334,,,,centennial,centennial19880412231956,2014-03-18T01:53:13.880Z,"near the coast of southern Peru",earthquake
+1988-03-06T22:35:36.000Z,57.263,-142.749,6,7.8,ms,697,,,,centennial,centennial19880306223536,2014-03-17T17:47:20.339Z,"Gulf of Alaska",earthquake
+1988-02-24T03:52:06.000Z,13.466,124.552,40,7.3,ms,446,,,,centennial,centennial19880224035206,2014-03-18T01:50:25.793Z,"Catanduanes, Philippines",earthquake
+1988-02-05T14:01:04.000Z,-24.787,-70.477,36.9,7.2,ms,322,,,,centennial,centennial19880205140104,2014-03-18T01:48:27.662Z,"Antofagasta, Chile",earthquake
+1988-01-19T07:30:30.000Z,-24.665,-70.507,14.8,7,ms,294,,,,centennial,centennial19880119073030,2014-03-18T01:47:19.662Z,"Antofagasta, Chile",earthquake
+1987-11-30T19:23:19.590Z,58.679,-142.786,10,7.9,mw,,,,,pde,pde19871130192319590_10,2013-03-16T00:20:08.918Z,"Gulf of Alaska",earthquake
+1987-11-30T19:23:17.000Z,58.83,-142.602,15,7.9,ms,572,,,,centennial,centennial19871130192317,2014-03-17T17:46:36.663Z,"Gulf of Alaska",earthquake
+1987-11-17T08:46:50.000Z,58.792,-143.195,3,7.2,ms,535,,,,centennial,centennial19871117084650,2013-07-09T19:08:05.000Z,"Gulf of Alaska",earthquake
+1987-10-16T20:48:00.000Z,-6.217,149.118,30,7.4,ms,335,,,,centennial,centennial19871016204800,2014-03-18T01:42:02.295Z,"New Britain region, Papua New Guinea",earthquake
+1987-10-12T13:57:06.000Z,-7.269,154.423,28.1,7,ms,383,,,,centennial,centennial19871012135706,2014-03-18T01:41:49.966Z,"Bougainville region, Papua New Guinea",earthquake
+1987-10-06T04:19:08.000Z,-17.976,-172.168,22.3,7.3,ms,470,,,,centennial,centennial19871006041908,2013-07-09T19:08:04.000Z,"Tonga region",earthquake
+1987-09-03T06:40:12.000Z,-58.936,158.508,15,7.4,ms,326,,,,centennial,centennial19870903064012,2013-07-09T19:08:04.000Z,"Macquarie Island region",earthquake
+1987-08-08T15:48:58.000Z,-19.092,-70.006,71.2,7.2,ms,408,,,,centennial,centennial19870808154858,2014-03-18T01:37:43.878Z,"Tarapaca, Chile",earthquake
+1987-06-17T01:32:56.000Z,-5.586,130.844,84.8,7.1,ms,474,,,,centennial,centennial19870617013256,2014-03-18T01:34:55.740Z,"Banda Sea",earthquake
+1987-04-01T01:48:07.000Z,-22.903,-66.248,229.9,7,ms,406,,,,centennial,centennial19870401014807,2014-03-18T01:28:35.921Z,"Jujuy, Argentina",earthquake
+1987-03-06T04:10:44.000Z,0.083,-77.786,18.3,7.2,ms,421,,,,centennial,centennial19870306041044,2014-03-20T17:34:23.359Z,"Colombia-Ecuador border region",earthquake
+1987-03-05T10:55:14.000Z,-24.44,-70.571,31.4,7,ms,236,,,,centennial,centennial19870305105514,2014-03-18T01:25:25.634Z,"near the coast of Antofagasta, Chile",earthquake
+1987-03-05T09:17:05.000Z,-24.396,-70.099,46.4,7.6,ms,366,,,,centennial,centennial19870305091705,2014-03-18T01:25:04.316Z,"Antofagasta, Chile",earthquake
+1987-02-08T18:33:58.000Z,-6.023,147.665,41.9,7.3,ms,368,,,,centennial,centennial19870208183358,2014-03-18T01:23:14.266Z,"eastern New Guinea region, Papua New Guinea",earthquake
+1987-01-30T22:29:38.000Z,-60.157,-27.012,8.3,7,ms,262,,,,centennial,centennial19870130222938,2013-07-09T19:08:03.000Z,"South Sandwich Islands region",earthquake
+1986-11-14T21:20:10.550Z,23.901,121.574,33.8,7.4,mw,,,,1.2,pde,pde19861114212010550_33,2014-04-07T20:26:57.079Z,"Taiwan",earthquake
+1986-11-14T21:20:05.000Z,23.976,121.723,25,7.4,ms,433,,,,centennial,centennial19861114212005,2014-03-18T01:16:06.870Z,"Taiwan",earthquake
+1986-10-30T01:28:55.000Z,-21.672,-176.551,189.5,7.2,ms,492,,,,centennial,centennial19861030012855,2014-03-18T01:15:56.277Z,"Fiji region",earthquake
+1986-10-20T06:46:11.000Z,-28.157,-176.294,30,7.7,ms,544,,,,centennial,centennial19861020064611,2013-07-09T19:08:02.000Z,"Kermadec Islands region",earthquake
+1986-08-30T21:28:37.000Z,45.524,26.269,135.8,7.2,ms,383,,,,centennial,centennial19860830212837,2014-03-18T01:12:10.535Z,"Romania",earthquake
+1986-08-14T19:39:14.000Z,1.804,126.482,30.3,7.5,ms,421,,,,centennial,centennial19860814193914,2014-03-18T01:11:13.850Z,"Molucca Sea",earthquake
+1986-06-24T03:11:34.000Z,-4.441,144.01,123.4,7.2,ms,470,,,,centennial,centennial19860624031134,2014-03-18T01:07:50.134Z,"near the north coast of New Guinea, Papua New Guinea",earthquake
+1986-06-16T10:48:27.000Z,-21.985,-178.868,559.5,7.1,ms,457,,,,centennial,centennial19860616104827,2013-07-09T19:08:02.000Z,"Fiji region",earthquake
+1986-05-26T19:06:16.000Z,-20.215,178.951,540.7,7.1,ms,511,,,,centennial,centennial19860526190616,2013-07-09T19:08:02.000Z,"south of the Fiji Islands",earthquake
+1986-05-07T22:47:10.000Z,51.555,-174.811,20,8,ms,676,,,,centennial,centennial19860507224710,2014-03-17T17:41:52.988Z,"Andreanof Islands, Aleutian Islands, Alaska",earthquake
+1986-04-30T07:07:18.000Z,18.371,-103.001,22.8,7,ms,335,,,,centennial,centennial19860430070718,2014-04-07T20:24:18.527Z,"Michoacan, Mexico",earthquake
+1986-01-15T20:17:31.000Z,-21.459,170.437,140,7.1,ms,317,,,,centennial,centennial19860115201731,2013-07-09T19:08:01.000Z,"southeast of the Loyalty Islands",earthquake
+1985-12-21T01:13:23.000Z,-14.012,166.632,43.6,7.1,ms,317,,,,centennial,centennial19851221011323,2014-03-18T00:58:08.366Z,"Vanuatu",earthquake
+1985-11-28T03:49:57.000Z,-13.982,166.284,49.4,7,ms,351,,,,centennial,centennial19851128034957,2014-03-18T00:57:01.359Z,"Vanuatu",earthquake
+1985-11-28T02:25:42.000Z,-14.029,166.335,25,7,ms,365,,,,centennial,centennial19851128022542,2014-03-18T00:56:49.178Z,"Vanuatu",earthquake
+1985-11-17T09:40:23.000Z,-1.668,134.943,10.2,7.1,ms,219,,,,centennial,centennial19851117094023,2014-03-18T00:55:53.128Z,"near the north coast of Papua, Indonesia",earthquake
+1985-09-21T01:37:13.000Z,17.827,-101.622,17.9,7.6,ms,329,,,,centennial,centennial19850921013713,2014-04-07T20:23:26.652Z,"Guerrero, Mexico",earthquake
+1985-09-19T13:17:49.000Z,18.455,-102.368,20.2,8,ms,318,,,,centennial,centennial19850919131749,2014-03-20T17:32:41.567Z,"Michoacan, Mexico",earthquake
+1985-08-23T12:41:59.000Z,39.445,75.241,20,7,ms,477,,,,centennial,centennial19850823124159,2014-03-18T00:50:12.264Z,"southern Xinjiang, China",earthquake
+1985-07-29T07:54:45.000Z,36.164,70.863,100.1,7.4,ms,553,,,,centennial,centennial19850729075445,2014-03-18T00:47:46.056Z,"Hindu Kush region, Afghanistan",earthquake
+1985-07-03T04:36:54.000Z,-4.453,152.879,46.9,7.2,ms,430,,,,centennial,centennial19850703043654,2014-03-18T00:46:11.220Z,"New Britain region, Papua New Guinea",earthquake
+1985-05-10T15:35:54.000Z,-5.596,151.061,46.6,7.2,ms,350,,,,centennial,centennial19850510153554,2014-03-18T00:44:13.935Z,"New Britain region, Papua New Guinea",earthquake
+1985-04-09T01:57:01.000Z,-34.116,-71.513,49.4,7.1,ms,358,,,,centennial,centennial19850409015701,2014-03-18T00:41:21.545Z,"Region Metropolitana, Chile",earthquake
+1985-03-04T00:32:24.000Z,-33.236,-71.74,40,7.4,ms,141,,,,centennial,centennial19850304003224,2014-03-18T00:36:42.892Z,"offshore Valparaiso, Chile",earthquake
+1985-03-03T22:47:08.000Z,-33.139,-71.761,35,8,ms,196,,,,centennial,centennial19850303224708,2014-03-18T00:35:26.882Z,"offshore Valparaiso, Chile",earthquake
+1984-11-20T08:15:15.000Z,5.124,125.112,180,7.5,ms,449,,,,centennial,centennial19841120081515,2014-03-18T00:29:42.995Z,"Mindanao, Philippines",earthquake
+1984-11-17T06:49:30.000Z,0.179,97.956,28.2,7.1,ms,527,,,,centennial,centennial19841117064930,2014-03-18T00:29:18.041Z,"Nias region, Indonesia",earthquake
+1984-11-15T02:46:23.000Z,-22.037,171.018,125.9,7.1,ms,384,,,,centennial,centennial19841115024623,2013-07-09T19:07:58.000Z,"southeast of the Loyalty Islands",earthquake
+1984-11-01T04:48:52.000Z,8.155,-38.805,11.7,7,ms,529,,,,centennial,centennial19841101044852,2013-07-09T19:07:58.000Z,"central Mid-Atlantic Ridge",earthquake
+1984-10-15T10:21:08.000Z,-15.866,-173.556,127,7.1,ms,388,,,,centennial,centennial19841015102108,2013-07-09T19:07:58.000Z,"Tonga",earthquake
+1984-08-06T12:01:53.000Z,-0.076,122.424,243.5,7.4,ms,397,,,,centennial,centennial19840806120153,2014-03-18T00:24:01.070Z,"Sulawesi, Indonesia",earthquake
+1984-05-30T07:49:44.000Z,-4.836,151.594,171.3,7.1,ms,396,,,,centennial,centennial19840530074944,2014-03-18T00:20:05.061Z,"New Britain region, Papua New Guinea",earthquake
+1984-03-24T09:44:03.000Z,44.171,148.163,37.9,7.2,ms,473,,,,centennial,centennial19840324094403,2014-03-17T17:36:11.659Z,"Kuril Islands",earthquake
+1984-03-19T20:28:40.000Z,40.342,63.331,15,7,ms,455,,,,centennial,centennial19840319202840,2014-03-18T00:16:40.896Z,"western Uzbekistan",earthquake
+1984-03-06T02:17:22.000Z,29.377,138.876,460.3,7.4,ms,504,,,,centennial,centennial19840306021722,2014-03-17T17:36:04.828Z,"Izu Islands, Japan region",earthquake
+1984-03-05T03:33:52.000Z,8.145,123.754,655,7.3,ms,494,,,,centennial,centennial19840305033352,2014-03-18T00:15:52.663Z,"Mindanao, Philippines",earthquake
+1984-02-07T21:33:21.000Z,-9.965,160.568,8.5,7.6,ms,417,,,,centennial,centennial19840207213321,2014-03-18T00:14:14.172Z,"Solomon Islands",earthquake
+1984-01-01T09:03:41.000Z,33.655,136.794,386.2,7.2,ms,506,,,,centennial,centennial19840101090341,2014-03-18T00:13:01.348Z,"near the south coast of western Honshu, Japan",earthquake
+1983-12-30T23:52:41.000Z,36.386,70.712,214.7,7.4,ms,491,,,,centennial,centennial19831230235241,2014-03-18T00:12:42.475Z,"Hindu Kush region, Afghanistan",earthquake
+1983-12-02T03:09:03.000Z,14.056,-91.913,35,7,ms,320,,,,centennial,centennial19831202030903,2014-03-18T00:10:07.865Z,"offshore Guatemala",earthquake
+1983-11-30T17:46:02.000Z,-6.84,72.062,10.4,7.7,ms,501,,,,centennial,centennial19831130174602,2014-03-17T17:35:23.634Z,"Chagos Archipelago region",earthquake
+1983-11-24T05:30:37.000Z,-7.512,128.108,195.5,7.4,ms,363,,,,centennial,centennial19831124053037,2014-03-18T00:09:42.736Z,"Kepulauan Barat Daya, Indonesia",earthquake
+1983-10-28T14:06:09.000Z,44.077,-113.802,16,7,ms,421,,,,centennial,centennial19831028140609,2014-04-07T20:20:23.867Z,"southern Idaho",earthquake
+1983-10-22T04:21:34.000Z,-60.685,-25.495,4.6,7.1,ms,187,,,,centennial,centennial19831022042134,2013-07-09T19:07:57.000Z,"South Sandwich Islands region",earthquake
+1983-10-04T18:52:15.000Z,-26.541,-70.504,24.2,7.7,ms,285,,,,centennial,centennial19831004185215,2014-03-18T00:04:38.623Z,"Atacama, Chile",earthquake
+1983-08-17T10:55:58.000Z,55.786,161.317,92.7,7,ms,523,,,,centennial,centennial19830817105558,2014-03-18T00:00:44.372Z,"near the east coast of the Kamchatka Peninsula, Russia",earthquake
+1983-07-11T12:56:29.000Z,-60.919,-53.121,8.7,7,ms,282,,,,centennial,centennial19830711125629,2013-07-09T19:07:56.000Z,"South Shetland Islands",earthquake
+1983-05-26T02:59:59.000Z,40.473,139.092,15.1,7.7,ms,504,,,,centennial,centennial19830526025959,2014-03-17T23:54:17.286Z,"near the west coast of Honshu, Japan",earthquake
+1983-04-12T12:07:58.000Z,-4.847,-78.091,126,7,ms,378,,,,centennial,centennial19830412120758,2014-03-17T23:51:04.366Z,"Peru-Ecuador border region",earthquake
+1983-04-04T02:51:37.000Z,5.72,94.689,93.7,7,ms,516,,,,centennial,centennial19830404025137,2014-03-17T23:49:54.809Z,"northern Sumatra, Indonesia",earthquake
+1983-04-03T02:50:04.000Z,8.716,-83.129,57,7.5,ms,335,,,,centennial,centennial19830403025004,2014-03-17T23:49:21.931Z,"Costa Rica",earthquake
+1983-03-18T09:05:51.000Z,-4.886,153.586,90.7,7.7,ms,376,,,,centennial,centennial19830318090551,2014-03-17T17:33:14.806Z,"New Ireland region, Papua New Guinea",earthquake
+1983-01-26T16:02:21.000Z,-30.45,-179.214,230,7,ms,451,,,,centennial,centennial19830126160221,2013-07-09T19:07:56.000Z,"Kermadec Islands region",earthquake
+1982-12-19T17:43:57.000Z,-24.194,-175.576,32.9,7.5,ms,177,,,,centennial,centennial19821219174357,2013-07-09T19:07:55.000Z,"south of Tonga",earthquake
+1982-08-05T20:32:51.000Z,-12.475,166.192,8.6,7,ms,241,,,,centennial,centennial19820805203251,2014-03-17T17:31:42.820Z,"Santa Cruz Islands",earthquake
+1982-07-23T14:23:53.000Z,36.302,141.778,24,7,ms,369,,,,centennial,centennial19820723142353,2014-03-17T23:36:27.125Z,"near the east coast of Honshu, Japan",earthquake
+1982-07-07T10:43:05.000Z,-51.303,160.668,15,7.2,ms,323,,,,centennial,centennial19820707104305,2013-07-09T19:07:55.000Z,"north of Macquarie Island",earthquake
+1982-06-30T01:57:34.000Z,44.721,151.116,19.8,7.1,ms,451,,,,centennial,centennial19820630015734,2013-07-09T19:07:55.000Z,"east of the Kuril Islands",earthquake
+1982-06-22T04:18:42.000Z,-7.364,126.051,460,7.5,ms,301,,,,centennial,centennial19820622041842,2014-03-17T23:35:58.957Z,"Kepulauan Barat Daya, Indonesia",earthquake
+1982-06-19T06:21:58.000Z,13.338,-89.313,72.8,7.3,ms,358,,,,centennial,centennial19820619062158,2014-04-01T23:33:27.173Z,"offshore El Salvador",earthquake
+1982-05-07T05:38:36.000Z,-60.703,-20.967,11.3,7,ms,138,,,,centennial,centennial19820507053836,2013-07-09T19:07:55.000Z,"east of the South Sandwich Islands",earthquake
+1982-01-11T06:10:06.000Z,13.833,124.337,31.7,7.1,ms,321,,,,centennial,centennial19820111061006,2014-03-17T23:28:19.996Z,"Catanduanes, Philippines",earthquake
+1982-01-03T14:09:53.000Z,-0.987,-21.869,19.5,7.1,ms,297,,,,centennial,centennial19820103140953,2013-07-09T19:07:54.000Z,"central Mid-Atlantic Ridge",earthquake
+1981-12-26T17:05:31.000Z,-29.936,-177.655,21.4,7.1,ms,331,,,,centennial,centennial19811226170531,2013-07-09T19:07:54.000Z,"Kermadec Islands, New Zealand",earthquake
+1981-11-07T03:29:52.000Z,-32.232,-71.382,63.9,7,ms,285,,,,centennial,centennial19811107032952,2014-03-17T23:26:16.024Z,"Valparaiso, Chile",earthquake
+1981-10-25T03:22:15.000Z,18.122,-101.996,20.3,7.2,ms,229,,,,centennial,centennial19811025032215,2014-04-07T20:17:31.761Z,"Guerrero, Mexico",earthquake
+1981-10-16T03:25:43.000Z,-33.196,-73.054,31.7,7.1,ms,278,,,,centennial,centennial19811016032543,2014-03-17T17:29:57.263Z,"off the coast of Valparaiso, Chile",earthquake
+1981-09-01T09:29:31.000Z,-15.111,-173.021,17.1,7.5,ms,258,,,,centennial,centennial19810901092931,2014-03-17T23:22:39.684Z,"Tonga",earthquake
+1981-07-28T17:22:24.000Z,29.986,57.772,13.7,7.3,ms,293,,,,centennial,centennial19810728172224,2014-03-20T17:20:33.784Z,"southern Iran",earthquake
+1981-07-15T07:59:08.000Z,-17.272,167.689,11.3,7.1,ms,148,,,,centennial,centennial19810715075908,2014-03-17T23:21:23.283Z,"Vanuatu",earthquake
+1981-07-06T03:08:25.000Z,-22.25,171.814,30,7.6,ms,295,,,,centennial,centennial19810706030825,2013-07-09T19:07:54.000Z,"southeast of the Loyalty Islands",earthquake
+1981-05-25T05:25:12.000Z,-48.716,164.654,10.7,7.6,ms,273,,,,centennial,centennial19810525052512,2013-07-09T19:07:53.000Z,"off the west coast of the South Island of New Zealand",earthquake
+1981-01-30T08:52:46.000Z,51.835,176.184,36.7,7,ms,461,,,,centennial,centennial19810130085246,2013-07-09T19:07:53.000Z,"Rat Islands, Aleutian Islands, Alaska",earthquake
+1981-01-18T18:17:27.000Z,38.712,142.795,45.9,7,ms,327,,,,centennial,centennial19810118181727,2014-03-17T23:13:40.082Z,"near the east coast of Honshu, Japan",earthquake
+1980-11-08T10:27:35.000Z,41.11,-124.3,17.3,7.3,ms,351,,,,centennial,centennial19801108102735,2014-04-07T20:14:49.183Z,"offshore Northern California",earthquake
+1980-10-25T11:00:07.000Z,-21.94,170.054,38.4,7.5,ms,136,,,,centennial,centennial19801025110007,2013-07-09T19:07:53.000Z,"southeast of the Loyalty Islands",earthquake
+1980-10-25T07:00:08.000Z,-22.023,170.135,24.5,7.1,ms,129,,,,centennial,centennial19801025070008,2013-07-09T19:07:53.000Z,"southeast of the Loyalty Islands",earthquake
+1980-10-24T14:53:35.000Z,18.176,-98.235,64.8,7.2,ms,318,,,,centennial,centennial19801024145335,2014-04-07T20:13:58.469Z,"Puebla, Mexico",earthquake
+1980-10-10T12:25:25.000Z,36.141,1.401,12.4,7.1,ms,248,,,,centennial,centennial19801010122525,2014-03-20T17:13:25.056Z,"northern Algeria",earthquake
+1980-07-17T19:42:24.000Z,-12.481,166.004,32.3,7.8,ms,184,,,,centennial,centennial19800717194224,2014-03-17T23:02:50.171Z,"Santa Cruz Islands",earthquake
+1980-07-16T19:56:48.000Z,-4.434,143.579,86.3,7.3,ms,313,,,,centennial,centennial19800716195648,2014-03-17T23:02:28.113Z,"New Guinea, Papua New Guinea",earthquake
+1980-07-08T23:19:24.000Z,-12.485,166.482,55.7,7.5,ms,226,,,,centennial,centennial19800708231924,2014-03-17T17:27:10.218Z,"Santa Cruz Islands",earthquake
+1980-04-13T18:04:40.000Z,-23.593,-177.224,148.7,7.6,ms,370,,,,centennial,centennial19800413180440,2013-07-09T19:07:52.000Z,"south of the Fiji Islands",earthquake
+1980-03-24T03:59:53.000Z,52.946,-167.712,34.7,7,ms,455,,,,centennial,centennial19800324035953,2014-03-17T17:26:10.183Z,"Fox Islands, Aleutian Islands, Alaska",earthquake
+1980-03-08T22:12:12.000Z,-22.638,171.452,40.7,7.2,ms,211,,,,centennial,centennial19800308221212,2013-07-09T19:07:52.000Z,"southeast of the Loyalty Islands",earthquake
+1980-02-23T05:51:04.000Z,43.592,146.678,37.3,7.1,ms,421,,,,centennial,centennial19800223055104,2014-03-17T22:54:21.781Z,"Kuril Islands",earthquake
+1980-01-02T20:58:43.000Z,5.985,126.153,38.2,7,ms,250,,,,centennial,centennial19800102205843,2014-03-17T22:51:48.189Z,"Mindanao, Philippines",earthquake
+1979-12-12T07:59:04.000Z,1.602,-79.363,24.3,8.1,ms,252,,,,centennial,centennial19791212075904,2014-03-20T17:11:58.545Z,"near the coast of Ecuador",earthquake
+1979-11-27T17:10:34.000Z,34.058,59.758,6.9,7.1,ms,282,,,,centennial,centennial19791127171034,2014-04-07T20:09:02.136Z,"northeastern Iran",earthquake
+1979-11-23T23:40:31.000Z,4.794,-76.188,107.8,7.2,ms,341,,,,centennial,centennial19791123234031,2014-03-17T22:48:55.408Z,"Colombia",earthquake
+1979-10-23T09:51:08.000Z,-10.635,161.352,21.7,7,ms,237,,,,centennial,centennial19791023095108,2014-03-17T22:45:04.125Z,"Solomon Islands",earthquake
+1979-10-17T05:43:03.000Z,18.518,145.413,590,7,ms,272,,,,centennial,centennial19791017054303,2014-03-17T22:44:16.129Z,"Pagan region, Northern Mariana Islands",earthquake
+1979-10-12T10:25:19.000Z,-46.693,165.825,6.5,7.3,ms,272,,,,centennial,centennial19791012102519,2014-03-17T17:24:48.563Z,"off the west coast of the South Island of New Zealand",earthquake
+1979-09-12T05:17:56.000Z,-1.686,135.969,20.4,7.5,ms,241,,,,centennial,centennial19790912051756,2014-03-17T22:42:05.841Z,"Biak region, Indonesia",earthquake
+1979-07-24T19:31:18.000Z,-11.186,107.634,12.5,7,ms,289,,,,centennial,centennial19790724193118,2013-07-09T19:07:51.000Z,"south of Java, Indonesia",earthquake
+1979-05-01T13:03:40.000Z,-21.264,169.874,94.6,7.4,ms,247,,,,centennial,centennial19790501130340,2014-03-17T17:23:38.684Z,"southeast of the Loyalty Islands",earthquake
+1979-04-15T06:19:44.000Z,42.001,19.153,15,7,ms,269,,,,centennial,centennial19790415061944,2014-03-20T17:10:37.071Z,"Montenegro-Albania border region",earthquake
+1979-04-10T01:42:23.000Z,2.987,126.965,39.5,7,ms,281,,,,centennial,centennial19790410014223,2014-03-17T22:32:47.545Z,"Molucca Sea",earthquake
+1979-03-14T11:07:14.000Z,17.759,-101.223,24.4,7.5,ms,281,,,,centennial,centennial19790314110714,2014-03-17T22:30:57.715Z,"Guerrero, Mexico",earthquake
+1979-02-28T21:27:08.000Z,60.657,-141.658,24.1,7.5,ms,388,,,,centennial,centennial19790228212708,2014-04-07T20:05:47.784Z,"Southern Alaska",earthquake
+1979-02-16T10:08:54.000Z,-16.538,-72.553,55.4,7.2,ms,328,,,,centennial,centennial19790216100854,2014-03-17T22:29:59.458Z,"near the coast of southern Peru",earthquake
+1979-02-16T10:08:53.000Z,-16.537,-72.553,55.1,7.1,,,,,,atlas,atlas19790216100853,2014-04-07T20:05:14.360Z,"near the coast of southern Peru",earthquake
+1978-12-23T11:23:14.000Z,23.226,122.024,41.6,7,ms,394,,,,centennial,centennial19781223112314,2014-03-17T22:27:55.486Z,"Taiwan region",earthquake
+1978-12-06T14:02:08.000Z,44.557,146.588,145,7.8,ms,416,,,,centennial,centennial19781206140208,2014-03-17T17:22:37.850Z,"Kuril Islands",earthquake
+1978-11-29T19:52:50.000Z,16.01,-96.602,24.4,7.8,ms,308,,,,centennial,centennial19781129195250,2014-04-07T20:04:37.209Z,"Oaxaca, Mexico",earthquake
+1978-11-05T22:02:10.000Z,-11.127,162.209,43.3,7,ms,244,,,,centennial,centennial19781105220210,2014-03-17T22:24:44.761Z,"Solomon Islands",earthquake
+1978-11-04T22:29:25.000Z,-11.333,162.244,41.6,7,ms,150,,,,centennial,centennial19781104222925,2014-03-17T22:24:21.474Z,"Solomon Islands",earthquake
+1978-09-16T15:35:53.000Z,33.238,57.382,2.8,7.4,ms,256,,,,centennial,centennial19780916153553,2014-03-20T17:08:26.823Z,"eastern Iran",earthquake
+1978-08-23T00:38:30.000Z,10.223,-85.204,25,7,ms,318,,,,centennial,centennial19780823003830,2014-03-17T22:19:38.512Z,"Costa Rica",earthquake
+1978-07-23T14:42:41.000Z,22.24,121.418,37.8,7.3,ms,380,,,,centennial,centennial19780723144241,2014-03-17T22:17:53.057Z,"Taiwan region",earthquake
+1978-06-17T15:11:30.000Z,-17.103,-172.167,3.1,7,ms,299,,,,centennial,centennial19780617151130,2013-07-09T19:07:49.000Z,"Tonga region",earthquake
+1978-06-14T12:32:36.000Z,8.286,122.394,31.9,7,ms,283,,,,centennial,centennial19780614123236,2014-03-17T22:15:09.485Z,"Mindanao, Philippines",earthquake
+1978-06-12T08:14:29.000Z,38.223,142.022,52.7,7.7,ms,397,,,,centennial,centennial19780612081429,2014-03-20T17:07:12.361Z,"near the east coast of Honshu, Japan",earthquake
+1978-03-24T19:47:49.000Z,44.232,148.924,12.2,7.5,ms,379,,,,centennial,centennial19780324194749,2014-03-17T17:20:48.951Z,"Kuril Islands",earthquake
+1978-03-23T03:15:20.000Z,44.983,148.523,23.1,7.6,ms,156,,,,centennial,centennial19780323031520,2014-03-17T17:20:46.860Z,"Kuril Islands",earthquake
+1978-03-23T03:14:21.000Z,44.358,149.118,7.4,7.5,ms,332,,,,centennial,centennial19780323031421,2014-03-17T17:20:45.882Z,"Kuril Islands",earthquake
+1978-03-23T00:31:01.000Z,44.292,148.948,27.9,7.1,ms,411,,,,centennial,centennial19780323003101,2014-03-17T17:20:44.884Z,"Kuril Islands",earthquake
+1978-03-07T02:48:48.000Z,31.945,137.46,442.2,7.1,ms,138,,,,centennial,centennial19780307024848,2013-07-09T19:07:48.000Z,"Izu Islands, Japan region",earthquake
+1978-02-09T21:35:20.000Z,-30.564,-177.517,89.3,7,ms,168,,,,centennial,centennial19780209213520,2013-07-09T19:07:48.000Z,"Kermadec Islands, New Zealand",earthquake
+1977-11-23T09:26:26.000Z,-31.08,-67.778,17.1,7.5,ms,241,,,,centennial,centennial19771123092626,2014-03-20T17:03:16.647Z,"San Juan, Argentina",earthquake
+1977-10-17T17:26:41.000Z,-27.991,173.211,32.3,7,ms,303,,,,centennial,centennial19771017172641,2013-07-09T19:07:48.000Z,"north of New Zealand",earthquake
+1977-10-10T11:53:51.000Z,-25.848,-175.284,8.3,7.3,ms,336,,,,centennial,centennial19771010115351,2013-07-09T19:07:48.000Z,"south of Tonga",earthquake
+1977-08-27T07:12:26.000Z,-8.137,125.326,44.4,7.1,ms,234,,,,centennial,centennial19770827071226,2014-03-17T21:57:16.186Z,"East Timor region",earthquake
+1977-08-26T19:50:00.000Z,-59.566,-20.512,11.6,7.2,ms,199,,,,centennial,centennial19770826195000,2013-07-09T19:07:48.000Z,"east of the South Sandwich Islands",earthquake
+1977-08-19T06:08:54.000Z,-11.125,118.38,20.9,8.3,ms,279,,,,centennial,centennial19770819060854,2014-03-17T17:19:15.904Z,"south of Sumbawa, Indonesia",earthquake
+1977-07-29T11:15:42.000Z,-8.038,155.584,1.5,7.2,ms,321,,,,centennial,centennial19770729111542,2014-03-17T21:55:47.775Z,"Solomon Islands",earthquake
+1977-06-22T12:08:34.000Z,-22.908,-175.749,64.2,8.1,ms,377,,,,centennial,centennial19770622120834,2014-03-17T17:18:59.717Z,"Tonga region",earthquake
+1977-04-21T04:24:12.000Z,-10.007,160.811,43.4,7.4,ms,319,,,,centennial,centennial19770421042412,2014-03-17T21:52:11.114Z,"Solomon Islands",earthquake
+1977-04-20T23:49:12.000Z,-9.571,160.652,16.4,7.1,ms,76,,,,centennial,centennial19770420234912,2014-03-17T21:51:44.102Z,"Solomon Islands",earthquake
+1977-04-20T23:42:54.000Z,-9.902,160.455,39.4,7.3,ms,244,,,,centennial,centennial19770420234254,2014-03-17T21:51:29.503Z,"Solomon Islands",earthquake
+1977-04-02T07:15:21.000Z,-16.772,-171.942,16,7.3,ms,303,,,,centennial,centennial19770402071521,2014-03-17T17:18:16.992Z,"Samoa Islands region",earthquake
+1977-03-18T21:43:54.000Z,16.749,122.273,42.5,7.3,ms,373,,,,centennial,centennial19770318214354,2014-03-17T21:48:25.629Z,"Luzon, Philippines",earthquake
+1977-03-04T19:21:55.000Z,45.777,26.704,88.6,7.5,ms,254,,,,centennial,centennial19770304192155,2014-03-03T19:33:28.010Z,"Romania",earthquake
+1976-11-30T00:40:58.000Z,-20.548,-68.874,74.4,7.6,ms,295,,,,centennial,centennial19761130004058,2014-03-17T21:43:21.516Z,"Tarapaca, Chile",earthquake
+1976-11-24T12:22:17.000Z,39.083,44.03,9.2,7,ms,236,,,,centennial,centennial19761124122217,2014-03-20T17:02:15.428Z,"Turkey-Iran border region",earthquake
+1976-08-17T04:19:28.000Z,7.259,122.959,20.4,7.1,ms,255,,,,centennial,centennial19760817041928,2014-03-17T21:35:59.965Z,"Mindanao, Philippines",earthquake
+1976-08-16T16:11:11.000Z,6.292,124.091,58.5,8,ms,250,,,,centennial,centennial19760816161111,2014-03-03T19:32:16.611Z,"Mindanao, Philippines",earthquake
+1976-07-28T10:45:35.000Z,39.722,118.36,17.9,7,ms,392,,,,centennial,centennial19760728104535,2014-03-17T21:34:00.927Z,"Hebei, China",earthquake
+1976-07-27T19:42:55.000Z,39.605,117.889,16.9,7.6,ms,359,,,,centennial,centennial19760727194255,2014-03-26T20:13:02.285Z,"Tianjin-Hebei border region, China",earthquake
+1976-07-11T20:41:51.000Z,7.374,-78.07,17.2,7.3,ms,329,,,,centennial,centennial19760711204151,2014-03-17T21:32:03.067Z,"Panama",earthquake
+1976-06-25T19:18:54.000Z,-4.524,140.104,2.8,7.2,ms,218,,,,centennial,centennial19760625191854,2014-03-20T16:59:36.409Z,"Papua, Indonesia",earthquake
+1976-06-20T20:53:12.000Z,3.437,96.254,15.3,7,ms,361,,,,centennial,centennial19760620205312,2014-03-17T21:30:10.817Z,"northern Sumatra, Indonesia",earthquake
+1976-06-03T16:44:40.000Z,-5.093,153.58,79.2,7.2,ms,260,,,,centennial,centennial19760603164440,2014-03-17T21:28:18.937Z,"New Ireland region, Papua New Guinea",earthquake
+1976-05-05T04:52:55.000Z,-29.845,-177.639,58.5,7.1,ms,314,,,,centennial,centennial19760505045255,2013-07-09T19:07:45.000Z,"Kermadec Islands, New Zealand",earthquake
+1976-03-24T04:46:05.000Z,-29.875,-177.695,28.4,7.1,ms,338,,,,centennial,centennial19760324044605,2013-07-09T19:07:45.000Z,"Kermadec Islands, New Zealand",earthquake
+1976-02-04T09:01:46.000Z,15.298,-89.145,12.7,7.5,ms,252,,,,centennial,centennial19760204090146,2014-03-20T16:55:07.896Z,"Guatemala",earthquake
+1976-01-21T10:05:25.000Z,44.78,149.144,37.6,7.2,ms,395,,,,centennial,centennial19760121100525,2014-03-17T17:14:39.947Z,"Kuril Islands",earthquake
+1976-01-14T16:47:37.000Z,-29.112,-177.396,35.8,7.9,ms,177,,,,centennial,centennial19760114164737,2014-03-17T17:14:35.160Z,"Kermadec Islands, New Zealand",earthquake
+1976-01-14T15:56:34.000Z,-29.212,-177.635,42.2,7.8,ms,129,,,,centennial,centennial19760114155634,2014-03-17T17:14:34.185Z,"Kermadec Islands, New Zealand",earthquake
+1976-01-01T01:29:39.000Z,-28.711,-177.426,49.2,7.3,ms,317,,,,centennial,centennial19760101012939,2013-07-09T19:07:45.000Z,"Kermadec Islands region",earthquake
+1975-12-26T15:56:38.000Z,-16.241,-172.364,15,7.7,mw,257,,,,centennial,centennial19751226155638,2014-03-17T17:14:24.792Z,"Samoa Islands region",earthquake
+1975-11-29T14:47:40.000Z,19.452,-155.034,2.1,7.5,mw,177,,,,centennial,centennial19751129144740,2014-04-01T23:19:39.706Z,"Hawaii region, Hawaii",earthquake
+1975-11-01T01:17:34.000Z,13.85,144.811,108,7.1,mb,219,,,,centennial,centennial19751101011734,2014-03-17T21:14:01.662Z,"Guam region",earthquake
+1975-10-31T08:28:04.000Z,12.537,125.999,51.1,7.5,mw,302,,,,centennial,centennial19751031082804,2014-03-17T21:13:46.732Z,"Samar, Philippines",earthquake
+1975-10-11T14:35:17.000Z,-24.906,-175.111,20.8,7.4,mw,294,,,,centennial,centennial19751011143517,2013-07-09T19:07:44.000Z,"south of Tonga",earthquake
+1975-10-01T03:30:01.000Z,-4.862,102.15,38.2,7,ms,301,,,,centennial,centennial19751001033001,2014-03-17T21:11:26.162Z,"southern Sumatra, Indonesia",earthquake
+1975-07-20T19:54:29.000Z,-7.083,155.212,45.3,7.3,mw,209,,,,centennial,centennial19750720195429,2014-03-17T21:07:39.503Z,"Solomon Islands",earthquake
+1975-07-20T14:37:42.000Z,-6.612,155.095,61.1,7.5,mb,221,,,,centennial,centennial19750720143742,2014-03-17T17:13:24.082Z,"Bougainville region, Papua New Guinea",earthquake
+1975-06-29T10:37:41.000Z,38.731,130.086,555.8,7.1,ms,369,,,,centennial,centennial19750629103741,2014-03-17T21:06:42.729Z,"Sea of Japan",earthquake
+1975-06-10T13:47:19.000Z,43.128,147.651,31.3,7,ms,231,,,,centennial,centennial19750610134719,2014-03-17T21:05:49.729Z,"Kuril Islands",earthquake
+1975-05-26T09:11:48.000Z,35.971,-17.646,4.2,7.9,mw,324,,,,centennial,centennial19750526091148,2014-03-17T17:12:55.773Z,"Azores-Cape St. Vincent Ridge",earthquake
+1975-05-10T14:27:43.000Z,-38.214,-73.001,29.5,7.7,mw,241,,,,centennial,centennial19750510142743,2014-03-17T21:03:46.489Z,"Araucania, Chile",earthquake
+1975-02-04T11:36:07.000Z,40.665,122.646,15.8,7,mw,313,,,,centennial,centennial19750204113607,2014-03-20T16:54:11.387Z,"Liaoning, China",earthquake
+1975-02-02T08:43:41.000Z,53.033,173.594,13.1,7.1,mw,311,,,,centennial,centennial19750202084341,2014-03-17T17:12:19.298Z,"Near Islands, Aleutian Islands, Alaska",earthquake
+1974-11-29T22:05:24.000Z,30.68,138.357,424,7.1,ms,320,,,,centennial,centennial19741129220524,2013-07-09T19:07:43.000Z,"Izu Islands, Japan region",earthquake
+1974-11-09T12:59:52.000Z,-12.525,-77.632,9.3,7.2,,,,,,atlas,atlas19741109125952,2014-04-07T19:56:05.724Z,"near the coast of central Peru",earthquake
+1974-11-09T12:59:51.000Z,-12.526,-77.633,7.2,7.1,mw,212,,,,centennial,centennial19741109125951,2014-03-17T20:54:07.199Z,"near the coast of central Peru",earthquake
+1974-10-23T06:14:54.000Z,-8.446,154.142,35.1,7.1,mw,203,,,,centennial,centennial19741023061454,2013-07-09T19:07:43.000Z,"D'Entrecasteaux Islands region",earthquake
+1974-10-03T14:21:34.000Z,-12.253,-77.523,35.8,8.1,mw,231,,,,centennial,centennial19741003142134,2014-04-07T19:55:25.804Z,"near the coast of central Peru",earthquake
+1974-08-18T10:44:10.000Z,-38.432,-73.462,8.7,7.1,ms,201,,,,centennial,centennial19740818104410,2014-03-17T20:50:26.118Z,"Araucania, Chile",earthquake
+1974-08-11T01:13:56.000Z,39.377,73.8,2.8,7.1,mw,292,,,,centennial,centennial19740811011356,2014-03-17T20:49:29.604Z,"Kyrgyzstan-Tajikistan-Xinjiang border region",earthquake
+1974-07-30T05:12:41.000Z,36.369,70.734,210.2,7.1,mb,315,,,,centennial,centennial19740730051241,2014-03-17T20:49:07.812Z,"Hindu Kush region, Afghanistan",earthquake
+1974-07-13T01:18:23.000Z,7.737,-77.631,3.8,7.3,,,,,,atlas,atlas19740713011823,2014-04-07T19:54:50.613Z,"Panama-Colombia border region",earthquake
+1974-07-13T01:18:22.000Z,7.737,-77.63,3,7.2,mw,306,,,,centennial,centennial19740713011822,2014-03-17T20:48:29.870Z,"Panama-Colombia border region",earthquake
+1974-07-04T19:30:42.000Z,45.185,93.938,15.8,7.3,uk,274,,,,centennial,centennial19740704193042,2014-03-17T20:47:40.409Z,"western Mongolia",earthquake
+1974-07-02T23:26:23.000Z,-29.152,-175.817,3.7,7.4,mw,315,,,,centennial,centennial19740702232623,2013-07-09T19:07:42.000Z,"Kermadec Islands region",earthquake
+1974-05-08T23:33:28.000Z,34.571,138.77,11.9,7,uk,307,,,,centennial,centennial19740508233328,2014-04-07T19:54:00.952Z,"near the south coast of Honshu, Japan",earthquake
+1974-03-23T14:28:34.000Z,-24.02,179.955,519.8,7,ms,319,,,,centennial,centennial19740323142834,2013-07-09T19:07:42.000Z,"south of the Fiji Islands",earthquake
+1974-02-01T03:12:35.000Z,-7.212,155.735,34.6,7.4,mw,213,,,,centennial,centennial19740201031235,2014-03-17T20:41:05.408Z,"Solomon Islands",earthquake
+1974-01-31T23:30:07.000Z,-7.404,155.946,35.8,7.3,mw,246,,,,centennial,centennial19740131233007,2014-03-17T20:40:22.256Z,"Solomon Islands",earthquake
+1974-01-10T08:51:17.000Z,-14.526,166.959,53.6,7.1,mw,266,,,,centennial,centennial19740110085117,2014-03-17T20:39:02.701Z,"Vanuatu",earthquake
+1974-01-02T10:42:33.000Z,-22.448,-68.324,120.7,7.1,mb,259,,,,centennial,centennial19740102104233,2014-03-17T20:38:24.192Z,"Antofagasta, Chile",earthquake
+1973-12-28T13:41:47.000Z,-14.509,166.776,23.5,7.3,mw,169,,,,centennial,centennial19731228134147,2014-03-17T20:37:44.050Z,"Vanuatu",earthquake
+1973-10-06T15:07:37.000Z,-60.95,-21.628,15,7.5,ms,160,,,,centennial,centennial19731006150737,2013-07-09T19:07:41.000Z,"east of the South Sandwich Islands",earthquake
+1973-09-29T00:44:01.000Z,41.906,130.976,569.9,7.8,ms,360,,,,centennial,centennial19730929004401,2013-07-09T19:07:41.000Z,"North Korea",earthquake
+1973-08-28T09:50:41.000Z,18.233,-96.607,80.5,7.3,mb,266,,,,centennial,centennial19730828095041,2014-03-17T20:31:33.995Z,"Oaxaca, Mexico",earthquake
+1973-06-24T02:43:25.000Z,43.358,146.424,30.5,7.3,mw,336,,,,centennial,centennial19730624024325,2014-03-17T20:27:05.880Z,"Kuril Islands",earthquake
+1973-06-17T03:55:03.000Z,43.223,145.741,43.6,7.8,mw,341,,,,centennial,centennial19730617035503,2014-04-07T19:52:22.622Z,"Hokkaido, Japan region",earthquake
+1973-03-17T08:30:54.000Z,13.4,122.794,45,7,ms,231,,,,centennial,centennial19730317083054,2014-03-17T20:23:43.271Z,"Luzon, Philippines",earthquake
+1973-02-28T06:37:55.000Z,50.484,156.624,59.9,7.1,mw,301,,,,centennial,centennial19730228063755,2014-03-17T17:07:31.204Z,"Kuril Islands",earthquake
+1973-02-06T10:37:08.000Z,31.361,100.503,5.9,7.4,mw,233,,,,centennial,centennial19730206103708,2014-03-20T16:53:31.615Z,"western Sichuan, China",earthquake
+1973-01-30T21:01:13.000Z,18.455,-102.961,37.3,7.6,mw,210,,,,centennial,centennial19730130210113,2014-04-07T19:51:19.527Z,"Michoacan, Mexico",earthquake
+1972-12-04T10:16:13.000Z,33.332,140.713,70.8,7.3,mb,347,,,,centennial,centennial19721204101613,2013-07-09T19:07:40.000Z,"Izu Islands, Japan region",earthquake
+1972-12-02T00:19:54.000Z,6.461,126.654,82.7,7.4,mb,244,,,,centennial,centennial19721202001954,2014-03-17T20:18:28.035Z,"Mindanao, Philippines",earthquake
+1972-11-02T19:55:24.000Z,-20.035,169.007,38.6,7,ms,222,,,,centennial,centennial19721102195524,2014-03-17T20:17:08.761Z,"Vanuatu",earthquake
+1972-08-17T23:44:08.000Z,-6.003,152.929,15.4,7.1,ms,264,,,,centennial,centennial19720817234408,2013-07-09T19:07:40.000Z,"New Britain region, Papua New Guinea",earthquake
+1972-07-30T21:45:13.000Z,56.695,-136.096,7.7,7.6,mw,251,,,,centennial,centennial19720730214513,2013-07-09T19:07:40.000Z,"off the coast of Southeastern Alaska",earthquake
+1972-06-11T16:41:03.000Z,3.861,124.23,329.5,7.8,ms,252,,,,centennial,centennial19720611164103,2013-07-09T19:07:39.000Z,"Celebes Sea",earthquake
+1972-05-22T20:45:57.000Z,-17.83,-175.014,224.6,7.2,mb,256,,,,centennial,centennial19720522204557,2014-03-17T20:05:01.815Z,"Tonga",earthquake
+1972-04-28T23:32:11.000Z,-5.139,154.227,408.8,7.2,ms,246,,,,centennial,centennial19720428233211,2014-03-17T20:03:27.627Z,"Bougainville region, Papua New Guinea",earthquake
+1972-04-25T19:30:08.000Z,13.388,120.312,29.7,7.2,mw,300,,,,centennial,centennial19720425193008,2014-03-17T20:03:09.545Z,"Mindoro, Philippines",earthquake
+1972-03-30T05:34:52.000Z,-25.744,179.632,496.2,7.3,ms,284,,,,centennial,centennial19720330053452,2013-07-09T19:07:39.000Z,"south of the Fiji Islands",earthquake
+1972-02-29T09:23:01.000Z,33.375,140.881,58.7,7.5,mw,316,,,,centennial,centennial19720229092301,2013-07-09T19:07:39.000Z,"Izu Islands, Japan region",earthquake
+1972-02-14T23:29:53.000Z,-11.432,166.408,106.4,7.3,mb,201,,,,centennial,centennial19720214232953,2013-07-09T19:07:39.000Z,"Santa Cruz Islands",earthquake
+1972-01-25T03:41:22.000Z,23.037,122.117,12.2,7,ms,226,,,,centennial,centennial19720125034122,2014-03-17T20:00:30.097Z,"Taiwan region",earthquake
+1972-01-25T02:06:21.000Z,22.55,122.325,10,7.5,mw,292,,,,centennial,centennial19720125020621,2014-03-17T20:00:17.652Z,"Taiwan region",earthquake
+1972-01-23T21:17:55.000Z,-13.231,166.371,51.5,7.1,ms,182,,,,centennial,centennial19720123211755,2013-07-09T19:07:39.000Z,"Vanuatu",earthquake
+1971-12-15T08:29:55.000Z,56.023,163.173,21.8,7.8,mw,306,,,,centennial,centennial19711215082955,2013-07-09T19:07:39.000Z,"near the east coast of the Kamchatka Peninsula, Russia",earthquake
+1971-11-24T19:35:31.000Z,52.811,159.174,116.2,7.4,mb,301,,,,centennial,centennial19711124193531,2013-07-09T19:07:39.000Z,"off the east coast of the Kamchatka Peninsula, Russia",earthquake
+1971-11-21T05:57:12.000Z,-11.881,166.624,114.7,7.1,mb,228,,,,centennial,centennial19711121055712,2014-03-17T19:56:35.981Z,"Santa Cruz Islands",earthquake
+1971-09-05T18:35:28.000Z,46.557,141.189,17.4,7.3,mw,313,,,,centennial,centennial19710905183528,2014-03-17T19:53:43.609Z,"Sakhalin, Russia",earthquake
+1971-08-05T01:58:51.000Z,-0.929,-22.085,22.1,7,ms,245,,,,centennial,centennial19710805015851,2013-07-09T19:07:38.000Z,"central Mid-Atlantic Ridge",earthquake
+1971-08-02T07:24:58.000Z,41.378,143.456,54,7.2,mw,318,,,,centennial,centennial19710802072458,2014-03-17T19:52:19.453Z,"Hokkaido, Japan region",earthquake
+1971-07-27T02:02:46.000Z,-2.827,-77.36,93.6,7.3,mb,244,,,,centennial,centennial19710727020246,2014-03-17T19:51:57.863Z,"Peru-Ecuador border region",earthquake
+1971-07-26T01:23:22.000Z,-4.889,153.182,37,8.1,mw,212,,,,centennial,centennial19710726012322,2013-07-09T19:07:38.000Z,"New Ireland region, Papua New Guinea",earthquake
+1971-07-19T00:14:45.000Z,-5.751,153.861,30.9,7.1,ms,221,,,,centennial,centennial19710719001445,2014-03-17T19:49:39.072Z,"New Ireland region, Papua New Guinea",earthquake
+1971-07-14T07:41:13.000Z,-5.604,153.768,55.7,7.1,mw,58,,,,centennial,centennial19710714074113,2014-03-17T19:48:57.142Z,"New Ireland region, Papua New Guinea",earthquake
+1971-07-14T06:11:30.000Z,-5.519,153.904,44.5,8,mw,200,,,,centennial,centennial19710714061130,2014-03-17T19:48:39.309Z,"New Ireland region, Papua New Guinea",earthquake
+1971-07-09T03:03:19.000Z,-32.558,-71.085,59,7.8,mw,189,,,,centennial,centennial19710709030319,2014-04-07T19:50:52.428Z,"Valparaiso, Chile",earthquake
+1971-06-17T21:00:41.000Z,-25.423,-69.051,90.3,7.2,mb,208,,,,centennial,centennial19710617210041,2014-03-17T19:45:50.576Z,"Antofagasta, Chile",earthquake
+1971-05-02T06:08:25.000Z,51.433,-177.246,19.5,7.1,ms,315,,,,centennial,centennial19710502060825,2013-07-09T19:07:38.000Z,"Andreanof Islands, Aleutian Islands, Alaska",earthquake
+1971-02-08T21:04:20.000Z,-63.419,-61.412,14.7,7,ms,198,,,,centennial,centennial19710208210420,2013-07-09T19:07:37.000Z,"South Shetland Islands",earthquake
+1971-02-04T15:33:33.000Z,0.551,98.665,59.9,7.1,ms,314,,,,centennial,centennial19710204153333,2014-03-17T19:33:16.806Z,"Nias region, Indonesia",earthquake
+1971-01-10T07:17:07.000Z,-3.233,139.743,55.2,7.7,mw,211,,,,centennial,centennial19710110071707,2014-03-17T19:27:18.032Z,"Papua, Indonesia",earthquake
+1971-01-03T17:35:41.000Z,-55.639,-2.466,27,7.1,ms,89,,,,centennial,centennial19710103173541,2013-07-09T19:07:37.000Z,"southern Mid-Atlantic Ridge",earthquake
+1970-12-10T04:34:39.000Z,-4.079,-80.66,19.5,7.1,mw,255,,,,centennial,centennial19701210043439,2014-03-17T19:24:12.996Z,"Peru-Ecuador border region",earthquake
+1970-12-10T04:34:38.000Z,-3.989,-80.724,25,7.6,,,,,,atlas,atlas19701210043438,2014-04-07T19:50:12.718Z,"Peru-Ecuador border region",earthquake
+1970-12-02T15:54:17.000Z,-11.005,163.493,2.7,7,ms,135,,,,centennial,centennial19701202155417,2013-07-09T19:07:37.000Z,"Solomon Islands",earthquake
+1970-10-31T17:53:07.000Z,-4.907,145.469,8.3,7.1,uk,174,,,,centennial,centennial19701031175307,2014-03-17T19:20:33.448Z,"near the north coast of New Guinea, Papua New Guinea",earthquake
+1970-08-30T17:46:10.000Z,52.349,151.616,649.5,7.3,ms,337,,,,centennial,centennial19700830174610,2013-07-09T19:07:37.000Z,"Sea of Okhotsk",earthquake
+1970-08-11T10:22:23.000Z,-14.097,166.57,39.7,7.5,ms,195,,,,centennial,centennial19700811102223,2014-03-17T19:17:38.507Z,"Vanuatu",earthquake
+1970-07-31T17:08:06.000Z,-1.486,-72.556,644.8,7.5,mb,256,,,,centennial,centennial19700731170806,2013-07-09T19:07:37.000Z,"Colombia",earthquake
+1970-07-25T22:41:13.000Z,32.245,131.679,45.1,7,mw,265,,,,centennial,centennial19700725224113,2014-03-17T19:15:45.095Z,"Kyushu, Japan",earthquake
+1970-06-15T11:14:50.000Z,-54.369,-64.11,3.7,7,ms,160,,,,centennial,centennial19700615111450,2013-07-09T19:07:37.000Z,"Tierra del Fuego, Argentina region",earthquake
+1970-06-11T16:46:33.000Z,-59.419,159.225,15,7.3,mw,104,,,,centennial,centennial19700611164633,2013-07-09T19:07:37.000Z,"Macquarie Island region",earthquake
+1970-05-31T20:23:32.000Z,-9.248,-78.842,73.2,7.5,mb,229,,,,centennial,centennial19700531202332,2014-03-03T19:15:30.558Z,"near the coast of northern Peru",earthquake
+1970-05-27T12:05:09.000Z,27.195,140.228,403.2,7.1,ms,297,,,,centennial,centennial19700527120509,2013-07-09T19:07:36.000Z,"Bonin Islands, Japan region",earthquake
+1970-04-29T14:01:21.000Z,14.458,-92.764,50,7.3,mw,127,,,,centennial,centennial19700429140121,2014-03-17T19:11:35.715Z,"offshore Chiapas, Mexico",earthquake
+1970-04-20T10:39:13.000Z,-18.805,169.374,246,7,mb,180,,,,centennial,centennial19700420103913,2014-03-17T19:11:08.724Z,"Vanuatu",earthquake
+1970-04-12T04:01:44.000Z,15.086,122.01,15.6,7,ms,243,,,,centennial,centennial19700412040144,2014-03-17T19:10:16.566Z,"Philippine Islands region",earthquake
+1970-04-07T05:34:06.000Z,15.771,121.659,29.7,7.2,mw,277,,,,centennial,centennial19700407053406,2014-03-17T19:09:22.859Z,"Luzon, Philippines",earthquake
+1970-03-30T16:46:45.000Z,6.763,126.617,63.1,7.1,mb,210,,,,centennial,centennial19700330164645,2014-03-17T19:09:06.681Z,"Mindanao, Philippines",earthquake
+1970-03-28T21:02:25.000Z,39.174,29.545,24.4,7.2,uk,190,,,,centennial,centennial19700328210225,2014-04-07T19:49:33.155Z,"western Turkey",earthquake
+1970-01-20T07:19:48.000Z,-25.865,-177.173,45,7.2,mb,258,,,,centennial,centennial19700120071948,2013-07-09T19:07:36.000Z,"south of the Fiji Islands",earthquake
+1970-01-10T12:07:08.000Z,6.786,126.687,59.7,7.3,ms,238,,,,centennial,centennial19700110120708,2014-03-17T19:04:37.745Z,"Mindanao, Philippines",earthquake
+1970-01-08T17:12:42.000Z,-34.884,178.851,207.6,7,mb,220,,,,centennial,centennial19700108171242,2013-07-09T19:07:36.000Z,"south of the Kermadec Islands",earthquake
+1970-01-04T17:00:40.000Z,24.148,102.462,14.1,7.2,mw,208,,,,centennial,centennial19700104170040,2014-03-20T16:48:38.908Z,"Yunnan, China",earthquake
+1969-12-25T21:32:29.000Z,15.727,-59.648,11.2,7.2,mw,261,,,,centennial,centennial19691225213229,2013-07-09T19:07:36.000Z,"east of Dominica, Leeward Islands",earthquake
+1969-11-22T23:09:35.000Z,57.729,163.595,9.2,7.8,mw,293,,,,centennial,centennial19691122230935,2013-07-09T19:07:36.000Z,"near the east coast of the Kamchatka Peninsula, Russia",earthquake
+1969-11-21T02:05:35.000Z,1.972,94.573,10.3,7.6,mw,288,,,,centennial,centennial19691121020535,2013-07-09T19:07:36.000Z,"off the west coast of northern Sumatra",earthquake
+1969-08-17T20:14:59.000Z,24.844,-109.686,32,7,uk,53,,,,centennial,centennial19690817201459,2013-07-09T19:07:35.000Z,"Gulf of California",earthquake
+1969-08-11T23:52:56.000Z,1.825,126.341,27.4,7.1,mw,145,,,,centennial,centennial19690811235256,2013-07-09T19:07:35.000Z,"Molucca Sea",earthquake
+1969-08-11T21:27:37.000Z,43.477,147.815,45.6,8.2,mw,112,,,,centennial,centennial19690811212737,2013-07-09T19:07:35.000Z,"Kuril Islands",earthquake
+1969-08-05T02:13:10.000Z,1.244,126.192,26.7,7,ms,192,,,,centennial,centennial19690805021310,2013-07-09T19:07:35.000Z,"Molucca Sea",earthquake
+1969-07-18T05:24:46.000Z,38.418,119.452,10.9,7.2,mw,269,,,,centennial,centennial19690718052446,2013-07-09T19:07:35.000Z,"Bo Hai, China",earthquake
+1969-05-14T19:32:55.000Z,51.279,-179.855,17,7,ms,294,,,,centennial,centennial19690514193255,2013-07-09T19:07:35.000Z,"Andreanof Islands, Aleutian Islands, Alaska",earthquake
+1969-02-28T02:40:33.000Z,35.918,-10.578,21.3,7.8,mw,250,,,,centennial,centennial19690228024033,2013-07-09T19:07:35.000Z,"Azores-Cape St. Vincent Ridge",earthquake
+1969-02-11T22:16:12.000Z,-6.788,126.685,426.8,7.2,ms,139,,,,centennial,centennial19690211221612,2013-07-09T19:07:35.000Z,"Banda Sea",earthquake
+1969-02-10T22:58:05.000Z,-22.798,178.793,659.2,7.2,ms,207,,,,centennial,centennial19690210225805,2013-07-09T19:07:35.000Z,"south of the Fiji Islands",earthquake
+1969-01-30T10:29:42.000Z,4.764,127.436,73.8,7.1,mb,185,,,,centennial,centennial19690130102942,2013-07-09T19:07:35.000Z,"Kepulauan Talaud, Indonesia",earthquake
+1969-01-19T07:02:08.000Z,44.889,143.205,237.5,7.3,mb,301,,,,centennial,centennial19690119070208,2013-07-09T19:07:35.000Z,"Hokkaido, Japan region",earthquake
+1969-01-05T13:26:43.000Z,-7.991,158.968,62.8,7.3,mb,226,,,,centennial,centennial19690105132643,2013-07-09T19:07:35.000Z,"Solomon Islands",earthquake
+1968-10-23T21:04:42.000Z,-3.373,143.319,9.7,7.1,mw,234,,,,centennial,centennial19681023210442,2013-07-09T19:07:34.000Z,"near the north coast of New Guinea, Papua New Guinea",earthquake
+1968-10-07T19:20:21.000Z,26.29,140.685,518.9,7.3,ms,270,,,,centennial,centennial19681007192021,2013-07-09T19:07:34.000Z,"Bonin Islands, Japan region",earthquake
+1968-08-31T10:47:40.000Z,34.037,58.962,11.8,7.2,mw,146,,,,centennial,centennial19680831104740,2014-04-07T19:47:04.282Z,"northeastern Iran",earthquake
+1968-08-18T18:38:31.000Z,-10.205,159.956,542.9,7.3,ms,203,,,,centennial,centennial19680818183831,2013-07-09T19:07:34.000Z,"Solomon Islands",earthquake
+1968-08-14T22:14:20.000Z,0.064,119.69,17.3,7.3,mw,201,,,,centennial,centennial19680814221420,2013-07-09T19:07:34.000Z,"Minahasa, Sulawesi, Indonesia",earthquake
+1968-08-10T02:07:04.000Z,1.422,126.259,19.3,7.6,mw,196,,,,centennial,centennial19680810020704,2013-07-09T19:07:34.000Z,"Molucca Sea",earthquake
+1968-08-03T04:54:35.000Z,25.649,128.469,29.2,7.1,mw,272,,,,centennial,centennial19680803045435,2013-07-09T19:07:34.000Z,"Ryukyu Islands, Japan",earthquake
+1968-08-02T14:06:46.000Z,16.492,-97.77,49.2,7.3,mw,215,,,,centennial,centennial19680802140646,2013-07-09T19:07:34.000Z,"Oaxaca, Mexico",earthquake
+1968-08-01T20:19:24.000Z,16.383,122.078,52.1,7.7,mw,238,,,,centennial,centennial19680801201924,2013-07-09T19:07:34.000Z,"Luzon, Philippines",earthquake
+1968-07-25T07:23:09.000Z,-30.81,-178.144,64.7,7.1,mb,271,,,,centennial,centennial19680725072309,2013-07-09T19:07:34.000Z,"Kermadec Islands, New Zealand",earthquake
+1968-06-12T13:41:51.000Z,39.501,142.892,31.4,7.1,mw,245,,,,centennial,centennial19680612134151,2013-07-09T19:07:34.000Z,"near the east coast of Honshu, Japan",earthquake
+1968-05-28T13:27:20.000Z,-2.92,139.409,63.8,7.2,mb,185,,,,centennial,centennial19680528132720,2013-07-09T19:07:34.000Z,"near the north coast of Papua, Indonesia",earthquake
+1968-05-23T17:24:20.000Z,-41.743,172.123,46.8,7.2,mw,147,,,,centennial,centennial19680523172420,2013-07-09T19:07:34.000Z,"South Island of New Zealand",earthquake
+1968-05-20T21:09:45.000Z,44.796,150.357,28.1,7.1,mw,252,,,,centennial,centennial19680520210945,2013-07-09T19:07:34.000Z,"east of the Kuril Islands",earthquake
+1968-05-16T23:04:52.000Z,39.881,143.221,9.2,7,uk,253,,,,centennial,centennial19680516230452,2013-07-09T19:07:33.000Z,"off the east coast of Honshu, Japan",earthquake
+1968-05-16T10:39:00.000Z,41.595,142.788,11.3,7.8,mw,291,,,,centennial,centennial19680516103900,2013-07-09T19:07:33.000Z,"Hokkaido, Japan region",earthquake
+1968-05-16T00:49:00.000Z,40.901,143.346,26,8.2,mw,231,,,,centennial,centennial19680516004900,2013-07-09T19:07:33.000Z,"off the east coast of Honshu, Japan",earthquake
+1968-04-09T02:29:01.000Z,33.157,-116.194,15,7,ms,194,,,,centennial,centennial19680409022901,2014-04-07T19:46:30.298Z,"Southern California",earthquake
+1968-04-01T00:42:04.000Z,32.484,132.193,29.4,7.5,mw,228,,,,centennial,centennial19680401004204,2013-07-09T19:07:33.000Z,"Shikoku, Japan",earthquake
+1968-02-26T10:50:17.000Z,22.762,121.414,16.5,7.2,mw,240,,,,centennial,centennial19680226105017,2013-07-09T19:07:33.000Z,"Taiwan region",earthquake
+1968-02-19T22:45:43.000Z,39.371,24.942,8.9,7.2,mw,185,,,,centennial,centennial19680219224543,2013-07-09T19:07:33.000Z,"Aegean Sea",earthquake
+1968-02-12T05:44:43.000Z,-5.503,153.401,23.4,7.4,mw,206,,,,centennial,centennial19680212054443,2013-07-09T19:07:33.000Z,"New Ireland region, Papua New Guinea",earthquake
+1968-01-29T10:19:07.000Z,43.591,146.699,39.2,7.3,mw,291,,,,centennial,centennial19680129101907,2013-07-09T19:07:33.000Z,"Kuril Islands",earthquake
+1967-12-27T09:17:54.000Z,-21.211,-68.184,116.3,7,mb,196,,,,centennial,centennial19671227091754,2013-07-09T19:07:33.000Z,"Potosi, Bolivia",earthquake
+1967-12-25T01:23:34.000Z,-5.289,153.762,51.7,7.2,mw,243,,,,centennial,centennial19671225012334,2013-07-09T19:07:33.000Z,"New Ireland region, Papua New Guinea",earthquake
+1967-12-21T02:25:24.000Z,-21.861,-69.947,44.7,7.4,mw,190,,,,centennial,centennial19671221022524,2013-07-09T19:07:33.000Z,"Antofagasta, Chile",earthquake
+1967-10-25T00:59:24.000Z,24.463,122.218,67.2,7,mb,263,,,,centennial,centennial19671025005924,2013-07-09T19:07:33.000Z,"Taiwan region",earthquake
+1967-10-09T17:21:49.000Z,-21.295,-179.063,636.4,7.3,ms,314,,,,centennial,centennial19671009172149,2013-07-09T19:07:33.000Z,"Fiji region",earthquake
+1967-07-22T16:56:55.000Z,40.629,30.74,4.4,7.4,mw,223,,,,centennial,centennial19670722165655,2014-04-07T19:45:29.008Z,"western Turkey",earthquake
+1967-03-13T16:06:53.000Z,-40.192,-74.84,23.6,7.3,uk,121,,,,centennial,centennial19670313160653,2013-07-09T19:07:32.000Z,"offshore Los Lagos, Chile",earthquake
+1967-02-15T16:11:12.000Z,-9.12,-71.326,600.9,7,ms,237,,,,centennial,centennial19670215161112,2013-07-09T19:07:32.000Z,"Peru-Brazil border region",earthquake
+1967-02-09T15:24:47.000Z,2.89,-74.801,41.4,7.2,mw,262,,,,centennial,centennial19670209152447,2014-04-07T19:44:40.135Z,"Colombia",earthquake
+1967-01-05T00:14:39.000Z,48.201,102.921,14.3,7,mw,242,,,,centennial,centennial19670105001439,2013-07-09T19:07:32.000Z,"central Mongolia",earthquake
+1966-12-31T22:15:16.000Z,-12.334,166.683,23.8,7.2,mw,77,,,,centennial,centennial19661231221516,2013-07-09T19:07:32.000Z,"Santa Cruz Islands",earthquake
+1966-12-31T18:23:11.000Z,-11.892,166.443,82.7,7.3,mb,139,,,,centennial,centennial19661231182311,2013-07-09T19:07:32.000Z,"Santa Cruz Islands",earthquake
+1966-12-28T08:18:07.000Z,-25.502,-70.656,30,7.7,mw,186,,,,centennial,centennial19661228081807,2013-07-09T19:07:32.000Z,"near the coast of Antofagasta, Chile",earthquake
+1966-10-17T21:41:57.000Z,-10.799,-78.68,34.3,8.2,mw,196,,,,centennial,centennial19661017214157,2013-07-09T19:07:32.000Z,"near the coast of central Peru",earthquake
+1966-09-08T21:15:52.000Z,2.353,128.385,81,7.2,mb,195,,,,centennial,centennial19660908211552,2013-07-09T19:07:32.000Z,"Halmahera, Indonesia",earthquake
+1966-07-04T18:33:38.000Z,51.823,179.875,15,7.3,mw,232,,,,centennial,centennial19660704183338,2013-07-09T19:07:31.000Z,"Rat Islands, Aleutian Islands, Alaska",earthquake
+1966-06-22T20:29:06.000Z,-7.256,124.646,526.8,7,ms,182,,,,centennial,centennial19660622202906,2013-07-09T19:07:31.000Z,"Banda Sea",earthquake
+1966-06-15T01:32:53.000Z,-10.11,161.029,13,7.3,mw,127,,,,centennial,centennial19660615013253,2013-07-09T19:07:31.000Z,"Solomon Islands",earthquake
+1966-06-15T00:59:42.000Z,-10.347,160.879,2.8,7.1,mw,188,,,,centennial,centennial19660615005942,2013-07-09T19:07:31.000Z,"Solomon Islands",earthquake
+1966-03-20T01:42:51.000Z,0.845,29.867,15,7,uk,207,,,,centennial,centennial19660320014251,2013-07-09T19:07:31.000Z,"Lake Edward region, Congo-Uganda",earthquake
+1966-03-12T16:31:19.000Z,24.308,122.694,27.5,7.4,mw,232,,,,centennial,centennial19660312163119,2013-07-09T19:07:31.000Z,"Taiwan region",earthquake
+1965-09-12T22:02:35.000Z,-6.477,70.745,29.4,7,uk,199,,,,centennial,centennial19650912220235,2013-07-09T19:07:31.000Z,"Chagos Archipelago region",earthquake
+1965-08-23T19:46:01.000Z,16.176,-95.846,10.5,7.4,mw,175,,,,centennial,centennial19650823194601,2013-07-09T19:07:30.000Z,"Oaxaca, Mexico",earthquake
+1965-08-13T12:40:08.000Z,-15.811,166.962,20.6,7,ms,85,,,,centennial,centennial19650813124008,2013-07-09T19:07:30.000Z,"Vanuatu",earthquake
+1965-08-11T22:31:52.000Z,-15.797,167.259,46.2,7.6,mw,172,,,,centennial,centennial19650811223152,2013-07-09T19:07:30.000Z,"Vanuatu",earthquake
+1965-08-11T03:40:57.000Z,-15.47,166.985,17.4,7.2,mw,157,,,,centennial,centennial19650811034057,2013-07-09T19:07:30.000Z,"Vanuatu",earthquake
+1965-06-11T03:33:46.000Z,44.612,148.936,46.2,7.1,mw,231,,,,centennial,centennial19650611033346,2013-07-09T19:07:30.000Z,"Kuril Islands",earthquake
+1965-05-20T00:40:12.000Z,-14.643,167.504,9.7,7.6,mw,154,,,,centennial,centennial19650520004012,2013-07-09T19:07:30.000Z,"Vanuatu",earthquake
+1965-03-30T02:27:04.000Z,50.314,177.934,18.9,7.7,mw,257,,,,centennial,centennial19650330022704,2013-07-09T19:07:30.000Z,"Rat Islands, Aleutian Islands, Alaska",earthquake
+1965-03-28T16:33:16.000Z,-32.49,-71.21,71,7.4,mb,182,,,,centennial,centennial19650328163316,2013-07-09T19:07:30.000Z,"Valparaiso, Chile",earthquake
+1965-03-14T15:53:07.000Z,36.401,70.713,209.5,7.5,mb,194,,,,centennial,centennial19650314155307,2013-07-09T19:07:30.000Z,"Hindu Kush region, Afghanistan",earthquake
+1965-02-04T08:40:38.000Z,51.396,179.561,7.9,7.8,mw,171,,,,centennial,centennial19650204084038,2013-07-09T19:07:30.000Z,"Rat Islands, Aleutian Islands, Alaska",earthquake
+1965-02-04T05:01:21.000Z,51.21,178.498,28.8,8.7,mw,194,,,,centennial,centennial19650204050121,2013-07-09T19:07:30.000Z,"Rat Islands, Aleutian Islands, Alaska",earthquake
+1965-01-24T00:11:17.000Z,-2.453,125.963,28.6,8.2,mw,143,,,,centennial,centennial19650124001117,2013-07-09T19:07:29.000Z,"Kepulauan Sula, Indonesia",earthquake
+1964-11-17T08:15:41.000Z,-5.751,150.729,50.5,7.1,mw,170,,,,centennial,centennial19641117081541,2013-07-09T19:07:29.000Z,"New Britain region, Papua New Guinea",earthquake
+1964-10-18T12:32:25.000Z,-7.183,123.808,581.7,7,ms,137,,,,centennial,centennial19641018123225,2013-07-09T19:07:29.000Z,"Banda Sea",earthquake
+1964-08-13T00:31:15.000Z,-5.492,154.277,385.7,7,ms,152,,,,centennial,centennial19640813003115,2013-07-09T19:07:29.000Z,"Bougainville region, Papua New Guinea",earthquake
+1964-07-09T16:39:51.000Z,-15.579,167.747,130.5,7.4,mb,154,,,,centennial,centennial19640709163951,2013-07-09T19:07:29.000Z,"Vanuatu",earthquake
+1964-07-08T11:55:44.000Z,-5.596,129.742,206.8,7,mb,124,,,,centennial,centennial19640708115544,2013-07-09T19:07:29.000Z,"Banda Sea",earthquake
+1964-07-06T07:22:12.000Z,18.193,-100.509,92.4,7.2,mb,158,,,,centennial,centennial19640706072212,2013-07-09T19:07:29.000Z,"Guerrero, Mexico",earthquake
+1964-06-23T01:26:38.000Z,43.271,146.151,75,7.2,mb,203,,,,centennial,centennial19640623012638,2013-07-09T19:07:29.000Z,"Kuril Islands",earthquake
+1964-06-16T04:01:40.000Z,38.438,139.225,10.2,7.6,mw,186,,,,centennial,centennial19640616040140,2013-07-09T19:07:29.000Z,"near the west coast of Honshu, Japan",earthquake
+1964-05-26T10:59:12.000Z,-56.245,-27.631,116.4,7.5,mb,79,,,,centennial,centennial19640526105912,2013-07-09T19:07:29.000Z,"South Sandwich Islands region",earthquake
+1964-04-23T03:32:48.000Z,-5.421,133.937,5.9,7.1,mw,134,,,,centennial,centennial19640423033248,2013-07-09T19:07:29.000Z,"Kepulauan Kai, Indonesia",earthquake
+1964-03-28T03:36:12.000Z,61.019,-147.626,6.3,9.2,mw,174,,,,centennial,centennial19640328033612,2014-04-01T23:00:34.642Z,"Southern Alaska",earthquake
+1964-02-06T13:07:22.000Z,55.641,-156.07,3.7,7.1,mw,191,,,,centennial,centennial19640206130722,2013-07-09T19:07:28.000Z,"south of Alaska",earthquake
+1963-12-18T00:30:02.000Z,-24.777,-176.51,35,7.7,mw,263,,,,centennial,centennial19631218003002,2013-07-09T19:07:28.000Z,"south of the Fiji Islands",earthquake
+1963-12-15T19:34:48.000Z,-4.768,108.056,666.9,7.1,ms,251,,,,centennial,centennial19631215193448,2013-07-09T19:07:28.000Z,"Java Sea",earthquake
+1963-11-09T21:15:30.000Z,-8.983,-71.539,577.1,7.7,ms,166,,,,centennial,centennial19631109211530,2013-07-09T19:07:28.000Z,"Acre, Brazil",earthquake
+1963-11-04T01:17:05.000Z,-6.735,129.685,35,7.8,mb,101,,,,centennial,centennial19631104011705,2013-07-09T19:07:28.000Z,"Banda Sea",earthquake
+1963-10-20T00:53:10.000Z,44.764,150.567,27,7.9,mw,166,,,,centennial,centennial19631020005310,2013-07-09T19:07:28.000Z,"east of the Kuril Islands",earthquake
+1963-10-13T05:17:55.000Z,44.763,149.801,26,8.6,mw,192,,,,centennial,centennial19631013051755,2013-07-09T19:07:28.000Z,"Kuril Islands",earthquake
+1963-10-12T11:27:00.000Z,44.429,149.273,48.2,7.1,mw,210,,,,centennial,centennial19631012112700,2013-07-09T19:07:28.000Z,"Kuril Islands",earthquake
+1963-09-17T19:20:11.000Z,-10.283,165.414,29.5,7.5,mw,224,,,,centennial,centennial19630917192011,2013-07-09T19:07:28.000Z,"Santa Cruz Islands",earthquake
+1963-09-15T00:46:54.000Z,-10.473,165.764,35,7.5,mw,226,,,,centennial,centennial19630915004654,2013-07-09T19:07:28.000Z,"Santa Cruz Islands",earthquake
+1963-08-25T12:18:13.000Z,-17.7,-178.537,570.9,7.1,ms,257,,,,centennial,centennial19630825121813,2013-07-09T19:07:28.000Z,"Fiji region",earthquake
+1963-08-15T17:25:08.000Z,-13.717,-69.321,549.7,7.7,ms,229,,,,centennial,centennial19630815172508,2013-07-09T19:07:28.000Z,"southern Peru",earthquake
+1963-05-01T10:03:21.000Z,-19.057,169.068,143.9,7.1,mb,158,,,,centennial,centennial19630501100321,2013-07-09T19:07:28.000Z,"Vanuatu",earthquake
+1963-04-16T01:29:23.000Z,-1.136,128.005,34.5,7.2,mw,181,,,,centennial,centennial19630416012923,2013-07-09T19:07:28.000Z,"Kepulauan Obi, Indonesia",earthquake
+1963-03-26T09:48:20.000Z,-30.113,-177.535,35,7.4,mw,217,,,,centennial,centennial19630326094820,2013-07-09T19:07:28.000Z,"Kermadec Islands, New Zealand",earthquake
+1963-03-16T08:44:52.000Z,46.617,154.893,35,7.2,mw,224,,,,centennial,centennial19630316084452,2013-07-09T19:07:28.000Z,"east of the Kuril Islands",earthquake
+1963-02-26T20:14:11.000Z,-7.575,146.219,181.2,7.3,mb,245,,,,centennial,centennial19630226201411,2013-07-09T19:07:28.000Z,"eastern New Guinea region, Papua New Guinea",earthquake
+1963-02-13T08:50:04.000Z,24.355,122.055,35,7.3,mw,179,,,,centennial,centennial19630213085004,2013-07-09T19:07:28.000Z,"Taiwan region",earthquake
+1962-12-08T21:27:20.000Z,-25.817,-63.277,588.9,7.2,ms,156,,,,centennial,centennial19621208212720,2013-07-09T19:07:28.000Z,"Santiago Del Estero, Argentina",earthquake
+1962-08-03T08:56:18.000Z,-23.287,-68.012,113,7.2,mb,199,,,,centennial,centennial19620803085618,2013-07-09T19:07:28.000Z,"Antofagasta, Chile",earthquake
+1962-07-26T08:14:45.000Z,7.494,-82.78,23.6,7.2,mw,183,,,,centennial,centennial19620726081445,2013-07-09T19:07:27.000Z,"south of Panama",earthquake
+1962-05-21T21:15:40.000Z,-20.004,-177.378,437.5,7.5,ms,211,,,,centennial,centennial19620521211540,2013-07-09T19:07:27.000Z,"Fiji region",earthquake
+1962-05-11T14:11:55.000Z,17.18,-99.642,35,7.3,mw,159,,,,centennial,centennial19620511141155,2013-07-09T19:07:27.000Z,"Guerrero, Mexico",earthquake
+1962-04-26T07:26:26.000Z,-17.864,-178.694,550.6,7.5,uk,94,,,,centennial,centennial19620426072626,2013-07-09T19:07:27.000Z,"Fiji region",earthquake
+1962-04-12T00:52:42.000Z,38.076,142.74,24.5,7.2,mw,204,,,,centennial,centennial19620412005242,2013-07-09T19:07:27.000Z,"near the east coast of Honshu, Japan",earthquake
+1962-03-17T20:47:33.000Z,10.809,-43.308,15,7,mb,136,,,,centennial,centennial19620317204733,2013-07-09T19:07:27.000Z,"northern Mid-Atlantic Ridge",earthquake
+1962-02-14T06:36:04.000Z,-38.09,-73,40.6,7.5,mb,142,,,,centennial,centennial19620214063604,2013-07-09T19:07:27.000Z,"Araucania, Chile",earthquake
+1961-09-08T11:26:32.000Z,-56.254,-27.278,103.9,7.6,mb,172,,,,centennial,centennial19610908112632,2013-07-09T19:07:27.000Z,"South Sandwich Islands region",earthquake
+1961-09-01T00:09:38.000Z,-59.26,-26.582,129.6,7.2,mb,160,,,,centennial,centennial19610901000938,2013-07-09T19:07:27.000Z,"South Sandwich Islands region",earthquake
+1961-08-31T01:57:09.000Z,-10.339,-70.997,600.7,7.3,mb,131,,,,centennial,centennial19610831015709,2013-07-09T19:07:27.000Z,"Peru-Brazil border region",earthquake
+1961-08-31T01:48:38.000Z,-10.699,-70.901,598.1,7,mb,244,,,,centennial,centennial19610831014838,2013-07-09T19:07:27.000Z,"Peru-Brazil border region",earthquake
+1961-08-19T05:09:51.000Z,-10.833,-70.838,615.5,7.2,mb,238,,,,centennial,centennial19610819050951,2013-07-09T19:07:27.000Z,"Peru-Brazil border region",earthquake
+1961-08-11T15:51:34.000Z,42.879,145.331,35,7.2,mw,203,,,,centennial,centennial19610811155134,2013-07-09T19:07:27.000Z,"Hokkaido, Japan region",earthquake
+1961-07-23T21:51:10.000Z,-18.418,168.402,35,7.3,mw,218,,,,centennial,centennial19610723215110,2013-07-09T19:07:27.000Z,"Vanuatu",earthquake
+1961-03-28T09:36:05.000Z,0.054,123.631,138.9,7.3,mb,226,,,,centennial,centennial19610328093605,2013-07-09T19:07:27.000Z,"Minahasa, Sulawesi, Indonesia",earthquake
+1961-03-07T10:10:39.000Z,-29.26,-175.265,35,7.1,mw,240,,,,centennial,centennial19610307101039,2013-07-09T19:07:27.000Z,"Kermadec Islands region",earthquake
+1961-02-26T18:10:51.000Z,31.592,131.513,36.7,7.7,mw,189,,,,centennial,centennial19610226181051,2013-07-09T19:07:27.000Z,"Kyushu, Japan",earthquake
+1961-01-05T15:54:04.000Z,-4.226,143.206,141.1,7.1,mb,183,,,,centennial,centennial19610105155404,2013-07-09T19:07:27.000Z,"New Guinea, Papua New Guinea",earthquake
+1960-12-13T07:36:17.000Z,-52.04,160.98,15,7.2,mw,28,,,,centennial,centennial19601213073617,2013-07-09T19:07:27.000Z,"Macquarie Island region",earthquake
+1960-12-02T09:10:43.000Z,-24.669,-70.08,14.1,7.2,mw,96,,,,centennial,centennial19601202091043,2013-07-09T19:07:27.000Z,"Antofagasta, Chile",earthquake
+1960-11-24T06:52:47.000Z,-24.71,-176.379,36,7.1,mw,187,,,,centennial,centennial19601124065247,2013-07-09T19:07:27.000Z,"south of the Fiji Islands",earthquake
+1960-11-20T22:02:00.000Z,-6.704,-80.62,35,7.8,mw,103,,,,centennial,centennial19601120220200,2013-07-09T19:07:27.000Z,"near the coast of northern Peru",earthquake
+1960-07-25T11:12:09.000Z,53.646,158.887,138.7,7.2,mb,210,,,,centennial,centennial19600725111209,2013-07-09T19:07:27.000Z,"near the east coast of the Kamchatka Peninsula, Russia",earthquake
+1960-06-20T12:59:46.000Z,-39.212,-73.322,24.6,7.1,mw,155,,,,centennial,centennial19600620125946,2013-07-09T19:07:27.000Z,"offshore Araucania, Chile",earthquake
+1960-06-20T02:01:15.000Z,-38.265,-73.324,35,7,mw,142,,,,centennial,centennial19600620020115,2013-07-09T19:07:27.000Z,"Bio-Bio, Chile",earthquake
+1960-06-06T05:55:49.000Z,-45.7,-73.502,15,7.2,mw,137,,,,centennial,centennial19600606055549,2013-07-09T19:07:27.000Z,"Aisen, Chile",earthquake
+1960-05-22T19:11:17.000Z,-38.294,-73.054,35,9.6,mw,27,,,,centennial,centennial19600522191117,2014-04-07T19:37:49.687Z,"Araucania, Chile",earthquake
+1960-05-22T18:56:04.000Z,-38.146,-72.984,35,7.9,mw,190,,,,centennial,centennial19600522185604,2013-07-09T19:07:27.000Z,"Araucania, Chile",earthquake
+1960-05-21T10:02:54.000Z,-37.825,-73.379,11.5,8.2,mw,152,,,,centennial,centennial19600521100254,2013-07-09T19:07:27.000Z,"Bio-Bio, Chile",earthquake
+1960-03-20T17:07:33.000Z,39.854,143.398,35,7.8,mw,175,,,,centennial,centennial19600320170733,2013-07-09T19:07:27.000Z,"off the east coast of Honshu, Japan",earthquake
+1960-03-08T16:33:41.000Z,-17.015,168.706,244.2,7.2,mb,259,,,,centennial,centennial19600308163341,2013-07-09T19:07:27.000Z,"Vanuatu",earthquake
+1960-01-13T15:40:22.000Z,-15.877,-73.059,35,7.5,mb,164,,,,centennial,centennial19600113154022,2013-07-09T19:07:27.000Z,"southern Peru",earthquake
+1959-11-19T11:08:49.000Z,-5.91,146.493,128.2,7,mb,217,,,,centennial,centennial19591119110849,2013-07-09T19:07:27.000Z,"eastern New Guinea region, Papua New Guinea",earthquake
+1959-09-14T14:09:46.000Z,-28.725,-177.075,35,7.8,mw,198,,,,centennial,centennial19590914140946,2013-07-09T19:07:27.000Z,"Kermadec Islands region",earthquake
+1959-08-18T06:37:19.000Z,44.566,-110.655,15,7.3,mw,193,,,,centennial,centennial19590818063719,2013-07-09T19:07:27.000Z,"Yellowstone National Park, Wyoming",earthquake
+1959-08-17T21:04:49.000Z,-7.893,156.341,35,7.1,mw,214,,,,centennial,centennial19590817210449,2013-07-09T19:07:27.000Z,"Solomon Islands",earthquake
+1959-08-15T08:57:05.000Z,21.978,120.95,26.8,7.2,mw,163,,,,centennial,centennial19590815085705,2013-07-09T19:07:27.000Z,"Taiwan region",earthquake
+1959-07-19T15:06:16.000Z,-15.087,-70.331,210.1,7.1,mb,203,,,,centennial,centennial19590719150616,2013-07-09T19:07:27.000Z,"southern Peru",earthquake
+1959-06-14T00:11:57.000Z,-20.275,-68.827,35,7.5,mb,194,,,,centennial,centennial19590614001157,2013-07-09T19:07:27.000Z,"Tarapaca, Chile",earthquake
+1959-05-24T19:17:41.000Z,17.456,-97.179,69.6,7,mb,167,,,,centennial,centennial19590524191741,2013-07-09T19:07:27.000Z,"Oaxaca, Mexico",earthquake
+1959-05-04T07:15:46.000Z,53.37,159.663,35,8,mw,211,,,,centennial,centennial19590504071546,2013-07-09T19:07:26.000Z,"near the east coast of the Kamchatka Peninsula, Russia",earthquake
+1959-04-26T20:40:37.000Z,24.682,122.766,117.8,7.5,mb,158,,,,centennial,centennial19590426204037,2013-07-09T19:07:26.000Z,"Taiwan region",earthquake
+1959-03-01T16:49:14.000Z,-0.99,134.172,43.5,7,mb,134,,,,centennial,centennial19590301164914,2013-07-09T19:07:26.000Z,"near the north coast of Papua, Indonesia",earthquake
+1959-01-22T05:10:31.000Z,37.557,142.48,32.1,7.2,mw,155,,,,centennial,centennial19590122051031,2013-07-09T19:07:26.000Z,"off the east coast of Honshu, Japan",earthquake
+1958-11-12T20:23:32.000Z,44.047,148.818,35,7,mw,188,,,,centennial,centennial19581112202332,2013-07-09T19:07:26.000Z,"Kuril Islands",earthquake
+1958-11-06T22:58:09.000Z,44.311,148.65,35,8.4,mw,220,,,,centennial,centennial19581106225809,2013-07-09T19:07:26.000Z,"Kuril Islands",earthquake
+1958-07-26T17:37:14.000Z,-13.285,-69.41,614.7,7.2,mb,244,,,,centennial,centennial19580726173714,2013-07-09T19:07:26.000Z,"southern Peru",earthquake
+1958-07-10T06:15:58.000Z,58.475,-136.283,15,7.8,mw,177,,,,centennial,centennial19580710061558,2013-07-09T19:07:26.000Z,"Southeastern Alaska",earthquake
+1958-05-31T19:32:34.000Z,-15.324,168.545,11.5,7.1,mw,179,,,,centennial,centennial19580531193234,2013-07-09T19:07:26.000Z,"Vanuatu",earthquake
+1958-04-07T15:30:44.000Z,65.895,-156.343,15,7.3,mw,239,,,,centennial,centennial19580407153044,2013-07-09T19:07:26.000Z,"northern Alaska",earthquake
+1958-03-11T00:25:53.000Z,23.812,124.163,35,7.2,mb,101,,,,centennial,centennial19580311002553,2013-07-09T19:07:26.000Z,"southwestern Ryukyu Islands, Japan",earthquake
+1958-01-19T14:07:24.000Z,0.985,-79.492,18.7,7.8,mw,135,,,,centennial,centennial19580119140724,2013-07-09T19:07:26.000Z,"near the coast of Ecuador",earthquake
+1958-01-15T19:14:30.000Z,-16.781,-72.492,69,7,mb,136,,,,centennial,centennial19580115191430,2013-07-09T19:07:26.000Z,"near the coast of southern Peru",earthquake
+1957-12-17T13:50:22.000Z,-12.473,166.672,124.2,7.2,mb,220,,,,centennial,centennial19571217135022,2013-07-09T19:07:26.000Z,"Santa Cruz Islands",earthquake
+1957-12-04T03:37:51.000Z,45.182,99.219,25,8.1,mw,203,,,,centennial,centennial19571204033751,2013-07-09T19:07:26.000Z,"central Mongolia",earthquake
+1957-11-29T22:19:42.000Z,-20.537,-67.229,158.8,7.4,mb,156,,,,centennial,centennial19571129221942,2013-07-09T19:07:26.000Z,"Potosi, Bolivia",earthquake
+1957-09-28T14:20:02.000Z,-20.693,-178.157,586.6,7.2,mb,264,,,,centennial,centennial19570928142002,2013-07-09T19:07:26.000Z,"Fiji region",earthquake
+1957-09-24T08:21:12.000Z,5.245,127.123,35,7.7,mw,188,,,,centennial,centennial19570924082112,2013-07-09T19:07:26.000Z,"Philippine Islands region",earthquake
+1957-07-28T08:40:10.000Z,16.886,-99.288,41.2,7.8,mw,115,,,,centennial,centennial19570728084010,2013-07-09T19:07:26.000Z,"Guerrero, Mexico",earthquake
+1957-07-14T06:24:01.000Z,-27.139,-177.741,200.6,7,mb,225,,,,centennial,centennial19570714062401,2013-07-09T19:07:26.000Z,"Kermadec Islands region",earthquake
+1957-07-02T00:42:28.000Z,36.069,52.695,35,7.1,mw,197,,,,centennial,centennial19570702004228,2013-07-09T19:07:26.000Z,"northern Iran",earthquake
+1957-06-27T00:09:32.000Z,56.419,116.44,15,7.4,mw,160,,,,centennial,centennial19570627000932,2013-07-09T19:07:26.000Z,"Chitinskaya Oblast', Russia",earthquake
+1957-06-22T23:50:30.000Z,-2.009,136.684,35,7.3,mw,154,,,,centennial,centennial19570622235030,2013-07-09T19:07:26.000Z,"near the north coast of Papua, Indonesia",earthquake
+1957-05-26T06:33:35.000Z,40.669,31.038,17.2,7.2,mw,130,,,,centennial,centennial19570526063335,2013-07-09T19:07:26.000Z,"western Turkey",earthquake
+1957-04-25T02:25:41.000Z,36.355,28.698,35,7.1,mw,166,,,,centennial,centennial19570425022541,2013-07-09T19:07:26.000Z,"Dodecanese Islands, Greece",earthquake
+1957-04-16T04:04:09.000Z,-4.514,107.274,601.7,7.2,mb,242,,,,centennial,centennial19570416040409,2013-07-09T19:07:26.000Z,"Java Sea",earthquake
+1957-04-14T19:18:05.000Z,-15.397,-173.138,35,7.5,mw,203,,,,centennial,centennial19570414191805,2013-07-09T19:07:26.000Z,"Tonga",earthquake
+1957-03-23T05:12:42.000Z,-5.492,130.913,126.7,7.1,mb,190,,,,centennial,centennial19570323051242,2013-07-09T19:07:26.000Z,"Banda Sea",earthquake
+1957-03-22T14:21:13.000Z,53.695,-165.691,42.4,7.1,mw,238,,,,centennial,centennial19570322142113,2013-07-09T19:07:26.000Z,"Fox Islands, Aleutian Islands, Alaska",earthquake
+1957-03-16T02:34:18.000Z,51.516,-178.782,31.5,7.1,mw,226,,,,centennial,centennial19570316023418,2013-07-09T19:07:26.000Z,"Andreanof Islands, Aleutian Islands, Alaska",earthquake
+1957-03-14T14:47:51.000Z,51.332,-176.62,35,7.2,mw,236,,,,centennial,centennial19570314144751,2013-07-09T19:07:26.000Z,"Andreanof Islands, Aleutian Islands, Alaska",earthquake
+1957-03-12T11:44:59.000Z,51.74,-176.665,32.2,7.1,mw,171,,,,centennial,centennial19570312114459,2013-07-09T19:07:26.000Z,"Andreanof Islands, Aleutian Islands, Alaska",earthquake
+1957-03-11T09:58:51.000Z,52.539,-168.896,35.6,7.1,mw,238,,,,centennial,centennial19570311095851,2013-07-09T19:07:26.000Z,"Fox Islands, Aleutian Islands, Alaska",earthquake
+1957-03-09T20:39:23.000Z,52.474,-169.484,31.3,7.2,mw,177,,,,centennial,centennial19570309203923,2013-07-09T19:07:26.000Z,"Fox Islands, Aleutian Islands, Alaska",earthquake
+1957-03-09T14:22:33.000Z,51.587,-175.419,35,8.6,mw,186,,,,centennial,centennial19570309142233,2013-07-09T19:07:26.000Z,"Andreanof Islands, Aleutian Islands, Alaska",earthquake
+1957-02-23T20:26:17.000Z,23.866,121.493,50.4,7.2,mw,122,,,,centennial,centennial19570223202617,2013-07-09T19:07:26.000Z,"Taiwan",earthquake
+1956-12-27T00:14:11.000Z,-23.41,-176.882,195.7,7,mb,152,,,,centennial,centennial19561227001411,2013-07-09T19:07:26.000Z,"south of the Fiji Islands",earthquake
+1956-10-24T14:42:16.000Z,11.619,-86.436,35,7.2,mw,101,,,,centennial,centennial19561024144216,2013-07-09T19:07:26.000Z,"near the coast of Nicaragua",earthquake
+1956-10-11T02:24:37.000Z,45.904,150.607,101.4,7.3,mb,181,,,,centennial,centennial19561011022437,2013-07-09T19:07:26.000Z,"Kuril Islands",earthquake
+1956-07-18T06:19:32.000Z,-5.048,130.358,106.2,7.2,mb,168,,,,centennial,centennial19560718061932,2013-07-09T19:07:26.000Z,"Banda Sea",earthquake
+1956-07-16T15:07:08.000Z,22.085,95.821,25.2,7.1,mw,108,,,,centennial,centennial19560716150708,2013-07-09T19:07:26.000Z,"Myanmar",earthquake
+1956-07-09T03:11:45.000Z,36.583,26.041,35,7.8,mw,129,,,,centennial,centennial19560709031145,2013-07-09T19:07:26.000Z,"Dodecanese Islands, Greece",earthquake
+1956-06-09T23:13:56.000Z,35.031,67.476,35,7.6,mw,207,,,,centennial,centennial19560609231356,2013-07-09T19:07:26.000Z,"central Afghanistan",earthquake
+1956-05-23T20:48:29.000Z,-15.523,-178.589,402.5,7.2,mb,227,,,,centennial,centennial19560523204829,2013-07-09T19:07:26.000Z,"Fiji region",earthquake
+1956-02-18T07:34:24.000Z,30.173,138.275,480.2,7.1,mb,124,,,,centennial,centennial19560218073424,2013-07-09T19:07:26.000Z,"Izu Islands, Japan region",earthquake
+1956-02-01T13:41:52.000Z,18.853,145.06,379.9,7,mb,104,,,,centennial,centennial19560201134152,2013-07-09T19:07:26.000Z,"Pagan region, Northern Mariana Islands",earthquake
+1955-11-10T01:44:05.000Z,-15.547,-173.637,66.4,7,ms,0,,,,centennial,centennial19551110014405,2013-07-09T19:07:26.000Z,"Tonga",earthquake
+1955-10-13T09:26:56.000Z,-10.054,160.797,100,7.1,mb,0,,,,centennial,centennial19551013092656,2013-07-09T19:07:26.000Z,"Solomon Islands",earthquake
+1955-10-10T08:57:50.000Z,-5.04,152.711,25,7.3,mw,0,,,,centennial,centennial19551010085750,2013-07-09T19:07:25.000Z,"New Britain region, Papua New Guinea",earthquake
+1955-08-06T08:31:13.000Z,-20.985,-177.41,185,7,mb,0,,,,centennial,centennial19550806083113,2013-07-09T19:07:25.000Z,"Fiji region",earthquake
+1955-05-30T12:31:43.000Z,24.227,142.441,553.1,7.1,mb,0,,,,centennial,centennial19550530123143,2013-07-09T19:07:25.000Z,"Volcano Islands, Japan region",earthquake
+1955-05-17T14:49:54.000Z,6.748,93.73,25,7.2,mw,0,,,,centennial,centennial19550517144954,2013-07-09T19:07:25.000Z,"Nicobar Islands, India region",earthquake
+1955-04-15T03:40:58.000Z,39.833,74.66,35,7.1,mw,0,,,,centennial,centennial19550415034058,2013-07-09T19:07:25.000Z,"southern Xinjiang, China",earthquake
+1955-04-14T01:29:03.000Z,30.01,101.706,16.3,7.5,mw,0,,,,centennial,centennial19550414012903,2013-07-09T19:07:25.000Z,"western Sichuan, China",earthquake
+1955-03-31T18:17:11.000Z,7.594,122.825,35,7.3,mb,0,,,,centennial,centennial19550331181711,2013-07-09T19:07:25.000Z,"Mindanao, Philippines",earthquake
+1955-03-18T00:06:52.000Z,54.202,161.225,63.4,7.2,mb,0,,,,centennial,centennial19550318000652,2013-07-09T19:07:25.000Z,"near the east coast of the Kamchatka Peninsula, Russia",earthquake
+1955-02-27T20:43:26.000Z,-28.424,-175.548,20,7.8,mw,0,,,,centennial,centennial19550227204326,2013-07-09T19:07:25.000Z,"Kermadec Islands region",earthquake
+1955-01-05T00:50:21.000Z,-49.658,163.01,35,7.1,mw,0,,,,centennial,centennial19550105005021,2013-07-09T19:07:25.000Z,"Auckland Islands, New Zealand region",earthquake
+1954-12-16T11:07:14.000Z,39.209,-118.173,20,7.1,mw,0,,,,centennial,centennial19541216110714,2013-07-09T19:07:25.000Z,"Nevada",earthquake
+1954-09-17T11:03:21.000Z,-21.414,-176.545,248.4,7,mb,0,,,,centennial,centennial19540917110321,2013-07-09T19:07:25.000Z,"Fiji region",earthquake
+1954-04-29T11:34:38.000Z,29.032,-112.967,15,7.1,mw,0,,,,centennial,centennial19540429113438,2013-07-09T19:07:25.000Z,"Sonora, Mexico",earthquake
+1954-03-31T18:25:50.000Z,12.369,57.999,26.5,7.1,mw,0,,,,centennial,centennial19540331182550,2013-07-09T19:07:25.000Z,"Owen Fracture Zone region",earthquake
+1954-03-29T06:17:07.000Z,37.008,-3.528,624.8,7,mb,0,,,,centennial,centennial19540329061707,2013-07-09T19:07:25.000Z,"Spain",earthquake
+1954-03-21T23:42:14.000Z,24.305,95.136,180,7.4,mb,0,,,,centennial,centennial19540321234214,2013-07-09T19:07:25.000Z,"Myanmar",earthquake
+1954-02-22T12:03:32.000Z,-57.061,-26.854,75,7,mb,0,,,,centennial,centennial19540222120332,2013-07-09T19:07:25.000Z,"South Sandwich Islands region",earthquake
+1954-02-20T18:35:03.000Z,-7.233,124.364,520.2,7,mb,0,,,,centennial,centennial19540220183503,2013-07-09T19:07:25.000Z,"Banda Sea",earthquake
+1954-02-11T00:30:19.000Z,38.878,101.225,25.2,7.1,mw,0,,,,centennial,centennial19540211003019,2013-07-09T19:07:25.000Z,"Gansu, China",earthquake
+1953-12-12T17:31:28.000Z,-3.619,-80.857,20,7.5,mw,0,,,,centennial,centennial19531212173128,2013-07-09T19:07:25.000Z,"Peru-Ecuador border region",earthquake
+1953-12-07T02:05:39.000Z,-22.54,-68.832,100,7.2,mb,0,,,,centennial,centennial19531207020539,2013-07-09T19:07:25.000Z,"Antofagasta, Chile",earthquake
+1953-11-25T17:48:53.000Z,34.015,141.817,15,7.9,mw,0,,,,centennial,centennial19531125174853,2013-07-09T19:07:25.000Z,"off the east coast of Honshu, Japan",earthquake
+1953-11-10T23:40:24.000Z,51.116,157.499,36.2,7,mb,0,,,,centennial,centennial19531110234024,2013-07-09T19:07:25.000Z,"near the east coast of the Kamchatka Peninsula, Russia",earthquake
+1953-11-04T03:49:12.000Z,-13.006,166.343,33.3,7.5,mw,0,,,,centennial,centennial19531104034912,2013-07-09T19:07:25.000Z,"Vanuatu",earthquake
+1953-09-29T01:36:47.000Z,-37.506,176.879,305,7,mb,0,,,,centennial,centennial19530929013647,2013-07-09T19:07:25.000Z,"North Island of New Zealand",earthquake
+1953-08-12T09:23:55.000Z,38.137,20.76,20,7.2,mw,0,,,,centennial,centennial19530812092355,2013-07-09T19:07:25.000Z,"Greece",earthquake
+1953-07-02T06:57:01.000Z,-19.225,169.602,245,7.4,mb,0,,,,centennial,centennial19530702065701,2013-07-09T19:07:25.000Z,"Vanuatu",earthquake
+1953-05-06T17:16:45.000Z,-36.901,-72.716,35,7.5,mb,0,,,,centennial,centennial19530506171645,2013-07-09T19:07:25.000Z,"Bio-Bio, Chile",earthquake
+1953-04-23T16:24:27.000Z,-4.477,153.456,55,7.6,mw,0,,,,centennial,centennial19530423162427,2013-07-09T19:07:25.000Z,"New Ireland region, Papua New Guinea",earthquake
+1953-03-19T08:27:52.000Z,14.061,-61.215,119.5,7.1,mb,0,,,,centennial,centennial19530319082752,2013-07-09T19:07:25.000Z,"Saint Lucia region, Windward Islands",earthquake
+1953-03-18T19:06:15.000Z,40.121,27.582,9.4,7.2,mw,0,,,,centennial,centennial19530318190615,2013-07-09T19:07:25.000Z,"western Turkey",earthquake
+1953-02-26T11:42:33.000Z,-10.944,164.091,35,7.1,mw,0,,,,centennial,centennial19530226114233,2013-07-09T19:07:25.000Z,"Santa Cruz Islands region",earthquake
+1953-01-05T10:06:35.000Z,49.233,155.455,39.7,7.1,mw,0,,,,centennial,centennial19530105100635,2013-07-09T19:07:25.000Z,"Kuril Islands",earthquake
+1953-01-05T07:48:26.000Z,53.483,171.236,20,7.2,mw,0,,,,centennial,centennial19530105074826,2013-07-09T19:07:25.000Z,"Near Islands, Aleutian Islands, Alaska",earthquake
+1952-12-24T18:39:40.000Z,-5.472,151.779,21.7,7.1,mw,0,,,,centennial,centennial19521224183940,2013-07-09T19:07:25.000Z,"New Britain region, Papua New Guinea",earthquake
+1952-12-06T10:41:25.000Z,-8.238,156.108,35,7.2,mw,0,,,,centennial,centennial19521206104125,2013-07-09T19:07:25.000Z,"Solomon Islands",earthquake
+1952-11-06T19:47:28.000Z,-4.545,144.816,49.3,7.1,mw,0,,,,centennial,centennial19521106194728,2013-07-09T19:07:25.000Z,"near the north coast of New Guinea, Papua New Guinea",earthquake
+1952-11-04T16:58:27.000Z,52.756,160.056,22.1,9,mw,0,,,,centennial,centennial19521104165827,2013-07-09T19:07:25.000Z,"off the east coast of the Kamchatka Peninsula, Russia",earthquake
+1952-09-21T02:30:39.000Z,-22.23,-65.985,271.1,7.1,mb,0,,,,centennial,centennial19520921023039,2013-07-09T19:07:25.000Z,"Jujuy, Argentina",earthquake
+1952-08-17T16:02:14.000Z,30.81,91.625,35,7.7,mw,0,,,,centennial,centennial19520817160214,2013-07-09T19:07:25.000Z,"eastern Xizang",earthquake
+1952-07-21T11:52:16.000Z,34.927,-119.06,15,7.3,mw,0,,,,centennial,centennial19520721115216,2014-08-18T21:59:32.107Z,"Central California",earthquake
+1952-03-19T10:57:13.000Z,9.329,126.88,15,7.7,mw,0,,,,centennial,centennial19520319105713,2013-07-09T19:07:24.000Z,"Mindanao, Philippines",earthquake
+1952-03-09T17:03:51.000Z,41.92,143.338,46.3,7.2,mw,0,,,,centennial,centennial19520309170351,2013-07-09T19:07:24.000Z,"Hokkaido, Japan region",earthquake
+1952-03-04T01:40:08.000Z,41.659,144.618,35,7.1,ms,0,,,,centennial,centennial19520304014008,2013-07-09T19:07:24.000Z,"Hokkaido, Japan region",earthquake
+1952-03-04T01:22:46.000Z,42.144,143.896,28.8,8.1,mw,0,,,,centennial,centennial19520304012246,2013-07-09T19:07:24.000Z,"Hokkaido, Japan region",earthquake
+1952-02-14T03:38:17.000Z,-7.766,126.618,35,7.2,mw,0,,,,centennial,centennial19520214033817,2013-07-09T19:07:24.000Z,"Kepulauan Barat Daya, Indonesia",earthquake
+1951-12-08T04:14:14.000Z,-34.155,57.08,21.4,7.5,mw,0,,,,centennial,centennial19511208041414,2013-07-09T19:07:24.000Z,"South Indian Ocean",earthquake
+1951-11-24T18:50:23.000Z,23.147,121.185,25,7.3,mw,0,,,,centennial,centennial19511124185023,2013-07-09T19:07:24.000Z,"Taiwan",earthquake
+1951-11-18T09:35:53.000Z,30.899,91.359,35,7.7,mw,0,,,,centennial,centennial19511118093553,2013-07-09T19:07:24.000Z,"eastern Xizang",earthquake
+1951-11-06T16:40:12.000Z,47.407,153.961,25,7.2,mw,0,,,,centennial,centennial19511106164012,2013-07-09T19:07:24.000Z,"Kuril Islands",earthquake
+1951-10-22T05:43:06.000Z,23.578,121.316,25,7.1,mw,0,,,,centennial,centennial19511022054306,2013-07-09T19:07:24.000Z,"Taiwan",earthquake
+1951-10-22T04:28:09.000Z,23.688,120.909,25,7,ms,0,,,,centennial,centennial19511022042809,2013-07-09T19:07:24.000Z,"Taiwan",earthquake
+1951-10-22T03:29:32.000Z,23.688,121.192,25,7.2,mw,0,,,,centennial,centennial19511022032932,2013-07-09T19:07:24.000Z,"Taiwan",earthquake
+1951-10-21T21:34:19.000Z,23.2,120.909,25,7.5,mw,0,,,,centennial,centennial19511021213419,2013-07-09T19:07:24.000Z,"Taiwan",earthquake
+1951-06-12T22:40:42.000Z,36.668,70.955,222.2,7.5,ms,0,,,,centennial,centennial19510612224042,2013-07-09T19:07:24.000Z,"Hindu Kush region, Afghanistan",earthquake
+1951-05-21T08:27:26.000Z,-5.934,154.529,151.2,7,mb,0,,,,centennial,centennial19510521082726,2013-07-09T19:07:24.000Z,"Bougainville region, Papua New Guinea",earthquake
+1951-03-10T21:57:30.000Z,-15.231,167.427,102.4,7.2,mb,0,,,,centennial,centennial19510310215730,2013-07-09T19:07:24.000Z,"Vanuatu",earthquake
+1951-02-17T21:07:11.000Z,-7.206,145.903,185,7.2,mb,0,,,,centennial,centennial19510217210711,2013-07-09T19:07:24.000Z,"near the south coast of New Guinea, Papua New Guinea",earthquake
+1951-02-13T22:13:01.000Z,55.689,-156.261,35,7.2,mw,0,,,,centennial,centennial19510213221301,2013-07-09T19:07:24.000Z,"south of Alaska",earthquake
+1950-12-14T14:15:53.000Z,16.722,-98.228,35,7.3,mw,0,,,,centennial,centennial19501214141553,2013-07-09T19:07:24.000Z,"Guerrero, Mexico",earthquake
+1950-12-14T01:52:53.000Z,-19.818,-175.812,210.2,7.5,mb,0,,,,centennial,centennial19501214015253,2013-07-09T19:07:24.000Z,"Tonga",earthquake
+1950-12-10T13:23:05.000Z,-28.715,-178.795,221.2,7.2,mb,0,,,,centennial,centennial19501210132305,2013-07-09T19:07:24.000Z,"Kermadec Islands region",earthquake
+1950-12-10T02:50:44.000Z,-14.407,-75.718,57.2,7.1,mb,0,,,,centennial,centennial19501210025044,2013-07-09T19:07:24.000Z,"near the coast of central Peru",earthquake
+1950-12-09T21:38:50.000Z,-24.139,-67.805,115,7.7,mb,0,,,,centennial,centennial19501209213850,2013-07-09T19:07:24.000Z,"Antofagasta, Chile",earthquake
+1950-12-04T16:28:05.000Z,-4.92,153.796,79.5,7.3,mb,0,,,,centennial,centennial19501204162805,2013-07-09T19:07:24.000Z,"New Ireland region, Papua New Guinea",earthquake
+1950-12-02T19:55:27.000Z,-18.25,167.5,60,7,uk,0,,,,centennial,centennial19501202195527,2013-07-09T19:07:24.000Z,"Vanuatu",earthquake
+1950-12-02T19:51:53.000Z,-18.242,167.29,45.7,7.2,ms,0,,,,centennial,centennial19501202195153,2013-07-09T19:07:24.000Z,"Vanuatu",earthquake
+1950-11-08T02:18:17.000Z,-9.791,159.957,35,7.1,mw,0,,,,centennial,centennial19501108021817,2013-07-09T19:07:24.000Z,"Solomon Islands",earthquake
+1950-11-02T15:28:13.000Z,-6.893,129.247,194.4,7.4,mb,0,,,,centennial,centennial19501102152813,2013-07-09T19:07:24.000Z,"Banda Sea",earthquake
+1950-10-23T16:13:27.000Z,14.358,-92.063,64.6,7.5,mw,0,,,,centennial,centennial19501023161327,2013-07-09T19:07:24.000Z,"offshore Guatemala",earthquake
+1950-10-08T03:23:13.000Z,-4.41,128.281,35,7.5,mw,0,,,,centennial,centennial19501008032313,2013-07-09T19:07:24.000Z,"Banda Sea",earthquake
+1950-10-05T16:09:40.000Z,10.438,-85.126,97.2,7.8,mw,0,,,,centennial,centennial19501005160940,2013-07-09T19:07:24.000Z,"Costa Rica",earthquake

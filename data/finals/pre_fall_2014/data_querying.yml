@@ -1,0 +1,44 @@
+title: Basic data querying
+background: This tests students ability to sort, order, and filter data.
+text: |
+  This spreadsheet contains the following fields:
+  - State, e.g. FL, IA, CA, NY
+  - County, e.g. Smith, Jackson, Kings
+  - Category of item, e.g. WEAPONS, AIRCRAFT
+  - Description of item, e.g. Rifle,5.56mm
+  - Quantity shipped, e.g. 1, 10
+  - Price per item, e.g. 12.50, 999.00
+  - Date of shipment
+
+  Example: Table TK
+
+
+questions:
+  - title: Basic filtering
+    text: List the items categorized as "WEAPONS" sent to the state of New York
+
+  - title: Basic sorting
+    text: List the items in descending order of shipping date, then ascending order of state and county name.
+
+  - title: Filtering by wildcard
+    text: List all rifles sent to the state of Arkansas
+
+  - title: Combining operators
+    text: List all items sent to the state of California and Nevada during the years 2008 to 2010.
+
+  - title: AND with comparison operators
+    text: Find all items that are, per item, between $100.00 and $500.00
+
+  - title: OR in between
+    text: Find all items that are, per item, priced under $200 or more than $2000
+
+  - title: Exclusion combination
+    text: List all items categorized as aircraft, except ones that were shipped to Montana and Michigan
+
+  - title: OR combination with AND
+    text: List all items that shipped after 2009, categorized as weapons, that are described as pistols, shotguns, or rifles.
+
+
+
+
+

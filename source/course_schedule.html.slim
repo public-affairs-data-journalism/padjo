@@ -1,0 +1,41 @@
+---
+title: Course Schedule
+layout: page
+description: The full course schedule
+current_course:
+  name: comm_273d
+  term: fall_2014
+---
+
+div.course-schedule.full
+  ul.list.list-unstyled
+    - current_course_schedule.lectures.each do |lecture|
+      li.lecture
+        div.meta
+          div.date => friendly_schedule_date lecture.date
+          h4.title
+            a href="#{{lecture.url}}" => lecture.title
+        div.description => lecture.description
+        div.row
+          div.col-sm-6
+            div.topics
+              h5 Topics
+              ul.list
+                - lecture.topics.each do |t|
+                  li => t
+          div.col-sm-6
+            div.homework
+              h5 Homework
+              ul.list
+                - lecture.homework.each do |h|
+                  li => h.title
+
+        / div.excerpt
+        /   - if lecture.summary.strip.length > 5
+        /     h5 Excerpt
+        /     div => lecture.summary
+
+
+
+
+

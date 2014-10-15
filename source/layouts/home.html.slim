@@ -1,0 +1,34 @@
+- cdata = current_page.data
+= wrap_layout :layout
+  article.home
+    section.meta
+      img src="/assets/images/273d-header.jpg" alt="Walking the unfinished third section of the High Line Park, New York" style="max-width: 100%; margin-bottom: -3.0em;"
+      div style="background: #8c1515; margin-bottom: 2.0em;"
+        div.container
+          h1 class="home-title" = cdata.title
+
+    section.previewed-lectures
+      div.sked-grid
+        div.container
+          div.row
+            - previewed_lectures.each do |lecture|
+              div.box.col-sm-4
+                div.lecture.item
+                  div.date => friendly_schedule_date lecture.date
+                  h4.title => link_to lecture.title, lecture.url
+                  div.description => lecture.description
+
+      div.container
+        div: strong => link_to "See complete course schedule", "/course_schedule"
+
+    section.content
+      div.container
+        = yield
+
+
+      - if current_course = cdata.current_course
+        section.current_course
+          div.container
+            h2#current-course-schedule Course schedule
+            div => partial 'layouts/partials/course_schedule'
+

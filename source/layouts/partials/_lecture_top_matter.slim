@@ -1,0 +1,28 @@
+section.top-meta
+  / TK create a syllabus helper
+  h4 => link_to "#{lecture.course_name} | #{lecture.term_name}", '/lectures/comm_273d/2014_fall/syllabus'
+  h5 class="date" data-date="#{{machine_date lecture.date}}" = friendly_schedule_date lecture.date
+  h1 class="title" = lecture.title
+  div.description
+    p = lecture.description
+section.overview
+
+  - unless lecture.topics.empty?
+    div.topics
+      h4 Topics
+      ul.list.list-inline-bullets
+        - lecture[:topics].andand.each do |topic|
+          li => topic
+
+  - unless lecture.homework.empty?
+    div.homework
+      h4 Homework
+      ul.list
+        - lecture[:homework].andand.each do |homework|
+            li
+              span.title => homework[:title]
+              span.duedate => 'Due ' + (homework[:duedate] ? friendly_schedule_date(homework[:duedate]) : 'by next class')
+
+      p
+        ' Jump to the
+        a href='#homework-details' full details on homework assignments

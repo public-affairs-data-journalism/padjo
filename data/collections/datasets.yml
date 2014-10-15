@@ -1,0 +1,268 @@
+spreadsheet:
+  url: "//example.com"
+  categories: false
+items:
+  - name: San Francisco 311 Calls
+    source: City of San Francisco
+    source_url: https://data.sfgov.org/City-Management-and-Ethics/Case-Data-from-San-Francisco-311-SF311-/vw6y-z8j6
+    description: |
+      311 calls to San Francisco from July 1, 2008 to present. Contains location information, resposible agency, opened and closed dates.
+
+  - name: CensusReporter
+    source_url: http://censusreporter.org/
+    source: United States Census data, as organized by the CensusReporter project
+    description: |
+      The best way to explore the dense, multi-faceted data produced by the U.S. Census.
+
+  - name: Yelp Dataset Challenge
+    source_url: http://www.yelp.com/dataset_challenge
+    source: Yelp
+    description:
+      Reviews, users, and businesses, check-ins, and tips for the cities of Phoenix, Las Vegas, Madison, Waterloo, and Edinburgh.
+
+  - name: USGS Earthquake Archive
+    source_url: http://earthquake.usgs.gov/earthquakes/search/
+    source: United States Geological Survey
+    description: Create a CSV of earthquakes and customize the timeframe and geography parameters.
+
+  - name: U.S. Congress social media activity
+    source: Crowdsourced
+    source_url: https://github.com/unitedstates/congress-legislators
+    description: Social media accounts of sitting U.S. legislators. Only contains account IDs, not actual data.
+
+  - name: IMDB actor and movie data
+    source_url: http://www.imdb.com/interfaces
+    source: IMDB
+    description: Massive plain text data dumps for various fields of info collected by IMDB, including actor biographies, movie box-office performance, and cast lists.
+
+  - name: FBI Uniform Crime Reports
+    source_url: http://www.fbi.gov/about-us/cjis/ucr/
+    source: Department of Justice
+    description: |
+      A collection of various categories of crime statistics from data received by partciptating law agencies. The FBI's data tool is a little unwiedly; raw data sets can be obtained through the [National Archive of Criminal Justice Data](http://www.icpsr.umich.edu/icpsrweb/content/NACJD/guides/ucr.html)
+
+  - name: Las Vegas restaurant inspection data
+    source: South Nevada Health District
+    source_url: http://www.southernnevadahealthdistrict.org/restaurants/index.php
+    description: Results of health inspections and violations found
+
+  - name: U.S. Baby Names
+    source: Social Security Administration
+    source_url: http://www.ssa.gov/oact/babynames/limits.html
+    description: Number of names given to U.S. babies per year, by state
+
+  - name: Department of Defense Excess Property Program
+    source: Department of Defense, collected by National Public Radio
+    source_url: https://github.com/nprapps/leso
+    description: Line-item listing of military equipment distributed to civilian law enforcement agencies since 2006.
+
+  - name: NYPD Stop and Frisk Data
+    source: New York Police Department
+    source_url: http://www.nyc.gov/html/nypd/html/analysis_and_planning/stop_question_and_frisk_report.shtml
+    description: Stops made by the NYPD from 2003 to present. Fields include geographical coordinates, race of the stopped person, and cause for and result of the stop.
+
+  - name: New York Times Bestsellers List
+    source: New York Times
+    source_url: http://developer.nytimes.com/docs/best_sellers_api/
+    description: Rank history for specific titles
+
+  - name: New York taxi rides
+    source: NYC Taxi and Limousine Commission
+    source_url: http://www.nyc.gov/html/tlc/html/about/statistics.shtml
+    description: |
+      Fields include time and location of pickup and dropoffs, as well as trip cost and distance. Raw data must be requested via FOIL. Read Chris Whong's [FOILing NYC’s Taxi Trip Data](http://chriswhong.com/open-data/foil_nyc_taxi/)
+
+  - name: Census Quickfacts
+    source: U.S. Census
+    source_url: http://quickfacts.census.gov/qfd/download_data.html
+    description: Summary population data and demographics per state and county.
+
+  - name: Car complaints defects, investigations, and recalls
+    source: NHTSA, Office of Defects Investigation
+    source_url: http://www-odi.nhtsa.dot.gov/downloads/
+    description: Contains records and narratives of accidents in which a car defect is suspected as a cause. Includes any subsequent investigations and recalls.
+    notes: Data can more or less be imported straight into a database. Significant cleaning of taxonomy and errant data fields is necessary, though.
+
+  - name: Car safety ratings
+    source: NHTSA
+    source_url: http://www.safercar.gov/
+    description: Safety ratings, features, and characteristics of cars sold in the U.S.
+    notes: |
+      There's no downloadable database file. You're going to have to scrape this one.
+
+  - name: California payroll data
+    source: California State Controller's Office
+    source_url: http://publicpay.ca.gov/
+    description: |
+       Salary and compensation information for public entities in California, including 58 counties, more than 450 cities, more than 2,900 special districts, more than 100 higher education providers, and most state employees
+
+  - name: New York payroll data
+    source: New York City Comptroller
+    source_url: http://www.checkbooknyc.com/payroll/yeartype/B/year/116
+    description: Payroll information for city employees
+
+  - name: U.S. airline on-time statistics
+    source: Bureau of Transportation Statistics
+    source_url: http://apps.bts.gov/xml/ontimesummarystatistics/src/index.xml
+    description: |
+      Percentage of late flights, by airline, origin, and destination
+
+  - name: U.S. airline ticket costs
+    source: Bureau of Transportation Statistics
+    source_url: "http://www.transtats.bts.gov/Tables.asp?DB_ID=125&DB_Name=Airline%20Origin%20and%20Destination%20Survey%20%28DB1B%29&DB_Short_Name=Origin%20and%20Destination%20Survey"
+    description: Sample of 10% of airline itineraries
+
+  - name: U.S. accident and incident data
+    source: Federal Aviation Administration
+    source_url: http://www.faa.gov/data_research/accident_incident/
+    description: Preliminary report and investigation data from air carrier safety incidents.
+
+  - name: Wildlife Strike Database
+    source: Federal Aviation Administration
+    source_url: http://wildlife.faa.gov/
+    description: Voluntary reports of aircraft collisions with wildlife.
+
+
+  - name: Massachusetts transportation data
+    description: Anonymous vehicle-use data in Massachusetts released as part of a hackathon
+    source_url: http://www.37billionmilechallenge.org/
+    source: Massachusetts Department of Transportation
+
+  - name: Crunchbase
+    source: TechCrunch via crowdsourcing
+    source_url: http://www.crunchbase.com/
+    description: |
+      This comprehensive, crowdsourced database of company information, including notable employees, investors, and funding rounds, has accompanied TechCrunch's coverage over the years. It's not perfect, but it's as detailed (and used) of a business dataset you'll find for startups and acquisitions.
+
+  - name: NYC 311 calls
+    source: New York City
+    source_url: https://nycopendata.socrata.com/Social-Services/311-Service-Requests-from-2010-to-Present/erm2-nwe9
+    description: Millions of complaints about pot holes and loud music in the city that never sleeps.
+
+  - name: Year of Gun Deaths, 2013
+    source: Slate and crowdsourcing
+    source_url: http://www.slate.com/articles/news_and_politics/crime/2012/12/gun_death_tally_every_american_gun_death_since_newtown_sandy_hook_shooting.html
+    description: |
+      After the Newtown school shooting, Slate began a crowdsourced interactive to collect all gun-related deaths in America for the year 2013.
+
+  - name: NYC restaurants inspections data
+    source: New York City health department
+    source_url: https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/xx67-kt59
+
+  - name: White House Visitors Log
+    source: White House
+    source_url: http://www.whitehouse.gov/briefing-room/disclosures/visitor-records
+    description: |
+      The names of just about everyone who has visited President Obama's White House, when they visited, and who they met.
+
+  - name: Chicago crime incidents
+    source: Chicago Police Department
+    source_url: https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2
+
+  - name: San Francisco crime incidents
+    source: San Francisco Police Department
+    source_url: https://data.sfgov.org/Public-Safety/SFPD-Reported-Incidents-2003-to-Present/dyj4-n68b
+    description: |
+      Incidents reported via the SFPD CABLE System, from 1/1/2003 to present. In KML format (past 90 days) In Shapefile format (by year) In CSV format (all: 800,000 plus records).
+
+  - name: NYC subway turnstile data
+    source: Metropolitan Transportation Authority
+    source_url: http://web.mta.info/developers/turnstile.html
+    description: How many people enter and exit New York's subways
+
+  - name: OSHA Workplace Injury data
+
+  - name: Payments made to doctors from medical companies
+    source_url: http://cms.gov/openpayments
+    source: Centers for Medicare & Medicaid Services
+    description: |
+      A federally-mandated listing of payments from drug and device companies to doctors and teaching hospitals. ProPublica [has a good list of the caveats](http://www.propublica.org/article/our-first-dive-into-the-new-open-payments-system).
+
+
+  - name: Food and drug recalls
+    source_url: http://www.fda.gov/safety/recalls/
+    source: Food and Drug Administration
+    description: A list of press releases of recalls for FDA-regulated products
+
+
+  - name: Drug adverse effects reports
+    source_url: http://www.fda.gov/Drugs/GuidanceComplianceRegulatoryInformation/Surveillance/AdverseDrugEffects/ucm082193.htm
+    source: Food and Drug Administration
+    description: A database of voluntary reports of adverse side effects and medication errors by healthcare professionals and consumers
+
+  - name: Federal employment opportunities
+    source_url: https://data.usajobs.gov/Rest
+    source: USAJobs
+    description: A JSON feed of federal job openings, including description and salary range
+
+  - name: California lobbying
+    source_url: http://cal-access.ss.ca.gov/
+    source: CAL-ACCESS
+
+
+  - name: U.S. federal campaign finance
+    source_url: http://www.fec.gov/disclosure.shtml
+    description: Who is giving and who is receiving campaign contributions
+    source: Federal Election Commission
+
+
+  - name: U.S. federal lobbying
+    source_url: http://www.senate.gov/pagelayout/legislative/g_three_sections_with_teasers/lobbyingdisc.htm#lobbyingdisc=lda
+    source: Senate Office of Public Records
+    description: Documents relevant to the Lobbying Disclosure Act
+
+
+  - name: NOAA Tides and Currents API
+    description: Provided as an API allowing you to select all kinds of measurements for different stations and timeframes
+    source_url: http://tidesandcurrents.noaa.gov/api/
+    source: NOAA's Center for Operational Oceanographic Products and Services
+
+
+  - name: Medicare Provider Utilization and Payment Data
+    source_url: http://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/Medicare-Provider-Charge-Data/Physician-and-Other-Supplier.html
+    source: Centers for Medicare & Medicaid Services
+    description: A 1.7GB file of 9 million records on which doctors were reimbursed for which procedures in 2012.
+
+  - name: Harvard and MIT MOOC Student Data
+    source_url: http://thedata.harvard.edu/dvn/dv/mxhx
+    source: Harvard-MITx
+    description: Anonymized data containing records of individual's activities in edX course.
+
+  - name: Jeopardy! game data
+    source: J! Archive
+    source_url: http://j-archive.com/
+    description: A crowdsourced database of Jeopardy! questions and answers and performances.
+
+  - name: Amazon product reviews
+    source_url: http://snap.stanford.edu/data/web-Amazon.html
+
+  - name: Amazon movie reviews
+    source_url: http://snap.stanford.edu/data/web-Movies.html
+
+  - name: San Francisco food trucks
+    source_url: https://data.sfgov.org/Economy-and-Community/Mobile-Food-Facility-Permit/rqzj-sfat
+
+  - name: Education Common Core
+    source_url: "http://datainventory.ed.gov/Search?seriesID=175&searchTerm=Common%20Core%20of%20Data&searchType=Exact"
+    source: U.S. Department of Education, National Center for Education Statistics
+    description: A set of fiscal and non-fiscal data about each public school in the United States
+
+  - name: Enron emails archive
+    source_url: https://www.cs.cmu.edu/~./enron/
+
+  - name: Last.fm music and artists data
+    source_url: http://www.last.fm/api
+    source: Last.fm
+    description: |
+      Includes info and taxonomy about musicians, albums, tracks, and performances
+
+  - name: Clincal research trials
+    source_url: https://clinicaltrials.gov/
+    source: U.S. National Institutes of Health
+    description: A registry and results database of publicly and privately supported clinical studies of human participants conducted around the world.
+
+  - name: Congressional record
+    source_url: https://www.congress.gov/
+    source: U.S. Congress
+    description: |
+      Who's in Congress, what they've proposed and what they've said

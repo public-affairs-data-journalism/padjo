@@ -1,0 +1,49 @@
+title: Data aggregation
+background: The ability to summarize and aggregate data
+text: |
+  Given one table that lists state, county, item_type, category, quantity, price per item
+
+
+questions:
+  - title: Basic counting
+    text: Count the total number of counties in this list
+    answer: |
+      ```sql
+         SELECT state, county FROM
+         leso_npr_cleaned
+         GROUP BY state, county
+      ```
+      Then count the number of rows.
+      Fancier SQL:
+
+      ```sql
+       SELECT COUNT(DISTINCT state, county) FROM
+       leso_npr_cleaned
+      ```
+
+  - title: Basic summation
+    text:  Sum up the total number of items sent out
+    answer: |
+      ```sql
+        SELECT SUM(quantity) FROM leso_npr_cleaned
+      ```
+
+  - title: Summation with derived field
+    text: Sum up the total cost of these items
+    answer: |
+      ```sql
+        SELECT SUM(quantity * cost)
+      ```
+
+  - title: Summation by grouped fields
+    text: |
+      Sum up the total cost of items per state, and sort that cost in descending order
+
+      i.e. Find the total amount of money each state received, and list it in order of which state received the most
+
+    answer: |
+      ``` sql
+        SELECT SUM(quantity * cost) as total_cost
+          FROM the_table
+          GROUP BY state, county
+          ORDER by total_cost DESC

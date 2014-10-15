@@ -1,0 +1,53 @@
+html lang='en' class='no-js'
+  head
+    title = page_title
+    meta[name="description" content="#{{page_description}}"]
+    meta[http-equiv="content-type" content="text/html" charset="utf-8"]
+    meta[http-equiv="x-ua-compatible" content="ie=edge,chrome=1"]
+    meta[name="author" content="Daniel Nguyen"]
+
+    / Standard viewport tag to set the viewport to the device's width,
+    / Android 2.3 devices need this so 100% width works properly and
+    / doesn't allow children to blow up the viewport width
+    meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport"
+
+    / Fix for iPhone 5 fullscreen web apps
+    meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1"
+    meta[name='apple-mobile-web-app-capable' content='yes']
+    meta[name='apple-mobile-web-app-status-bar-style' content='black-translucent']
+
+    / App Icons
+    link[rel="shortcut icon" href="/images/favicon.ico"]
+    link[rel="apple-touch-icon-precomposed" href="/images/apple-touch-icon-precomposed.png"]
+    link[rel="apple-touch-icon-precomposed" sizes="57x57" href="/images/apple-touch-icon-57x57-precomposed.png"]
+    link[rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/apple-touch-icon-72x72-precomposed.png"]
+    link[rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114x114-precomposed.png"]
+
+    / Stylesheets
+    = stylesheet_link_tag 'application'
+
+    = javascript_include_tag "application", charset:"utf-8"
+
+    / fonts
+
+    // google font
+    / link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic' rel='stylesheet' type='text/css'
+    / Typekit
+    - if (tkit_id = config[:typekit_id])
+        script type="text/javascript" src="//use.typekit.net/#{{tkit_id}}.js"
+        javascript:
+            try{Typekit.load();}catch(e){}
+
+
+
+    javascript:
+      videojs.options.flash.swf = "/assets/misc/video-js.swf";
+
+    - if build? && (ga_id = config[:google_analytics_id])
+      / Google Analytics
+      javascript:
+        | var _gaq=[['_setAccount','#{{ga_id}}'],['_trackPageview']];
+        | (function[d,t]{var g=d.createElement[t],s=d.getElementsByTagName[t][0];
+        | g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+        | s.parentNode.insertBefore[g,s]}(document,'script'));
+

@@ -1,0 +1,13 @@
+- cdata = current_page.data
+- lecture_meta = cdata.other_meta || {}
+= wrap_layout :layout
+  article.syllabus
+
+    div.container
+      h1 => current_page.data.title
+      section.content => yield
+
+    div.container
+      section.course-schedule
+        h3 Course schedule
+        div => partial 'layouts/partials/course_schedule'

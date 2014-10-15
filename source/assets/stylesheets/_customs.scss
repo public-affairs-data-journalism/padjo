@@ -1,0 +1,28 @@
+$font-size-base:        16px !default;
+$text-color:            #333 !default;
+$stanford-red: #8c1515;
+$brand-primary: $stanford-red;
+$link-color: lighten($brand-primary, 25%);
+$font-family-sans-serif:  "museo-sans", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-family-serif:        Georgia, "Times New Roman", Times, serif !default;
+$font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace !default;
+$font-family-base:        $font-family-sans-serif !default;
+$font-family-display: "adelle", $font-family-serif !default;
+$font-family-headers: "Futura PT", "museo-sans", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+
+////
+
+$grid-gutter-width: 20px;
+// Small screen / tablet
+$container-tablet:             ((720px + $grid-gutter-width)) !default;
+$container-sm:                 $container-tablet !default;
+
+// Medium screen / desktop
+$container-desktop:            ((840px + $grid-gutter-width)) !default;
+$container-md:                 $container-desktop !default;
+
+// Large screen / wide desktop
+$container-large-desktop:      $container-desktop !default;
+$container-lg:                 $container-desktop !default;
+
+$stanford-red-link: lighten($stanford-red, 50%);

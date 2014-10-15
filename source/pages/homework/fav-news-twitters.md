@@ -1,0 +1,571 @@
+
+
+
+### The different ways people listed things
+
+The correct way:
+
+```
+@NewYorker
+@CNNEE
+@MiamiHerald
+https://twitter.com/CNN
+https://twitter.com/washingtonpost
+```
+
+
+The wrong way:
+
+```
+1.New York Times World
+https://twitter.com/nytimesworld
+2.New York Times
+https://twitter.com/nytimes
+
+- [Quartz](https://twitter.com/qz)
+- [SF Chronicle](https://twitter.com/sfchronicle)
+
+[@TwitterData](http://twitter.com/TwitterData) - Collects and shares numbers about Twitter usage, especially pertaining to specific events and happenings.
+
+[@BrainPicker](http://twitter.com/BrainPicker) - Wonderful feed of curated articles, videos, pictures covering a range of topics.
+
+5. @mcall- The Morning Call
+6. @NateSilver538- Nate Silver
+
+[BBC World](https://twitter.com/BBCWorld)
+
+[Spin](https://twitter.com/SPINmagazine)
+```
+
+
+We want everything to look like this:
+
+```
+@nytimesworld
+@nytimes
+@qz
+@sfchronicle
+@TwitterData
+@mcall
+@BBCWorld
+```
+
+
+### The original list
+
+```
+1.New York Times World
+https://twitter.com/nytimesworld
+2.New York Times
+https://twitter.com/nytimes
+3.USA Today
+https://twitter.com/USATODAY
+4.CNN Breaking News
+https://twitter.com/cnnbrk
+5.The New Yorker
+https://twitter.com/NewYorker
+6.Wall Street Journal
+https://twitter.com/WSJ
+7.Contra Costa Times
+https://twitter.com/CCTimes
+8.Forbes
+https://twitter.com/Forbes
+9.CNN Money
+https://twitter.com/CNNMoney
+10.SF Chronicle
+https://twitter.com/sfchronicle
+https://twitter.com/SultanAlQassemi
+https://twitter.com/susie_c
+https://twitter.com/Ibishblog
+https://twitter.com/GeeDee215
+https://twitter.com/femfreq
+https://twitter.com/mallelis
+https://twitter.com/feministabulous
+https://twitter.com/sisiwei
+https://twitter.com/UpshotNYT
+https://twitter.com/derekwillis
+- [Quartz](https://twitter.com/qz)
+- [SF Chronicle](https://twitter.com/sfchronicle)
+- [Vox](https://twitter.com/voxdotcom)
+- [The New York Times](https://twitter.com/nytimes)
+- [The New Yorker](https://twitter.com/NewYorker)
+- [Teju Cole](https://twitter.com/tejucole)
+- [The Associated Press](https://twitter.com/AP)
+- [Wired](https://twitter.com/WIRED)
+- [The Atlantic](https://twitter.com/TheAtlantic)
+- [Sanjay Sipahimalani](https://twitter.com/SanSip)
+- [@NickKristof](https://twitter.com/NickKristof)
+- [@60minutes](https://twitter.com/60Minutes)
+- [@nytvideo](https://twitter.com/nytvideo)
+- [@SoccerByIves](https://twitter.com/SoccerByIves)
+- [@Grantland33](https://twitter.com/Grantland33)
+- [@nprnews](https://twitter.com/nprnews)
+- [@ThisAmerLife](https://twitter.com/ThisAmerLife)
+- [@GrantWahl](https://twitter.com/GrantWahl)
+- [@darrenrovell](https://twitter.com/darrenrovell)
+- [@BBCWorld](https://twitter.com/BBCWorld)
+@NiemanLab
+@HuffingtonPost
+@nytimeshealth 
+@nytimesarts
+@TIME
+@NatGeo
+@CBSEveningNews
+@NewYorker
+@CNNEE
+@MiamiHerald
+@MJBerens1
+@adrianflorido
+@JulianGuthrie
+@MelodyGutierrez
+@TheAtlantic
+@HuffPostVoces
+@radioambulante 
+@ThePlumLineGS
+[@TwitterData](http://twitter.com/TwitterData) - Collects and shares numbers about Twitter usage, especially pertaining to specific events and happenings.
+
+[@BrainPicker](http://twitter.com/BrainPicker) - Wonderful feed of curated articles, videos, pictures covering a range of topics.
+
+[@PBSMediaShift](http://twitter.com/PBSMediaShift) - Covers the digital media revolution. Mostly its own articles, but also occasionally links elsewhere, and has a Must Reads collection weekly.
+
+[@si_vault](http://twitter.com/si_vault) - Tweets photographs from Sports Illustrated's deep archives.
+
+[@visually](http://twitter.com/visually) - Shares great infographs and data visualizations.
+
+[@ESPNStatsInfo](http://twitter.com/ESPNStatsInfo) - Shares insightful statistics pertaining to current happenings in sports.
+
+[@petesouza](http://twitter.com/petesouza) - White House photographer who shares great photos from the presidency.
+
+[@frugaltraveler](http://twitter.com/frugaltraveler) - New York Times' blog on traveling the world for cheap.
+
+[@NatGeoTravel](http://twitter.com/NatGeoTravel) - Great collection of articles and photos to inspire wanderlust.
+
+[@UN](http://twitter.com/UN) - Shares the great work the UN has been doing, and the work that is left ahead.
+Wall Street Journal,https://twitter.com/WSJ
+Washington Post,https://twitter.com/washingtonpost
+NPR News,https://twitter.com/nprnews
+REuters Top News,https://twitter.com/Reuters
+CNN Breaking News,https://twitter.com/cnnbrk
+BBC Breaking News,https://twitter.com/BBCBreaking
+The New Yorker,https://twitter.com/NewYorker
+The Onion,https://twitter.com/TheOnion
+Forbes,https://twitter.com/Forbes
+Bloomberg News,https://twitter.com/BloombergNews
+The New York Times, @nytimes
+The Upshot, @UpshotNYT 
+The Washington Post, @WashingtonPost
+Slate, @slate 
+Stacy Martinet, @stacymartinet
+Alex Howard, @digiphile
+Office of the Spokesperson for United Nations Secretary-General Ban Ki-moon, @UN_Spokesperson
+On the Media, @onthemedia
+Radio Lab, @Radiolab
+The Atlantic, @TheAtlantic
+@Sportscenter,
+@WSJ,
+@FT,
+@UTSanDiego,
+@Princeton,
+@BloombergNews,
+@HuffingtonPost,
+@NYTimes,
+@EaterSF,
+@ezraklein,
+@natesilver538,
+@asymmetricinfo
+1. [Ed Yong](https://twitter.com/edyong209)
+2. [Popular Science](https://twitter.com/PopSci)
+3. [Quartz](https://twitter.com/qz)
+4. [Harry McCracken](https://twitter.com/harrymccracken)
+5. [Ina Fried](https://twitter.com/inafried)
+6. [Gizmodo](https://twitter.com/Gizmodo)
+7. [Katie Boehret](https://twitter.com/KatieBoehret)
+8. [Ron Amadeo](https://twitter.com/RonAmadeo)
+9. [Ensia](https://twitter.com/ensiamedia)
+10. [Treehugger](https://twitter.com/TreeHugger)
+1. @TheEconomist
+2. @WSJ
+3. @BBCWorld
+4. @rollcall
+5. @politico
+6. @thehill
+7. @UN
+8. @HouseFloor
+9. @UNinBrussels
+10. @nprnews
+1. @TiME
+2. @HuffingtonPost
+3. @nytimes
+4. @NewYorker
+5. @nytimeshealth
+6. @NBCNewsHealth
+7. @AP
+8. @CDCEmergency
+9. @thecrimson
+10. @Politico
+1. @FoxNews- Fox News
+2. @HooverInst- Hoover Institution
+3. @Politico- Politico
+4. @thehill- The Hill
+5. @mcall- The Morning Call
+6. @NateSilver538- Nate Silver
+7. @lanheechen- Lanhee J. Chen
+8. @washingtonpost- Washington Post
+9. @mercnews- San Jose Mercury News
+10. @cnnbrk- CNN Breaking News
+Nicholas Kristof (@NickKristof)
+ABC News (@ABC)
+New York Times (@NYTimes)
+New Yorker (@NewYorker)
+Vanity Fair (@VanityFair)
+Reza Aslan (@rezaaslan)
+Borowitz Report (@BorowitzReport)
+Megan Amran (@MeganAmran)
+Carrot Facts (@RealCarrotFacts)
+Total Bird Move (@totalbirdmove)
+https://twitter.com/verge
+https://twitter.com/medium
+https://twitter.com/recode
+https://twitter.com/nytfoodfeed
+https://twitter.com/KarlTheFog
+https://twitter.com/ozy
+https://twitter.com/mashable
+https://twitter.com/Lord_Voldemort7
+https://twitter.com/PeninsuPress
+https://twitter.com/StanfordJourn
+https://twitter.com/nytimes
+https://twitter.com/WSJ
+https://twitter.com/NBCNightlyNews
+https://twitter.com/CNN
+https://twitter.com/washingtonpost
+https://twitter.com/bizjournals
+https://twitter.com/chicagotribune
+https://twitter.com/BBC
+https://twitter.com/BostonGlobe
+https://twitter.com/latimes
+[Vice News](https://twitter.com/vicenews)
+
+[Aris Roussinos](https://twitter.com/arisroussinos)
+
+[BBC World](https://twitter.com/BBCWorld)
+
+[Spin](https://twitter.com/SPINmagazine)
+
+[Noisey](https://twitter.com/NoiseyMusic)
+
+[Gordon Ramsay](https://twitter.com/GordonRamsay)
+
+[Comedy Central](https://twitter.com/ComedyCentral)
+
+[The Atlantic](https://twitter.com/TheAtlantic)
+
+[Salon](https://twitter.com/Salon)
+
+[Juan Cole](https://twitter.com/jricole)
+*  https://twitter.com/CityLab
+*  https://twitter.com/cityforward
+*  https://twitter.com/CitiesChallenge
+*  https://twitter.com/Open_Cities
+*  https://twitter.com/AndreinaSeijas
+*  https://twitter.com/gophermagazine
+*  https://twitter.com/bookschool
+*  https://twitter.com/knightlab
+*  https://twitter.com/TEDFellow
+*  https://twitter.com/JSKstanford
+*  @buzzfeed
+*  @geedee215
+*  @vox
+*  @micnews
+*  @nprcodeswitch
+*  @todayin1963
+*  @allDigitocracy
+*  @nytimes 
+*  @desusnice
+*  @brokeymcpoverty
+```
+
+
+- replace all `Vanity Fair (@VanityFair)`
+  - find: `.*(@\w+).*`
+  - replace: `\1`
+- replace `- [Teju Cole](https://twitter.com/tejucole)`
+  + find: `.*twitter.com/(\w+).*`
+  + replace: `@\1`
+- replace `7.Contra Costa Times`
+  + find: `^\d+.+`
+  + replace: (with nothing)
+- replace blank lines
+  + find: `^\n`
+  + replace: (with nothing)
+
+
+We're then left with this list:
+
+```
+@nytimesworld
+@nytimes
+@USATODAY
+@cnnbrk
+@NewYorker
+@WSJ
+@CCTimes
+@Forbes
+@CNNMoney
+@sfchronicle
+@SultanAlQassemi
+@susie_c
+@Ibishblog
+@GeeDee215
+@femfreq
+@mallelis
+@feministabulous
+@sisiwei
+@UpshotNYT
+@derekwillis
+@qz
+@sfchronicle
+@voxdotcom
+@nytimes
+@NewYorker
+@tejucole
+@AP
+@WIRED
+@TheAtlantic
+@SanSip
+@NickKristof
+@60minutes
+@nytvideo
+@SoccerByIves
+@Grantland33
+@nprnews
+@ThisAmerLife
+@GrantWahl
+@darrenrovell
+@BBCWorld
+@NiemanLab
+@HuffingtonPost
+@nytimeshealth
+@nytimesarts
+@TIME
+@NatGeo
+@CBSEveningNews
+@NewYorker
+@CNNEE
+@MiamiHerald
+@MJBerens1
+@adrianflorido
+@JulianGuthrie
+@MelodyGutierrez
+@TheAtlantic
+@HuffPostVoces
+@radioambulante
+@ThePlumLineGS
+@TwitterData
+@BrainPicker
+@PBSMediaShift
+@si_vault
+@visually
+@ESPNStatsInfo
+@petesouza
+@frugaltraveler
+@NatGeoTravel
+@UN
+@WSJ
+@washingtonpost
+@nprnews
+@Reuters
+@cnnbrk
+@BBCBreaking
+@NewYorker
+@TheOnion
+@Forbes
+@BloombergNews
+@nytimes
+@UpshotNYT
+@WashingtonPost
+@slate
+@stacymartinet
+@digiphile
+@UN_Spokesperson
+@onthemedia
+@Radiolab
+@TheAtlantic
+@Sportscenter
+@WSJ
+@FT
+@UTSanDiego
+@Princeton
+@BloombergNews
+@HuffingtonPost
+@NYTimes
+@EaterSF
+@ezraklein
+@natesilver538
+@asymmetricinfo
+@edyong209
+@PopSci
+@qz
+@harrymccracken
+@inafried
+@Gizmodo
+@KatieBoehret
+@RonAmadeo
+@ensiamedia
+@TreeHugger
+@TheEconomist
+@WSJ
+@BBCWorld
+@rollcall
+@politico
+@thehill
+@UN
+@HouseFloor
+@UNinBrussels
+@nprnews
+@TiME
+@HuffingtonPost
+@nytimes
+@NewYorker
+@nytimeshealth
+@NBCNewsHealth
+@AP
+@CDCEmergency
+@thecrimson
+@Politico
+@FoxNews
+@HooverInst
+@Politico
+@thehill
+@mcall
+@NateSilver538
+@lanheechen
+@washingtonpost
+@mercnews
+@cnnbrk
+@NickKristof
+@ABC
+@NYTimes
+@NewYorker
+@VanityFair
+@rezaaslan
+@BorowitzReport
+@MeganAmran
+@RealCarrotFacts
+@totalbirdmove
+@verge
+@medium
+@recode
+@nytfoodfeed
+@KarlTheFog
+@ozy
+@mashable
+@Lord_Voldemort7
+@PeninsuPress
+@StanfordJourn
+@nytimes
+@WSJ
+@NBCNightlyNews
+@CNN
+@washingtonpost
+@bizjournals
+@chicagotribune
+@BBC
+@BostonGlobe
+@latimes
+@vicenews
+@arisroussinos
+@BBCWorld
+@SPINmagazine
+@NoiseyMusic
+@GordonRamsay
+@ComedyCentral
+@TheAtlantic
+@Salon
+@jricole
+@CityLab
+@cityforward
+@CitiesChallenge
+@Open_Cities
+@AndreinaSeijas
+@gophermagazine
+@bookschool
+@knightlab
+@TEDFellow
+@JSKstanford
+@buzzfeed
+@geedee215
+@vox
+@micnews
+@nprcodeswitch
+@todayin1963
+@allDigitocracy
+@nytimes
+@desusnice
+@brokeymcpoverty
+```
+
+
+----------------
+
+
+Throw it in a spreadsheet, then use a formula to convert to lower case. Then pivot to find the most popular accounts in our class.
+
+```
+@nytimes,7
+@newyorker,6
+@wsj,5
+@theatlantic,4
+@washingtonpost,4
+@bbcworld,3
+@cnnbrk,3
+@huffingtonpost,3
+@nprnews,3
+@politico,3
+@ap,2
+@bloombergnews,2
+@forbes,2
+@natesilver538,2
+@nickkristof,2
+@nytimeshealth,2
+@qz,2
+@sfchronicle,2
+@thehill,2
+@time,2
+@un,2
+@upshotnyt,2
+@60minutes,1
+@abc,1
+@adrianflorido,1
+@arisroussinos,1
+...etc
+```
+
+
+A quick tweety program:
+
+```ruby
+filename = File.expand_path '~/Downloads/twitter names from class - Pivot Table 1.csv'
+rows = open(filename).readlines
+rows.each do |row|
+  name, count = row.strip.split(',')
+  if count.to_i  > 1
+    puts "Hey @#{name}, #{count} students in my class enjoy your work. Good work!"
+  end
+end 
+```
+
+```ruby
+# add a program
+require 'twitter'
+client = Twitter::Client TK
+
+client.tweet "Stay tuned for some positive vibes..."
+rows.each do |row|
+  name, count = row.strip.split(',')
+  if count.to_i  > 1
+    client.tweet "Hey @#{name}, #{count} students in my class enjoy your work. Good work!"
+  end
+end
+
+```
+
