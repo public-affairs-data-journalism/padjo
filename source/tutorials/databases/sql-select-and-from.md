@@ -200,6 +200,8 @@ SELECT IncidentNum, Category, Descript
 
 The above statement will return an error because I've omitted what table I want to select these columns _from_. In the GUI, just because you've selected a table by clicking on it and you've been querying the same table for the past hour, doesn't mean that the SQL interpreter will automatically assume that you're using the same table.
 
+Also, that above query will throw an error because I've spelled 'IncidntNum' as 'Incid__e__ntNum'; database software won't do the guesswork for you when it comes to typos.
+
 Keep this need for being _explicit_ (and repetitive) in mind. That's typical behavior in programming languages.
 
 

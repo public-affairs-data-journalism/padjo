@@ -360,12 +360,36 @@
 
 "2014-10-16": # inner joins
   homework:
-    - title: "A map, a chart, and a webpage"
+    - title: "Map your name"
       description: |
-        TBA - Creating a join between school location data and school performance data, then creating a map.
+        Create at least **two maps** of the United States and the popularity of your name. [Kind of like this](http://jezebel.com/map-sixty-years-of-the-most-popular-names-for-girls-s-1443501909), except be more informational:
+
+        ![img from jezebel](/files/lectures/2014-10-16/mary-1960-jezebel.png)
+
+
+
+        By *more informational*, I mean for you to do something interesting with the level of granular data you have in the SSA database from the previous assignment ([MySQL](http://stash.padjo.org/dumps/sql/ssa-babynames-since-1980.sqlite.zip), [SQLite](http://stash.padjo.org/dumps/sql/ssa-babynames-since-1980.sqlite.zip))
+
+        For this assignment, you will re-use the state KML data you've worked with before, [which can be found here](https://docs.google.com/a/stanford.edu/spreadsheets/d/18YaI4CDDOnhBHtX1vykmhwukfMeYqN9qdDggcnSfHFo/edit#gid=764026114).
+
+        Remember how you had to match data to each state row by hand? Doing that, even just 50 times, is for suckers. Use a SQL inner join to join the **ssa_baby_names_by_state** table to the state KML spreadsheet, do some kind of aggregation at the state level, then export it out to Fusion Table or TileMill.
+
+        What kind of aggregation? I leave it to you. One could be to shade the states by relative popularity of your name in 1983 and 2013. Or you could use the political vote data that's in the [provided KML spreadsheet](https://docs.google.com/a/stanford.edu/spreadsheets/d/18YaI4CDDOnhBHtX1vykmhwukfMeYqN9qdDggcnSfHFo/edit#gid=764026114), and see if there's a correlation between political leanings of a state and the popularity of your name. Knock yourself out.
+
+        Why two maps (i.e. two Fusion Tables)? Because if you are using SQL and joins, you can create the intersection of the baby-names table and the KML table very quickly. If you are doing it by hand...well, not so much.
+
+        The first step you will have to do is to export the KML-spreadsheet as CSV and then import it **into the database that contains the ssa_baby_names tables**. I have not made a tutorial that lists out those steps, which differ between **SQLite Manager** and **MySQL** (SQLite Manager is especially a pain). This tutorial by [Troy Thibodeaux ](https://github.com/tthibo/SQL-Tutorial/blob/master/tutorial_files/part1.textile) will help, but google around for more information.
+
+
+
+
+
+
+
   topics:
     - Inner joins
-    - Subqueries
+    - One-to-one relationships
+    - Our politicians and what they tweet
 
 
 
