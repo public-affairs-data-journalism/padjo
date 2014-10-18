@@ -212,7 +212,12 @@ SELECT name, twitter_profiles.screen_name,
 - get number of tweets replied to 
 - get number of tweets that were replied to or were rewteets
 - get users who were retweeted or replied to who are also congressmembers
+- get users who were most retweeted or replied to who are not congressmembers
+- Find the democrats Congressmembers most retweeted by Republicans
+- Find the republicans Congressmembers most retweeted by Republicans
 - Find the congressmembers who use the most variety of web/twitter clients
+- find the congressmembers with at least 1000 tweets who have been least retweeted
+- Find the number of tweets that mention ebola and graph it by week
 
 Homework:
 
