@@ -201,7 +201,8 @@ One of Fusion Tables's most convenient features is that your work not only lives
 
 ### Conclusion
 
-TK
+Fusion Tables is a great way for creating interactive web maps from large (but relatively simple) data tables. Check out the [tutorial on creating intensity maps in Fusion Tables](/tutorials/mapping/fusion-table-shapes) to see other ways of linking data to geography inside of FT.
+
 
 
 
