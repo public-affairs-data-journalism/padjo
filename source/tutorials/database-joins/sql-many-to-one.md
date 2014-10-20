@@ -1,9 +1,8 @@
 ---
 layout: tutorial
-title: SQL Joins on many-to-one relationship
-description: Whe
+title: Joining on a many-to-one relationship
+description: When one record has many child records
 date: 2014-10-17
-published: false
 ---
 
 In the [previous tutorial](/tutorials/database-joins/sql-many-to-one), we learned the basics of the `JOIN` syntax and how to join one record from a table to one record from another table, e.g. a Congressmember to his/her Twitter account.
@@ -16,7 +15,13 @@ The syntax of `JOIN` is no different from before, so this will be more of a refr
 
 --------------
 
-> Note: For this SQL lesson, I will be using MySQL and the Sequel Pro GUI. The queries and concepts should be the same as they are with SQLite.
+> Note: For this SQL lesson, I will be using MySQL and the Sequel Pro GUI. The queries and concepts should be the same as they are with SQLite. The database we will use consists of five tables:
+> 
+> 1. `members` - Current U.S. congressmembers as of October 2014
+> 2. `terms` - The terms served by the current U.S. congressmembers
+> 3. `social_accounts` - social account names for current U.S. congressmembers
+> 4. `twitter_profiles` - Twitter profile data for the accounts in `social_accounts`
+> 5. `tweets` - The most recent 3,200 tweets of each Twitter profile (about 800,000+ tweets altogether)
 > 
 > - [MySQL dump of Congress and Twitter data](http://stash.padjo.org/dumps/sql/congress_twitter.sql.zip)
 > - [SQLite dump of Congress and Twitter data](http://stash.padjo.org/dumps/sql/congress_twitter.sqlite.zip)
@@ -160,19 +165,25 @@ UPDATE social_accounts
 UPDATE twitter_profiles
   SET screen_name = LOWER(screen_name);
 /* normalize tweets */
-
-UPDATE tweets
-  SET retweeted_status_id = NULL, retweeted_status_screen_name = NULL,
-    retweeted_status_user_id = NULL
-  WHERE retweeted_status_id = '' OR retweeted_status_id = 0;
-UPDATE tweets
-  SET in_reply_to_status_id = NULL, in_reply_to_screen_name = NULL
-  WHERE in_reply_to_status_id = '' OR in_reply_to_status_id = 0; 
-/* lower case all kinds of screen_names */
 UPDATE tweets
   SET screen_name = LOWER(screen_name),
   retweeted_status_screen_name = LOWER(retweeted_status_screen_name),
   in_reply_to_screen_name = LOWER(in_reply_to_screen_name);
+UPDATE tweets
+  SET retweeted_status_id = NULL
+  WHERE retweeted_status_id = '' OR retweeted_status_id = 0;
+UPDATE tweets
+  SET retweeted_status_screen_name = NULL, retweeted_status_user_id = NULL
+  WHERE retweeted_status_id IS NULL;
+UPDATE tweets
+  SET in_reply_to_status_id = NULL
+  WHERE in_reply_to_status_id = '' OR in_reply_to_status_id = 0; 
+UPDATE tweets 
+  SET in_reply_to_screen_name = NULL
+  WHERE in_reply_to_status_id IS NULL;
+
+/* lower case all kinds of screen_names */
+
 ~~~
 
 

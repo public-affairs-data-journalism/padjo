@@ -15,7 +15,13 @@ This is an incredibly powerful ability, even more useful than being able to crun
 
 --------------
 
-> Note: For this SQL lesson, I will be using MySQL and the Sequel Pro GUI. The queries and concepts should be the same as they are with SQLite.
+> Note: For this SQL lesson, I will be using MySQL and the Sequel Pro GUI. The queries and concepts should be the same as they are with SQLite. The database we will use consists of five tables:
+> 
+> 1. `members` - Current U.S. congressmembers as of October 2014
+> 2. `terms` - The terms served by the current U.S. congressmembers
+> 3. `social_accounts` - social account names for current U.S. congressmembers
+> 4. `twitter_profiles` - Twitter profile data for the accounts in `social_accounts`
+> 5. `tweets` - The most recent 3,200 tweets of each Twitter profile (about 800,000+ tweets altogether)
 > 
 > - [MySQL dump of Congress and Twitter data](http://stash.padjo.org/dumps/sql/congress_twitter.sql.zip)
 > - [SQLite dump of Congress and Twitter data](http://stash.padjo.org/dumps/sql/congress_twitter.sqlite.zip)

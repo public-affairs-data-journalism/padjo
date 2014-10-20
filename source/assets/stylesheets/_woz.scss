@@ -103,6 +103,12 @@ ol, ul{
 }
 
 
+a.ref{
+  &:link{
+    color: $text-color;
+  }
+}
+
 .navbar{
   margin-bottom: 0;
 }

@@ -14,7 +14,7 @@ article.tutorials
 
     - tutorials_list.group_by{|t| t.metadata[:page]['topic'] }.each_pair do |topic, tutorials|
       div.topic
-        h3 id="#{{topic}}" => topic.capitalize
+        h3 id="#{{topic_slug(topic)}}" => topic_link(topic)
         ul
           - tutorials.sort_by{|t| t.date }.each do |tutorial|
             - tutorial_data = tutorial.data

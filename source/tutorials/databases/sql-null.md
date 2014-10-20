@@ -1,9 +1,8 @@
 ---
 layout: tutorial
-title: The null value
-description: "Sometimes nothing can be a real cool value."
+title: The null state in databases
+description: "In databases, there's nothing and then there's NULL"
 date: 2014-10-18
-published: false
 ---
 
 In the [previous tutorial on datatypes](/tutorials/databases/sql-data-types), we learned that there is a difference between _strings_ and _numbers_ and _dates_, that "101" is not quite the same as `101` when it comes to SQL queries and functions.
@@ -14,7 +13,7 @@ In this brief tutorial, we learn that there's a difference between what we, in n
 ![img](/files/tutorials/databases/cool-hand-luke.jpg)
 
 
-> "Sometimes nothing is a real cool hand" -- [Luke](http://www.imdb.com/title/tt0061512/)
+> "Yeah, well, sometimes nothin' can be a real cool hand" -- [Luke](http://www.imdb.com/title/tt0061512/)
 
 To use a clumsy cinematic metaphor, _a handful of nothing_ is what Paul Newman holds, colloquially, during a poker game in [_Cool Hand Luke_](http://www.imdb.com/title/tt0061512/). Whereas `NULL` is what you hold when you *are not in the game*. 
 
@@ -40,8 +39,9 @@ For us SQL programmers, there is one immediate syntactical takeaway: know the di
 
 ### What is NULL
 
+> SQL null is a state (unknown) and not a value. -- [Wikipedia](http://en.wikipedia.org/wiki/Null_(SQL))
 
-A tricky concept for non-programmers is the concept of the `NULL` [value](http://en.wikipedia.org/wiki/Null_(SQL)). In other programming languages, it's sometimes referred to as `nil`; in Spanish, as _nada_:
+A tricky concept for non-programmers is the concept of the `NULL` [state](http://en.wikipedia.org/wiki/Null_(SQL)). In other programming languages, it's sometimes referred to as `nil`; in Spanish, as _nada_:
 
 > Our nada who art in nada, nada be thy name thy kingdom nada thy will be nada in nada as it is in nada. Give us this nada our daily nada and nada us our nada as we nada our nadas and nada us not into nada but deliver us from nada; pues nada. Hail nothing full of nothing, nothing is with thee.”
 > 
@@ -65,16 +65,16 @@ Think of a database of `people` that contains names and _yearly income_:
 
 The clearest illustration of the difference between `NULL` and a value like `0` or `""` can be found in the `yearly_income`. If you wanted to get the _average_ income of the folks in the `people` table, you might want to exclude people who aren't eligible to receive an income, e.g. a child. Technically, such a person "makes" an income equivalent to $0. But how would differentiate between such a person (in the example table above, `Zach Butler Jr.`) and someone else who _is_ expected to have an income but still earned $0? (e.g. `Charles R. Thompson III`)?
 
-If the `yearly_income` field is set to be a numeric-type of column, then we can't just add a `"NONE"` for `Butler Jr.` However, we _can_ add give him an income value of `NULL`.
+If the `yearly_income` field is set to be a numeric-type of column, then we can't just add a `"NONE"` for `Butler Jr.` However, we _can_ set his `yearly_income` to `NULL`, to differentiate his situation from someone who makes `0`.
 
-So a query to find all `people` who earned 0 income would look like this:
+So a query to find all `people` who earned `0` income would look like this:
 
 ~~~sql
 SELECT * FROM people
   WHERE yearly_income = 0
 ~~~
 
-However, the syntax for finding `NULL` values does _not_ use the _equals_ operator. To find all people with a `NULL` income:
+However, the syntax for finding `NULL` states does _not_ use the _equals_ operator. To find all people with a `NULL` income:
 
 ~~~sql
   SELECT * FROM people
@@ -103,11 +103,11 @@ In the example `people` table, look at the possible values for `suffix`:
 
 To reiterate: just as `0` is not equivalent to `NULL` &ndash; an empty string, i.e. `""` &ndash; is also not equivalent to `NULL`.
 
-So here's where confusion often arises in data: what does `NULL` and a blank value mean to the _maintainer_ of the data? In the `yearly_income` case, I posited an explanation: a `NULL` value means that a person is ineligible to receive an income. _However_, that's just speculation: it could be that `NULL` means, "*The collector of this data never got around to finding this value*".
+So here's where confusion often arises in data: what does `NULL` and a blank value mean to the _maintainer_ of the data? In the `yearly_income` case, I posited an explanation: a `NULL` state means that a person is ineligible to receive an income. _However_, that's just speculation: it could be that `NULL` means, "*The collector of this data never got around to finding this value*".
 
-For `suffix`, a `NULL` value could mean just that: "*We haven't asked Nick R. Johnson if he is a Jr. or a Sr.*" And the blank value for Sara C. Smith could mean, "*Sara C. Smith does not have a suffix*". Or I could have the meanings switched up here. The point is, from a semantic standpoint, you might not know the difference between `NULL` and `""` and `0`. And to find the difference, you may have to tab-out of your database GUI and make a phone call or visit to the data's originating office.
+For `suffix`, a `NULL` state could mean just that: "*We haven't asked Nick R. Johnson if he is a Jr. or a Sr.*" And the blank value for Sara C. Smith could mean, "*Sara C. Smith does not have a suffix*". Or I could have the meanings switched up here. The point is, from a semantic standpoint, you might not know the difference between `NULL` and `""` and `0`. And to find the difference, you may have to tab-out of your database GUI and make a phone call or visit to the data's originating office.
 
-If _you_ happen to be a creator of data, being aware of `NULL` and blank values _may_ be important, _especially_ if you're starting data collection from a spreadsheet or text file, and then importing into a database. Sometimes the import process may interpret a blank value as `NULL`; other times, just as an actual blank value or `0`. And spreadsheets typically don't have a native way of designating a `NULL` value.
+If _you_ happen to be a creator of data, being aware of `NULL` and blank values _may_ be important, _especially_ if you're starting data collection from a spreadsheet or text file, and then importing into a database. Sometimes the import process may interpret a blank value as `NULL`; other times, just as an actual blank value or `0`. And spreadsheets typically don't have a native way of designating a `NULL` state.
 
 The [Wikipedia entry on `NULL` in SQL](http://en.wikipedia.org/wiki/Null_(SQL)) has a nice summary of the controversy among programmers:
 
@@ -123,7 +123,7 @@ The [Wikipedia entry on `NULL` in SQL](http://en.wikipedia.org/wiki/Null_(SQL)) 
 
 ### Conclusion
 
-The main point of this brief lesson was to make you __aware__ of the existence of `NULL` &ndash; some of the datasets I've imported into MySQL via Sequel Pro have treated blank values as blank. And in SQLite, the import process has treated the values as `NULL`.
+The main point of this brief lesson was to make you __aware__ of the existence of `NULL` &ndash; some of the datasets I've imported into MySQL via Sequel Pro have treated blank values as blank. And in SQLite, the import process has treated the values as `NULL` states.
 
 At left is a table in MySQL/Sequel Pro that came in from a CSV file. Apparently, Sequel Pro considered blank values to be blank. At right, SQLite Manager treated the blank values as `NULL`, which is signified as pink-colored cells:
 
