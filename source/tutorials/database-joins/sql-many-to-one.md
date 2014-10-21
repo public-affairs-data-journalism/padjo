@@ -31,7 +31,10 @@ The syntax of `JOIN` is no different from before, so this will be more of a refr
 
 ### Important note about inconsistencies
 
-The next two sub-sections deal with __inconsistencies__ that may exist in the two database files I've provided. If you're getting unexpected results, please read these notes:
+The next two sub-sections deal with __inconsistencies__ that may exist in the two database files I've provided. 
+
+
+If you're getting unexpected results, please read the following notes. You [might also want to consult the quick tutorial](/tutorials/databases/sql/update-and-delete) on using `UPDATE` statements.
 
 #### About case-sensitivity
 Depending on your database setup, you may run into issues of _case-sensitivity_. This is a particular problem in this lesson's context, because Twitter screen names are __case-insensitive__. That is, the following URLs will go to the same page:
