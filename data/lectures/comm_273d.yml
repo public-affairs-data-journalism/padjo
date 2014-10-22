@@ -400,8 +400,26 @@
 "2014-10-21": # haystacks without needles
   topics:
     - Left joins
-    - Left joins and NULL
+    - NULL values
+    - Which Congressmembers like Ellen Degeneres?
 
+  homework:
+    - title: Congress tweeting about Ebola
+      description: |
+        1. Create a Markdown file named: `congress-tweets-about-ebola.md`
+        2. Download the Congress twitter data I've provided in the tutorials
+          - [MySQL dump of Congress and Twitter data](http://stash.padjo.org/dumps/sql/congress_twitter.sql.zip)
+          - [SQLite dump of Congress and Twitter data](http://stash.padjo.org/dumps/sql/congress_twitter.sqlite.zip)
+        3. Create a time-series chart (i.e. a column or line chart) or a table showing the number of tweets that mention "Ebola" from Democrats and Republicans.
+
+    - title: Read up on the LESO 1033 Program
+      description: |
+        Next class will involve a "midterm project" that will test your knowledge of spreadsheets, SQL, mapping, math, and web publishing. The topic will be the Department of Defense's surplus equipment program. Read up on the subject, start thinking of interesting queries you might want to do based on what you surmise from these data stories.
+
+        - [MRAPs And Bayonets: What We Know About The Pentagon's 1033 Program](http://www.npr.org/2014/09/02/342494225/mraps-and-bayonets-what-we-know-about-the-pentagons-1033-program)
+        - [Mapping the Spread of Military Gear](http://www.nytimes.com/interactive/2014/08/15/us/surplus-military-equipment-map.html)
+        - [The Flow of Money and Equipment To Local Police](http://www.nytimes.com/interactive/2014/08/23/us/flow-of-money-and-equipment-to-local-police.html)
+        - [MuckRock's FOIAs of 1033 Data](https://www.muckrock.com/news/archives/2014/sep/04/we-have-over-half-countrys-agency-agency-1033-data/)
 
 # ----------------------------# ------------# ----------------------------# ------------------
 
@@ -409,6 +427,7 @@
 
 "2014-10-23": # data janitor
   topics:
+    - A midterm
     - Reconciling Jim, Jimmy, John, James, and Jack
     - Clustering
     - Using OpenRefine

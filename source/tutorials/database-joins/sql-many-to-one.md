@@ -665,19 +665,3 @@ Check out the Internet-savviness of our Independents:
 
 
 
-- get number of tweets at night time
-- get number of tweets at night time adjusted for utc
-- get number of tweets replied to 
-- get number of tweets that were replied to or were rewteets
-- get users who were retweeted or replied to who are also congressmembers
-- get users who were most retweeted or replied to who are not congressmembers
-- Find the democrats Congressmembers most retweeted by Republicans
-- Find the republicans Congressmembers most retweeted by Republicans
-- Find the congressmembers who use the most variety of web/twitter clients
-- find the congressmembers with at least 1000 tweets who have been least retweeted
-- Find the number of tweets that mention ebola and graph it by week
-
-Homework:
-
-Find the number of times Republicans retweeted or replied to each other, versus the number of times they replied or retweeted Democrats.
-
