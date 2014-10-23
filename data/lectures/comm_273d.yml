@@ -425,14 +425,16 @@
 
 
 
-"2014-10-23": # data janitor
+"2014-10-23": # midterm
   topics:
-    - A midterm
-    - Reconciling Jim, Jimmy, John, James, and Jack
-    - Clustering
-    - Using OpenRefine
-    - Lookup tables
-
+    - A midterm on SQL and data
+    - Data on military surplus distributed to U.S. counties
+    - U.S. Census QuickFacts
+  homework:
+    - title: Do the Midterm
+      description: |
+        1. Create a file named `midterm.md` in your private Github repo
+        2. Answer the question in the lecture notes.
 
 
 # ----------------------------# ------------# ----------------------------# ------------------
@@ -452,12 +454,15 @@
 
 
 "2014-10-30":
-
+  topics:
+    - Election data
 
 # ----------------------------# ------------# ----------------------------# ------------------
 
 
 "2014-11-04":
+  topics:
+    - No class because of Election Day Coverage
 
 
 # ----------------------------# ------------# ----------------------------# ------------------
