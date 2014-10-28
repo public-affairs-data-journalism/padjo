@@ -432,6 +432,7 @@
     - U.S. Census QuickFacts
   homework:
     - title: Do the Midterm
+      duedate: 2014-10-30
       description: |
         1. Create a file named `midterm.md` in your private Github repo
         2. Answer the question in the lecture notes.
@@ -441,12 +442,21 @@
 
 
 
-"2014-10-28": # the forms of death
+"2014-10-28": # Election data
   topics:
-    - Filling in the blanks of data acquisition
+    - Polling and pollsters
+    - Following the campaign finance money
+    - Competitive U.S. Senate races
   homework:
-    - title: Write up a public records request
-      description: TBA
+    - title: Analyze a Senate race's campaign spending
+      description: |
+        Teams (groups of 3) will each focus on one of the 7 most highly-contested Senate races and produce a data dossier that includes:
+
+        - An analysis of campaign finance records for the two current candidates, including how much money has been spent, where the money came from, and how much money is currently on hand.
+        - Repeat the analysis for the 2008 race and compare the difference with 2014.
+    - title: Analyze polling methodologies
+      description: |
+        Read the methodologies for the Upshot's Leo, FiveThirtyEight, WaPo's Election Lab, and HuffPo's Pollster
 
 
 # ----------------------------# ------------# ----------------------------# ------------------
@@ -455,7 +465,13 @@
 
 "2014-10-30":
   topics:
-    - Election data
+    - Statistical significance
+    - Election historical data
+    - Past presidential results by county
+    - Past U.S. Senate results by county
+  homework:
+    - title: Senate prediction pool
+      description: Each group will guess the margin of error for each of the highly-contested Senate races. Winners get something TBA.
 
 # ----------------------------# ------------# ----------------------------# ------------------
 
