@@ -441,7 +441,6 @@
 # ----------------------------# ------------# ----------------------------# ------------------
 
 
-
 "2014-10-28": # Election data
   topics:
     - Polling and pollsters
@@ -454,9 +453,67 @@
 
         - An analysis of campaign finance records for the two current candidates, including how much money has been spent, where the money came from, and how much money is currently on hand.
         - Repeat the analysis for the 2008 race and compare the difference with 2014.
-    - title: Analyze polling methodologies
-      description: |
-        Read the methodologies for the Upshot's Leo, FiveThirtyEight, WaPo's Election Lab, and HuffPo's Pollster
+
+
+        ### The teams
+
+        |          Students          |  State   |
+        |----------------------------|----------|
+        | Dan, Austin, Sabrina       | Alaska   |
+        | Allison, Laura, Sean       | Colorado |
+        | Carolina, Mary Ann, Yuqing | Georgia  |
+        | Jay, Katie, Phoebe         | Iowa     |
+        | Ariha, Liam, Maren         | Kansas   |
+        | Alex, Farida, Jessica      | N.C.     |
+
+        #### Data you must collect from the FEC website
+
+        Download all of these CSV files and collect them in **three** spreadsheets.
+
+        From the [Senate Campaign Finance committees per candidate](http://www.fec.gov/disclosurehs/hsnational.do):
+
+        - **contributions.csv**
+          + Itemized Individual Contributions (both candidates) [2013-2014]
+          + Itemized Individual Contributions (both candidates) [2007-2008]
+
+        - **operating-expenditures.csv**
+          + Operating Expenditures (both candidates) [2013-2014]
+          + Operating Expenditures (both candidates) [2007-2008]
+
+
+        - **independent-expenditures.csv**
+          + Senate independent expenditures [2013-2014]
+
+        #### Fill out this master spreadsheet
+
+        The [class will collaboratively edit this Google Spreadsheet.](https://docs.google.com/a/stanford.edu/spreadsheets/d/1BYmwy5T24JJj9Gryud8mewdy6z59-82aACYjxEgZy2Y/edit#gid=0)
+
+        One row for each candidate (i.e. two candidates per state)
+
+          + State
+          + Year
+          + Candidate Last name
+          + Candidate First name
+          + Candidate Party
+          + Candidate Incumbent?
+          + Itemized Individual contributions
+          + Unitemized individual contributions
+          + Party Committees Contributions
+          + Other committees contributions
+          + Candidate contributions
+          + Transfers from authorized committees
+          + Candidate Loans
+          + Other loans
+          + Operating expenditure offsets
+          + Other receipts
+          + Operating expenditures
+          + Transfers to other Authorized Committees
+          + Candidate Loan Repayments
+          + Other Loan Repayments
+          + Individual Refunds
+          + Political Party Refunds
+          + Other Committee Refunds
+          + Other Disbursements
 
 
 # ----------------------------# ------------# ----------------------------# ------------------
@@ -466,12 +523,64 @@
 "2014-10-30":
   topics:
     - Statistical significance
-    - Election historical data
-    - Past presidential results by county
-    - Past U.S. Senate results by county
+    - Poll reliability
+    - Forecasting
   homework:
+    - title: Analyze polling methodologies
+      description: |
+        Choose 2 of the 3 methodologies for the [Upshot's Leo](http://www.nytimes.com/newsgraphics/2014/senate-model/methodology.html), [FiveThirtyEight](http://fivethirtyeight.com/features/how-the-fivethirtyeight-senate-forecast-model-works/), WaPo's [Election Lab](http://www.washingtonpost.com/news/politics/wp/2014/05/05/how-election-lab-works/).
+        In a file named **poll-methodologies.md**, explain the five most significant differences between the two methodologies you've chosen to read.
+
+        Also, write about: which of the methodologies is better, and why?
+
+    - title: Make your own poll-aggregating forecast
+      description: |
+        Within your group, make a [copy of this homemade polling spreadsheet](https://docs.google.com/a/stanford.edu/spreadsheets/d/1jAi4QzmUqNP8N18AKPqRLP3eu_o1IxAhT0F4j3dDrBU/edit#gid=669192362)
+
+        Then, visit the [HuffPo Pollster](http://elections.huffingtonpost.com/pollster), find the state that you're supposed to analyze, and enter in at least 24 polls that you've found. There are two components to this:
+
+        ##### Boilerplate for you to manually copy
+        - The name of the poll
+        - The URL to the poll
+        - The date of the poll
+        - The size of the poll (if given)
+        - The method of the poll (e.g. Live phone, internet poll)
+        - The stated margin of error (if given) in percentage points
+        - The state Republican margin of victory in percentage points
+
+        ##### Half-educated guesses for you to make
+        Based on what you have read about the factors in polling, assign positive or negative adjustments in the Date, Pollster credibility, and Poll conduct columns. **These are pretty much at your discretion**. For example, for a month-old poll, you may want to give it -30 in the Date adjustment. All of the adjustments are added/subtracted to the "Total weight", which then weights the given Republican Margin of Victory.
+
+        At the bottom of the chart is a formula that will sum up all the weighted margins.
+
+        Again, all of this adjustment-business is up to you and your educated guessing. Next week, expect to write a short essay explaining why your weighted estimate was very right/wrong.
+
     - title: Senate prediction pool
-      description: Each group will guess the margin of error for each of the highly-contested Senate races. Winners get something TBA.
+      description: |
+        Each group will guess the margin of error for each of the highly-contested Senate races. Winners get something TBA.
+
+        Fill [out the spreadsheet here](https://docs.google.com/a/stanford.edu/spreadsheets/d/1SdbsvgM87Tec7Rvzoc4wKrhDpHB1y1L7Z9rWqfcLb5I/edit#gid=0) for your state group row.
+
+        1. For **your state**, enter in the sum of the weighted margin you got in your homemade poll aggregator.
+        2. For all the other states, just make an educated guess.
+
+
+    - title: Campaign finance data
+      description: |
+        Gather/clean up the FEC data as mentioned in the assignment from last class.
+
+        For starters, [fill out your state row in this spreadsheet](https://docs.google.com/a/stanford.edu/spreadsheets/d/1BYmwy5T24JJj9Gryud8mewdy6z59-82aACYjxEgZy2Y/edit#gid=0).
+
+        Your group is responsible for making charts that illustrate the 3 following topics:
+
+        1. Contributions to the candidates, both in 2008 and 2014. One example would be to show the difference of in-state versus out-of-state in 2008 vs. 2014.
+        2. How candidates spent their money. Do not just do a simple summation of 2008 vs 2014, but show the breakdowns of cateogries of spending.
+        3. How independent expenditures were used for/against the 2014 candidates (there is no data for the 2008 race).
+
+
+        I leave the nature of the charts to you. In a subsequent class, we will do a class critique of the visualization choices made in this assignment.
+
+
 
 # ----------------------------# ------------# ----------------------------# ------------------
 
@@ -486,8 +595,32 @@
 
 "2014-11-06":
   topics:
-    - Avoiding chartjunk
-    - Color sensibility
+    - Review of the midterm
+    - The importance of good data in visualizations
+    - How visualization can augment the Serial podcast
+  homework:
+    - title: Proposal for data project
+      description: |
+        Prepare an outline for your data project. It should be at least two pages long and should include:
+
+        - Why you find this story interesting, and/or why it will be interesting to readers.
+        - Why you think data is important to tell this story
+        - A rough outline on what you believe you will find.
+        - At least three data sources that you have in your possession or that you have a good idea how to get (very soon), and the structure of the data records.
+        - Links to and summaries of at least three stories that have already been published on the subject.
+        - If you think a visualization is in order, a rough sketch (hand-drawn is fine) of what this visualization will look like.
+        - A rough timeline for the next 3 weeks of where you plan to be in your reporting on these stories.
+
+        Your data project can be based on what you're doing in the other reporting classes. Or, if you don't think your current beat lends itself to a data project, you're free to pursue a subject that you are interested in, even if it's at a national level.
+
+        ### How the project will be evaluated
+
+        Overall, the key question that I will be asking is: did you tell an interesting story and make a compelling argument that could not have been made without looking at data? What type or how many visualizations you use, how big the dataset is, etc., are obviously related topics.
+
+        So far, I have not judged homework assignments on writing/editing/formatting/etc., but what you turn in as your final project should be in a form that if we wanted to, we could publish in the Peninsula Press.
+
+        This project should take at least 30 hours to research.
+
 
 
 # ----------------------------# ------------# ----------------------------# ------------------
@@ -495,17 +628,34 @@
 
 "2014-11-11":
   topics:
-    - Correlation and causation
-    - Simpson's Paradox
-    - Statistical significance
+    - Dirty data
+    - OpenRefine
+    - Clustering
+  homework:
+    - title: Clean up a dataset via data clustering
+      description: |
+        Pick a dataset, any dataset, but if you want an easy one, just pick something from the FEC database, [such as contributions to a given presidential candidate](http://www.fec.gov/disclosurep/pnational.do), or expenditures.
 
+        Use [OpenRefine to clean up a field](/tutorials/open-refine/introduction-to-open-refine/), such as "Employer" or "Purpose" of an expenditure and do a simple analysis or chart of your results (such as contributions by employer).
 
 # ----------------------------# ------------# ----------------------------# ------------------
 
 
 "2014-11-13":
   topics:
-    - Yelp reviews and restaurant inspections
+    - Proxy variables
+    - Thanks Google for figuring out my commute
+    - How racist are we, really?
+    - How web sites measure us
+  homework:
+    - title: Status update on your project
+      description: |
+        This update should include:
+
+        - Who you've interviewed
+        - What data you have in your possession
+        - Who you are going to interview
+        - What has changed about your angle or story since this past week
 
 
 # ----------------------------# ------------# ----------------------------# ------------------
@@ -513,7 +663,8 @@
 
 "2014-11-18":
   topics:
-    - How social media sites measure us
+    - Regular expressions
+
 
 
 # ----------------------------# ------------# ----------------------------# ------------------
