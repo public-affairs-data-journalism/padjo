@@ -643,10 +643,7 @@
 
 "2014-11-13":
   topics:
-    - Proxy variables
-    - Thanks Google for figuring out my commute
-    - How racist are we, really?
-    - How web sites measure us
+    - Ellen, World Cup, and other masses of Twitter data
   homework:
     - title: Status update on your project
       description: |
@@ -663,9 +660,46 @@
 
 "2014-11-18":
   topics:
-    - Regular expressions
+    - Proxy variables
+    - Thanks Google for figuring out my commute
+    - How racist are we, really?
+    - How web sites measure us
 
+  homework:
+    - title: Status update No. 2 for your project
+      description: |
+        This update should include:
+        - The first 200 words of your story, i.e. the lede and nutgraf
+        - What you will have finished by Friday for your story
+        - What you will be doing on Monday for your story
 
+    - title: Read about visualizations, find a good visualization and a bad visualization
+      description: |
+
+        In your Github repo, with the filename `cool-viz.md`, find and link (and screengrab):
+
+        1. A visualization you found compelling
+        2. A visualization you think is ineffective.
+
+        Write a graf on each. Try to use the readings listed below as points of comparison.
+
+        And **no maps**.
+
+        Some clips for inspiration and for thought
+        - [Good Ol’ Excel Is The Ultimate Data Visualization Tool (In Most Cases)](http://insights.qunb.com/good-ol-excel-is-the-ultimate-data-visualization-tool-in-most-cases/)
+
+          [Animated GIF by Darkhorse Analytics](http://darkhorseanalytics.com/blog/):
+
+          ![img](/files/lectures/2014-11-18/data-ink-darkhorse.gif)
+
+        - [A Big Article About Wee Things](http://www.propublica.org/nerds/item/a-big-article-about-wee-things) - A compilation by ProPublica's Lena Groger; small images can make big impact
+        - [How The Rainbow Color Map Misleads](https://eagereyes.org/basics/rainbow-color-map) - More color is not always better
+        - [The NYT's Amanda Cox on Winning the Internet](https://source.opennews.org/en-US/articles/nyts-amanda-cox-wins-internet/)
+        - [PowerPoint Does Rocket Science--and Better Techniques for Technical Reports](http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0001yB&topic_id=1) - How ugly formatting can obscure the important information in technical presentations.
+        - [Megan Jaegerman's brilliant news graphics](http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0002w4)
+        - [Slopegraphs](http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0003nk) - a simple, but rarely used chart form that combines the list form with line charts. A 2012 example [from the Times](www.nytimes.com/imagepages/2012/09/30/opinion/30coontz-gr1.html):
+
+          ![img](http://graphics8.nytimes.com/images/2012/09/30/opinion/30coontz-gr1/30coontz-gr1-popup-v2.png)
 
 # ----------------------------# ------------# ----------------------------# ------------------
 
