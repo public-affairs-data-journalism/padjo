@@ -7,7 +7,7 @@ layout: page
 
 ## Overview
 
-__Due date:__ Wednesday, December 10, 2014.
+__Due date:__ Thursday 11:59PM, December 11, 2014.
 
 The final project counts for 50 percent of your overall class grade and should consist of two things: 
 
@@ -87,4 +87,4 @@ And this is the same deal for an important chart. Pretend as if you were writing
 
 Again, take a look at PBS Newshour's Ferguson chart. The chart contains a lot of information, but its creators included a [narrative explaining the intentions and the ins-and-outs of the data behind the chart](http://www.pbs.org/newshour/updates/newly-released-witness-testimony-tell-us-michael-brown-shooting/).
 
-Another great example from The Marshall Project: [The Pentagon Finally Details its Weapons-for-Cops Giveaway](https://www.themarshallproject.org/2014/12/03/the-pentagon-finally-details-its-weapons-for-cops-giveaway?utm_medium=homepage&utm_campaign=site-placement&utm_source=featured-block&utm_content=3-112)
+__Another great example from The Marshall Project:__ [The Pentagon Finally Details its Weapons-for-Cops Giveaway](https://www.themarshallproject.org/2014/12/03/the-pentagon-finally-details-its-weapons-for-cops-giveaway?utm_medium=homepage&utm_campaign=site-placement&utm_source=featured-block&utm_content=3-112)

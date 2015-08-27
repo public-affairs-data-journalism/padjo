@@ -1,8 +1,8 @@
 # Public Affairs Data Journalism, The Repo
 
-This is the Github repository for the class site of __Public Affairs Data Journalism I__, as taught at [Stanford University's Graduate Journalism Program.](http://journalism.stanford.edu/)
+This is the Github repository for the __Fall 2014__ class site of __Public Affairs Data Journalism I__, as taught at [Stanford University's Graduate Journalism Program.](http://journalism.stanford.edu/)
 
-The site currently lives at: [padjo.org](//www.padjo.org) and is currently maintained by lecturer [Dan Nguyen](//www.stanford.edu/~dun).
+The site currently lives at: [fall2014.padjo.org](//fall2014.padjo.org) and is currently maintained by lecturer [Dan Nguyen](//www.stanford.edu/~dun).
 
 
 ## Technical details
