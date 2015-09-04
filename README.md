@@ -1,35 +1,28 @@
 # Public Affairs Data Journalism, The Repo
 
-This is the Github repository for the __Fall 2014__ class site of __Public Affairs Data Journalism I__, as taught at [Stanford University's Graduate Journalism Program.](http://journalism.stanford.edu/)
+This is the Github repository for the __Fall 2015__ class site of __Public Affairs Data Journalism I__, as taught at [Stanford University's Graduate Journalism Program.](http://journalism.stanford.edu/)
 
-The site currently lives at: [fall2014.padjo.org](//fall2014.padjo.org) and is currently maintained by lecturer [Dan Nguyen](//www.stanford.edu/~dun).
+The site currently lives at: [fall2015.padjo.org](//fall2015.padjo.org) and is currently maintained by lecturer [Dan Nguyen](//www.stanford.edu/~dun).
 
+## Schedule
 
-## Technical details
+Tuesdays and Thursdays, 1:30-2:50P, McClatchy Hall, Building 120, Room 410
 
-This site was built with [Middleman](http://middlemanapp.com/), the Ruby static-site generator. Other libraries and packages used include:
-  
-- [Bootstrap](//getbootstrap.com) (via [bootstrap-sass](https://github.com/twbs/bootstrap-sass))
-- [Slim](http://slim-lang.com/), for HTML templating
-- [Kramdown](http://kramdown.gettalong.org/), a superset of Markdown
+## Proposed syllabus
 
+Assignments:
 
-## How this site was built
+- Use DocumentCloud to post and annotate FBI documents.
 
+via Muckrock:
+https://www.documentcloud.org/public/search/Group:%20muckrock%20title:FBI
 
-### Screencasts for tutorials
+via FBI:
+https://vault.fbi.gov/reading-room-index
 
-I've never been one to learn much from watching video tutorials, but I've also started to realize that massively long written tutorials can be hard to digest. Even when the text includes screenshots, it's hard to express the flow of the work.
-
-So I've been experimenting with quick screencasts, not more than a minute each, for my tutorials. I've tried to mix the best of both worlds: the visual appeal of videos with the expressiveness of text. The tradeoff is that I don't narrate my short videos, which makes them much easier to produce.
-
-A nice side-benefit is that if I need to take screenshots, I can always do a screengrab of the video.
+https://www.fbi.gov/foia/sample-fbi-foia-request-letter
 
 
 
-
-
-
-
-
-I used QuickTime to do screencasts. 
+https://www.muckrock.com/news/archives/2015/aug/24/ray-bradbury-fbi-file/
+https://www.muckrock.com/foi/united-states-of-america-10/ray-bradbury-fbi-file-1816/#comm-10362

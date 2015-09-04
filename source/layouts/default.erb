@@ -1,0 +1,8 @@
+<!-- bare minimum, with container -->
+<% wrap_layout :layout do %>
+  <%= partial "/layouts/onthestreet/partials/site/header" %>
+  <% container_tag do %>
+    <%= yield %>
+  <% end %>
+  <%= partial "/layouts/onthestreet/partials/site/footer" %>
+<% end %>

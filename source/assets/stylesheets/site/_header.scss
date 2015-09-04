@@ -1,0 +1,23 @@
+.site-header{
+
+  padding-bottom: 0.25em;
+  padding-top: 0.25em;
+  background-color: inherit;
+  margin-bottom: 0;
+
+  &.navbar, &.navbar-fixed{
+    border-bottom: thin solid #ddd;
+    min-height: 10px;
+  }
+}
+
+/* headroom stuff */
+.headroom {
+    transition: transform 200ms linear;
+}
+.headroom--pinned {
+    transform: translateY(0%);
+}
+.headroom--unpinned {
+    transform: translateY(-100%);
+}

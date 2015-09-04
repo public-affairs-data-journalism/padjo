@@ -1,0 +1,6 @@
+<%- [:google_analytics, :typekit].each do |name| -%>
+  <% service_obj = config[:services][name] %>
+  <% if service_obj %>
+    <%= partial "/layouts/onthestreet/partials/services/#{name}", locals: {:service_id => service_obj[:id] } %>
+  <%- end -%>
+<%- end -%>

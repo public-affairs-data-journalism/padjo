@@ -1,0 +1,32 @@
+site:
+  title: 'Public Affairs Data Journalism at Stanford University'
+  baseurl: 'http://fall2015.padjo.org'
+  description: |
+    Civic accountability journalism taught at the Stanford University Graduate Journalism Program
+  author: Dan Nguyen
+  repo:
+    github:
+      id: public-affairs-data-journalism
+      repo: padjo
+  image_url: /assets/images/footer-logo.png # TODO: add image meta tag
+
+
+services:
+  google_analytics:
+    id: nil
+  typekit:
+    id: nil
+  disqus:
+    id: nil
+  google_custom_search:
+    id: nil
+
+social:
+  github:
+    id: dannguyen
+  facebook:
+    id: nil
+  twitter:
+    id: nil
+  email:
+    id: nil

@@ -1,0 +1,34 @@
+// typography
+// GOOGLE FONTS
+@import url(http://fonts.googleapis.com/css?family=Lato:400,700,300italic);
+@import url(http://fonts.googleapis.com/css?family=Lora:400,700,400italic);
+
+$font-size-base:          17px !default;
+$font-size-large:         ceil(($font-size-base * 1.25)) !default; // ~18px
+$font-size-small:         ceil(($font-size-base * 0.85)) !default; // ~12px
+
+$font-size-h1:            floor(($font-size-base * 2.7)) !default; // ~36px
+$font-size-h2:            floor(($font-size-base * 2.15)) !default; // ~30px
+$font-size-h3:            ceil(($font-size-base * 1.7)) !default; // ~24px
+$font-size-h4:            ceil(($font-size-base * 1.25)) !default; // ~18px
+$font-size-h5:            $font-size-base !default;
+$font-size-h6:            ceil(($font-size-base * 0.85)) !default; // ~12px
+
+$font-family-serif:       "Lora", Georgia, "Times New Roman", Times, serif !default;
+$font-family-sans-serif:  "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-family-headings:    $font-family-sans-serif;
+
+
+//** Unit-less `line-height` for use in components like buttons.
+$line-height-base:        1.528571429 !default;
+
+$headings-font-family:    $font-family-headings !default;
+$headings-font-weight:    bold !default;
+$headings-line-height:    1.1 !default;
+
+$prose-font-family:       $font-family-serif;
+
+
+p{
+  font-family: $prose-font-family;
+}

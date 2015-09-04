@@ -1,0 +1,47 @@
+
+code {
+  padding: 1px 1px;
+  font-size: 100%;
+  color: $code-color;
+  border-radius: 0px;
+}
+
+a:link, a:visited, h1, h2, h3, h4, h5, h6{
+  code{
+    color: inherit;
+  }
+}
+
+pre{
+  margin-top: 1.5em;
+  margin-bottom: 2.0em;
+  padding: 1.0em;
+}
+
+
+
+
+/* stole this from Google's docs
+https://developer.chrome.com/devtools
+*/
+
+.kbd {
+  background-color: #f2f2f4;
+  border: 1px solid #ccc;
+  color: #000;
+  font-size: 0.75em;
+  font-weight: bold;
+  line-height: 1.4;
+  text-shadow: 0 1px 0 #fff;
+  font-family: Helvetica,sans-serif;
+  display: inline-block;
+  padding: 0.1em 0.6em;
+  margin: 0 0.1em;
+  white-space: nowrap;
+  box-shadow: 0 1px 0px rgba(0,0,0,0.3),0 0 0 2px #fff inset;
+  border-radius: 3px;
+}
+
+
+
+<%= Rouge::Themes::Github.render(:scope => '.highlight') %>
