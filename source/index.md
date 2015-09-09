@@ -6,7 +6,26 @@ current_course:
   term: fall_2014
 ---
 
-This is the homepage for [Stanford COMM 273D](/lectures/comm_273d/2014_fall/syllabus), Public Affairs Data Journalism I, as taught in Fall 2014 by [Hearst Professional in Residence, Dan Nguyen](http://stanford.edu/~dun).
+This is the homepage for the Stanford course __COMM 273D, Public Affairs Data Journalism I__ as taught by [Hearst Professional in Residence, Dan Nguyen](http://stanford.edu/~dun).
+
+If you're a casual visitor, you're probably most interested in the [Tutorials](/tutorials). You can also visit the class sites for my two other electives this year:
+
+- COMM 213 - [Computational Methods in the Civic Sphere](http://www.compciv.org/)
+- COMM 277A - [Computational Journalism](http://www.compjour.org/)
+
+
+### Fall 2015
+
+__Session:__ September 21 to December 4, 2015 
+
+__Hours:__ Tuesdays and Thursdays, 1:30 to 2:50PM
+
+__Location:__ McClatchy Hall ([Building 120](http://campus-map.stanford.edu/?srch=120-410)), Room 410
+
+The __Fall 2015__ site, currently under construction, will be at: [http://fall2015.padjo.org](http://fall2015.padjo.org)
+
+The __Fall 2014__ site is archived here: [http://fall2014.padjo.org](http://fall2014.padjo.org).
+
 
 #### Quick Links
 

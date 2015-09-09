@@ -7,17 +7,6 @@
         div.container
           h1 class="home-title" = cdata.title
 
-    section.previewed-lectures
-      div.sked-grid
-        div.container
-          div.row
-            - previewed_lectures.each do |lecture|
-              div.box.col-sm-4
-                div.lecture.item
-                  div.date => friendly_schedule_date lecture.date
-                  h4.title => link_to lecture.title, lecture.url
-                  div.description => lecture.description
-
       div.container
         div: strong => link_to "See complete course schedule", "/course_schedule"
 
