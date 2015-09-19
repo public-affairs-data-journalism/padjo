@@ -3,7 +3,7 @@
 @import url(http://fonts.googleapis.com/css?family=Lato:400,700,300italic);
 @import url(http://fonts.googleapis.com/css?family=Lora:400,700,400italic);
 
-$font-size-base:          17px !default;
+$font-size-base:             1rem !default;
 $font-size-large:         ceil(($font-size-base * 1.25)) !default; // ~18px
 $font-size-small:         ceil(($font-size-base * 0.85)) !default; // ~12px
 
