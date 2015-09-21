@@ -1,3 +1,6 @@
+require 'lib/content_resource'
+require 'lib/week_lesson'
+
 # Kramdown
 set :markdown_engine, :kramdown
 set :markdown, :toc_levels => 1..3

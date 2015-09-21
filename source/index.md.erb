@@ -11,3 +11,16 @@ Our primary goal is to learn how to argue with and against data.
 
 To understand how our government works, including the power it holds over and yields to its institutions and citizens, then we must understand the data that is both the byproduct and fuel from the government's work.
 
+
+## Schedule
+
+<%- schedule.each do |week_lesson| %>
+  <div class="week-lesson">
+    <div class="date">Week of <%= week_lesson.friendly_week_date %></div>
+    <h4 class="title"><%=link_to_resource week_lesson %></h4>
+    <p class="description"><%=week_lesson.description%></p>
+  </div>
+<%- end %>
+
+
+<%= partial "/layouts/partials/pages/conduct" %>
