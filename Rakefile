@@ -12,12 +12,17 @@ end
 
 namespace :bootstrap do
   task :weeks do
-    (1..10).each do |wnum|
-      open("./source/weeks/#{wnum}.md.erb", "w") do |f|
-        f.write("hey")
+    (0...10).each do |wnum|
+      tuesday = CLASS_START_DATE + wnum * 7
+      puts(tuesday)
 
-
-
+      open("./source/weeks/#{tuesday}.md.erb", "w") do |f|
+        f.write(%Q{---
+title: Week of #{tuesday}
+description: Week of #{tuesday}
+date: #{tuesday}
+---
+})
       end
     end
   end
