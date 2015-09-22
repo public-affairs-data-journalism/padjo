@@ -19,5 +19,5 @@ Gemfile.lock
 
 /_drafts
 /notes
-
+/source/memos
 .s3_sync

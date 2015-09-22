@@ -5,8 +5,8 @@
 
 $font-size-root:             17px !default;
 $font-size-base:             1rem !default;
-$font-size-large:         ceil(($font-size-base * 1.25)) !default; // ~18px
-$font-size-small:         ceil(($font-size-base * 0.85)) !default; // ~12px
+$font-size-large:         1.25rem;
+$font-size-small:         0.85rem;
 
 $font-size-h1:               2.5rem !default;
 $font-size-h2:               2rem !default;
@@ -32,8 +32,4 @@ $headings-line-height:    1.1 !default;
 
 p{
   font-family: $font-family-serif;
-}
-
-h1{
-  font-size: 2.5rem;
 }

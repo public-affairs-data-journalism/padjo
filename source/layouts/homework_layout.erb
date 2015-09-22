@@ -1,0 +1,60 @@
+<% homework = HomeworkResource.new(current_page) %>
+
+<% wrap_layout :page do %>
+
+  <section class="sec" id="homework-meta">
+    <div class="card card-block">
+      <div class="meta-date">
+        <strong>Due:</strong>
+        <span class="due-date">
+          <% if homework.date %>
+              <%= friendly_date(homework.date) %>
+          <% else %>
+              <%= homework.date_slug %>
+          <% end %>
+        </span>
+      </div>
+      <div class="meta-points">
+        <strong>Points:</strong>
+        <span class="points">
+          <% if homework.points %>
+              <%= homework.points %>
+          <% else %>
+            TBA
+          <% end %>
+        </span>
+      </div>
+    </div>
+  </section>
+
+
+  <%= yield %>
+
+
+  <section class="sec" id="homework-requirements">
+    <div class="card card-block">
+
+            <div id="deliverables">
+              <% if homework.deliverables %>
+                <h3>Deliverables</h3>
+                <%=markdownify homework.deliverables %>
+              <% end %>
+            </div>
+            <div id="requirements" class="requirements">
+              <% if homework.requirements %>
+                  <h3>Requirements</h3>
+                  <ul>
+                    <% homework.requirements.each do |r| %>
+                      <li><%=markdownify r%></li>
+                    <% end %>
+                  </ul>
+              <% end %>
+          </div>
+    </div>
+  </section>
+
+
+
+
+
+<% end %>

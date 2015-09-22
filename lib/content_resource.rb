@@ -1,9 +1,15 @@
 require 'chronic'
+
+
 class ContentResource
   attr_reader :title, :description, :date, :url, :path, :source_name,
     :full_title
   def friendly_week_date
     @date.strftime("%B %-d")
+  end
+
+  def date_slug
+    @date.strftime("%Y-%m-%d") if @date
   end
 end
 
@@ -55,3 +61,8 @@ def ContentResource(obj)
     MiddlemanContentResource.new(obj)
   end
 end
+
+
+
+require 'lib/homework_resource'
+require 'lib/week_resource'

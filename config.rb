@@ -1,5 +1,4 @@
 require 'lib/content_resource'
-require 'lib/week_lesson'
 
 # Kramdown
 set :markdown_engine, :kramdown
@@ -18,7 +17,8 @@ puts config[:services]
 
 ## SETTINGS
 set :layout, :page
-page "/weeks/*", :layout => "week-lesson"
+page "/weeks/*", :layout => "week_layout"
+page "/homework/*", :layout => "homework_layout"
 
 
 # Build-specific configuration
