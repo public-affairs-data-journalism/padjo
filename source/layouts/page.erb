@@ -4,13 +4,22 @@
       <h1><%= page_title %></h1>
     </div>
 
-    <%= yield %>
+    <div class="page-content">
+      <%= yield %>
+    </div>
 
-    <div class="references">
-      <% current_page.data.references.each do |r| %>
-        <div class="reference">
-          <%= link_to_resource(r) %>
-        </div>
+
+
+    <div  id="references" class="references">
+      <% if current_page.data.references %>
+        <h2>References</h2>
+        <% current_page.data.references.each do |r| %>
+          <div class="reference">
+            <%= link_to_resource(r) %>
+          </div>
+        <% end %>
       <% end %>
     </div>
+
+
 <% end %>

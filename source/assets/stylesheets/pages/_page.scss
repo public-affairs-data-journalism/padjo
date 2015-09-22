@@ -1,0 +1,13 @@
+.page-content-mediawrap-img{
+  margin: 1.0em 0 2.0em;
+  max-width: 100%;
+}
+
+
+.page-content{
+  /* standard markdown images */
+  /*hack until media wrap is better implemented */
+  p > img:first-child, iframe, video{
+    @extend .page-content-mediawrap-img;
+  }
+}
