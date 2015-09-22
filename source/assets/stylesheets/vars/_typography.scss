@@ -8,12 +8,12 @@ $font-size-base:             1rem !default;
 $font-size-large:         ceil(($font-size-base * 1.25)) !default; // ~18px
 $font-size-small:         ceil(($font-size-base * 0.85)) !default; // ~12px
 
-$font-size-h1:            floor(($font-size-base * 2.7)) !default; // ~36px
-$font-size-h2:            floor(($font-size-base * 2.15)) !default; // ~30px
-$font-size-h3:            ceil(($font-size-base * 1.7)) !default; // ~24px
-$font-size-h4:            ceil(($font-size-base * 1.25)) !default; // ~18px
-$font-size-h5:            $font-size-base !default;
-$font-size-h6:            ceil(($font-size-base * 0.85)) !default; // ~12px
+$font-size-h1:               2.5rem !default;
+$font-size-h2:               2rem !default;
+$font-size-h3:               1.75rem !default;
+$font-size-h4:               1.5rem !default;
+$font-size-h5:               1.25rem !default;
+$font-size-h6:               1rem !default;
 
 $font-family-serif:       "Lora", Georgia, "Times New Roman", Times, serif !default;
 $font-family-sans-serif:  "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
@@ -27,9 +27,13 @@ $headings-font-family:    $font-family-headings !default;
 $headings-font-weight:    bold !default;
 $headings-line-height:    1.1 !default;
 
-$prose-font-family:       $font-family-serif;
+
 
 
 p{
-  font-family: $prose-font-family;
+  font-family: $font-family-serif;
+}
+
+h1{
+  font-size: 2.5rem;
 }

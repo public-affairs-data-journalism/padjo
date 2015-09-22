@@ -1,0 +1,19 @@
+<% wrap_layout :page do %>
+
+
+  <section id="lessons" class="lessons">
+    <% if current_page.data.lessons %>
+        <h1>Lessons</h2>
+        <% current_page.data.lessons.each do |r| %>
+          <div class="lesson">
+            <%= render_content_resource_element(r) %>
+          </div>
+        <% end %>
+      <% end %>
+  </section>
+
+
+  <%= yield %>
+
+
+<% end %>

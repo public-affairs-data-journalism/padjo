@@ -1,5 +1,5 @@
 require "lib/content_resource"
-class WeekLesson < ContentResource
+class WeekLesson < MiddlemanContentResource
 
 
 end

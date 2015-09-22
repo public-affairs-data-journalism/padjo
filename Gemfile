@@ -16,7 +16,7 @@ gem "wdm", "~> 0.1.0", :platforms => [:mswin, :mingw]
 gem "tzinfo-data", platforms: [:mswin, :mingw, :jruby]
 
 ## Middling stuff
-
+gem 'middleman-pry'
 gem 'middleman-onthestreet', :git => 'https://github.com/dannguyen/middleman-onthestreet.git'
 gem 'bootstrap', git: 'https://github.com/twbs/bootstrap-rubygem'
 gem 'activesupport'

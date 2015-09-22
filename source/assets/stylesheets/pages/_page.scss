@@ -4,10 +4,27 @@
 }
 
 
+
+
 .page-content{
   /* standard markdown images */
   /*hack until media wrap is better implemented */
   p > img:first-child, iframe, video{
     @extend .page-content-mediawrap-img;
+  }
+}
+
+
+.page-header{
+  h1.title{
+    font-size: $font-size-h1 * 1.1;
+    margin-bottom: 1.5rem;
+  }
+}
+
+
+.references{
+  .reference{
+    margin-bottom: 0.6rem;
   }
 }

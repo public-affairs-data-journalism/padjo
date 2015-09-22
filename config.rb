@@ -18,6 +18,7 @@ puts config[:services]
 
 ## SETTINGS
 set :layout, :page
+page "/weeks/*", :layout => "week-lesson"
 
 
 # Build-specific configuration

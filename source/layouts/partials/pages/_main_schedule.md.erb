@@ -1,0 +1,7 @@
+<%- schedule.each do |week_lesson| %>
+  <div class="week-lesson">
+    <div class="date">Week of <%= week_lesson.friendly_week_date %></div>
+    <div class="title"><%=my_link_to_resource week_lesson %></div>
+    <p class="description"><%=week_lesson.description%></p>
+  </div>
+<%- end %>
