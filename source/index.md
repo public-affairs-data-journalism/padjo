@@ -22,7 +22,7 @@ __Hours:__ Tuesdays and Thursdays, 1:30 to 2:50PM
 
 __Location:__ McClatchy Hall ([Building 120](http://campus-map.stanford.edu/?srch=120-410)), Room 410
 
-The __Fall 2015__ site, currently under construction, will be at: [http://fall2015.padjo.org](http://fall2015.padjo.org)
+The __Fall 2015__ site, currently under construction, will be at: [http://2015.padjo.org](http://2015.padjo.org)
 
 The __Fall 2014__ site is archived here: [http://fall2014.padjo.org](http://fall2014.padjo.org).
 
