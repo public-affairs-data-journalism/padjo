@@ -1,0 +1,29 @@
+
+<table class="table table-striped assignments">
+  <thead>
+    <tr>
+      <th class="name">Name</th>
+      <th class="points">Points</th>
+      <th class="date">Due Date</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <% assignments.each do |a| %>
+      <tr class="assignment">
+        <td class="name">
+          <div class="title"><%=link_to_resource a%></div>
+          <div class="description"><%=a.description%></div>
+        </td>
+        <td class="points">
+          <%= a.points %>
+        </td>
+        <td class="date">
+            <%=friendly_date a.date %>
+        </td>
+      </tr>
+    <% end %>
+
+
+  </tbody>
+</table>

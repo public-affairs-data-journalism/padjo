@@ -1,35 +1,69 @@
 ---
-title: Elements of Effective Data Journalism
+title: Elements of Assertive Data Journalism
 description: |
-  An introduction to data journalism, how to count, how to research, and understanding the elements of a data story. We also dive into doing public records requests and reviewing spreadsheet fundamentals.
+  An introduction to data journalism, how to count, how to research, and understanding the elements of a data story. We also dive into doing public records requests and using spreadsheets to aggregate and filter data.
 date: 2015-09-22
+
+
+assignments:
+  - /assignments/casual-spreadsheets
 
 lessons:
   - /briefs/singular-of-data
   - /briefs/florida-missing-speeding-cops
   - /briefs/foia-fbi-files
+  - /tutorials/spreadsheets/sun-sentinel-speeding-miami-cops-exercise
+  - /tutorials/spreadsheets/basic-agg-pivot-tables
 
+references:
+  - title: Facebook data suggests people from higher social class have fewer international friends
+    description: |
+      This Cambridge research paper analyzed an anonymized dataset of "57 billion friendships" and found a "correlation between higher social class and fewer international friendships". But how did they account for social class from anonymized user data?       
+    url: http://www.cam.ac.uk/research/news/facebook-data-suggests-people-from-higher-social-class-have-fewer-international-friends
 ---
 
 
-# Tuesday, September 22
+<!-- # Tuesday, September 22
 {:.day-lesson}
+ -->
 
-## Speeding cops
+
+For the first week, we'll discuss the term "data journalism", e.g. what _is_ data journalism, how is it done, how is it different from "non-data" journalism, etc, and get a grounding in fundamental tools (spreadsheets) and concepts (filtering and aggregation).
+
+
+## How to find speeding cops
+
+<%=my_link_to_resource '/briefs/florida-missing-speeding-cops' %>
 
 <iframe width="640" height="360" src="//www.youtube.com/embed/hBHOTK4sQPY" frameborder="0" allowfullscreen></iframe>
 
 
-## Elements of a data story
+## FBI FOIAs
+
+This class won't be covering the complexities of American public records law, but we can still practice it. Requesting a [FBI file for an individual person is a popular example of FOIA](/briefs/foia-fbi-files).
 
 
 ## In-class work
 
-- Create a folder on Google Drive: PADJO2015-DNGUYEN (put your first initial and last name instead of mine) and give edit permissions to dun@stanford.edu.
-- Signup for Github
-- Sun-sentinel exercise on speeding cops
+- Follow the [Casual Spreadsheets homework assignment](/assignments/casual-spreadsheets/) and create a folder on Google Drive: PADJO2015-DNGUYEN (put your first initial and last name instead of mine). Give edit permissions to dun@stanford.edu.
+- Signup for [Github](https://github.com/) and the [Github Student Education Pack](https://education.github.com/pack). I'm not sure how far we'll go into the Github funland but approval for the education pack takes a few days/weeks.
+
+## Pivot tables
+
+For Tuesday and Thursday we'll be doing some in-class work with pivot tables. This is to get everyone re-acquainted with the spreadsheet and to understand the huge value that it brings to doing effective data work. Even after you've mastered SQL, you'll find that spreadsheets will be your go-to tool for most data tasks.
+
+In class, we'll try to walk through: <%=my_link_to_resource "/tutorials/spreadsheets/sun-sentinel-speeding-miami-cops-exercise" %>.
+
+And here's a pivot table walkthrough from last year that's worth practicing: <%=my_link_to_resource "/tutorials/spreadsheets/basic-agg-pivot-tables/" %>
+
+
+__On Thursday:__ We'll focus more on visualization, or more accurately, how filtering and aggregation are necessary for making useful visualizations, rather than "noisy" [ones like this earthquake map](https://dundee.cartodb.com/viz/888634d0-60ae-11e5-93c9-0e018d66dc29/public_map):
+
+<iframe width="100%" height="520" frameborder="0" src="https://dundee.cartodb.com/viz/888634d0-60ae-11e5-93c9-0e018d66dc29/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
 
 
 
-# Thursday, September 22
+
+<!-- # Thursday, September 22
 {:.day-lesson}
+ -->

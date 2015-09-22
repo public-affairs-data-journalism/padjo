@@ -15,7 +15,10 @@ end
 
 
 class MiddlemanContentResource < ContentResource
+  attr_reader :middleman_resource, :source_file
   def initialize(resource)
+    @middleman_resource = resource
+    @source_file = resource.source_file
     @url    = resource.url
     @path   = resource.path
     @title  = resource.data.title
@@ -24,6 +27,36 @@ class MiddlemanContentResource < ContentResource
     @date   = Chronic.parse(resource.data.date) if resource.data.date
     @description = resource.data.description
   end
+
+  def content_size
+    File.size(@source_file)
+  end
+
+  def stub?
+    content_size < 1024
+  end
+
+  def self.set_sitemap(sitemap) #UGGHGHGHGHTK
+    @sitemap = sitemap
+  end
+
+  def self.sitemap_resources
+    @sitemap.resources # theoretically could be scoped to just briefs/tutorials/etc
+  end
+
+  # rel_url is a String: /articles/my-fav-article
+  #  trailing slash is optional
+  def self.find_sitemap_resource_by_relative_url(rel_url)
+    rel_url += '/' unless rel_url[-1] == '/'
+    r = self.sitemap_resources.find{|p| p.url == rel_url }
+  end
+end
+
+def MiddlemanContentResource(obj)
+  if obj.is_a?(String)
+    obj = MiddlemanContentResource.find_sitemap_resource_by_relative_url(obj)
+  end
+  MiddlemanContentResource.new(obj)
 end
 
 
@@ -58,11 +91,10 @@ def ContentResource(obj)
   elsif obj.is_a?(Hash)
     HashContentResource.new(obj)
   else
-    MiddlemanContentResource.new(obj)
+    MiddlemanContentResource(obj)
   end
 end
 
 
-
-require 'lib/homework_resource'
+require 'lib/assignment_resource'
 require 'lib/week_resource'

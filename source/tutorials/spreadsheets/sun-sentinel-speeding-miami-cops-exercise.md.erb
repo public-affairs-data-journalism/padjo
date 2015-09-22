@@ -1,6 +1,66 @@
 ---
-title: Spreadsheet formula exercise with Sun Sentinel speeding cops database
+title: Spreadsheet exercise with Sun Sentinel speeding cops database
+description: |
+  Using spreadsheets to re-create a small, ingenious part of the analysis in the Sun Sentinel's Pulitzer-winning investigation into speeding cops.
+references:
+  - title: "Sun-Sentinel Online Database: Speeding Cops in South Florida"
+    url: http://databases.sun-sentinel.com/news/broward/ftlaudCopSpeeds/ftlaudCopSpeeds_list.php
+  - title: "How the Sun Sentinel reported its Pulitzer Prize winning coverage of off-duty cops"
+    url: http://www.ire.org/blog/ire-news/2013/04/15/how-sun-sentinel-reported-its-pulitzer-prize-winni/
+  - "/tutorials/spreadsheets/basic-agg-pivot-tables"
 ---
 
+This is an exercise in using spreadsheets and pivot tables to see how aggregation is necessary for finding insights in granular data.
 
-https://docs.google.com/spreadsheets/d/1ukgPmpZWp_XN2GrC-3prTfG6deZb29NTQ2DGBAjf5S4/edit#gid=1624056416
+__To get started:__ [Download this exercise's data as CSV](/files/data/sun-sentinel-miami-pd-speeding-data.csv). Then import to a spreadsheet.
+
+## About the data
+
+The data comes from the [Sun Sentinel's online database, "Speeding Cops in South Florida"](http://databases.sun-sentinel.com/news/broward/ftlaudCopSpeeds/ftlaudCopSpeeds_list.php). Each row represents a trip associated with a cop vehicle's transponder. The transponder is tracked by toll booths. And that was enough for the Sun Sentinel to do their Pulitzer-award-winning analysis and investigation.
+
+![img](/files/briefs/sun-sentinel-speeding-cops/sun-sentinel-database.png)
+
+
+From the page:
+
+> A Sun Sentinel investigation of officers’ SunPass toll records found nearly 800 cops from a dozen agencies drove 90 to 130 mph on highways in Broward, Palm Beach and Miami-Dade counties from October 2010 through November 2011. This database shows transponders that exceeded an average of 90 mph at least three times during that time period.
+
+
+Note that the data published by the Sun Sentinel simplifies the work they had to do, including measuring the distance between toll stations and filtering out irrelevant data. And of course, [the massive legal fight to get the data](http://www.ire.org/blog/ire-news/2013/04/15/how-sun-sentinel-reported-its-pulitzer-prize-winni/).
+
+The [data for this exercise](/files/data/sun-sentinel-miami-pd-speeding-data.csv) includes all published records from the Sentinel database that relate to the [Miami Police](http://databases.sun-sentinel.com/news/broward/ftlaudCopSpeeds/ftlaudCopSpeeds_list.php?q=%28Agency~equals~Miami+PD%29) -- roughly 27,000 rows. It's been modified so that you have to recreate the average speed value yourself.
+
+
+## Our goals
+
+After importing the data into a spreadsheet, we want to find:
+
+- The highest speed reached any individual police vehicle.
+- The number of _unique_ transponders in the data. Whether this is a rough indication of number of unique police officer depends on how cars/transponders are allocated.
+- The highest average speed associated with a police vehicle/transponder.
+- Highest average speed by time of day
+
+Also, [can we find the transponder that belongs to the trooper described here](http://www.ire.org/blog/ire-news/2013/04/15/how-sun-sentinel-reported-its-pulitzer-prize-winni/):
+
+> The worst speeder in the bunch? The same Miami cop caught going 120 mph by the state trooper. Our analysis showed he commuted at speeds above 100 mph on 114 days and only slowed down after his traffic stop hit the news.
+
+
+
+
+## Getting started
+
+First: [Download the data as CSV](/files/data/sun-sentinel-miami-pd-speeding-data.csv)
+
+Second: Import it into a spreadsheet
+
+
+## Sample spreadsheet
+
+For your convenience, I've posted an example of the spreadsheet with the columns needed to [calculate average speed per trip](https://docs.google.com/spreadsheets/d/1ukgPmpZWp_XN2GrC-3prTfG6deZb29NTQ2DGBAjf5S4/edit#gid=1624056416).
+
+You can refer to it but please build your own spreadsheet from scratch by [importing the exercise's data file](/files/data/sun-sentinel-miami-pd-speeding-data.csv).
+
+
+
+
+

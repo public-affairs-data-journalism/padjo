@@ -35,16 +35,15 @@
 .references{
   margin-top: 1.5em;
   h1{
-    font-size: 2.05rem;
+    font-size: $font-size-h5;
   }
   .reference{
-    margin-bottom: 0.6em;
+    margin-bottom: 1.2em;
     .title, .source{
-      font-size: $font-size-large;
+      font-size: $font-size-medium;
     }
     .title{
       font-weight: bold;
     }
-
   }
 }

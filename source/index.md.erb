@@ -7,14 +7,52 @@ layout: home
 
 # Public Affairs Data Journalism at Stanford University
 
+
+<div class="card card-block" id="course-info">
+  <%= partial '/layouts/partials/pages/course-info.md.erb' %>  
+</div>
+
+
 Our primary goal is to learn how to argue with and against data. 
 
 To understand how our government works, including the power it holds over and yields to its institutions and citizens, then we must understand the data that is both the byproduct and fuel from the government's work.
 
+<div class="note">
+  <strong>Note:</strong> COMM 273D was first taught in Fall 2014. You can visit the 2014 class website at: <a href="http://fall2014.padjo.org">fall2014.padjo.org</a>
+</div>
 
-# Schedule
-<%= partial "/layouts/partials/pages/main_schedule" %>
+
+--------------
 
 
-# Conduct
-<%= partial "/layouts/partials/pages/conduct" %>
+
+<section class="sec">
+  <h1>Schedule</h1>
+  <%= partial "/layouts/partials/pages/main_schedule" %>  
+</section>
+
+<section class="sec">
+  <h1>Assignments and Grading Assessments</h1>
+
+  <p>Visit the <%=link_to "Assignments page", "/assignments" %> to see the latest due dates.</p>
+
+  <p>
+  Students will be graded on successful completion of homework assignments and a midterm test focused on SQL (<a href="http://fall2014.padjo.org/2014-10-23/#midterm-information">see last year's test</a>).
+  </p>
+
+  <p>The assignments will be <em>frequent</em>. Some of the assignments will be longer than others but none are what I would consider <em>project-length</em>. There is no final.</p>
+
+  <h3>Grading breakdown</h3>
+  <p>Standard (but flexible) curve with __A-__ starting at 90%</p>
+
+  <p><strong>80%</strong> of the grade will be from assignments.</p>
+  <p><strong>20%</strong> of the grade will be from the midterm.</p>
+
+  <p>Any assignment more than 2 days late will receive half-credit at most.</p>
+</section>
+
+
+<section class="sec">
+  <h1>Conduct</h1>
+  <%= partial "/layouts/partials/pages/conduct" %>
+</section>

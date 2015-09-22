@@ -1,5 +1,5 @@
 def sitemap_content_resources
-  sitemap.resources # theoretically could be scoped to just briefs/tutorials/etc
+  MiddlemanContentResource.sitemap_resources
 end
 # TK: this is already included in onthestreet gem
 # resource has a url and/or title
@@ -7,7 +7,7 @@ end
 
 def to_content_resource(obj)
   if obj.is_a?(String) # assume it is a relative url
-    resource = find_middleman_resource_by_relative_url(obj)
+    resource = MiddlemanContentResource(obj)
   else
     resource = ContentResource(obj)
   end
@@ -44,10 +44,3 @@ def render_content_resource_element(obj, opts = {})
   end
 end
 
-# rel_url is a String: /articles/my-fav-article
-#  trailing slash is optional
-def find_middleman_resource_by_relative_url(rel_url)
-  rel_url += '/' unless rel_url[-1] == '/'
-  r = sitemap_content_resources.find{|p| p.url == rel_url }
-  return MiddlemanContentResource.new(r)
-end

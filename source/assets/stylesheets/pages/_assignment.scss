@@ -1,0 +1,22 @@
+#requirements, #deliverables{
+  h1{
+    font-size: $font-size-h4;
+  }
+}
+
+
+.assignments_index{
+  table.assignments{
+    td.name, th.name{
+      .title{ font-weight: bold; }
+      .description{ font-size: $font-size-small;}
+    }
+    td.date, th.date{
+      width: 25%
+    }
+    td.points, th.points{
+      width: 8%;
+    }
+
+  }
+}

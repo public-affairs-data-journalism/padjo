@@ -18,7 +18,7 @@ puts config[:services]
 ## SETTINGS
 set :layout, :page
 page "/weeks/*", :layout => "week_layout"
-page "/homework/*", :layout => "homework_layout"
+page "/assignments/*", :layout => "assignment_layout"
 
 
 # Build-specific configuration
@@ -26,6 +26,10 @@ configure :build do
 
 end
 
+
+ready do
+  MiddlemanContentResource.set_sitemap(sitemap)
+end
 
 
 

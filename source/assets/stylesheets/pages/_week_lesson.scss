@@ -7,4 +7,27 @@ body.weeks{
       border-top: thin solid #aaa;
   }
 
+
+
+  .lessons{
+    @extend .card;
+    @extend .card-block;
+    margin-top: 1.5em;
+    margin-bottom: 2.5em;
+    h1{
+      font-size: $font-size-h2;
+      margin-top: 0.1em;
+    }
+    .lesson{
+      margin-bottom: 0.75em;
+      .title, .source{
+        font-size: $font-size-medium;
+      }
+      .title{
+        font-weight: bold;
+      }
+    }
+  }
+
 }
+

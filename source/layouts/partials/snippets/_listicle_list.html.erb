@@ -1,0 +1,8 @@
+<% listicle_list = listicle(listicle_name) %>
+
+
+<ul class="listicle">
+  <% listicle_list.each do |item| %>
+    <li><%=render_content_resource_element(item) %></li>
+  <% end %>
+</ul>

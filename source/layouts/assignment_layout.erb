@@ -1,0 +1,58 @@
+<% assignment = AssignmentResource(current_page) %>
+
+<% wrap_layout :page do %>
+  <div class="card card-block">
+  <section  id="assignment-meta">
+      <h4>Assignment</h4>
+      <div class="meta-date">
+        <strong>Due:</strong>
+        <span class="due-date">
+          <% if assignment.date %>
+              <%= friendly_date(assignment.date) %>
+          <% else %>
+              <%= assignment.date_slug %>
+          <% end %>
+        </span>
+      </div>
+      <div class="meta-points">
+        <strong>Points:</strong>
+        <span class="points">
+          <% if assignment.points %>
+              <%= assignment.points %>
+          <% else %>
+            TBA
+          <% end %>
+        </span>
+      </div>
+  </section>
+  <section id="assignment-requirements">
+
+            <div id="deliverables">
+              <% if assignment.deliverables %>
+                <h1>Deliverables</h1>
+                <%=markdownify assignment.deliverables %>
+              <% end %>
+            </div>
+            <div id="requirements" class="requirements">
+              <% if assignment.requirements %>
+                  <h1>Requirements</h1>
+                  <ul>
+                    <% assignment.requirements.each do |r| %>
+                      <li><%=markdownify r%></li>
+                    <% end %>
+                  </ul>
+              <% end %>
+            </div>
+
+  </section>
+  </div>
+
+  <%= yield %>
+
+
+
+
+
+
+
+<% end %>

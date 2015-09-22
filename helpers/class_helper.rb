@@ -4,12 +4,19 @@ def schedule
     }.sort_by{|r| r.date}
 end
 
-def homeworks
-  sitemap.resources.select{|r| r.path =~ /homework\/2015/
-    }.map{|r| Homework.new(r)
+def assignments
+  sitemap.resources.select{|r| r.path =~ /assignments\/.+/
+    }.map{|r| AssignmentResource.new(r)
     }.sort_by{|r| r.date_slug }
 end
 
+def current_assignments
+  assignments.select{|a| a.assigned? }
+end
+
+def projected_assignments
+  assignments.select{|a| a.projected? }
+end
 
 
 def schedule_first_week_date

@@ -1,0 +1,31 @@
+---
+title: Homework and Project Assignments
+description: A listing of scheduled assignments
+---
+
+<section class="note card card-block">
+  <strong>First week note:</strong> This section is under heavy revision so that the assignments are listed and organized in a relatively ordered way. Be prepared for frequent, small assignments on a weekly basis.
+
+</section>
+
+
+<section class="sec" id="current-assignments">
+  <h2>Current Assignments</h2>
+
+  <%= partial '/layouts/partials/snippets/assignments_table',
+   locals: {:assignments => current_assignments }  %>
+
+
+</section>
+
+
+<section class="sec" id="projected-assignments">
+  <h2>Projected Assignments</h2>
+
+  <p>These assignments that have not yet been officially announced. The due dates are meant to be estimates and are subject to change -- i.e. being pushed back.</p>
+
+  <%= partial '/layouts/partials/snippets/assignments_table',
+   locals: {:assignments => projected_assignments }  %>
+
+
+</section>

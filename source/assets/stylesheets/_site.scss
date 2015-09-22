@@ -4,6 +4,8 @@
 @import 'site/media';
 @import 'pages/page';
 @import 'pages/week_lesson';
+@import 'pages/assignment';
+@import 'pages/schedule';
 
 body{
   padding-top: 3em;
@@ -11,5 +13,5 @@ body{
 
 
 .sec{
-  margin-top: 1.5em;
+  margin-top: 2.5em;
 }

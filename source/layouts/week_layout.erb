@@ -1,19 +1,37 @@
 <% wrap_layout :page do %>
+  <%- week = WeekResource(current_page) %>
 
 
+  <% if week.lessons? %>
   <section id="lessons" class="lessons">
-    <% if current_page.data.lessons %>
-        <h1>Lessons</h1>
-        <% current_page.data.lessons.each do |r| %>
-          <div class="lesson">
-            <%= render_content_resource_element(r) %>
-          </div>
+        <p><em>These links contain material that I refer to in class but in self-contained article/aggregate/tutorial form.</em></p>
+
+        <% week.lessons.each do |r| %>
+          <%= render_content_resource_element(r, :class => 'lesson') %>
         <% end %>
-      <% end %>
   </section>
+  <% end %>
+
+  <% if week.assignments? %>
+    <section id="assignments" class="assignments card card-block">
+      <h2>Assignments</h2>
+      <% week.assignments.each do |r| %>
+        <div class="assignment">
+            <h4 class="title"><%=link_to_resource(r)%></h4>
+            <div class="date">Due: <%=friendly_date(r.date)%></div>
+            <div class="points">Points: <%=r.points%></div>
+            <div class="description">
+              <%=markdownify r.description%>
+            </div>
+        </div>
+      <% end %>
+    </section>
+  <% end %>
 
 
-  <%= yield %>
-
+  <!-- begin content -->
+  <section class="week-content sec">
+    <%= yield %>
+  </section>
 
 <% end %>
