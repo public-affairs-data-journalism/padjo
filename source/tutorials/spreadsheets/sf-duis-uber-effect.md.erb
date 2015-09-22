@@ -1,0 +1,163 @@
+---
+title: San Francisco's DUIs and the Uber effect
+---
+
+
+
+## The Uber effect
+
+In June 2010, [the Uber ride-sharing service launched in San Francisco](http://en.wikipedia.org/wiki/Uber_(company)#Establishment_in_the_U.S.). Besides changing our transportation habits, and the bottom-line of existing cab services, Uber believes it has also had a profound effect on public safety. 
+
+From their blog: [DUI rates decline in Uber cities](http://blog.uber.com/duiratesdecline)
+
+> We estimate that **the entrance of Uber in Seattle caused the number of arrests for DUI to decrease by more than 10%**. These results are robust and statistically significant. The diagram below illustrates the “Uber effect” relative to the baseline of DUIs.
+> 
+
+![img](/files/images/tutorials/sf-duis-uber/baltimoresun/uber-duis-seattle-chart.png)
+
+
+
+>...Uber is responsible for approximately -.7 DUIs per day, or more than a 10% reduction overall. However, this approach is inherently weakened by the fact that many things could have caused DUI to go down around the time when Uber entered. In order to test the robustness of this estimate, **we use San Francisco as a control city in a “differences-in-differences” framework**. The result is consistent:
+
+![img](/files/images/tutorials/sf-duis-uber/baltimoresun/uber-diff-and-diff.png)
+
+
+The [Washington Post's Wonkblog took a second look](http://www.washingtonpost.com/blogs/wonkblog/wp/2014/07/10/are-uber-and-lyft-responsible-for-reducing-duis/) (and included Lyft's entrance) at San Francisco and concluded that more research was needed, but the raw numbers don't seem to contradict Uber's claims. The WaPo produced this chart from SF DUI numbers:
+
+![img](/files/images/tutorials/sf-duis-uber/wonkblog-dui_san_fran.png)
+
+
+### Counter-claim: It's all about the policing
+
+Some law enforcement officials remain skeptical, [SCPR.org reported](http://www.scpr.org/news/2014/07/22/45416/uber-takes-credit-for-big-drop-in-drunk-driving-bu/):
+
+> Seattle Police Detective Drew Fowler said Uber shouldn’t be taking credit for reducing DUIs.
+>
+> “We have seen a decrease in the number of DUI arrests made," Fowler said. "If part of that can be assigned to the introduction of Uber, fantastic. But I don’t think proving the veracity of that is going to be very easy to do.”
+>
+> Fowler said it's more likely that DUIs have fallen because of a crackdown on drunk driving as part of a statewide initiative called Target Zero. 
+
+Sometimes crime numbers drop because there are fewer police to make reports. Here, the Seattle detective thinks an increased police presence drove down DUI rates. 
+
+And it always pays to remember: Correlation does not equal causation. It seems intuitive that Uber would allow more people to get home drunk without driving. But maybe those people stayed home before Uber was around, due to the inconvenience of having to find a ride home otherwise. Maybe Uber's real effect is that more people get to party who otherwise wouldn't &ndash; which is not a bad feat, by mind you.
+
+
+### Let's make a pivot chart!
+
+So what's the truth? Finding all the datasets across the different domains (such as number of liquor sales and bar business over time) is beyond our ability. But one thing we *can* do is just verify just one piece of Uber's evidence, something that's well within our means: [the DUI reports in San Francisco.](https://docs.google.com/a/stanford.edu/spreadsheets/d/1oUXIEc0Qxev34Lwt0Ocea_lCwRqcRCw4wWNz4elw4uc/edit#gid=0)
+
+
+__The big picture:__ We want to re-create the [Washington Post Wonkblog's chart](http://www.washingtonpost.com/blogs/wonkblog/wp/2014/07/10/are-uber-and-lyft-responsible-for-reducing-duis/); But we need to get the data in the right form. In fact, much of your difficult work in visualization (or any analysis) will be to get the data in the right form for whatever chart-making tool you're using.
+
+We start out with a spreadsheet with every DUI report in the San Francisco crime incident database. Every report has its own row, and we may be able to count the total number of incidents (by counting up all the rows), but we can't figure out how many incidents there are by, say, per month and year:
+
+![img](/files/images/tutorials/sf-duis-uber/sf-duis-opened.png)
+
+
+We need a thing that looks like this: A row for every __month-year__ combination, and a column that __counts__ number of incidents that have that __month-year__
+
+![img](/files/images/tutorials/sf-duis-uber/sf-duis-pivot-year-month-count.png)
+
+
+And then we can chart it.
+
+As an exercise, let's first chart the rate of DUIs by __hour__.
+
+1. Open [Google spreadsheet](https://docs.google.com/a/stanford.edu/spreadsheets/d/1oUXIEc0Qxev34Lwt0Ocea_lCwRqcRCw4wWNz4elw4uc/edit#gid=0)
+2. Make a copy
+3. Add some frozen panes, stretch out some fields
+4. Add a column to the end of the sheet and name it `hour`
+5. Add the formula `=HOUR(E2)` (assuming `E` is the `time` column) and calculate the formula down all the rows.
+ 
+   ![img](/files/images/tutorials/sf-duis-uber/sf-duis-hour-column.png)
+
+6. Now make a __Pivot Table__
+7. For the __Rows__ editor, we want to __Group by: hour__ (you can uncheck the __Show totals__ box, too). This ennumerates all the possible values in the `hour` column, i.e. `0` (midnight) to `23` (11PM):
+
+   ![img](/files/images/tutorials/sf-duis-uber/sf-duis-hour-pivot.png)
+
+8. Now we need to create a second listing in our pivot table: _how many DUIs were reported per hour_; in other words, the kind of summary we want is a *count of the rows*. So in the __Values__ section, it doesn't matter what column you pick out. But for consistencies' sake, just pick `incidntnum`.
+
+9. By default, the pivot table will try to __Display__ the __SUM__ of the incident numbers...which makes no sense for what we want to do. Change the __Display__ option to __COUNT__
+
+   ![img](/files/images/tutorials/sf-duis-uber/sf-duis-pivot-values-count.png)
+
+10. To visualize this, we select from the menu: __Insert__ a new __Chart__. Check the __Use column A as labels__ (remember that the first column has what will be the __hour__ labels) and select the __Line__ chart (Google Charts may recommend a few irrelevant chart types at first):
+
+   ![img](/files/images/tutorials/sf-duis-uber/sf-duis-hour-line-chart.png)
+
+
+As expected, based on Uber's findings, people tend to get caught driving drunk in the night (and comparatively rarely during, say, 10AM). 
+
+Let's move on to our original goal: charting by __month and year__.
+
+#### DUIs by month and year
+
+Return to the original sheet (it should be called "Sheet1" in the bottom tabs) and now add a new column: `year_and_month`.
+
+We want the values in this column to be a _combination_ of the __year__ and __month__ derived from the `date` column. This can all be done in one formula:
+
+    =TEXT(D2,"YYYY-MM")
+
+This is an admittedly esoteric-looking formula...but it's important because we need to extract just the year and the month so that we are __summarizing__ (i.e. counting) incidents per year and month, and _not_ by _each day_. The new column will look like this:
+
+![img](/files/images/tutorials/sf-duis-uber/sf-duis-year-month-col.png)
+
+
+You can either make a new pivot table, or return to the previous one. If you do the latter, you have to __Edit [the] range__ since we've added a new column to the report.
+
+Now, when you __Add field__ to __Rows__, the `year_and_month` option should show up. 
+
+Select that. And then for __Values__, again pick a column and choose __Summarize by: COUNT__
+
+The pivot table will now look like this:
+
+![img](/files/images/tutorials/sf-duis-uber/sf-duis-pivot-year-month-count.png)
+
+
+And then insert a new chart as before to get something pretty similar to what the [WaPo Wonkblog has](http://www.washingtonpost.com/blogs/wonkblog/wp/2014/07/10/are-uber-and-lyft-responsible-for-reducing-duis/):
+
+![img](/files/images/tutorials/sf-duis-uber/sf-duis-year-month-chart.png)
+
+![img](/files/images/tutorials/sf-duis-uber/wonkblog-dui_san_fran.png)
+
+
+#### Simplifying the data
+
+In the Wonkblog piece, they note a curious trend in both the SF and Philly DUI numbers:
+
+> It's also striking that **San Francisco and Philadelphia show a steep and parallel rise in DUIs** long before these services ever came to town; on both charts, it looks as if DUI numbers may be returning to an older normal as much as they've been falling. Perhaps these services have arrived on the market just in time to ride the benefits of an improving economy? (More theories on this welcome below as well).
+
+Let's make some theories of our own. We can't do anything for Philly right now, but let's check out our SF numbers. Eyeballing the chart, it seems like the spike happened somewhere between 2008 to 2009 (Uber launched [in June 2010](http://en.wikipedia.org/wiki/Uber_(company)))
+
+The problem with our current pivot table is there's too much data. So go back to the _original_ spreadsheet and add two more columns, just `year` and `month` (you can figure out the formulas yourself). Then re-adjust your pivot table to include those columns.
+
+Let's make a simpler chart: Instead of grouping the __Rows__ by `year_and_month`, simply group by `year` and make a column chart of the results:
+
+![img](/files/images/tutorials/sf-duis-uber/sf-dui-year-column-chart.png)
+
+
+2009 seems like a banner year for DUI reports. Let's look even _closer_ at that number by examining the data at a _monthly_ level.
+
+
+
+#### Crosstab across year and month
+
+So far, we've been using the pivot tables in the _simplest_ way: to aggregate across one dimension (counting incidents per hour, for instance). But pivot tables are especially useful for multiple dimensions, such as incidents per year, per month.
+
+Well, we kind of did that with the "year_and_month" field, but that only generated a two column chart. You'll see the difference in what I mean if you do the following:
+
+1. In the __Rows__ section of the __Report Editor__, change the __Group by__ field to the `year` column.
+2. In the __Columns__ section, add the `month` field.
+3. Set the __Values__ as before
+
+You'll now get a nice cross-tabulation of the data:
+
+![img](/files/images/tutorials/sf-duis-uber/sf-dui-xtab-year-month.png)
+
+Notice anything strange? In February 2009 (the column headed by `2`), there were __60__ DUI reports. In February 2008 and 2010, there were __35__ and __26__ incidents respectively. Make a chart of this pivot table to see the difference visually:
+
+![img](/files/images/tutorials/sf-duis-uber/sf-dui-xtab-year-month-chart.png)
+
+
+In the homework, you'll practice the use of Pivot Tables. I've posted a [complete walkthrough for the homework here](/tutorials/spreadsheets/basic-pivot-tables/TKimport).
