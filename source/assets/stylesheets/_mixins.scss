@@ -1,0 +1,8 @@
+/* inherit classes from Bootstrap 4 alpha */
+
+blockquote{
+  @extend .blockquote;
+  p{
+    font-size: $font-size-base;
+  }
+}
