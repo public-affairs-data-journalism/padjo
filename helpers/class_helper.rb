@@ -1,12 +1,12 @@
 def schedule
   sitemap.resources.select{|r| r.path =~ /weeks\/2015/
-    }.map{|r| WeekResource.new(r)
+    }.map{|r| WeekResource(r)
     }.sort_by{|r| r.date}
 end
 
 def assignments
   sitemap.resources.select{|r| r.path =~ /assignments\/.+/
-    }.map{|r| AssignmentResource.new(r)
+    }.map{|r| AssignmentResource(r)
     }.sort_by{|r| r.date_slug }
 end
 

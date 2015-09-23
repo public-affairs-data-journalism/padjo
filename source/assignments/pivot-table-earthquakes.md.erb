@@ -1,0 +1,38 @@
+---
+title: State-based earthquake data and pivot tables
+description: |
+  A routine exercise in getting data from an official government source and using pivot tables and spreadsheets to filter and visualize it. 
+date: 2015-09-22
+points: 5
+deliverables: |
+  In your PADJO2015 Google Drive folder, create a new spreadsheet named:
+
+  __EARTHQUAKES_PIVOTS__
+
+  This spreadsheet should contain 4 sheets:
+
+  1. The USGS earthquake data for two geopolitical regions.
+  2. The pivot table that aggregates Sheet 1 in the form it needs to be for the Chart Wizard to create the histograms for Sheets 3 and 4. As noted in the __Requirements__, the x- and y-axes should mark the __year__,
+  3. A histogram using __grouped__ bars based off of the pivot table in __Sheet 2__.
+  4. A histogram using __stacked__ bars based off of the pivot table in __Sheet 2__.
+
+
+requirements:
+  - Use the [USGS earthquake archive](http://earthquake.usgs.gov/earthquakes/search/) to retrieve M3.0+ earthquake records for a span of 5+ years for two different geopolitical regions (e.g. U.S. state, province, country)
+  - Import both files into the same spreadsheet but create a column named __GEO_ID__. Use this column to provide a value to distinguish between the two sets of data downloaded from USGS.
+  - Aggregate the data using a pivot table so that it can be used to create two histograms (i.e. time-series) in which the x-axis shows the __year__ and the y-axis shows the __number of earthquakes__.
+  - |
+      - A __grouped__ bar chart.
+      - A __stacked__ bar chart. 
+---
+
+Note from Dan: TODO - The in-class tutorial on using pivot tables needs to be completed and linked to here.
+
+Revisit the [tutorial on U.S.-based earthquakes](#TK) to see how to get the earthquake data from the USGS.
+
+For your convenience, the USGS Earthquake Archives search form is here: [http://earthquake.usgs.gov/earthquakes/search/](http://earthquake.usgs.gov/earthquakes/search/).
+
+Pick whatever 2 geopolitical regions you'd like: Mexico vs. Texas, France vs. Italy, Australia vs. New Zealand, etc. The USGS archive can return as many as 20,000 records at one time, so feel free to go back a decade or so, depending on the seismic volatility of the region. The search tool can be configured to return batches of data if you hit the 20,000 record limit -- but honestly, completeness is not the point of this exercise and there will be plenty enough data-wrantling pain in the very next steps.
+
+
+## Feel -- and remember -- the pain

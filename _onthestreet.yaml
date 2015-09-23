@@ -12,8 +12,11 @@ site:
 
 
 services:
+  github_repo:
+    id: 'public-affairs-data-journalism/padjo'
+    default_branch: 'fall2015'
   google_analytics:
-    id: nil
+    id: UA-55019978-1
   typekit:
     id: nil
   disqus:
