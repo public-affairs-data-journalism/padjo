@@ -14,7 +14,7 @@ site:
 services:
   github_repo:
     id: 'public-affairs-data-journalism/padjo'
-    default_branch: 'fall2015'
+    branch: 'fall2015'
   google_analytics:
     id: UA-55019978-1
   typekit:

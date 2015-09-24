@@ -1,5 +1,6 @@
 require 'lib/content_resource'
-
+Tilt.mappings.delete('csv')
+# https://github.com/middleman/middleman/issues/822
 # Kramdown
 set :markdown_engine, :kramdown
 set :markdown, :toc_levels => 1..3

@@ -6,3 +6,8 @@ blockquote{
     font-size: $font-size-base;
   }
 }
+
+
+table{
+  @extend .table;
+}
