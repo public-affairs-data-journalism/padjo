@@ -1,5 +1,5 @@
 def render_toc(opts = {})
-return %Q{
+  return %Q{
 
 * Table of contents
 {:toc}
