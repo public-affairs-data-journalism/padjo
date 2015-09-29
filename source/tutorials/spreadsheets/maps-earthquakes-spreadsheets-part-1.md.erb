@@ -26,7 +26,7 @@ But even before thinking about what we can _do_ with the data, I want this lesso
 
 
 
-<% content_card("Just give me that data and map!") do %>
+<% content_card "Just give me that data and map!" do %>
 
 Here are the important data links before you dive into the wall of text that is this lesson.
 
@@ -93,6 +93,7 @@ Let's use the to show the __mag__ value of each earthquake and visually represen
 
 It's not a bad strategy but in this specific dataset, it's not helpful because, besides the problem of having 5,500+ dots, it turns out that the vast majority of these earthquakes are between magnitudes of 3 to 4. A map is profoundly unhelpful for showing that kind of breakdown.
 
+<a id="mark-earthquakes-year-color"></a>
 
 ### Depicting year of earthquake with color
 
@@ -102,6 +103,7 @@ Let's use each dot's color to indicate what _year_ the given earthquake happened
 
 Again, not a bad tactic, but we still have the problem of more than 5,500+ dots to show.
 
+<a id="mark-bins-and-clusters"></a>
 
 ## Bins and clusters
 
@@ -113,8 +115,6 @@ Again, this is not meant to be an in-depth lesson on geographic visualization. B
 
 
 ### Clustering
-
-
 
 <iframe width="100%" height="520" frameborder="0" src="https://dundee.cartodb.com/viz/b05720ca-62f0-11e5-bbad-0ec6f7c8b2b9/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
 

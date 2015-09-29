@@ -15,6 +15,7 @@
   h1{
     font-size: 2.25rem;
     margin-top: 2.0em;
+    margin-bottom: 0.8em;
   }
   /* standard markdown images */
   /*hack until media wrap is better implemented */
@@ -29,9 +30,17 @@
 
 
 .page-header{
+  margin-bottom: 1.5em;
   h1.title{
     font-size: $font-size-h1 * 1.1;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .description{
+    font-size: 1.2rem;
+    font-style: italic;
+    border-bottom: thin solid #aaa;
+    padding-bottom: 0.5em;
   }
 }
 

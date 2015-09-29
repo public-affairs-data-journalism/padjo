@@ -1,5 +1,180 @@
 ---
-title: Earthquake spreadsheets (Part 2 of 3)
+title: Spreadsheets and Earthquakes
 description: |
-  Part 2 of 3
+  A walkthrough of managing earthquake data and doing basic visualizations with spreadsheets (Part 2 of 3)
+references:
+  - /tutorials/spreadsheets/basic-agg-pivot-tables
+  - /tutorials/spreadsheets/why-spreadsheets
 ---
+
+
+<%= render_toc %>
+
+
+
+# Import the data into a spreadsheet
+
+__Download the data here:__ [usgs-us-with-fips-quakes.csv](/files/data/usgs-us-with-fips-quakes.csv)
+
+Then import it into a Google Spreadsheet. The delimiter is, of course, a __comma__.
+
+The result of the import should look something like this:
+
+
+![image](files/images/tutorials/spreadsheets/earthquakes/import-data-google-sheet.png)
+
+
+# Visualizations from a spreadsheet
+
+Creating charts from a spreadsheet is as easy as selecting the data we want to visualize and then clicking __Insert__ on the menubar, then __Chart...__. Of course, knowing what data to select is the more difficult part.
+
+For now, let's just highlight the __mag__ column. In modern spreadsheets, the easiest way to highlight an entire column is to __click its header__
+
+I demonstrate the column-highlighting and menu item selection in the animated GIF below:
+
+![gif to insert chart](/files/images/tutorials/spreadsheets/earthquakes/google-sheet-insert-chart.gif)
+
+
+<a id="mark-first-bar-chart-mag"></a>
+
+### Bar chart of magnitudes
+
+By default, Google Sheets will offer you a selection of "Recommended" charts. It sees that we've selected a whole bunch of numbers and tries to guess what might be the most useful visualization. 
+
+![image](files/images/tutorials/spreadsheets/earthquakes/recommended-charts-for-mag.png)
+
+This is a hint that the structure and content of the selected data is very important to the __type of visualizations__ that can be created. The __histogram__ is actually the best choice, but for now, I choose the one that seems to be a straightforward __bar chart__, in which _each_ earthquake is represented by a very thin line. The height of the line (i.e. the __y-axis__) depicts the __mag__ value of each earthquake:
+
+<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1232931494&amp;format=image"></iframe>
+
+It's actually not too bad. We can see with a quick glance that other than very few earthquakes break the __5.0__ mark. So this is definitely a visual refinement of what we started out with: a bunch of text, in which reading all the __mag__ values is very cumbersome. But that's about the limit of our insights.
+
+
+### Scatterplot, longitude vs. latitude
+
+Before moving on to the histogram-type chart, let's try charting a different part of the data. Highlight both the __longitude__ and __latitude__ columns, and then selecting __Insert > Chart...__
+
+The very first recommended chart should be a __scatter plot__. As I mentioned in the previous lesson, a map can be thought of as a scatter plot with longitude and latitude on the x- and y-axis, respectively:
+
+<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1429797666&amp;format=image"></iframe>
+
+For whatever reason, though, I can't get Google to _not_ switch those two things around. Oh well, you can mentally transpose the variables yourself, then imagine drawing the outlines of the United States onto the scatter plot. And you basically have a geospatial map. Moving back to magnitudes and histograms...
+
+
+# Histograms
+
+Think of a [histogram](https://en.wikipedia.org/wiki/Histogram) as a special kind of __bar chart__ that shows how the data points are _distributed_.
+
+This is similar in purpose to the [_binned_ maps we saw in the previous lesson](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-1#mark-bins-and-clusters):
+
+![image](/files/images/tutorials/spreadsheets/earthquakes/cartodb-usgs-rect-bin.jpg)
+
+Earthquakes _similar in geospatial location_ were represented as a single bubble/square/hexagon, and the _color_ of this clustered shape indicated how many earthquakes were in that cluster. In the example above, the _redder_ the square, the more earthquakes in that area. This __density map__ depicts the distribution of earthquakes along two dimensions -- __latitude__ and __longitude__ -- and _color_ is used to show the amount (i.e. the _density_) of the distribution.
+
+In contrast, a histogram depicts only _one dimension_ and uses the _height_ of the bar (i.e. the y-axis) to show the amount of each distribution.
+
+
+
+## Histogram of magnitudes
+
+Remember our [first attempt at charting the __mag__ column](#mark-first-bar-chart-mag)? We can see the outliers, but we can't easily see the _distribution_ of the earthquakes by magnitude, e.g. __how many earthquakes are M4.0+?__, etc.
+
+So highlight the __mag__ column, select the menu action to __Insert > Chart...__, and then from the list of recommended chart types, select __Histogram__.
+
+You should get something similar to this:
+
+
+<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=535712983&amp;format=image"></iframe>
+
+It's definitely a lot fewer _bars_ to look at, and it tells the general story of the distribution: there are way more  M4.0-or-weaker earthquakes. But it's a little awkward because of the __bins__, which you can see in the __x-axis__ where the ticks are spaced un-neatly at intervals of 0.26.
+
+It's is a bid weird how every third bar is a major drop-off from the first two. I can't tell if that's because the data itself is that weird, or just a quirk in the graphing process, in which some values are not rounded the way they should be.
+
+Either way, the default __bins__ that Google chose aren't great. So let's make our own.
+
+--------------
+
+# The importance of bucket size
+
+I didn't go demonstrate this in the [previous lesson](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-1#mark-bins-and-clusters), but it's not just the _shape_ of the bins (e.g. hexagons versus squares), but the _size_ of the bins that can be varied, and which can make a _big_ difference in how the data is interpreted.
+
+Below are [three variations of sizes of the hexbins](https://dundee.cartodb.com/viz/9d493bb4-66c7-11e5-bac2-0e76aec36da9/public_map):
+
+![image](/files/images/tutorials/spreadsheets/earthquakes/cartodb-3-hex-maps.png)
+
+If the bins -- often referred to as __buckets__ -- are too big, then we lose valuable geographic distinctions: the bins for California earthquakes spill across the border and make the entire West coast a block of red. But make the buckets too small, and we're back right at the original problem: having too much data to visually interpret.
+
+This same problem applies to histograms. In our first attempt, the default bucket size was too small...or just too weird. Either way, the visual story was jumbled.
+
+
+## Magnitude bucketed by integers
+
+So let's go for "big" bucket sizes for our histogram of magnitudes. Round all magnitude values to the nearest integer. This is better done explicitly, by making a new column and using a formula. But [we get to formulas later](#mark-formulas), let's see what magic the Google charting software can do for us.
+
+Repeat the part where you select the __mag__ columns and perform an __Insert Chart__. When the recommended visualizations pop up, select the __Histogram__ option again, but then, click on the __Customization__ tab.
+
+Then scroll down until you see the __Buckets__ sub-menu. In the input field for __Bucket size__, enter a value of `1`:
+
+![image](files/images/tutorials/spreadsheets/earthquakes/histogram-choose-bucketsize.png)
+
+This is the resulting chart:
+
+<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=386083353&amp;format=interactive"></iframe>
+
+As we guessed earlier, earthquakes M4.0-and-weaker make up the vast majority of earthquakes. And earthquakes M5.0+ and above were very rare.
+
+### Magnitude bucketed by 0.2 increments
+
+Let's customize the bucket size again and see what a smaller size looks like. This is especially appropriate with our given data set because, if you recall from geology class, the power of an earthquake is logarithmic, i.e. [a M4.0 earthquake is _10 times_ the amplitude of a M3.0 earthquake](http://earthquake.usgs.gov/learn/topics/how_much_bigger.php).
+
+So let's choose a fraction of a number for the bucket. Here's what a bucket size of __0.2__ looks like:
+
+<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=6351283&amp;format=interactive"></iframe>
+
+Is this particularly profound? Maybe, if you care that there's a large drop-off after M3.4+. Otherwise, the story is not much different from the integer-bucketed histogram, at least to us laypersons.
+
+
+## Histogram of states
+
+We can use histograms using non-numerical columns, such as the __STUSPS__ columns. This shows a distribution of earthquakes by _category_ -- in this case, the category is the name of the U.S. state the quake was centered in. Highlight the __STUSPS__ column and repeat the steps to create a histogram:
+
+<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1255972073&amp;format=interactive"></iframe>
+
+This sorting is not optimal. And also, not all 50 states are fit into the chart or even labeled. This is a limitation of the charting software. _Stupid Google_ you might think. But actually, _stupid us_ for trying to graph all 50 states. Some are clearly not worth showing as they have so little earthquakes throughout their history.
+
+One way to get around the limitations of the histogram is to use a pie chart. Except as Edward Tufte notes, pie charts are bad. But maybe because he hasn't seen them in faux 3-D:
+
+<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1061720506&amp;format=interactive"></iframe>
+
+Nope, still bad. 
+
+If only we could limit this histogram to only the top 10-or-so states by total earthquake activity, we'd have a nice chart. Unfortunately, I don't think there's an easy way to do kind of filtering with vanilla spreadsheets. But it's easy with __Pivot Tables__, [which we will get to soon enough in the next lesson](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-3).
+
+
+
+<a id="mark-formulas"></a>
+
+# Deriving new columns with formulas
+
+In the previous lesson, I came up with a lame attempt to show earthquakes-by-ear using the [CartoDB map](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-1#mark-earthquakes-year-color):
+
+![image](/files/images/tutorials/spreadsheets/earthquakes/cartodb-by-year-snapshot.png)
+
+So many of the earthquake points overlap that it's hard to tell if 2011 was a dominant year in earthquakes, or if the charting software just happened to place 2011 earthquakes on top of the later quakes by default.
+
+So right now, we just want to figure out: __how many earthquakes were there per year__?
+
+
+### The `LEFT` formula
+
+
+
+## Histogram by year
+
+A histogram in which _time_ is in the 
+
+
+
+
+
+
