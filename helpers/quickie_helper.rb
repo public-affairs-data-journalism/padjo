@@ -1,9 +1,23 @@
 def render_toc(opts = {})
   return %Q{
+## Table of contents
+{:.no_toc}
 
 * Table of contents
 {:toc}
 }
+end
+
+# def content_tag_markdownify(tag_name, opts = {}, &blk)
+#   txt = markdownify(capture(&blk))
+#   concat content_tag(tag_name, txt, opts)
+# end
+
+def content_card(title = nil, &blk) # takes block
+  txt = ""
+  txt += content_tag( :div, title, :class => 'header') if title
+  txt += content_tag :div, markdownify(capture(&blk)), :class => 'body'
+  concat content_tag(:div, txt, :class => 'content-card')
 end
 
 

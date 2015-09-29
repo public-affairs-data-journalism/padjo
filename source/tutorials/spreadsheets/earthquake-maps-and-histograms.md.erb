@@ -1,8 +1,3 @@
----
-title: How (and why) to use a spreadsheet to turn a beautiful interactive map of earthquakes into a bar chart
-description: |
-  We have a lot of ways to easily create beautiful, elaborate visualizations. But let's see what we can do when we prioritize the story of the data over its visual presentation.
----
 
 <div class="warning card card-block">
   <p><strong>Note:</strong> This tutorial is taught in Sept. 24's class but I didn't get all the text transcribed. All the TK notes will be filled in. In the meantime, you can use this tutorials from last year: </p>
@@ -15,41 +10,10 @@ description: |
 
 </div>
 
-This lesson covers virtually everything I hope you learn about spreadsheets, pivot tables, and the value of summarization and filtering data. There's a lot of charts, and instructions on how to make charts. 
-
-But the main takeaway is: __Why do we work with data?__
-
-One possible answer: to make a beautiful map. Such as this [torque map from CartoDB](http://docs.cartodb.com/tutorials/introduction_torque.html) of nearly 5 years worth of earthquake data:
-
-
-
-<iframe width="100%" height="580" frameborder="0" src="https://dundee.cartodb.com/viz/888634d0-60ae-11e5-93c9-0e018d66dc29/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
-
-It took me literally 5 minutes to make this map. That includes reading about CartoDB, creating an account, confirming my account, uploading the data, and using the map wizard. [I didn't even have to read their great tutorials](http://docs.cartodb.com/tutorials.html).
-
-But let's pretend we didn't have CartoDB to make it so easy. __What important stories can we find in this data? And how?__
 
 
 
 
-# Just give me that data and map!
-
-Here are the important data links before you dive into the wall of text that is this lesson.
-
-##### The CSV of 2011 to 2015 earthquakes as collected from the United States Geological Survey:
-
-[usgs-north-america-quakes.csv](/files/data/usgs-us-with-fips-quakes.csv)
-
-
-##### The link to the CartoDB torque map made from the USGS data
-
-[The public view of the map](https://dundee.cartodb.com/viz/888634d0-60ae-11e5-93c9-0e018d66dc29/public_map). If you create your own CartoDB account, you can clone it yourself.
-
-##### The Google spreadsheets, pivot tables, and charts
-
-This tutorial walks you through the [steps of making everything in this massive Google Sheet](https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/edit#gid=1127221441).
-
-But there's not much fun in just copying my work. [Start with the original CSV](/files/data/usgs-us-with-fips-quakes.csv).
 
 
 
@@ -57,98 +21,10 @@ But there's not much fun in just copying my work. [Start with the original CSV](
 
 
 
-# Why a map?
-
-![image](files/images/tutorials/spreadsheets/earthquakes/cartodb-empty-map.jpg)
-
-
-## The problems of overplotting
-
-The built-in strength of a map -- the visualization of geospatial data, i.e. __longitude__ and __latitude__ coordinates -- is also its main limitation. Think of a map as a scatterplot with __longitude__ on the x-axis and __latitude__ on the y-axis -- with _so many dots_ that it creates the continuous image of Earth's land masses and oceans. In other words, a lot of the ink of this chart is devoted to showing us what Earth looks like -- even before we add any data.
-
-Here's what the earthquake data looks like if we don't try to plot it by __time__:
-
-
-Because there are so many earthquakes, this turns out to be a gigantic clutterfest:
-
-
-![image](files/images/tutorials/spreadsheets/earthquakes/cartodb-usgs-all.jpg)
 
 
 
-## The z-axis
 
-If the x- and y-axes are taken up by longitude and latitude, respectively, this means we have at most the ability to show one to two other attributes, i.e. the __z-axis__. 
-
-
-### z-axis by size
-
-Let's use the to show the __mag__ value of each earthquake and visually represent the __z-axis__ by __size__. In other words, __the bigger the magnitude, the bigger the dot__:
-
-<iframe width="100%" height="520" frameborder="0" src="https://dundee.cartodb.com/viz/e20ccde0-62f0-11e5-89ff-0e853d047bba/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
-
-### z-axis by year
-
-<iframe width="100%" height="520" frameborder="0" src="https://dundee.cartodb.com/viz/87f3c8ce-62f3-11e5-8231-0e9d821ea90d/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
-
-
-
-### Bins and clusters
-
-(More TK about not showing all points at once, but "binning" by longitude/latitude)
-
-
-#### Clustering
-
-<iframe width="100%" height="520" frameborder="0" src="https://dundee.cartodb.com/viz/b05720ca-62f0-11e5-bbad-0ec6f7c8b2b9/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
-
-
-#### Rectangular binning
-
-![image](files/images/tutorials/spreadsheets/earthquakes/cartodb-usgs-rect-bin.jpg)
-
-
-#### Hex binning
-
-![image](files/images/tutorials/spreadsheets/earthquakes/cartodb-usgs-hex-bin.jpg)
-
-
-
-### Visualizing time with animation
-
-Visualization software like [CartoDB's torque map](http://docs.cartodb.com/tutorials/introduction_torque.html) allow for another kind of axis of visualization: __time__. That is, the chart _changes over time_ -- i.e. the time that is physically passes for the viewer.
-
-So basically, animation. Here's the intro chart again:
-
-<iframe width="100%" height="400" frameborder="0" src="https://dundee.cartodb.com/viz/888634d0-60ae-11e5-93c9-0e018d66dc29/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
-
-So beautiful. And literally, no effort on my part. 
-
-
-# Why not an animated map?
-
-First of all, this is __not__ a substantiated critique of CartoDB or other mapping software. I have literally put the least amount of effort possible into using their software.  A lengthier discussion on the limitations of maps in general will be saved for another lesson. But Matthew Ericson, a graphics director at the New York Times, said it better than I can with: [When Maps Shouldn’t Be Maps](http://www.ericson.net/content/2011/10/when-maps-shouldnt-be-maps/)
-
-But let's _pretend_ that it is difficult to make a more useful visualization after more sophisticated usage of mapping software -- what can we do better _without_ a map?
-
-
-## Missing the state-by-state story
-
-So why does an animated map fail in our situation? 
-
-The better question to ask is: __what story is told by this time-lapse map?__
-
-Or, to state it in a viral-news way: 
-
-## THESE TWO CHARTS PROVE WHY ANIMATED MAPS DON'T ALWAYS WORK
-
-##### January 2011
-
-![image](files/images/tutorials/spreadsheets/earthquakes/cartodb-usgs-2011-01.jpg)
-
-##### January 2015
-
-![image](files/images/tutorials/spreadsheets/earthquakes/cartodb-usgs-2015-01.jpg)
 
 
 ---------

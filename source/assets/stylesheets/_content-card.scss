@@ -1,0 +1,10 @@
+.content-card{
+  @extend .card;
+  .body{
+    @extend .card-block;
+  }
+  .header{
+    @extend .card-header;
+    font-size: $font-size-h4;
+  }
+}
