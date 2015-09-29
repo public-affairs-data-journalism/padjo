@@ -1,11 +1,33 @@
 ---
-title: Spreadsheets and Earthquakes
+title: Spreadsheets and Earthquake Data (Part 2 of 3)
 description: |
   A walkthrough of managing earthquake data and doing basic visualizations with spreadsheets (Part 2 of 3)
 references:
   - /tutorials/spreadsheets/basic-agg-pivot-tables
   - /tutorials/spreadsheets/why-spreadsheets
+  - /tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-1
+  - /tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-3
+
+  - title: Google spreadsheets function list
+    url: https://support.google.com/docs/table/25273?hl=en
+    description: A searchable list of functions that can be used in Google Sheets.
+  - title: Add formulas to a spreadsheet
+    url: https://support.google.com/docs/answer/46977?hl=en
+    description: |
+      Google's somewhat-brief documentation on how to work with formulas in Google Sheets.
+  - title: The LEFT function in Google Sheets
+    url: https://support.google.com/docs/answer/3094079?vid=1-635791440481547713-2744638423
+    description: |
+      Documentation and sample usage for `LEFT`, which returns a substring from the beginning of a specified string.
+  - title: The IF function in Google Sheets
+    url: https://support.google.com/docs/answer/3093364?vid=1-635791440481547713-2744638423
+    description: |
+      Documentation and sample usage for `IF`, which returns one value if a logical expression is `TRUE` and another if it is `FALSE`.
 ---
+
+In the [previous lesson](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-1), we learned about the USGS earthquake data and why a map might possibly obscure some interesting insights. __In this lesson__, we use basic spreadsheet techniques to create slightly more insightful visualizations. In [the next lesson](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-3), we learn how to use pivot tables to summarize the data to add an extra, essential layer to our data visualizations.
+
+
 
 
 <%= render_toc %>
@@ -134,27 +156,31 @@ So let's choose a fraction of a number for the bucket. Here's what a bucket size
 Is this particularly profound? Maybe, if you care that there's a large drop-off after M3.4+. Otherwise, the story is not much different from the integer-bucketed histogram, at least to us laypersons.
 
 
+# Categorical histograms
+
+We can use histograms using non-numerical columns, such as the __STUSPS__ columns, in which case we don't care about "bucket size". This kind of histogram shows a distribution by __category__.
+
 ## Histogram of states
 
-We can use histograms using non-numerical columns, such as the __STUSPS__ columns. This shows a distribution of earthquakes by _category_ -- in this case, the category is the name of the U.S. state the quake was centered in. Highlight the __STUSPS__ column and repeat the steps to create a histogram:
+In the case of __STUSPS__, the category is the name of the U.S. state the quake was centered in. Highlight the __STUSPS__ column and repeat the steps to create a histogram:
 
 <iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1255972073&amp;format=interactive"></iframe>
 
 This sorting is not optimal. And also, not all 50 states are fit into the chart or even labeled. This is a limitation of the charting software. _Stupid Google_ you might think. But actually, _stupid us_ for trying to graph all 50 states. Some are clearly not worth showing as they have so little earthquakes throughout their history.
 
-One way to get around the limitations of the histogram is to use a pie chart. Except as Edward Tufte notes, pie charts are bad. But maybe because he hasn't seen them in faux 3-D:
+One way to get around the limitations of the histogram is to use a pie chart. Except [Edward Tufte thinks pie charts are bad](http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=00018S). But maybe because he hasn't seen them in faux interactive 3-D:
 
 <iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1061720506&amp;format=interactive"></iframe>
 
 Nope, still bad. 
 
-If only we could limit this histogram to only the top 10-or-so states by total earthquake activity, we'd have a nice chart. Unfortunately, I don't think there's an easy way to do kind of filtering with vanilla spreadsheets. But it's easy with __Pivot Tables__, [which we will get to soon enough in the next lesson](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-3).
+If only we could limit the data to only the top 10-or-so states by total earthquake activity, we'd have a nice chart, pie or histogram. Unfortunately, I don't think there's an easy way to do kind of filtering with vanilla spreadsheets. But it's easy with __Pivot Tables__, [which we will get to soon enough in the next lesson](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-3).
 
 
 
 <a id="mark-formulas"></a>
 
-# Deriving new columns with formulas
+# Deriving new columns with formulas and functions
 
 In the previous lesson, I came up with a lame attempt to show earthquakes-by-ear using the [CartoDB map](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-1#mark-earthquakes-year-color):
 
@@ -164,17 +190,138 @@ So many of the earthquake points overlap that it's hard to tell if 2011 was a do
 
 So right now, we just want to figure out: __how many earthquakes were there per year__?
 
+Unfortunately, while our dataset does have a __time__ column, there is no column for just _year_. So let's make one.
 
-### The `LEFT` formula
+## The `LEFT` function
+
+There's several approaches we could take in order to derive the year from each __time__ value. Just to warn you: working with time -- or rather, the datatypes and values that purport to represent time -- is one of those things that continues to be very frustrating for me, even as an experienced programmer.
+
+Rather than jump into that pain, let's tackle the problem in the most literal, straightforward way.
+
+Here is a sample value from the __time__ column:
+
+        2015-09-20T16:55:21.558Z
+
+What part of that text string represents the _year_? The __first 4 characters__, e.g. `2015`. So to create a __year__ column, we just need to extract the first 4 characters of every value in the __time__ column.
+
+There is a function in Google Sheet that does exactly this: [__LEFT__](https://support.google.com/docs/answer/3094079?vid=1-635791440481547713-2744638423). Via [Google's documentation](https://support.google.com/docs/answer/3094079?vid=1-635791440481547713-2744638423):
+
+Sample usage:
+
+        LEFT(A2,2)
+
+In which `A2` is the reference to a __cell__, and `2` refers to number of characters to extract, starting from the _left_ side.
+
+## How to create and repeat a formula
+
+At this point, I'm going to assume you _kind of_ know what a spreadsheet formula is and how they work, _generally_. If not, check out [Google's help page here](https://support.google.com/docs/answer/46977?hl=en).
+
+Below is an animated GIF in which I create a __year__ column. Note these things:
+
+- The __time__ column in our dataset is in the _first_ column, i.e. __column A__
+- Successfully running a formula requires that, in a given cell, you first enter an __equals sign__, i.e. `=LEFT(A2,4)`
+- To __repeat__ the formula down an entire column, first make sure it works _once_. Then click on the cell that you want to repeat to highlight it. Then __double-click__ its __bottom-right-corner__ -- Google Sheet should make it obvious by depicting that corner with a __blue square__.
+
+Any way, here's the GIF:
+
+![google-sheet-drag-formula](/files/images/tutorials/spreadsheets/earthquakes/google-sheet-drag-formula.gif)
+
+
+### Histogram by year
+
+Let's get back to chart-making. Highlight our new __year__ column and create a __time series__ -- which is basically a histogram except having some kind of time value in the __x-axis__. 
+
+It should look something like this:
+
+__Note:__ I've adjusted a few of the chart editor options, such as removing the __Legend__ and title for the y-axis. I'm going to be doing that for all the charts in this lesson. But I will not describe this customization in detail. Figuring out how to twiddle the various chart editor buttons and options, and obsessing over it to an unhealthy degree, is something you can do on your own time.
+
+![image](files/images/tutorials/spreadsheets/earthquakes/quick-histogram-by-year.png)
+
+So, contrary to what we could see on the map, the years 2014 and 2015 (remember that 2015 is only 3/4 done at this point) have significantly more earthquakes than the previous years. This simple bar chart ended up being pretty valuable.
+
+### Histogram by year-month
+
+Is it worth looking at earthquakes by year _and month_? Maybe. Since earthquakes aren't seasonal (we _think_), it's interesting to see if the number of earthquakes per month has increased over the years. For all we know, with the time-series-by-year, 2014 and 2015 each had some kind of exceptional earthquake, in which many aftershocks were triggered, but were not significantly different on a typical month-to-month basis.
+
+How do we extract the year and month values? Take a look again at the __time__ column:
+
+        2015-09-20T16:55:21.558Z
+
+If `09` represents the month (i.e. the 9th month, i.e. September), I think you can figure out the formula using `LEFT` for yourself. Here's the resulting time series:
+
+![image](files/images/tutorials/spreadsheets/earthquakes/quick-histogram-by-year-month.png)
+
+At a quick glance, it does look like the overall frequency of earthquakes has markedly increased from 2014 onwards.
 
 
 
-## Histogram by year
+## The `IF` formula
 
-A histogram in which _time_ is in the 
+Let's now go from smaller picture (i.e. earthquakes per year-month) to a _broader_ picture: how many M3.0+ earthquakes occurred in the period of _2011 through 2013_, i.e. __3 years__, compared to the period of _2014 through September 2015_, i.e. __less than 2 years__? The previous histogram makes it fairly obvious that 2014 is a new era in earthquake activity. But now we want to show, in a more black-and-white fashion, how much more dramatic the change is.
+
+In terms of spreadsheet-steps, we basically want to create a new column that designates whether an earthquake is __before 2014__ or __2014 and later__. We can derive this from the existing __year__ column but we need to use a different formula.
+
+Enter [the __IF__ function](https://support.google.com/docs/answer/3093364?vid=1-635791440481547713-2744638423). In the example below, the formula tests cell __K2__ (which, in my example, is where the __year__ column is located) to see if it is __less than__ 2014. 
+
+__If__ that is the case, the resulting value will be the text string, `"2011-2013"`. __Else__, the value will be the text string, `"2014-2015"`
+
+      IF(K2 < "2014", "2011-2013", "2014-2015")
+
+Again, not to get into too much detail about formula syntax here, but the __double-quotation marks__ are important. If you have a little knowledge of the pickiness of programming languages, you might wonder why we use the quoted-character string `"2014"` instead of the _number_ `2014` -- it's because that __year__ column was derived from a __text__ formula, i.e. `LEFT`.
+
+Entering this formula and repeating it is the same as before. Your spreadsheet should look something like this (note the new __era__ column):
+
+![image](files/images/tutorials/spreadsheets/earthquakes/new-era-column.png)
+
+### Histogram by era
+
+What can we do with this new __era__ column? We could create a histogram; since there are only two values -- `2011-2013` and `2014-2015` -- the result is a two-bar bar chart:
+
+![image](files/images/tutorials/spreadsheets/earthquakes/new-era-histogram.png)
+
+If that's a little tame for you, go for the pie chart version:
+
+![image](files/images/tutorials/spreadsheets/earthquakes/new-era-pie-chart.png)
+
+That's still not very dramatic. But think about the insight that it obscures: the __blue__ piece of the pie represents _far less time_ than the __red__ piece. So the fact that it is `54.3%` of the pie is _very significant_. But our choice of __bucket size__ somewhat obscures it.
+
+Let's keep the __era__ column for now and move on to one more kind of categorization:
+
+
+### California vs. non-California
+
+It's pretty well known that California is a big state for earthquakes. Repeat the steps we did for __era__, but this time, derive a column named `is_CA`, which is either `"California"` or `"Not California"` based on the value of the __STUSPS__ column.
+
+Assuming the __STUSPS__ column is in column __I__, here's a hint to the formula:
+
+    =IF(I2="CA"...
+
+Then make a pie chart that looks like this:
+
+![image](/files/images/tutorials/spreadsheets/earthquakes/is-ca-pie-chart.png)
+
+
+## Why formulas and functions?
+
+Again, not a terribly interesting insight. But it's good to get some practice with formulas. `LEFT` and `IF` are only a few of the possible functions we can use to transform text. But keep in mind _why_ we need to transform text in the first place: sometimes we want to filter and sort data by categories that didn't exist in the original data, such as __year__.
+
+Here is [Google's searchable list of spreadsheet functions](https://support.google.com/docs/table/25273?hl=en), many of which are the same in Excel. It's not worth _memorizing_, per se, but it's definitely worth browsing so you get an idea of what is _possible_.
 
 
 
+# What we need to know
 
+The spreadsheet techniques we've learned were fairly basic, but pretty powerful. Other than getting more [familiarized with the variety of spreadsheet functions available](https://support.google.com/docs/table/25273?hl=en), there's not much more to learn (at least for _this_ class) in terms of spreadsheets, _specifically_.
+
+However, there were a few things we weren't able to easily do. One of them was to just __filter__ the earthquake data so that we could compare states with a non-trivial number of earthquakes, rather than getting something that results in this mess of a pie chart:
+
+<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1061720506&amp;format=interactive"></iframe>
+
+
+I use the phrase "_just filter_" a bit facetiously. Filtering is one of the most fundamental things we do not just as journalists, but as _humans_ -- it is our constant challenge to make sense of the world's flood of information. 
+
+Making charts from data -- that is, simplifying data for visual interpretation -- is one example of why and how we filter. But being able to filter data _even before_ we visualize data is itself an essential skill.
+
+In the next lesson, [we learn about pivot tables](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-3), which are a built-in function of modern spreadsheets. In a nutshell, pivot tables allow us to easily summarize and simplify data, which we then create charts from. It doesn't sound very sexy but it is all we need for finding the most interesting insights in this earthquake data.
 
 

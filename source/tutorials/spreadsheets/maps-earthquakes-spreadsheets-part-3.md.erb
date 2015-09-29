@@ -1,5 +1,197 @@
 ---
-title: Earthquake spreadsheets (Part 3 of 3)
+title: Pivot Tables and Earthquake Data (Part 3 of 3)
 description: |
-  Part 3 of 3
+  A walkthrough of using Pivot Tables to summarize earthquake data across two dimensions, allowing for even more insightful histograms (Part 3 of 3)
+references:
+  - /tutorials/spreadsheets/basic-agg-pivot-tables
+  - /tutorials/spreadsheets/why-spreadsheets
+  - /tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-1
+  - /tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-2
 ---
+
+In the [first lesson](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-1), we learned about the USGS earthquake data and why a map might possibly obscure some interesting insights. [In the previous lesson](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-3) we used basic spreadsheet techniques to create slightly more insightful visualizations. In __this final lesson__, we learn how to use pivot tables to summarize the data to add an extra, essential layer to our data visualizations.
+
+To refresh your memory, one of our key challenges was to create a histogram of earthquakes-by-state. But using Google's default chart wizard, we didn't have an easy way to _only_ chart states that had a noticeable number of earthquakes. The result was charts like this (only a little exaggerated for effect):
+
+<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1061720506&amp;format=interactive"></iframe>
+
+
+<%= render_toc %>
+
+
+
+# Making a pivot table
+
+In Google Sheets, a pivot table can be created by going to the menubar and clicking __Data > Pivot table...__. You have the option of selecting the columns and rows that the pivot table is based from. But the best thing to do is just to not select anything specifically. Or to be safe, click the __A1__ cell before creating the pivot table.
+
+Here's a GIF:
+
+![making-a-pivot-table](/files/images/tutorials/spreadsheets/earthquakes/making-a-pivot-table.gif)
+
+Creating a pivot table __creates a new sheet__ in your current workbook, i.e. a new tab at the bottom (not shown above in the cropped GIF). To switch between your original spreadsheet and pivot table, just use the tabs at the bottom:
+
+![image](/files/images/tutorials/spreadsheets/earthquakes/pivot-tabs.png)
+
+This also means you can delete the pivot table without affecting your original spreadsheet. However, deleting the original spreadsheet will obviously affect the pivot table that is based off of it.
+
+
+# Creating rows
+
+The pivot table, when first created, will be empty. So let's add some rows to it.
+
+Turn your attention to the __Report Editor__ panel on the right side of the workspace. If you don't see it, click on cell __A1__ (in the pivot table) to bring it up -- the Report Editor tends to auto-hide if the pivot table area isn't in focus:
+
+![image](/files/images/tutorials/spreadsheets/earthquakes/empty-pivot-table.png)
+
+
+The __Report Editor__ has several subpanels. The one we care about is __Rows__. 
+
+Click the __Add field__ action. This generates a dropdown menu of all the __columns__ from your original spreadsheet. For now, let's choose __STUSPS__. 
+
+Here's a GIF of the action:
+
+[pivot-adding-rows](/files/images/tutorials/spreadsheets/earthquakes/pivot-adding-rows.gif)
+
+What did "__adding a row__" based on the `STUSPS` column accomplish? It tells the pivot table that we want to __group__ each record by its `STUSPS` value, e.g. `CA`, `IA`, and so forth. So the pivot table generates a row for _each unique value_ of `STUSPS` in the original data spreadsheet. 
+
+In effect, selecting an attribute to group by is an easy way to find out exactly what and how many unique values there are in our dataset -- which is something we couldn't easily figure out from that ugly pie chart at the beginning of this lesson.
+
+Theoretically, this operation _should_ result in __50__ rows, one for each state. As it turns out, only __36__ rows show up, which indicates that from 2011 to 2015, only 36 states had earthquakes of M3.0+. Not a bad insight to get right off the bat.
+
+
+# Aggregating values
+
+OK, a list of the `STUSPS` values is nice, but what we really want is number of records per `STUSPS` value, i.e. how many earthquakes by state. We do this by adding __Values__ to aggregate by.
+
+Before we count earthquakes by state, let's do a simple kind of aggregation: __find out the highest magnitude of earthquake per state__.
+
+To do this, turn your attention to the __Report Editor__, and look for the __Values__ subpanel. 
+
+Click __Add field__. This time, choose `mag` as the field. By default, the pivot table will `SUM` up the values of `mag` per state, which will tell us the total amount of `mag` each state has experienced:
+
+![image](/files/images/tutorials/spreadsheets/earthquakes/pivot-sum-mags-whatev.png)
+
+
+This is not particularly important to us. So go back to the __Values__ subpanel, to the sub-subpanel titled "__Display:__ mag". Then click on the little dropdown arrow by `SUM`. Then, select the `MAX` option from the dropdown menu. 
+
+The result is a more interesting table: __the biggest earthquake each state has experienced since 2011.__
+
+Here's an animated GIF of adding the `mag` column and finding its `MAX` value:
+
+![pivot-max-mag](/files/images/tutorials/spreadsheets/earthquakes/pivot-max-mag.gif)
+
+## Sorting by aggregate
+
+To make the __biggest earthquake by state__ insight even more convenient to see, let's sort the rows of the pivot table by the `MAX` `mag` value, i.e. the newly-generated second column. 
+
+By default, the pivot table's rows are sorted by the value of the rows, i.e. alphabetical order of `STUSPS`. To change this, go to the __Report Editor's__ __Rows__ subpanel, then the __Group by: STUSPS__ sub-subpanel. 
+
+Then, change the options like so:
+
+- __Order__: Descending
+- __Sort__ by: `MAX` of `mag`
+
+Here's a GIF:
+
+![pivot-max-mag-sort-by](/files/images/tutorials/spreadsheets/earthquakes/pivot-max-mag-sort-by.gif)
+
+
+## Doing a group count of records
+
+OK, let's think how this relates to our original problem: we want to compare the _number of earthquakes_ by state, but only for the states that have actually had a significant number of earthquakes. Well, we now know how to summarize the earthquake data by __STUSPS__, and then how to sort _by_ the summary values, i.e. to find the top maximum `mag` values per state.
+
+Now, instead of `MAX` of `mag` as the summary, we want to just get a count of records per state.
+
+In the __Report Editor__, in the __Values__ subpanel, go ahead and click the little `X` to remove the "__Display:__ mag" box. Then, click __Add field__ for __Values__.
+
+To get a count of records, it actually doesn't matter which column you choose here. But to make that obvious, choose the `id` field, which is just a string of characters used by the USGS to refer to each earthquake. It's obviously not a value that you can calculate a meaningful `MAX` or `SUM` of.
+
+Again, the default aggregate function will be `SUM`, which results in `0` for every row. Click the __Summarize by__ dropdown and select __COUNTA__. 
+
+Now we have a list of earthquakes by state since 2011:
+
+![image](/files/images/tutorials/spreadsheets/earthquakes/pivot-count-unsorted-counta-id.png)
+
+## Making histograms the manual way
+
+Let's take a step back to realize something: remember in the last lesson, how we were able to create histograms by simply highlighting an entire column and telling Google to make us a chart? Here's what [happened when we made a categorical histogram by `STUSPS`](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-2#categorical-histograms):
+
+<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1255972073&amp;format=interactive"></iframe>
+
+Note how the y-values of each bar corresponds to the summary counts in our pivot table. So basically, in the previous lesson, the Google Chart Editor did this summary-count _for_ us. Which is nice, when that's exactly what you want...but it's nice to know how to do a summary count for ourselves.
+
+To create a histogram from this pivot table is not difficult; the pivot table you just made looks just like a spreadsheet, right? Because it basically _is_ a spreadsheet (though not one that's editable), which means, making a chart from the data is pretty much the same thing.
+
+Prove this to yourself by selecting the __A1__ cell (so that the Google Chart Editor assumes you want a chart based on the entire pivot table). Then, selecting __Insert > Chart...__ from the menubar. 
+
+Then, instead of choosing a recommended chart, click the __Chart Types__ tab, scroll down, and select one of the __Column__ charts. The result should be something that looks like our previous earthquakes-by-state histogram, warts and all:
+
+![image](/files/images/tutorials/spreadsheets/earthquakes/pivot-count-a-simple-histogram-manual.png)
+
+### Selectively charting data
+
+OK, so now that we can more manually create a histogram, what does that mean? Well, now we have more flexibility in creating the histogram. Remember that the default histogram was, in theory, what we needed. But it couldn't fit all of the possible states, which it arranged on the x-axis in __alphabetical order__.
+
+So the first step is to __sort the rows__ by "`COUNTA` of `id`" in __Descending__ order, and we now have a ranking of states by total number of M3.0+ earthquakes since 2011:
+
+![image](/files/images/tutorials/spreadsheets/earthquakes/pivot-sum-count-top-counta-id.png)
+
+
+
+We could now create the histogram as before. But let's not use all of the data. Highlight the __first 10 rows__ of the data, _then_ create the chart. Here's an animated GIF:
+
+![pivot-quakes-counta-by-state-histogram](/files/images/tutorials/spreadsheets/earthquakes/pivot-quakes-counta-by-state-histogram.gif)
+
+<a id="mark-histogram-top-10-states"></a>
+
+
+And the resulting chart:
+
+<iframe width='100%' height='350' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=830641781&amp;format=interactive"></iframe>
+
+__Quick tip:__ After creating the chart and inserting it into your spreadsheet, click the little dropdown arrow on the __top-right__ of the chart. There should be an option to move the chart to its own spreadsheet, if that makes it easier to see things.
+
+
+#### Take a minute to practice
+
+For practice, try repeating the histograms from the previous lesson, such as earthquakes by __year__ or by __year-month__. The charts you make shouldn't be substantially different from before, but just make sure you fully understand the ideas of grouping and summarizing by rows with pivot tables.
+
+
+# Adding a column to summarize by
+
+Summarizing data by grouped row is very useful in itself. So what more is there? Scroll back up and take a look at that [top 10 state histogram](#mark-histogram-top-10-states): did it surprise you that __Oklahoma__ has more earthquakes than famously-quake-prone California?
+
+Has that _always_ been the case? Maybe we're ignorant of that because people just like to talk more about California than Oklahoma?
+
+But let's find out for sure. To answer that question -- _has Oklahoma always been more seismically active than California?_ -- we need to know not just how many earthquakes happened in a state, but _when_.
+
+We obviously can find that via the __time__ and __year__ attributes. But how? By creating a second level of aggregation: __number of earthquakes by state and by year__.
+
+So assuming your pivot table is where we previously left it, turn your attention to the __Columns__ subpanel in the __Report Editor__.
+
+Click __Add field__, then select the `year` column (which you should have [created via formula in the previous lesson](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-2#the-left-function)). Since we already have "Summarize by: `COUNTA`" as a __Value__ field, we get the breakdown by state and year that we wanted:
+
+![image](files/images/tutorials/spreadsheets/earthquakes/pivot-cross-state-year-count.png)
+
+## Creating a multi-series visualization
+
+Selectively highlight the first 10 rows again (ignore the __Grand Total__ column) and create a chart from it. Without too much work, you should get something like this:
+
+<iframe src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1164972071&amp;format=interactive"></iframe>
+
+### Earthquakes by state and by era
+
+Remember that __era__ column we created in the previous lesson? Now that we're not simply counting earthquakes by era, but earthquakes by _era and by state_...maybe a different picture will come up? Alter the pivot table to perform this aggregation. You should get a [chart](https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/edit#gid=627213524) (with some customization effort) that looks like this:
+
+
+<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1077827130&amp;format=interactive"></iframe>
+
+Oklahoma just became a lot more interesting...
+
+
+
+
+
+
+# More to come...
+
