@@ -80,7 +80,6 @@
   source: Sacramento Bee
 
 
-
 - title: "Auto Regulators Dismissed Defect Tied to 13 Deaths"
   source: New York Times
   url: http://www.nytimes.com/2014/03/09/business/auto-regulators-dismissed-defect-tied-to-13-deaths.html?_r=0
@@ -100,8 +99,15 @@
   url: http://www.nytimes.com/2015/05/10/nyregion/at-nail-salons-in-nyc-manicurists-are-underpaid-and-unprotected.html?_r=0
   description: "Manicurists are routinely underpaid and exploited, and endure ethnic bias and other abuse, The New York Times has found."
 
+- title: The money prison
+  url: http://www.pulitzer.org/archives/8836
+  source: Bristol (VA) Herald Courier
 
 - title: "Much of Northrop Grumman's Washington influence flies under the radar"
   source: Sunlight Foundation
   url: http://sunlightfoundation.com/blog/2015/05/19/much-of-northrop-grummans-washington-influence-flies-under-the-radar/
   description: "Northrop Grumman's B2 Stealth Bomber. (Photo credit: U.S. Air Force/Wikimedia Commons) What’s Washington’s gross political product? That is, how much, exactly, do corporations, trade groups and other special interests spend trying to influence the federal government? And who are the players involved in the process? Unfortunately, these are questions with ..."
+
+- title: "Pace is new peril: Amid pressure to finish massive projects, 9 men have died in 16 months"
+  url: http://www.pulitzer.org/archives/8381
+  source: Las Vegas Sun

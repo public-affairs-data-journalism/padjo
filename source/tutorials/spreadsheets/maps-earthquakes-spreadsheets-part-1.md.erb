@@ -51,7 +51,36 @@ If you want to jump straight to the spreadsheeting, that starts in [Part 2](/tut
 
 # What's in the USGS data?
 
-Explanation of the USGS data to come (TK).
+The United States Geological Survey (USGS) offers [downloadable historical earthquake data via its Earthquake Hazards archive](http://earthquake.usgs.gov/earthquakes/search/) and [real-time feeds](http://earthquake.usgs.gov/earthquakes/feed/v1.0/).
+
+For this exercise, we will be using __comma-delimited data__ (CSV format) from the [archive](http://earthquake.usgs.gov/earthquakes/search/), but you can get a snapshot of what it looks like by visiting the [USGS landing page for its real-time CSV data](http://earthquake.usgs.gov/earthquakes/feed/v1.0/csv.php). On that page is a list of the fields, of which these are the most relevant to us:
+
+- [`time`](http://earthquake.usgs.gov/earthquakes/feed/v1.0/glossary.php#time): the time of an earthquake event, in [Coordinated Universal Time](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) and formatted as [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601): `2015-10-04T05:04:09Z` 
+- `latitude` and `longitude`: the coordinates for the earthquake event.
+- `place`: a vague but human-readable description of the earthquake's location, e.g. `"Southern Alaska"` and `"36km WNW of La Belleza, Colombia"`
+- [`mag`](http://earthquake.usgs.gov/earthquakes/feed/v1.0/glossary.php#mag): a decimal number, typically in the range of -1 to 10, representing the [relative size of an earthquake](http://earthquake.usgs.gov/learn/glossary/?term=magnitude). This actually isn't terribly important for this exercise but is a number that is common to think about when it comes to earthquakes.
+
+## Getting the USGS data for yourself
+
+Quick reminder -- the data for this exercise is here: [usgs-us-with-fips-quakes.csv](/files/data/usgs-us-with-fips-quakes.csv). But I have _modified_ and augmented it in very important ways, [which I detail later](#mark-about-this-location-data).
+
+The [USGS earthquake archive provides a web form](http://earthquake.usgs.gov/earthquakes/search/) for data access:
+
+
+
+
+
+
+### How to get United States-only earthquake data
+
+
+
+<a id="mark-about-this-location-data"></a>
+
+## How to get USGS data by U.S. state
+
+
+
 
 
 
