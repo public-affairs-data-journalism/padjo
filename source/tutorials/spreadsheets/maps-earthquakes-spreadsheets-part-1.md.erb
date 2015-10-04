@@ -8,19 +8,21 @@ references:
   - /tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-2
   - /tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-3
   - /tutorials/spreadsheets/basic-agg-pivot-tables
+  - title: Manipulating and editing geographic data with QGIS, by Michael Corey
+    url: http://mikejcorey.github.io/qgis_advanced_2015/
+    description: |
+      We'll learn QGIS in another tutorial. But if you're curious how to do a spatial join, Michael Corey demonstrates how QGIS while also using the USGS earthquake data.
 ---
 
-__Quick summary:__ This three-part lesson covers virtually everything I hope you learn about spreadsheets, pivot tables, and the value of summarization and filtering data. There's an intimidating array of charts. And numerous steps describing how to make those charts. But those are just the details. Our main takeaway will be: __how do we find stories in data?__
+__Quick summary:__ This three-part lesson covers virtually everything I hope you learn about spreadsheets ([Part 2](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-2)), pivot tables ([Part 3](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-3)), and the value of summarization and filtering data. There will be an intimidating array of charts, and numerous steps describing how to make those charts. 
 
+But those are just the details. Our main takeaway will be: __how do we find stories in data?__
 
-For this lesson, the data will be [5 years worth of earthquake records for the United States](/files/data/usgs-us-with-fips-quakes.csv). Nowhere near "big" data, but big enough that its insights are buried in a wall of (delimited) text:
+__Part 1__ of this lesson -- what you're currently reading -- describes the data we use and how to get it: [5 years worth of earthquake records for the United States](/files/data/usgs-us-with-fips-quakes.csv). It is nowhere near "big" data, but big enough that its insights are buried in a wall of (delimited) text:
 
 ![image](/files/images/tutorials/spreadsheets/earthquakes/raw-quakes-csv.png)
 
-So when we talk about finding stories in data, the core challenge is basically to make something _readable_ out of a visually unreadable dump of text. 
-
-
-__One possible solution:__ turn that text into a beautiful interactive map, such as this [CartoDB torque map](http://docs.cartodb.com/tutorials/introduction_torque.html):
+So when we talk about __finding stories in data__, the core challenge is basically to make something _readable_ out of a visually unreadable dump of text. In Part 1 of this lesson, we learn how to turn that text into a beautiful interactive map, such as this [CartoDB torque map](http://docs.cartodb.com/tutorials/introduction_torque.html):
 
 <iframe width="100%" height="580" frameborder="0" src="https://dundee.cartodb.com/viz/888634d0-60ae-11e5-93c9-0e018d66dc29/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
 
@@ -51,6 +53,14 @@ If you want to jump straight to the spreadsheeting, that starts in [Part 2](/tut
 
 # What's in the USGS data?
 
+<% content_card "Too much information...?" do %>
+
+Reading this section is _not necessary_ for doing this exercise. I provide it as context. The most important part is understanding [how I've modified the data to include United States specific information](#mark-about-this-location-data), which will become important when we learn about spatial data joins via QGIS ([here's a great tutorial by Michael Corey to tide you over](http://mikejcorey.github.io/qgis_advanced_2015/)).
+
+Otherwise, feel free to skip to the section [Why Make a Map?](#mark-why-make-a-map) 
+
+<% end %>
+
 The United States Geological Survey (USGS) offers [downloadable historical earthquake data via its Earthquake Hazards archive](http://earthquake.usgs.gov/earthquakes/search/) and [real-time feeds](http://earthquake.usgs.gov/earthquakes/feed/v1.0/).
 
 For this exercise, we will be using __comma-delimited data__ (CSV format) from the [archive](http://earthquake.usgs.gov/earthquakes/search/), but you can get a snapshot of what it looks like by visiting the [USGS landing page for its real-time CSV data](http://earthquake.usgs.gov/earthquakes/feed/v1.0/csv.php). On that page is a list of the fields, of which these are the most relevant to us:
@@ -62,31 +72,146 @@ For this exercise, we will be using __comma-delimited data__ (CSV format) from t
 
 ## Getting the USGS data for yourself
 
-Quick reminder -- the data for this exercise is here: [usgs-us-with-fips-quakes.csv](/files/data/usgs-us-with-fips-quakes.csv). But I have _modified_ and augmented it in very important ways, [which I detail later](#mark-about-this-location-data).
+<% content_card "Quick reminder: Here's my data" do %>
+The data for this exercise is here: [usgs-us-with-fips-quakes.csv](/files/data/usgs-us-with-fips-quakes.csv). But I have _modified_ and augmented it in very important ways, [which I detail later](#mark-about-this-location-data).
+<% end %>
 
 The [USGS earthquake archive provides a web form](http://earthquake.usgs.gov/earthquakes/search/) for data access:
 
+![image](files/images/tutorials/spreadsheets/earthquakes/usgs-archive-form.png){:.bordered}
 
+The most relevant input fields are __Date & Time__, __Magnitude__, and __Output Options__. 
 
+#### Output options
 
+This should be set to CSV. The default option, __Map and list__, will produce, well, [a map and list](http://earthquake.usgs.gov/earthquakes/map/#%7B%22feed%22%3A%221443993922762%22%2C%22search%22%3A%7B%22id%22%3A%221443993922762%22%2C%22name%22%3A%22Search%20Results%22%2C%22isSearch%22%3Atrue%2C%22params%22%3A%7B%22starttime%22%3A%222015-09-26%2000%3A00%3A00%22%2C%22minmagnitude%22%3A4%2C%22endtime%22%3A%222015-10-03%2023%3A59%3A59%22%2C%22orderby%22%3A%22time%22%7D%7D%2C%22listFormat%22%3A%22default%22%2C%22sort%22%3A%22newest%22%2C%22basemap%22%3A%22grayscale%22%2C%22autoUpdate%22%3Afalse%2C%22restrictListToMap%22%3Atrue%2C%22timeZone%22%3A%22utc%22%2C%22mapposition%22%3A%5B%5B-67.06743335108297%2C181.23046875%5D%2C%5B72.86793049861396%2C395.50781249999994%5D%5D%2C%22overlays%22%3A%7B%22plates%22%3Atrue%7D%2C%22viewModes%22%3A%7B%22help%22%3Afalse%2C%22list%22%3Atrue%2C%22map%22%3Atrue%2C%22settings%22%3Afalse%7D%7D):
 
+![image](files/images/tutorials/spreadsheets/earthquakes/usgs-archive-map-and-list.png)
 
-### How to get United States-only earthquake data
+This is nice, but not helpful if we want to do our own data analysis. The other formats, such as __GeoJSON__, are definitely useful, but only if you know enough programming to work with JSON efficiently. The raw GeoJSON looks like this:
 
+![image](files/images/tutorials/spreadsheets/earthquakes/usgs-archive-geo-json.png)
 
+The __CSV__ output is not much prettier to human eyes:
+
+![image](files/images/tutorials/spreadsheets/earthquakes/usgs-archive-csv-raw.png)
+
+But it's something that can be easily imported into a spreadsheet, which is good enough for us:
+
+![image](files/images/tutorials/spreadsheets/earthquakes/usgs-archive-csv-excel.png)
+
+#### Magnitude
+
+I suggest setting the __minimum__ of the __magnitude__ to at least __3__. The number of all earthquakes worldwide, in the last 30 days, can range near 10,000, with 80 to 90 percent having a magnitude less than M3.0. If you want to verify this for yourself, visit the [USGS real-time feeds page](http://earthquake.usgs.gov/earthquakes/feed/v1.0/csv.php) and download the "Past 30 Days: All Earthquakes" file (or just click this [link](http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.csv)).
+
+Is it worth counting earthquakes that have [about as much perceivable force to humans as a car driving by](http://earthquake.usgs.gov/learn/topics/mag_vs_int.php)? Probably not, if you aren't professionally studying geology. For our purposes, including weaker-than-M3.0+ earthquakes involves downloading a much bigger dataset.
+
+The big reason for our purposes is that the USGS archive will return a __maximum of 20,000 records at a time__. Trying to do a very large query, such as [all earthquakes in the last 5 years](http://earthquake.usgs.gov/fdsnws/event/1/query.csv?starttime=2011-01-01%2000:00:00), regardless of magnitude, will result in an error message:
+
+      Error 400: Bad Request
+
+      344492 matching events exceeds search limit of 20000. Modify the search to match fewer events.
+
+      Usage details are available from http://earthquake.usgs.gov/fdsnws/event/1
+
+      Request:
+      /fdsnws/event/1/query.csv?starttime=2011-01-01%2000:00:00
+
+      Request Submitted:
+      2015-10-04T21:37:49+00:00
+
+      Service version:
+      1.0.17
+
+So including weak earthquakes means having to fiddle with the __Limit Results__ input fields and downloading multiple batches, which is a bit of an inconvenience.
+
+#### Date & Time
+
+Even though we can set the start time of our query to the entire last century, earthquake-detection capabilities has changed over time. You can [read the caveats and details about the USGS data here](http://earthquake.usgs.gov/earthquakes/map/doc_aboutdata.php). Keeping in mind the 20,000-record-per-request limit, I think it's best to query within the last 20 years.
+
+The USGS does not have an international seismic sensor array as complete as its United States network. In fact, [its (outdated) statistics page says](http://earthquake.usgs.gov/earthquakes/eqarchives/year/eqstats.php):
+
+> Starting in January 2009, the USGS National Earthquake Information Center no longer locates earthquakes smaller than magnitude 4.5 outside the United States, unless we receive specific information that the earthquake was felt or caused damage.
+
+Although the [USGS archive includes data from international networks](http://earthquake.usgs.gov/earthquakes/map/doc_aboutdata.php), it's safe to assume that the historical number of records for weak earthquakes is a bit nebulous. 
+
+#### Geographic Region
+
+The USGS search form provides a handy interactive tool for specifying a region to request data for:
+
+![image](files/images/tutorials/spreadsheets/earthquakes/usgs-archive-map-tool.jpg)
+
+As you can see, my attempt to specify all of the United States, including Alaska, results in a bounding box that will include earthquakes from parts of Canada, Mexico, and Russia.
+
+Why can't we just specify a region by name, such as "the United States"? Because that's not how the USGS categorizes earthquakes. [More on that later](#mark-about-this-location-data).
+
+#### Practice your cURLing
+
+If you don't know anything about [curl](http://curl.haxx.se/) or using the command-line, you can skip this part.
+
+However, if you do know __curl__, and you know a bit about your [browser's network inspection panel](https://developer.chrome.com/devtools/docs/network), you can see how the GET requests behind the USGS form. If you don't feel like fiddling around with buttons and inputs, here's the curl request needed to get data for M3.0+ North American earthquakes since 2011 through September 2015:
+
+~~~sh
+usgs_url='http://earthquake.usgs.gov/fdsnws/event/1/query.csv?starttime=2011-01-01%2000:00:00&maxlatitude=72.396&minlatitude=5.616&maxlongitude=-44.297&minlongitude=-197.578&minmagnitude=3&endtime=2015-09-20%2023:59:59&orderby=time&limit=20000&offset='
+curl --compressed "${usgs_url}1" -o data/usgs-north-america-quakes.csv
+curl --compressed "${usgs_url}20001" | tail -n +2 >> data/usgs-north-america-quakes.csv
+~~~
+
+The result of those two GET requests can be found in my stashed copy here: [usgs-north-america-quakes.csv](/files/data/usgs-north-america-quakes.csv)
 
 <a id="mark-about-this-location-data"></a>
 
 ## How to get USGS data by U.S. state
 
+In the dataset I provide for this exercise -- [usgs-us-with-fips-quakes.csv](/files/data/usgs-us-with-fips-quakes.csv) -- contains __5,537__ records of M3.0+ earthquakes since 2011 that have occurred within the borders of the United States. I extracted this subset of data from the standard USGS data, in which I drew a bounding box around all of North America. This data -- which you can see here: [usgs-north-america-quakes.csv](/files/data/usgs-north-america-quakes.csv) -- contains __23,347 records__, i.e earthquakes that happened in Canada, or the ocean.
+
+Remember that the USGS data includes only a `place` field, which contains a vague, human-readable description such as `"Southern Alaska"` and `"36km WNW of La Belleza, Colombia"`.
+
+So how did I get filter the data to include only earthquakes within the United States when the USGS doesn't provide a way to filter the data by political boundaries?
+
+By cross-referencing the __latitude__ and __longitude__ data with [U.S. Census boundary data](https://www.census.gov/geo/maps-data/data/cbf/cbf_counties.html). So...OK, how did I do _that_? That's a topic for a much later tutorial on QGIS (check out Michael Corey's QGIS tutorial for NICAR: [Manipulating and editing geographic data with QGIS](http://mikejcorey.github.io/qgis_advanced_2015/)).
+
+The upshot is that the [usgs-us-with-fips-quakes.csv](/files/data/usgs-us-with-fips-quakes.csv) file, besides being a filtered subset of data, contains two fields that I've added: __STUSPS__ and __FIPS__:
+
+![image](files/images/tutorials/spreadsheets/earthquakes/usgs-fips-preview-cols.png)
+
+__STUSPS__ stands for _United States Postal Code_ -- e.g. `AK` and `NY` -- and __FIPS__ is the [federal code](https://en.wikipedia.org/wiki/Federal_Information_Processing_Standards) designated for each United States county, e.g. `06075` for [San Francisco county](http://www.epa.gov/enviro/html/codes/ca.html). 
+
+How does this differ from the USGS's `place` field? Take a look at the record for this [Sept. 20, 2015 earthquake with an `id` of `nn00511445`](http://earthquake.usgs.gov/earthquakes/eventpage/nn00511445#general_summary). 
+
+Its `place` value is: `69km ESE of Lakeview, Oregon`
+
+On a locator map, [it looks like this](http://earthquake.usgs.gov/earthquakes/eventpage/nn00511445#general_map):
+
+![image](files/images/tutorials/spreadsheets/earthquakes/usgs-fips-locator-lakeview.jpg)
+
+However, its `STUSPS` value is `NV`, i.e. the state of __Nevada__, and its `FIPS` is `32031`, i.e. [Washoe County, Nevada](http://quickfacts.census.gov/qfd/states/32/32031.html).
 
 
+## Why doesn't the USGS provide country or state level data?
+
+Obviously, the USGS could categorize earthquakes by political boundaries, but it chooses to go with `place` labels. In our previous example, why does the USGS choose to use `69km ESE of Lakeview, Oregon`? Maybe because [Lakeview, Oregon](https://en.wikipedia.org/wiki/Lakeview,_Oregon) is the most significant municipality near the earthquake, and thus, describing the earthquake relative to Lakeview is more useful than, `"Somewhere in Washoe County"`.
+
+But in general, think about the _nature_ of earthquakes. They don't abide by our human-made geopolitical boundaries. If California is hit by numerous earthquakes, it's not because of something related to California, the _political entity_, but the fact that California has a [lot of active fault lines](http://earthquake.usgs.gov/regional/nca/ucerf/). So geologists don't care so much about where an earthquake occurs relative to state lines. They care about earthquakes relative to _fault lines_.
+
+### So why care about earthquakes at U.S. state-level?
+
+OK, so what's the purpose of including the __STUSPS__ and __FIPS__ fields? If nothing else, it's a convenient way of categorizing earthquakes; "California had 25 earthquakes in the last month" is more understandable to the average person than "There were 25 earthquakes within the Hayward-Rodgers Creek Fault region in the last month".
+
+But even if earthquakes are generally the result of geological characteristics, there are reasons to quantify earthquakes in terms of human-made __geopolitical__ boundaries. For example, if a massive earthquake were to strike Kansas City, near the split between the Missouri and Kansas state lines, the damage done on a _human_-scale might be more greatly affected by _state boundaries_ rather than physical distance to the earthquake. 
+
+How? Think about how building codes differ between states, cities, and counties.
+
+But what if state-regulated human activity _caused_ earthquakes? Then using the __STUSPS__ field would be _very_ helpful, at least to quantify the correlation.
+
+In the next section, I go over some examples of map visualization, which rely completely on the __latitude__ and __longitude__ fields of the earthquake data. However, parts [2](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-2) and [3](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-3) of this tutorial rely completely on the __STUSPS__ and __FIPS__ fields, and by doing so, reveal a more interesting story about a recent trend in U.S.-based earthquake activity.
 
 
+<a id="mark-why-make-a-map"></a>
 
 # Why a map?
 
-When our data includes geospatial coordinates, i.e. __latitude__ and __longitude__, a map seems obvious. With mapping software -- in this case, CartoDB -- we don't even have to supply any data and we already have a visual more lovely and sophisticated-looking than just about anything we could create from a typical spreadsheet:
+When our data includes geospatial coordinates, i.e. __latitude__ and __longitude__, a map seems like the obvious choice. With mapping software -- in this case, CartoDB -- we don't even have to supply any data and we already have a visual more lovely and sophisticated-looking than just about anything we could create from a typical spreadsheet:
 
 ![image](/files/images/tutorials/spreadsheets/earthquakes/cartodb-empty-map.jpg)
 

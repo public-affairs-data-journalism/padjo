@@ -5,6 +5,7 @@
   }
   .header{
     @extend .card-header;
-    font-size: $font-size-h4;
+    font-size: $font-size-h5;
+    font-weight: bold;
   }
 }
