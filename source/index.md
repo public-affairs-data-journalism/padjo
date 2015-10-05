@@ -6,7 +6,7 @@ current_course:
   term: fall_2014
 ---
 
-This is the homepage for the Stanford course __COMM 273D, Public Affairs Data Journalism I__ as taught by [Hearst Professional in Residence, Dan Nguyen](http://stanford.edu/~dun).
+This is the homepage for the Stanford course __COMM 273D, Public Affairs Data Journalism I__ as taught by [Hearst Professional in Residence, Dan Nguyen](http://stanford.edu/~dun) for the Stanford [Computational Journalism Lab](http://cjlab.stanford.edu).
 
 If you're a casual visitor, you're probably most interested in the [Tutorials](/tutorials). You can also visit the class sites for my two other electives this year:
 
