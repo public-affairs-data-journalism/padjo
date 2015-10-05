@@ -12,6 +12,10 @@ references:
     url: http://mikejcorey.github.io/qgis_advanced_2015/
     description: |
       We'll learn QGIS in another tutorial. But if you're curious how to do a spatial join, Michael Corey demonstrates how QGIS while also using the USGS earthquake data.
+  - title: "Weather Underground: The Arrival of Man-Made Earthquakes"
+    url: http://www.newyorker.com/magazine/2015/04/13/weather-underground
+  - title: Exploring the Link Between Earthquakes and Oil and Gas Disposal Wells
+    url: https://stateimpact.npr.org/oklahoma/tag/earthquakes/
 ---
 
 __Quick summary:__ This three-part lesson covers virtually everything I hope you learn about spreadsheets ([Part 2](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-2)), pivot tables ([Part 3](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-3)), and the value of summarization and filtering data. There will be an intimidating array of charts, and numerous steps describing how to make those charts. 
@@ -265,21 +269,24 @@ Again, not a bad tactic, but we still have the problem of more than 5,500+ dots 
 
 ## Bins and clusters
 
-The sheer number of dots is our main obstacle to understanding the data. 
+The sheer number of data points is our main obstacle to understanding the data. One solution is to simply _remove_ the number of data points by _grouping_ them together with other like data points. This concept is often referred to as __clustering__.
 
-TK
-
-Again, this is not meant to be an in-depth lesson on geographic visualization. But the concept of __binning__ and __clustering__ is _very_ important to us. Here, it serves as a way to group thousands of dots into just _dozens_ of dots. We sacrifice granularity to gain a clearer overview of the data. Here, we cluster by longitude and latitude. In the Parts 2 and 3 of this lesson, we will use bar graphs to cluster the earthquake records, but _not_ according to their latitudes and longitudes.
-
-
-### Clustering
+CartoDB actually has a map type named [Cluster](http://docs.cartodb.com/cartodb-editor.html#cluster), in which nearby points are grouped together into a _bigger_ point:
 
 <iframe width="100%" height="520" frameborder="0" src="https://dundee.cartodb.com/viz/b05720ca-62f0-11e5-bbad-0ec6f7c8b2b9/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+
+By clustering -- that is, _aggregating_ points based on their latitude and longitude into a single "glob" -- we sacrifice granularity to gain a clearer overview of the data. This is a technique applies to more than map visualizations, though. In the Parts [2](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-2) and [3](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-2) of this lesson, we will create bar graphs by "clustering" the earthquake records, but _not_ according to their latitudes and longitudes.
 
 
 ### Rectangular binning
 
+The term __binning__ is sometimes used to refer to the aggregating/clustering of points. In the screenshot below, the CartoDB earthquake data is grouped into square-shaped __bins__. The more points that fall into each square bin, the darker the color of that bin:
+
 ![image](/files/images/tutorials/spreadsheets/earthquakes/cartodb-usgs-rect-bin.jpg)
+
+Choosing the size of the bin can drastically change the visualization. Here, the bins are cartoonishly large, painting a picture so broad that we can't even see California as a earthquake-dense state:
+
+![image](files/images/tutorials/spreadsheets/earthquakes/cartodb-big-blocks.jpg)
 
 
 ### Hexbinning
@@ -334,3 +341,21 @@ Or, to state it in a viral-news way:
   <img src="/files/images/tutorials/spreadsheets/earthquakes/cartodb-usgs-2015-01.jpg" alt="January 2015 earthquake map">
   </div>
 </div>
+
+## The story of Oklahoma
+
+The big story of the 2011 to 2015 M3.0+ USGS earthquake data is that the _state of Oklahoma_, once relatively dormant, is now _just recently_ a hotbed of seismic activity. If the side-by-side screenshots above weren't enough, here's a side-by-side comparison of torque maps for 2011 versus 2014 (roughly):
+
+![cartodb-side-by-side-torques](/files/images/tutorials/spreadsheets/earthquakes/cartodb-side-by-side-torques.gif)
+
+The [New Yorker](http://www.newyorker.com/magazine/2015/04/13/weather-underground) and [NPR](https://stateimpact.npr.org/oklahoma/tag/earthquakes/) have extensively covered Oklahoma's recent earthquake binge and I highly recommend reading their coverage.
+
+But for this exercise, let's pretend we have yet to discover Oklahoma as an outlier. With maps, we can most definitely notice the trend -- but only because it is so _dramatic_. And we can't quite quantify with a map alone.
+
+In the [next part of this lesson](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-2), we'll move away from maps and to the humble spreadsheet and bar chart and explore the earthquake data. It will take a little more  work initially, but the concepts will be applicable for all kinds of data, not just geospatial data. And we'll get a clearer picture of Oklahoma's earthquakes.
+
+
+Continue [on to part 2 of this tutorial](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-2).
+
+
+

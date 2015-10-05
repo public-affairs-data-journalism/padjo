@@ -4,5 +4,4 @@ $(document).ready(function(){
   var headroom  = new Headroom(myElement);
   // initialise
   headroom.init();
-
 })
