@@ -26,7 +26,7 @@ end
 def render_content_resource_element(obj, opts = {})
   resource = to_content_resource(obj)
   my_opts = {}
-  my_opts[:class] = (opts[:class].to_s + ' resource item').strip
+  my_opts[:class] = (opts[:class].to_s + ' resource item content-resource').strip
   content_tag(:div, my_opts) do
     s = ActiveSupport::SafeBuffer.new
     _title_link = my_link_to_resource(resource, :class => 'title')

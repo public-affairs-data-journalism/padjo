@@ -13,10 +13,14 @@ end
 #   concat content_tag(tag_name, txt, opts)
 # end
 
-def content_card(title = nil, &blk) # takes block
+def content_card(title = nil, opts = {}, &blk) # takes block
+  o = ActiveSupport::HashWithIndifferentAccess.new(opts)
+  o[:markdown] = true unless o[:markdown] == false
+  rtext = capture(&blk)
+  rtext = markdownify(rtext) if o[:markdown]
   txt = ""
-  txt += content_tag( :div, title, :class => 'header') if title
-  txt += content_tag :div, markdownify(capture(&blk)), :class => 'body'
+  txt += content_tag(:div, title, :class => 'header') if title
+  txt += content_tag :div, rtext, :class => 'body'
   concat content_tag(:div, txt, :class => 'content-card')
 end
 

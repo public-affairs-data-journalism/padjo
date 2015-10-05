@@ -1,0 +1,9 @@
+---
+title: Tutorials
+descriptions: Walkthroughs and guides to data journalism technology and computational techniques
+---
+
+
+<% tutorials.each do |tutorial| %>
+  <%= render_content_resource_element tutorial, :class => 'tutorial' %>
+<% end %>

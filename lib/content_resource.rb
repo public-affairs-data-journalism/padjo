@@ -15,13 +15,15 @@ end
 
 
 class MiddlemanContentResource < ContentResource
-  attr_reader :middleman_resource, :source_file
+  attr_reader :middleman_resource, :source_file, :ranking
   def initialize(resource)
     @middleman_resource = resource
     @source_file = resource.source_file
     @url    = resource.url
     @path   = resource.path
     @title  = resource.data.title
+    @ranking = resource.data.ranking || 99999
+    @_listed = resource.data.listed
     @source_name = nil
     @full_title = @title
     @date   = Chronic.parse(resource.data.date) if resource.data.date
@@ -34,6 +36,11 @@ class MiddlemanContentResource < ContentResource
 
   def stub?
     content_size < 1024
+  end
+
+
+  def listed?
+    @_listed == true
   end
 
   def self.set_sitemap(sitemap) #UGGHGHGHGHTK
@@ -97,4 +104,5 @@ end
 
 
 require 'lib/assignment_resource'
+require 'lib/tutorial_resource'
 require 'lib/week_resource'

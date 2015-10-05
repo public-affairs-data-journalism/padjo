@@ -12,17 +12,17 @@
     </div>
 
 
+    <% if current_page.data.references %>
+      <section id="references" class="references card">
+        <div class="card-block">
 
-    <section id="references" class="references card">
-      <div class="card-block">
-        <% if current_page.data.references %>
-          <h1>References</h1>
-          <% current_page.data.references.each do |r| %>
-            <%= render_content_resource_element(r, :class => 'reference') %>
-          <% end %>
-        <% end %>
-      </div>
-    </section>
+            <h1>References</h1>
+            <% current_page.data.references.each do |r| %>
+              <%= render_content_resource_element(r, :class => 'reference') %>
+            <% end %>
 
+        </div>
+      </section>
+    <% end %>
 
 <% end %>
