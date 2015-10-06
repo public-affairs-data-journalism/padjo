@@ -23,6 +23,16 @@ def my_link_to_resource(obj, opts = {})
 end
 
 
+def render_content_resource_box(obj, opts = {})
+  box = render_content_resource_element(obj, opts)
+  content_tag :div, box, :class => 'content-box'
+end
+
+def render_content_resource_row(obj, opts = {})
+    box = render_content_resource_element(obj, opts)
+    content_tag :div, box, :class => 'content-row'
+end
+
 def render_content_resource_element(obj, opts = {})
   resource = to_content_resource(obj)
   my_opts = {}
@@ -30,6 +40,14 @@ def render_content_resource_element(obj, opts = {})
   content_tag(:div, my_opts) do
     s = ActiveSupport::SafeBuffer.new
     _title_link = my_link_to_resource(resource, :class => 'title')
+    # add image
+    if resource.image_url
+      imgtag = image_tag(resource.image_url, :alt => "image #{resource.title}")
+      imglink = link_to(imgtag, resource.url)
+      s.safe_concat content_tag(:div, imglink, :class => "image")
+    end
+
+
     if resource.source_name
       _title_source = content_tag(:span, resource.source_name, {:class => 'source'})
     else
@@ -38,8 +56,8 @@ def render_content_resource_element(obj, opts = {})
     _title_matter = [_title_link, _title_source].compact.join(' | ')
     c_title_matter = content_tag(:div, _title_matter)
     c_description = content_tag(:div, resource.description, {:class => 'description'})
-    s.safe_concat(c_title_matter)
-    s.safe_concat(c_description)
+    c_text = content_tag(:div, c_title_matter + c_description, :class => 'text')
+    s.safe_concat(c_text)
     s
   end
 end

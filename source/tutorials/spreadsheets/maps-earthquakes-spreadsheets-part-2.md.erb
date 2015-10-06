@@ -27,7 +27,10 @@ references:
       Documentation and sample usage for `IF`, which returns one value if a logical expression is `TRUE` and another if it is `FALSE`.
 ---
 
-In the [previous lesson](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-1), we learned about the USGS earthquake data and why a map might possibly obscure some interesting insights. __In this lesson__, we use basic spreadsheet techniques to create slightly more insightful visualizations. In [the next lesson](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-3), we learn how to use pivot tables to summarize the data to add an extra, essential layer to our data visualizations.
+
+- In the [previous lesson](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-1), we learned about the USGS earthquake data and some of the limits of map visualizations. 
+- __In this lesson__, we use basic spreadsheet techniques to create slightly more basic, but more insightful visualizations. 
+- In [the next lesson](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-part-3), we use pivot tables to summarize the data to add an essential aggregate layer to our bar chart visualizations.
 
 
 
@@ -40,21 +43,20 @@ In the [previous lesson](/tutorials/spreadsheets/maps-earthquakes-spreadsheets-p
 
 __Download the data here:__ [usgs-us-with-fips-quakes.csv](/files/data/usgs-us-with-fips-quakes.csv)
 
-Then import it into a Google Spreadsheet. The delimiter is, of course, a __comma__.
+Then [import it into a Google Spreadsheet](https://support.google.com/docs/answer/40608?hl=en). You shouldn't have to change any of the default options. The delimiter, which of course is a __comma__ for our data set, should be automatically detectable by Google's import process.
 
-The result of the import should look something like this:
-
+The result of the import should look something like this, i.e. a typical spreadsheet:
 
 ![image](files/images/tutorials/spreadsheets/earthquakes/import-data-google-sheet.png)
 
 
 # Visualizations from a spreadsheet
 
-Creating charts from a spreadsheet is as easy as selecting the data we want to visualize and then clicking __Insert__ on the menubar, then __Chart...__. Of course, knowing what data to select is the more difficult part.
+Creating a chart from a spreadsheet is a matter of __selecting the data-to-be visualized__. Then on the __menubar__, select __Insert__, then select the __Chart...__ menu item. 
 
-For now, let's just highlight the __mag__ column. In modern spreadsheets, the easiest way to highlight an entire column is to __click its header__
+Selecting the data is the part that requires thinking. For now, let's just highlight the __mag__ column. In modern spreadsheets, the easiest way to highlight an entire column is to __click the column's header__.
 
-I demonstrate the column-highlighting and menu item selection in the animated GIF below:
+In the animated GIF below, I demonstrate highlighting the data column and choosing the __Insert > Chart...__ menu item:
 
 ![gif to insert chart](/files/images/tutorials/spreadsheets/earthquakes/google-sheet-insert-chart.gif)
 
@@ -63,13 +65,16 @@ I demonstrate the column-highlighting and menu item selection in the animated GI
 
 ### Bar chart of magnitudes
 
-By default, Google Sheets will offer you a selection of "Recommended" charts. It sees that we've selected a whole bunch of numbers and tries to guess what might be the most useful visualization. 
+As soon as we try to create a chart, the first thing Google Sheets offers us is a selection of "__Recommended__" charts. How does it know what to recommend? Well, we _don't know_, which is why in general, __we need to learn how to choose chart types for ourselves__. But a good guess is that the Google Sheets program sees that our data selection is a single column of numbers and knows, by convention, that there are a few likely choices for visualization options.
+
+That a computer can predict what chart type we might use should be a hint that the very structure of the data selection is critical in what type of visualizations can be created:
 
 ![image](files/images/tutorials/spreadsheets/earthquakes/recommended-charts-for-mag.png)
 
-This is a hint that the structure and content of the selected data is very important to the __type of visualizations__ that can be created. The __histogram__ is actually the best choice, but for now, I choose the one that seems to be a straightforward __bar chart__, in which _each_ earthquake is represented by a very thin line. The height of the line (i.e. the __y-axis__) depicts the __mag__ value of each earthquake:
 
-<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1232931494&amp;format=image"></iframe>
+The __histogram__ is actually the best choice, but for now, I choose the one that seems to be a straightforward __bar chart__, in which _each_ earthquake is represented by a very thin line. The height of the line (i.e. the __y-axis__) depicts the __mag__ value of each earthquake:
+
+<iframe frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1232931494&amp;format=image"></iframe>
 
 It's actually not too bad. We can see with a quick glance that other than very few earthquakes break the __5.0__ mark. So this is definitely a visual refinement of what we started out with: a bunch of text, in which reading all the __mag__ values is very cumbersome. But that's about the limit of our insights.
 
@@ -80,7 +85,7 @@ Before moving on to the histogram-type chart, let's try charting a different par
 
 The very first recommended chart should be a __scatter plot__. As I mentioned in the previous lesson, a map can be thought of as a scatter plot with longitude and latitude on the x- and y-axis, respectively:
 
-<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1429797666&amp;format=image"></iframe>
+<iframe frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1429797666&amp;format=image"></iframe>
 
 For whatever reason, though, I can't get Google to _not_ switch those two things around. Oh well, you can mentally transpose the variables yourself, then imagine drawing the outlines of the United States onto the scatter plot. And you basically have a geospatial map. Moving back to magnitudes and histograms...
 
@@ -108,7 +113,7 @@ So highlight the __mag__ column, select the menu action to __Insert > Chart...__
 You should get something similar to this:
 
 
-<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=535712983&amp;format=image"></iframe>
+<iframe frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=535712983&amp;format=image"></iframe>
 
 It's definitely a lot fewer _bars_ to look at, and it tells the general story of the distribution: there are way more  M4.0-or-weaker earthquakes. But it's a little awkward because of the __bins__, which you can see in the __x-axis__ where the ticks are spaced un-neatly at intervals of 0.26.
 
@@ -143,7 +148,7 @@ Then scroll down until you see the __Buckets__ sub-menu. In the input field for 
 
 This is the resulting chart:
 
-<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=386083353&amp;format=interactive"></iframe>
+<iframe frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=386083353&amp;format=interactive"></iframe>
 
 As we guessed earlier, earthquakes M4.0-and-weaker make up the vast majority of earthquakes. And earthquakes M5.0+ and above were very rare.
 
@@ -153,7 +158,7 @@ Let's customize the bucket size again and see what a smaller size looks like. Th
 
 So let's choose a fraction of a number for the bucket. Here's what a bucket size of __0.2__ looks like:
 
-<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=6351283&amp;format=interactive"></iframe>
+<iframe frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=6351283&amp;format=interactive"></iframe>
 
 Is this particularly profound? Maybe, if you care that there's a large drop-off after M3.4+. Otherwise, the story is not much different from the integer-bucketed histogram, at least to us laypersons.
 
@@ -166,13 +171,13 @@ We can use histograms using non-numerical columns, such as the __STUSPS__ column
 
 In the case of __STUSPS__, the category is the name of the U.S. state the quake was centered in. Highlight the __STUSPS__ column and repeat the steps to create a histogram:
 
-<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1255972073&amp;format=interactive"></iframe>
+<iframe frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1255972073&amp;format=interactive"></iframe>
 
 This sorting is not optimal. And also, not all 50 states are fit into the chart or even labeled. This is a limitation of the charting software. _Stupid Google_ you might think. But actually, _stupid us_ for trying to graph all 50 states. Some are clearly not worth showing as they have so little earthquakes throughout their history.
 
 One way to get around the limitations of the histogram is to use a pie chart. Except [Edward Tufte thinks pie charts are bad](http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=00018S). But maybe because he hasn't seen them in faux interactive 3-D:
 
-<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1061720506&amp;format=interactive"></iframe>
+<iframe frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1061720506&amp;format=interactive"></iframe>
 
 Nope, still bad. 
 
@@ -317,7 +322,7 @@ The spreadsheet techniques we've learned were fairly basic, but pretty powerful.
 
 However, there were a few things we weren't able to easily do. One of them was to just __filter__ the earthquake data so that we could compare states with a non-trivial number of earthquakes, rather than getting something that results in this mess of a pie chart:
 
-<iframe width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1061720506&amp;format=interactive"></iframe>
+<iframe frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen width='100%' height='380' src="https://docs.google.com/spreadsheets/d/16LKYJN-JjpbSP5m5pvVttkG-XNJL7_QabSHnhvMpByk/pubchart?oid=1061720506&amp;format=interactive"></iframe>
 
 
 I use the phrase "_just filter_" a bit facetiously. Filtering is one of the most fundamental things we do not just as journalists, but as _humans_ -- it is our constant challenge to make sense of the world's flood of information. 

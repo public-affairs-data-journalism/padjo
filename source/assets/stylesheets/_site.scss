@@ -17,16 +17,53 @@ body{
 }
 
 
+// .content-box{
+//   margin-bottom: 0.8em;
+//   .content-resource{
+//     img{
+//       height: 200px;
+//       width: 100%;
+//     }
+
+//     outline: #999 solid 1px;
+//     .text{
+//       padding: 0.1em 0.5em 0.5em 0.5em;
+//     }
+//     .title, .source{
+//       font-size: $font-size-base;
+//     }
+//   }
+// }
+
+.content-row{
+  @extend .row;
+  .content-resource{
+    .text{
+      @extend .col-sm-8;
+      @extend .pull-right;
+    }
+    .image{
+      @extend .col-sm-4;
+      @extend .bordered;
+      min-width: 1px;
+    }
+  }
+}
+
 .content-resource{
   h1{
     font-size: $font-size-h5;
   }
-    margin-top: 1.5em;
-    margin-bottom: 1.2em;
-    .title, .source{
-      font-size: $font-size-medium;
-    }
-    .title{
-      font-weight: bold;
-    }
+  img{
+    @extend .img-responsive !optional;
+    margin-bottom: 0.5em;
+  }
+  margin-top: 1.5em;
+  margin-bottom: 1.2em;
+  .title, .source{
+    font-size: $font-size-medium;
+  }
+  .title{
+    font-weight: bold;
+  }
 }

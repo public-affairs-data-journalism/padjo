@@ -3,7 +3,7 @@ require 'chronic'
 
 class ContentResource
   attr_reader :title, :description, :date, :url, :path, :source_name,
-    :full_title
+    :full_title, :image_url
   def friendly_week_date
     @date.strftime("%B %-d")
   end
@@ -20,6 +20,7 @@ class MiddlemanContentResource < ContentResource
     @middleman_resource = resource
     @source_file = resource.source_file
     @url    = resource.url
+    @image_url = resource.image_url
     @path   = resource.path
     @title  = resource.data.title
     @ranking = resource.data.ranking || 99999
@@ -72,6 +73,7 @@ class HashContentResource < ContentResource
     resource = ActiveSupport::HashWithIndifferentAccess.new(h)
     @url    = resource[:url]
     @path   = resource[:path] || @url
+    @image_url = resource[:image_url]
     @title  = resource[:title]
     if resource[:source]
       @source_name = resource[:source]

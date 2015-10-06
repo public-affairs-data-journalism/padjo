@@ -1,13 +1,20 @@
 def schedule
-  sitemap.resources.select{|r| r.path =~ /weeks\/2015/
+  sitemap.resources.select{|r| r.path =~ /^weeks\/2015/
     }.map{|r| WeekResource(r)
     }.sort_by{|r| r.date}
 end
 
 def assignments
-  sitemap.resources.select{|r| r.path =~ /assignments\/.+/
+  sitemap.resources.select{|r| r.path =~ /^assignments\/.+/
     }.map{|r| AssignmentResource(r)
     }.sort_by{|r| r.date_slug }
+end
+
+def briefs
+  sitemap.resources.select{|r| r.path =~ /^briefs\/.+/
+    }.map{|r| ContentResource(r)
+    }.select{|r| r.listed?
+    }.sort_by{|r| r.ranking }
 end
 
 def current_assignments
@@ -19,7 +26,7 @@ def projected_assignments
 end
 
 def tutorials
-  sitemap.resources.select{ |r| r.path =~ /tutorials\/.+/
+  sitemap.resources.select{ |r| r.path =~ /^tutorials\/.+/
     }.map{ |r| TutorialResource(r)
     }.select{ |r| r.listed?
     }.sort_by{ |r| r.ranking }

@@ -1,0 +1,55 @@
+- title: Fatal Encounters
+  url: http://fatalencounters.org
+  description: |
+    Perhaps the first crowdsourced attempt to independently track police-involved homicides, created by a newspaper editor who was angry that "somebody somewhere decided Americans shouldn’t know how many people are killed by police and under what circumstances."
+  image_url: /files/images/briefs/police/fatal-encounters-map.jpg
+
+- title: The Counted
+  source: The Guardian
+  description: |
+    The Counted is a project by the Guardian – and you – working to count the number of people killed by police and other law enforcement agencies in the United States throughout 2015, to monitor their demographics and to tell the stories of how they died.
+  url: http://www.theguardian.com/us-news/ng-interactive/2015/jun/01/the-counted-police-killings-us-database
+  image_url: /files/images/briefs/police/guardian-the-counted-faces.jpg
+
+- title: "Investigation: Police shootings"
+  source: The Washington Post
+  url: https://www.washingtonpost.com/graphics/national/police-shootings/
+  image_url: /files/images/briefs/police/wapo-police-shootings-graphic.png
+  description: |
+    The Washington Post's database of police shootings is based on news reports, public records, Internet databases and original reporting.
+
+
+- title: "Police Open Data Census: Officer-Involved Shootings"
+  source: Code for America
+  url: https://codeforamerica.github.io/PoliceOpenDataCensus/OfficerInvolvedShootings.html
+  image_url: /files/images/briefs/police/police-data-census-screen.png
+  description: |
+    A list of datasets of officer-involved shootings published by law enforcement agencies.
+
+- title: Officer Involved
+  source: The Intercept
+  url: https://theintercept.co/officer-involved/
+  description: |
+    Data artist Josh Begley’s uses The Guardian's database of police-involved shootings and creates geo-photographic montage using Google satellite and street maps.
+  image_url: /files/images/briefs/police/the-intercept-officer-involved-maps.jpg
+
+- title: Killed by Police
+  source: A Facebook community group
+  url: http://killedbypolice.net/
+  image_url: /files/images/briefs/police/fb-killed-by-police.png
+  description: |
+    Originally started off as a Facebook group that collected "corporate news reports of people killed by U.S. law enforcement officers May 1, 2013"
+
+- title: "Deadly Force: When Las Vegas Police Shoot, And Kill"
+  url: http://www.reviewjournal.com/news/deadly-force
+  source: Las Vegas Review-Journal
+  image_url: /files/images/briefs/police/las-vegas-deadly-force-front.jpg
+  description: |
+      A 2011 investigative series into Las Vegas police-involved shootings that found many of the deaths "could have been avoided". The Review-Journal also published a database of local officer-involved shootings since 1990.
+
+- title: "Deadly Force: A Decade of Oklahoma City Police Department Shootings"
+  source: The Oklahoman
+  url: http://newsok.com/deadly-force-a-decade-of-oklahoma-city-police-department-shootings/article/4747453
+  description: |
+    To examine the issue of deadly force, The Oklahoman reviewed Oklahoma City police shootings from 2004 through 2013.
+  image_url: /files/images/briefs/police/oklahoman--deadly-force-front.jpg

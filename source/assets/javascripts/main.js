@@ -4,4 +4,9 @@ $(document).ready(function(){
   var headroom  = new Headroom(myElement);
   // initialise
   headroom.init();
+
+  $(".isotope-row").isotope({
+    itemSelector: '[class^="col"]',
+    layoutMode: 'masonry'
+  })
 })

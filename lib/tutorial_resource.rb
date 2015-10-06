@@ -1,5 +1,7 @@
 class TutorialResource < MiddlemanContentResource
-
+  def listed?
+    assigned?
+  end
 end
 
 def TutorialResource(obj)

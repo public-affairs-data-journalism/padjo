@@ -18,6 +18,6 @@ gem "tzinfo-data", platforms: [:mswin, :mingw, :jruby]
 ## Middling stuff
 gem 'middleman-pry'
 gem 'middleman-onthestreet', :git => 'https://github.com/dannguyen/middleman-onthestreet.git'
-gem 'bootstrap', git: 'https://github.com/twbs/bootstrap-rubygem'
+gem 'bootstrap', '~> 4.0.0.dev', git: 'https://github.com/twbs/bootstrap-rubygem'
 gem 'activesupport'
 gem 'chronic'

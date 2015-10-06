@@ -1,0 +1,59 @@
+---
+title: Tracking Police-Involved Homicides
+description: A list of known projects and datasets tracking the use of deadly force by police in the United States.
+listed: true
+---
+
+<%=render_toc%>
+
+# The problem of no data
+
+Fron the Daily Show: [A Shot in the Dark](http://thedailyshow.cc.com/videos/v4l2pe/a-shot-in-the-dark), Oct. 7, 2014.
+
+<iframe src="http://media.mtvnservices.com/embed/mgid:arc:video:thedailyshow.com:85b3e9e7-f811-43d8-8352-cddcd9b2509f" width="100%" height="400" frameborder="0"></iframe>
+
+
+> Samantha Bee attempts to uncover statistics about the excessive use of lethal force by the police, only to discover that this data is mysteriously nonexistent. [(7:09)](http://thedailyshow.cc.com/videos/v4l2pe/a-shot-in-the-dark)
+> 
+
+# Projects
+
+<% content_listicle('police', 'deadly-incidents-projects').each do |t| %>
+<%= render_content_resource_row(t) %>
+<% end %>
+
+
+
+
+
+# Articles, essays, and stories
+
+<% content_listicle('police', 'deadly-incidents-articles').each do |t| %>
+<%= render_content_resource_element(t) %>
+<% end %>
+
+
+# Datasets
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th>Source</th>
+      <th>Info page</th>
+      <th>Direct download</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% listicle('police', 'deadly-incidents-datasets').each do |t| %>    
+      <tr>
+        <td><%=t.source %></td>
+        <td><%=link_to(t.landing_page_title, t.landing_page_url) if t.landing_page_url %></td>
+        <td><%=link_to(t.data_file_title, t.data_file_url) if t.data_file_url %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+
+

@@ -1,0 +1,88 @@
+- source: Baltimore Police Department
+  landing_page_title: BPD Officer Involved Injuries (Socrata)
+  landing_page_url: https://data.baltimorecity.gov/Public-Safety/BPD-Officer-Involved-Injuries/3w4d-kckv
+  data_file_title: Socrata CSV
+  data_file_url: https://data.baltimorecity.gov/api/views/3w4d-kckv/rows.csv?accessType=DOWNLOAD
+
+
+- source: Dallas Police Department
+  landing_page_title: Officer Involved Shootings
+  landing_page_url: http://www.dallaspolice.net/ois/
+  data_file_title: Socrata CSV
+  data_file_url: https://www.dallasopendata.com/api/views/4gmt-jyx2?accessType=DOWNLOAD
+
+
+
+- source: Fatal Encounters
+  landing_page_title: Spreadsheets
+  landing_page_url: http://www.fatalencounters.org/spreadsheets/
+  data_file_title: Google Sheets CSV
+  data_file_url: https://docs.google.com/spreadsheets/d/1dKmaV_JiWcG8XBoRgP8b4e9Eopkpgt7FL7nyspvzAsE/export?format=csv&gid=0
+
+- source: The Washington Post
+  landing_page_title: "Github repo: data-police-shootings"
+  landing_page_url: https://github.com/washingtonpost/data-police-shootings/
+  data_file_title: Github Raw CSV
+  data_file_url: https://raw.githubusercontent.com/washingtonpost/data-police-shootings/master/fatal-police-shootings-data.csv
+
+- source: The Guardian
+  landing_page_title: About The Counted
+  landing_page_url: http://www.theguardian.com/us-news/ng-interactive/2015/jun/01/about-the-counted
+  data_file_title: Zipped CSV
+  data_file_url: http://interactive.guim.co.uk/2015/the-counted/thecounted-data.zip
+
+- source: Deadspin
+  landing_page_title: The Deadspin Police-Shooting Database
+  landing_page_url: http://regressing.deadspin.com/deadspin-police-shooting-database-update-were-still-go-1627414202
+  data_file_title: Google Sheets CSV
+  data_file_url: https://docs.google.com/spreadsheets/d/1cEGQ3eAFKpFBVq1k2mZIy5mBPxC6nBTJHzuSWtZQSVw/export?format=csv&gid=0
+
+- source: "Killed By Police on Facebook, as scraped via FiveThirtyEight"
+  landing_page_title: Another (Much Higher) Count Of Homicides By Police
+  landing_page_url: http://fivethirtyeight.com/datalab/another-much-higher-count-of-police-homicides/
+  data_file_title: Google Sheets CSV
+  data_file_url: https://docs.google.com/a/fivethirtyeight.com/spreadsheets/d/1WwVDP8anxtQm-6C2g7pjmZkS_jdSomM7UDMonIX0b6k/export?format=csv&gid=0
+
+- source: Killed by Police
+  landing_page_title: Killedbypolice.net yearly tabular reports
+  landing_page_url: http://killedbypolice.net/
+
+- source: Wikipedia
+  landing_page_title: List of U.S. LEO killings
+  landing_page_url: https://en.wikipedia.org/wiki/List_of_killings_by_law_enforcement_officers_in_the_United_States
+
+- source: Gun Violence Archive
+  landing_page_title: Filtered by Officer-Involved Shootings
+  landing_page_url: http://www.gunviolencearchive.org/officer-involved-shootings?sort=desc&order=%23%20Killed
+
+- source: Denver Police Department
+  landing_page_title: Officer-involved shooting investigations
+  landing_page_url: http://www.denverda.org/News_Release/Officer-involved_shooting_investigations.htm
+
+- source: Houston Police Department
+  landing_page_title: Officer Involved Shootings
+  landing_page_url: http://www.houstontx.gov/police/ois/index.htm
+  description: |
+    This site depicts only those OIS scenes where a HPD officer discharged his or her weapon in the performance of his or her duties.  It does NOT reflect accidental discharges where no injury occurred or the intentional shooting of vicious animals.
+
+- source: Philadelphia Police Department
+  landing_page_title: Officer Involved Shootings
+  landing_page_url: https://www.phillypolice.com/ois/
+
+- source: Las Vegas Police Department
+  landing_page_title: Fatal Shootings
+  landing_page_url: http://www.lvmpd.com/AboutLVMPD/OfficeofInternalOversight/OfficerInvolvedShooting/tabid/451/Default.aspx
+
+- source: Las Vegas Police Department
+  landing_page_title: Non-Fatal Shootings
+  landing_page_url: http://www.lvmpd.com/AboutLVMPD/OfficeofInternalOversight/NonFatalOfficerInvolvedShootings/tabid/459/Default.aspx
+
+
+- source: Las Vegas Review Journal
+  landing_page_title: Deadly Force searchable database
+  landing_page_url: http://www.reviewjournal.com/news/deadly-force/advanced-search
+
+
+- source: Los Angeles Times
+  landing_page_title: "Homicide Report; filtered by Officer-Involved homicides"
+  landing_page_url: http://homicide.latimes.com/officer_involved/true/year/all
