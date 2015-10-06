@@ -20,8 +20,8 @@ class MiddlemanContentResource < ContentResource
     @middleman_resource = resource
     @source_file = resource.source_file
     @url    = resource.url
-    @image_url = resource.image_url
     @path   = resource.path
+    @image_url = resource.data.image_url
     @title  = resource.data.title
     @ranking = resource.data.ranking || 99999
     @_listed = resource.data.listed

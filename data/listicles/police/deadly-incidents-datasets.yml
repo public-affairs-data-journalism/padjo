@@ -20,6 +20,8 @@
   data_file_url: https://docs.google.com/spreadsheets/d/1dKmaV_JiWcG8XBoRgP8b4e9Eopkpgt7FL7nyspvzAsE/export?format=csv&gid=0
 
 - source: The Washington Post
+  description: |
+    "Shootings in which a police officer, while on duty, shot and killed a civilian"
   landing_page_title: "Github repo: data-police-shootings"
   landing_page_url: https://github.com/washingtonpost/data-police-shootings/
   data_file_title: Github Raw CSV

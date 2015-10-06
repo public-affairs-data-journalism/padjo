@@ -2,10 +2,14 @@
 
 - title: "In Baltimore, No One Left to Press the Police"
   source: David Simon
+  description: |
+    A powerful essay about the state of affairs between the government and journalists; Simon describes the process of just getting the police report behind an officer-involved fatal shooting in Baltimore.
   url: http://davidsimon.com/in-baltimore-no-one-left-to-press-the-police/
 
-- title: How The Washington Post is examining police shootings in the U.S.
+- title: Distraught People, Deadly Results
   source: The Washington Post
+  description: |
+    An in-depth story focused specifically on how police respond when confronting mentally unstable suspects.
   url: http://www.washingtonpost.com/national/how-the-washington-post-is-examining-police-shootings-in-the-us/2015/06/29/f42c10b2-151b-11e5-9518-f9e0a8959f32_story.html
 
 - title: "Police Have Killed at Least 1,083 Americans Since Michael Brown's Death"
@@ -16,24 +20,24 @@
 - title: Is Google More Accurate Than the FBI?
   source: The Marshall Project
   url: https://www.themarshallproject.org/2015/07/02/is-google-more-accurate-than-the-fbi
+  description: |
+    An in-depth overview of both the official and the independent crowdsourced efforts in counting police-involved homicides.
 
 - title: Deadly Force, in Black and White - ProPublica (propublica.org)
   url: http://www.propublica.org/article/deadly-force-in-black-and-white
 
-
-
-- title: "Deadspin Police-Shooting Database Update: We're Still Going"
-  source: Deadspin/Gawker
-  url: http://regressing.deadspin.com/deadspin-police-shooting-database-update-were-still-go-1627414202
-
-
 - title: Nobody Knows How Many Americans The Police Kill Each Year
   source: FiveThirtyEight
+  description: This analysis came shortly after the death of Michael Brown as people searched for nationwide data.
   url: http://fivethirtyeight.com/features/how-many-americans-the-police-kill-each-year/
 
 - title: Another (Much Higher) Count Of Homicides By Police
   source: FiveThirtyEight
   url: http://fivethirtyeight.com/datalab/another-much-higher-count-of-police-homicides/
+
+- title: "Deadspin Police-Shooting Database Update: We're Still Going"
+  source: Deadspin/Gawker
+  url: http://regressing.deadspin.com/deadspin-police-shooting-database-update-were-still-go-1627414202
 
 
 - title: "Q&A with The Guardian reporters behind The Counted"
@@ -41,6 +45,10 @@
   description: |
     We’re the Guardian reporters behind The Counted, a project to chronicle every person killed by police in the US. We're here to answer your questions about police and social justice in America.
   url: https://www.reddit.com/r/IAmA/comments/3br3j6/were_the_guardian_reporters_behind_the_counted_a/
+
+- title: "Police officers' names still secret 3 years after shooting"
+  source: The Associated Press
+  url: http://bigstory.ap.org/article/73a2b9956b4d4b91912fa67d44a0ffbc/police-officers-names-still-secret-3-years-after-shooting
 
 - title: "About The Counted: why and how the Guardian is counting US police killings"
   source: The Guardian
@@ -58,6 +66,8 @@
 
 - title: Visualization of Police-Involved Homicides in the U.S. Since 2011
   source: KQED
+  description: |
+    A somewhat elaborate visualization based off of the Fatal Encounters data.
   url: http://ww2.kqed.org/lowdown/2015/04/09/visualization-officer-involved-homicides-since-2011
 
 - title: Baltimore's open (but not current) police data

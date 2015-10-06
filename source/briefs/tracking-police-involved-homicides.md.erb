@@ -1,22 +1,38 @@
 ---
-title: Tracking Police-Involved Homicides
-description: A list of known projects and datasets tracking the use of deadly force by police in the United States.
+title: "Tracking police-involved homicides: A shortlist of data projects and investigations"
+description: Projects, datasets, investigative journalism, and research tracking the use of deadly force by police in the United States.
 listed: true
 ---
 
 <%=render_toc%>
 
-# The problem of no data
+# A "battle at the frontiers of public information"
 
-Fron the Daily Show: [A Shot in the Dark](http://thedailyshow.cc.com/videos/v4l2pe/a-shot-in-the-dark), Oct. 7, 2014.
+From David Simon's 2009 essay, ["In Baltimore, No One Left to Press the Police"](http://davidsimon.com/in-baltimore-no-one-left-to-press-the-police/)
+
+>  In an American city, a police officer with the authority to take human life can now do so in the shadows, while his higher-ups can claim that this is necessary not to avoid public accountability, but to mitigate against a nonexistent wave of threats...
+
+> At one point last week, after the department spokesman denied me the face sheet of the shooting report, I tried doing what I used to do: I went to the Southeastern District and demanded the copy on file there. When the desk officer refused to give it to me, I tried calling the chief judge of the District Court. But Sweeney’s replacement no longer handles such business. 
+> 
+> It’s been a while since any reporter asked, apparently. So I tried to explain the Maryland statutes to the shift commander, but so long had it been since a reporter had demanded a public document that he stared at me as if I were an emissary from some lost and utterly alien world.
+
+
+
+## "A shot in the dark"
+
+[From the Daily Show, Oct. 7, 2014](http://thedailyshow.cc.com/videos/v4l2pe/a-shot-in-the-dark)
 
 <iframe src="http://media.mtvnservices.com/embed/mgid:arc:video:thedailyshow.com:85b3e9e7-f811-43d8-8352-cddcd9b2509f" width="100%" height="400" frameborder="0"></iframe>
 
 
-> Samantha Bee attempts to uncover statistics about the excessive use of lethal force by the police, only to discover that this data is mysteriously nonexistent. [(7:09)](http://thedailyshow.cc.com/videos/v4l2pe/a-shot-in-the-dark)
+> Synopsis: Samantha Bee attempts to uncover statistics about the excessive use of lethal force by the police, only to discover that this data is mysteriously nonexistent. [(7:09)](http://thedailyshow.cc.com/videos/v4l2pe/a-shot-in-the-dark)
 > 
 
-# Projects
+
+
+# Projects and investigations
+
+Here's a short list of journalism projects and investigations into police-involved shootings, before Ferguson and after:
 
 <% content_listicle('police', 'deadly-incidents-projects').each do |t| %>
 <%= render_content_resource_row(t) %>
@@ -28,12 +44,16 @@ Fron the Daily Show: [A Shot in the Dark](http://thedailyshow.cc.com/videos/v4l2
 
 # Articles, essays, and stories
 
+A brief selection of articles and essays about police shootings:
+
 <% content_listicle('police', 'deadly-incidents-articles').each do |t| %>
 <%= render_content_resource_element(t) %>
 <% end %>
 
 
 # Datasets
+
+These are the datasets that I've been able to find so far. The list includes both the recent crowdsourced initiatives and anything else which has been organized enough to at least fit in a HTML table, though not all of these sources have direct links to downloadable data.
 
 <table class="table table-condensed table-striped">
   <thead>
@@ -56,4 +76,12 @@ Fron the Daily Show: [A Shot in the Dark](http://thedailyshow.cc.com/videos/v4l2
 
 
 
+# Documents, Memos, and Papers
+
+Official memos and documents and academic research relating to the use of deadly force by law enforcement.
+
+
+<% content_listicle('police', 'deadly-incidents-papers').each do |t| %>
+<%= render_content_resource_element(t) %>
+<% end %>
 

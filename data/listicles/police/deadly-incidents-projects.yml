@@ -1,7 +1,14 @@
+- title: D.C. Police Lead Nation in Shootings (1999)
+  source: The Washington Post
+  url: http://www.washingtonpost.com/wp-srv/local/longterm/dcpolice/deadlyforce/police1page1.htm
+  image_url: /files/images/briefs/police/wapo-deadly-force-infographic.png
+  description: |
+    This classic of investigative data journalism was awarded the Pulitzer Prize for Public Service in 1999. A team of 15 reporters, editors, computer analysts, and graphic artists produced this five-part investigation into why the D.C. police force had "shot and killed more people per resident in the 1990s than any other large American city police force."
+
 - title: Fatal Encounters
   url: http://fatalencounters.org
   description: |
-    Perhaps the first crowdsourced attempt to independently track police-involved homicides, created by a newspaper editor who was angry that "somebody somewhere decided Americans shouldn’t know how many people are killed by police and under what circumstances."
+    Perhaps the first modern crowdsourced attempt to track police-involved homicides, the Fatal Encounters project was launched by a newspaper editor angry that "somebody somewhere decided Americans shouldn’t know how many people are killed by police and under what circumstances."
   image_url: /files/images/briefs/police/fatal-encounters-map.jpg
 
 - title: The Counted
@@ -19,27 +26,6 @@
     The Washington Post's database of police shootings is based on news reports, public records, Internet databases and original reporting.
 
 
-- title: "Police Open Data Census: Officer-Involved Shootings"
-  source: Code for America
-  url: https://codeforamerica.github.io/PoliceOpenDataCensus/OfficerInvolvedShootings.html
-  image_url: /files/images/briefs/police/police-data-census-screen.png
-  description: |
-    A list of datasets of officer-involved shootings published by law enforcement agencies.
-
-- title: Officer Involved
-  source: The Intercept
-  url: https://theintercept.co/officer-involved/
-  description: |
-    Data artist Josh Begley’s uses The Guardian's database of police-involved shootings and creates geo-photographic montage using Google satellite and street maps.
-  image_url: /files/images/briefs/police/the-intercept-officer-involved-maps.jpg
-
-- title: Killed by Police
-  source: A Facebook community group
-  url: http://killedbypolice.net/
-  image_url: /files/images/briefs/police/fb-killed-by-police.png
-  description: |
-    Originally started off as a Facebook group that collected "corporate news reports of people killed by U.S. law enforcement officers May 1, 2013"
-
 - title: "Deadly Force: When Las Vegas Police Shoot, And Kill"
   url: http://www.reviewjournal.com/news/deadly-force
   source: Las Vegas Review-Journal
@@ -53,3 +39,33 @@
   description: |
     To examine the issue of deadly force, The Oklahoman reviewed Oklahoma City police shootings from 2004 through 2013.
   image_url: /files/images/briefs/police/oklahoman--deadly-force-front.jpg
+
+- title: "Police Open Data Census: Officer-Involved Shootings"
+  source: Code for America
+  url: https://codeforamerica.github.io/PoliceOpenDataCensus/OfficerInvolvedShootings.html
+  image_url: /files/images/briefs/police/police-data-census-screen.png
+  description: |
+    A list of datasets of officer-involved shootings published by law enforcement agencies.
+
+
+
+- title: Killed by Police
+  source: A Facebook community group
+  url: http://killedbypolice.net/
+  image_url: /files/images/briefs/police/fb-killed-by-police.png
+  description: |
+    Originally started off as a Facebook group that collected "corporate news reports of people killed by U.S. law enforcement officers May 1, 2013"
+
+- title: The Homicde Report
+  source: The Los Angeles Times
+  url: http://homicide.latimes.com/officer_involved/true/year/all
+  image_url: /files/images/briefs/police/la-times-homicide-report.jpg
+  description: |
+    This ongoing project to track all homicides includes a filter for deaths marked as officer-involved.
+
+- title: Officer Involved
+  source: The Intercept
+  url: https://theintercept.co/officer-involved/
+  description: |
+    Data artist Josh Begley’s uses The Guardian's database of police-involved shootings and creates geo-photographic montage using Google satellite and street maps.
+  image_url: /files/images/briefs/police/the-intercept-officer-involved-maps.jpg
