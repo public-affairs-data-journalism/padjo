@@ -7,7 +7,7 @@
 
 - source: Dallas Police Department
   landing_page_title: Officer Involved Shootings
-  landing_page_url: http://www.dallaspolice.net/ois/
+  landing_page_url: http://www.dallaspolice.net/ois/ois.html
   data_file_title: Socrata CSV
   data_file_url: https://www.dallasopendata.com/api/views/4gmt-jyx2?accessType=DOWNLOAD
 
@@ -38,6 +38,12 @@
   landing_page_url: http://regressing.deadspin.com/deadspin-police-shooting-database-update-were-still-go-1627414202
   data_file_title: Google Sheets CSV
   data_file_url: https://docs.google.com/spreadsheets/d/1cEGQ3eAFKpFBVq1k2mZIy5mBPxC6nBTJHzuSWtZQSVw/export?format=csv&gid=0
+
+- source: 'The Seattle Times project, "Shielded By The Law"'
+  landing_page_title: The seattletimes/police-killings Github repo
+  landing_page_url: https://github.com/seattletimes/police-killings/
+  data_file_title: Raw CSV file
+  data_file_url: https://github.com/seattletimes/police-killings/raw/master/data/deadly-force-data.csv
 
 - source: "Killed By Police on Facebook, as scraped via FiveThirtyEight"
   landing_page_title: Another (Much Higher) Count Of Homicides By Police

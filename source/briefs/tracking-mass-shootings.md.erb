@@ -1,72 +1,59 @@
 ---
-title: Tracking Mass Shootings
+title: Tracking Shootings, Mass Shootings, and Mass Killings
+description: |
+  An overview of the different ways in counting and categorizing gun-related homicides and events of mass casualties.
+listed: true
 ---
 
+<%=render_toc%>
 
 
-https://library.stanford.edu/projects/mass-shootings-america/about
-https://library.stanford.edu/projects/mass-shootings-america
+
+# Projects and investigations
+
+Here's a short list of projects attempting to count either gun-related casualties and/or mass killing events in America:
+
+<% content_listicle('mass-shootings', 'shootings-data-projects').each do |t| %>
+<%= render_content_resource_row(t) %>
+<% end %>
 
 
-http://www.washingtonpost.com/news/wonkblog/wp/2015/07/24/there-have-been-204-mass-shootings-and-204-days-in-2015-so-far/
-http://www.people-press.org/2014/12/10/growing-public-support-for-gun-rights/
-http://www.washingtonpost.com/news/the-fix/wp/2015/10/01/theres-been-no-calendar-week-without-a-mass-shooting-during-president-obamas-second-term/
 
-http://www.slate.com/articles/news_and_politics/crime/2012/12/gun_death_tally_every_american_gun_death_since_newtown_sandy_hook_shooting.html
+# Articles and stories
 
-
-* http://www.motherjones.com/politics/2012/12/mass-shootings-mother-jones-full-data
-* http://shootingtracker.com/wiki/Main_Page
+<% content_listicle('mass-shootings', 'shootings-articles').each do |t| %>
+<%= render_content_resource_element(t) %>
+<% end %>
 
 
-https://library.stanford.edu/sites/default/files/harrisharris_ajph_june_2012.pdf Rampage Violence Requires a New Type of Research
+# Datasets
 
-http://www.washingtonpost.com/wp-srv/special/national/weapons-and-mass-shootings/
+<% listicle('mass-shootings', 'shootings-datasets').each do |t| %>
+<div class="item feature" style="margin-bottom:5.5em;">
+  <div class="image">
+    <a href="<%=t.url %>">
+      <img src="<%=t.image_url%>" alt="data" class="bordered" style="margin-bottom:1em;">
+    </a>
+  </div>
+  <h3 class="title"><%=link_to t.title, t.url %></h3>
+  <div class="description"><%=markdownify t.description %></div>
 
+  <div class="definition">
+    <h5>Definition</h5>
+      <%=markdownify t.definition %>
+  </div>
 
-http://www.gunviolencearchive.org/methodology
+  <% if t.data_downloads %>
+  <h5>Downloads</h5>
+  <ul class="downloads list">
+    <% for k in t.data_downloads %>
+      <li><%=link_to k.title, k.url %></li>
+    <% end %>
 
-> FOUR or more shot and/or killed in a single event [incident], at the same general time and location  not including the shooter.
-
-
-http://www.gannett-cdn.com/GDContent/mass-killings/index.html
-
-
-https://www.fbi.gov/about-us/office-of-partner-engagement/active-shooter-incidents
-
-http://www.usatoday.com/story/news/nation/2013/12/03/fbi-mass-killing-data-inaccurate/3666953/
-
-> "Accurately accounting for mass killings — having a definition, sticking to the definition, trying to find all the incidents — that may seem somewhat pedantic but it's actually very important."
-
-> To get a more accurate count, USA TODAY began with 156 such incidents reported to the FBI from 2006-11. But after investigating each one and finding others missing, USA TODAY found the FBI data had an accuracy rate of just 61%, throwing doubt on conclusions that might be drawn from analyzing it.
-
-
-http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0117259
-
-> Data Availability: The USA Today mass killings data are publicly available from masskillings.usatoday.com. The Brady Campaign data on school shootings and mass shootings are freely available on request from that organization, who can be contacted at (202) 370-8101. Data have also been included in the paper and its Supporting Information files.
-
-
-Interesting that Wikipedia attempts to track U.S. police-involved killings and school shootings, but not mass shootings.
-
-https://en.wikipedia.org/wiki/List_of_school_shootings_in_the_United_States
-https://en.wikipedia.org/wiki/List_of_killings_by_law_enforcement_officers_in_the_United_States
-https://en.wikipedia.org/wiki/Talk:List_of_American_police_officers_killed_in_the_line_of_duty
+  </ul>
+  <% end %>
+</div>
 
 
-http://www.wsj.com/articles/u-s-leads-world-in-mass-shootings-1443905359
 
-
-http://fas.org/sgp/crs/misc/R44126.pdf - Mass Murder with Firearms: Incidents and Victims, 1999-2013 
-
-
-http://www.nytimes.com/interactive/2015/10/02/us/03mass-shootings-timeline.html
-
-http://www.wsj.com/articles/obamas-gun-control-misfire-1433892493
-
-http://www.newrepublic.com/article/123027/heres-why-no-one-can-agree-number-mass-shootings
-
-http://www.nytimes.com/2014/09/25/us/25shooters.html?_r=0
-
-https://www.fbi.gov/news/stories/2014/september/fbi-releases-study-on-active-shooter-incidents
-
-https://reason.com/blog/2014/09/24/active-shooters
+<% end %>

@@ -10,6 +10,15 @@
     A landing page that leads to a repository of data files that contain tallies of arrest-related deaths, including by state, over various time frames of study.
   url: http://www.bjs.gov/index.cfm?ty=tp&tid=82
 
+- title: An Assessment of Deadly Force in the Philadelphia Police Department
+  source: U.S. Department of Justice
+  url: https://www.documentcloud.org/documents/1691753-cops-w0753-pub.html
+  description: |
+    From the [DOJ press release](http://www.justice.gov/opa/pr/department-justice-releases-report-philadelphia-police-departments-use-deadly-force):
+
+    > Through its 48 findings, the assessment identifies serious deficiencies in the department’s use of force policies and training, including a failure to maintain a certified field training program; deficient, inconsistent supervision and operational control of officer-involved shooting investigations and crime scenes; and oversight and accountability practices in need of improvement, the most notable being the need for the department to fully cooperate with the Police Advisory Commission.
+
+
 
 
 - title: FBI Justifiable Homicide (yearly summaries)

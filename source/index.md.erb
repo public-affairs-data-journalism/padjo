@@ -5,11 +5,19 @@ layout: home
 ---
 
 <% content_card "Today's lesson" do %>
-  <%= render_content_resource_element("/weeks/2015-09-29") %>
-  
-  <p><strong>Today's dataset:</strong> 
+  <%= render_content_resource_element("/briefs/tracking-police-involved-homicides") %>
+  <%= render_content_resource_element("/briefs/tracking-mass-shootings/") %>
 
-  <a href="/files/data/sf-crimes-august-2014-2015.csv">San Francisco police incidents for August 2014 and 2015</a>
+  
+  <p><strong>Today's datasets:</strong> 
+
+  <div><a href="http://slate-interactives-prod.elasticbeanstalk.com/gun-deaths/getCSV.php">Slate's count of all gun homicides</a></div>
+
+  <div><a href="http://shootingtracker.com/tracker/2014MASTER.csv">Mass Shooting Tracker 2014 data</a></div>
+
+  <div><a href="https://docs.google.com/spreadsheets/d/1XV4mZi3gYDgwx5PrLwqqHTUlHkwkV-6uy_yeJh3X46o/">Mother Jones Mass Shooting database</a></div>
+
+
 
   </p>
 <% end %>

@@ -1,0 +1,66 @@
+- title: Active Shooter Incidents - Overview
+  url: https://www.fbi.gov/about-us/office-of-partner-engagement/active-shooter-incidents
+  source: Federal Bureau of Investigation
+  image_url: /files/images/briefs/mass-shootings/fbi-active-shooter-page.jpg
+  description: |
+    The FBI gets a lot of criticism for undercounting or miscategorizing mass shooting incidents. But it's worth having a base definition:
+
+    > An active shooter is an individual actively engaged in killing or attempting to kill people in a populated area, and recent active shooter incidents have underscored the need for a coordinated response by law enforcement and others to save lives.
+
+- title: A Study of Active Shooter Incidents in the United States Between 2000 and 2013
+  url: https://www.fbi.gov/news/stories/2014/september/fbi-releases-study-on-active-shooter-incidents/pdfs/a-study-of-active-shooter-incidents-in-the-u.s.-between-2000-and-2013
+  source: Federal Bureau of Investigation
+  image_url: /files/images/briefs/mass-shootings/fbi-study-2000-2013-map.png
+  description: |
+    This official report is purportedly based off of a dataset of 160 incidents with 486 people killed.
+
+
+
+- title: "America Under the Gun"
+  source: Mother Jones
+  url: http://www.motherjones.com/special-reports/2012/12/guns-in-america-mass-shootings
+  image_url: /files/images/briefs/mass-shootings/mother-jones-histogram.png
+  description: |
+     After the 2012 mass shooting in Aurora, Colorado, Mother Jones launched a five-month special investigation focusing on American gun laws and the apparent rise in mass shootings. Their project included an online database of mass shootings from 1982-2012, which they have updated with major shootings through 2015.
+
+
+
+- title: "Behind the Bloodshed: The Untold Story of America's Mass Killings"
+  url: http://www.gannett-cdn.com/GDContent/mass-killings/index.html
+  source: USA TODAY
+  image_url: /files/images/briefs/mass-shootings/usa-today-histograms-by-age.png
+  description: |
+    This investigation found that mass killings in America happened "far more often" than what the government reports, and that their circumstances and the weapons used "are far more predictable than many might think."
+
+    One astonishing takeaway from USA Today's reporting (emphasis added):
+
+    > While only about 1% of all murders nationally, mass killings still happen frequently. The FBI counted 172 cases of mass killings between 2006 and 2011. __That does not include some large states such as Florida__, for example. Poor reporting by police agencies to the FBI also means some mass killings were left out, while others that don’t meet the standard were included.
+
+
+- title: "How Many People Have Been Killed by Guns Since Newtown?"
+  url: http://www.slate.com/articles/news_and_politics/crime/2012/12/gun_death_tally_every_american_gun_death_since_newtown_sandy_hook_shooting.html
+  description: "The answer to the simple question in that headline is surprisingly hard to come by. So Slate is collecting data for our crowdsourced interactive."
+  source: Slate and @GunDeaths
+  image_url: /files/images/briefs/mass-shootings/slate-map.png
+
+
+- title: The Gun Violence Archive
+  source: "The eponymous non-profit organization"
+  description: |
+    An online archive of gun violence incidents collected from over 1,200 media, government and commercial sources daily in an effort to provide  near-real time data about the results of gun violence.
+  url: http://www.gunviolencearchive.org/
+  image_url: /files/images/briefs/mass-shootings/gun-violence-archive-front.png
+
+- title: "Mass Shootings in America"
+  url: https://library.stanford.edu/projects/mass-shootings-america
+  source: The Stanford Geospatial Center
+  image_url: /files/images/briefs/mass-shootings/stanford-lib-mass-shootings-map.png
+  description: |
+    This database contains U.S. mass shooting incidents -- and their associated geospatial data -- over a span of five decades.
+
+
+- title: List of school shootings in the United States
+  url: https://en.wikipedia.org/wiki/List_of_school_shootings_in_the_United_States
+  image_url: /files/images/briefs/mass-shootings/wiki-school-shootings-table.png
+  description: |
+    [Unlike with U.S. police-involved homicides](https://en.wikipedia.org/wiki/List_of_killings_by_law_enforcement_officers_in_the_United_States), Wikipedia users have not initiated a seperate project for general mass killings in the United States.

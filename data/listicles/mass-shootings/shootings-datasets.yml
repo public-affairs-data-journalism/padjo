@@ -1,0 +1,154 @@
+
+
+- title: "U.S. Mass Shootings, 1982-2015"
+  source: Mother Jones
+  description: |
+    A dataset of two decades compiled after the 2012 Aurora, Colorado theater shootings. After the publication of the project in 2012, the database has been occasionally updated with major shooting events. The spreadsheet also contains a separate sheet categorizing the weapons used in each incident.
+  url: http://www.motherjones.com/politics/2012/12/mass-shootings-mother-jones-full-data
+  image_url: /files/images/briefs/mass-shootings/mother-jones-data.png
+
+  definition: |
+    - The attack must have occurred essentially in a single incident, in a public place
+    - We excluded crimes of armed robbery, gang violence, or domestic violence in a home, focusing on cases in which the motive appeared to be indiscriminate mass murder
+    - The killer, in accordance with the FBI criterion, had to have taken the lives of at least four people.
+
+  fields:
+    - name: Case
+      description: |
+        Familiar name of the incident, e.g. "Santa Monica rampage" and "Fort Hood massacre"
+    - name: Location
+      description: |
+        City and State, e.g. "Marysville, WA"
+    - name: Date
+    - name: Summary
+      description: Short narrative of the incident.
+    - name: Fatalities
+    - name: Injured
+    - name: Total victims
+    - name: Venue
+      description: |
+        e.g. "Religious" for the Charleston Church Shooting
+    - name: Prior signs of possible mental illness
+      description: |
+        e.g. "Unclear", "unknown", "Yes", "No"
+    - name: Mental Health
+      description: |
+        A short narrative elaborating on the shooter's reported mental condition.
+    - name: Weapons obtained legally
+      description: |
+        e.g. "Yes", "Unknown", "Some"
+    - name: Where obtained
+      description: |
+        e.g. "Stolen from mother", "On the internet, via Armslist.com"
+    - name: Types of weapons
+      description: |
+        e.g. "Handgun", "Three semiautomatic handguns, one shotgun"
+    - name: Race
+      description: |
+        e.g. "White", "Other", "Asian"
+    - name: Gender
+      description: |
+        e.g. "Male", "Female"
+    - name: Sources
+      description: |
+        Semi-colon-delimited-lists of URLs
+    - name: Mental Health Sources
+      description: |
+        Semi-colon-delimited-lists of URLs to information relating to the shooter's mental health
+    - name: latitude
+    - name: longitude
+    - name: Type
+      description: |
+        "Mass", "Spree"
+
+  data_downloads:
+    - title: Google Spreadsheet
+      url: https://docs.google.com/spreadsheets/d/1XV4mZi3gYDgwx5PrLwqqHTUlHkwkV-6uy_yeJh3X46o/
+    - title: CSV of incidents
+      url: "https://docs.google.com/spreadsheet/pub?key=0AswaDV9q95oZdG5fVGJTS25GQXhSTDFpZXE0RHhUdkE&output=csv"
+
+
+
+- title: Mass Shooting Tracker
+  source: "r/GunsAreCool"
+  url: http://shootingtracker.com/wiki/Main_Page
+  image_url: /files/images/briefs/mass-shootings/mass-shooting-tracker-data.png
+  description: |
+    This wiki of mass shooting data has been maintained by the users of Reddit's [r/GunsAreCool subreddit](https://www.reddit.com/r/GunsAreCool/) since [2013](https://www.reddit.com/r/GunsAreCool/wiki/who_we_are_and_what_we_do).
+  definition: |
+    A mass shooting is when four or more people are shot in an event, or related series of events, likely without a cooling off period.
+  fields:
+    - name: 'Shooter'
+      description: "Name of the shooter, if known"
+    - name: "Date"
+    - name: "Dead"
+      description: Number of people killed
+    - name: "Injured"
+      description: Number of people injured
+    - name: "Article"
+      description: Subsequent columns contain URLs to related articles
+
+  data_downloads:
+    - title: 2013 Raw Data
+      url: http://shootingtracker.com/tracker/2013MASTER.csv
+    - title: 2014 Raw Data
+      url: http://shootingtracker.com/tracker/2014MASTER.csv
+    - title: 2015 Raw Data
+      url: http://shootingtracker.com/tracker/2015CURRENT.csv
+
+
+
+
+
+- title: "Data for the Untold Story of America's Mass Killings"
+  url: http://www.gannett-cdn.com/GDContent/mass-killings/index.html
+  source: USA TODAY
+  image_url: /files/images/briefs/mass-shootings/usa-today-histograms-by-age.png
+  description: |
+    Among the datasets listed here, USA Today has the most comprehensive and complex data schemas, with separate JSON files for events and victims.
+  definition: |
+    To analyze mass killings, USA TODAY used the FBI's definition: 4 or more killed, not including suspects, in an event. The killing may stretch over a day or more and some distance, especially if it includes killings committed in flight or against targeted people. It does not include an extended "cooling-off period" to distinguish this kind of crime from the acts of serial killers.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- title: People killed by guns in America since the Newtown shootings to the end of 2013.
+  source: Slate and @GunDeaths
+  image_url: /files/images/briefs/mass-shootings/slate-deaths-newtown-data.png
+  description: |
+    A data project that attempted to record each gun-related death in America. At the end of the year, [Slate wrote about why the project failed.](http://www.slate.com/articles/news_and_politics/crime/2013/12/newtown_anniversary_what_slate_learned_from_trying_and_failing_to_record.html)
+  definition: |
+    This dataset did not limit its count to mass killings by gun, but any death caused by a gun. Ultimately, they counted roughly 11,000 reported gun deaths in 2013. The [Centers for Disease Control and Prevention reported 32,163 deaths](http://www.slate.com/articles/news_and_politics/crime/2013/12/newtown_anniversary_what_slate_learned_from_trying_and_failing_to_record.html).
+  fields:
+    - name: victimID
+      description: A unique numerical identifier for each victim
+    - name: date
+    - name: name
+    - name: gender
+    - name: age
+    - name: ageGroup
+      description: |
+        e.g. `3` for a 20-year-old, `1` for a 6-year-old
+    - name: city
+    - name: state
+    - name: lat
+    - name: lng
+    - name: url
+      description: URL to related news story
+
+  data_downloads:
+    - title: CSV
+      url: http://slate-interactives-prod.elasticbeanstalk.com/gun-deaths/getCSV.php
+
+
+

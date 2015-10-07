@@ -25,6 +25,12 @@
   description: |
     The Washington Post's database of police shootings is based on news reports, public records, Internet databases and original reporting.
 
+- title: Shielded by the law
+  url: http://projects.seattletimes.com/2015/killed-by-police/
+  source: The Seattle Times
+  image_url: /files/images/briefs/police/seattle-times-2015-killed-by-police-front.png
+  description: |
+    Out of the 213 people killed by police in Washington from 2005 to 2014, the Seattle Times found that just one officer was ever charged.
 
 - title: "Deadly Force: When Las Vegas Police Shoot, And Kill"
   url: http://www.reviewjournal.com/news/deadly-force
@@ -39,6 +45,15 @@
   description: |
     To examine the issue of deadly force, The Oklahoman reviewed Oklahoma City police shootings from 2004 through 2013.
   image_url: /files/images/briefs/police/oklahoman--deadly-force-front.jpg
+
+
+- title: "In 179 fatalities involving on-duty NYPD cops in 15 years, only 3 cases led to indictments — and just 1 conviction"
+  source: New York Daily News
+  url: http://www.nydailynews.com/new-york/nyc-crime/179-nypd-involved-deaths-3-indicted-exclusive-article-1.2037357
+  image_url: /files/images/briefs/police/nydn-nypd-involved-deaths-tableau.png
+  description: |
+    A Daily News analysis of NYPD-involved deaths starts with the 1999 slaying of unarmed Amadou Diallo in a hail of bullets in the Bronx and ends with the November 2014 shooting death of Akai Gurley in a Brooklyn stairwell.
+
 
 - title: "Police Open Data Census: Officer-Involved Shootings"
   source: Code for America
@@ -56,7 +71,7 @@
   description: |
     Originally started off as a Facebook group that collected "corporate news reports of people killed by U.S. law enforcement officers May 1, 2013"
 
-- title: The Homicde Report
+- title: The Homicide Report
   source: The Los Angeles Times
   url: http://homicide.latimes.com/officer_involved/true/year/all
   image_url: /files/images/briefs/police/la-times-homicide-report.jpg

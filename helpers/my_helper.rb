@@ -55,7 +55,7 @@ def render_content_resource_element(obj, opts = {})
     end
     _title_matter = [_title_link, _title_source].compact.join(' | ')
     c_title_matter = content_tag(:div, _title_matter)
-    c_description = content_tag(:div, resource.description, {:class => 'description'})
+    c_description = content_tag(:div, markdownify(resource.description), {:class => 'description'})
     c_text = content_tag(:div, c_title_matter + c_description, :class => 'text')
     s.safe_concat(c_text)
     s
