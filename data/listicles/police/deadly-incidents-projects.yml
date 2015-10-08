@@ -55,6 +55,21 @@
     A Daily News analysis of NYPD-involved deaths starts with the 1999 slaying of unarmed Amadou Diallo in a hail of bullets in the Bronx and ends with the November 2014 shooting death of Akai Gurley in a Brooklyn stairwell.
 
 
+- title: "Line of Fire: Bullets, badges, and death on the street"
+  source: Palm Beach Post and WPTV5
+  url: http://www.mypalmbeachpost.com/policeshootings/
+  image_url: /files/images/briefs/police/palmbeachpost-police-shootings-logo.jpg
+  description: |
+    Reporters created a database of 256 police shootings in a 15 year span -- 86 of them resulting in deaths -- and found that many of the shootings "didn't have to happen." Among the incidents counted, only one deputy lost his job and no deputy had ever been criminally charged.
+
+- title: Unanswered
+  source: Creative Loafing
+  url: "http://clatl.com/atlanta/unanswered/Content?oid=14494645&showFullText=true"
+  description: |
+    Reporters found that Metro Atlanta police officers have fatally shot at least 75 people since 2010.
+  image_url: /files/images/briefs/police/creative-loafing-unanswered-lede-pic.jpg
+
+
 - title: "Police Open Data Census: Officer-Involved Shootings"
   source: Code for America
   url: https://codeforamerica.github.io/PoliceOpenDataCensus/OfficerInvolvedShootings.html

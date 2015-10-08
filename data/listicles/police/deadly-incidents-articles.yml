@@ -2,9 +2,9 @@
 
 - title: "In Baltimore, No One Left to Press the Police"
   source: David Simon
-  description: |
-    A powerful essay about the state of affairs between the government and journalists; Simon describes the process of just getting the police report behind an officer-involved fatal shooting in Baltimore.
   url: http://davidsimon.com/in-baltimore-no-one-left-to-press-the-police/
+  description: |
+    A powerful essay about the state of affairs between the government and journalists; Simon laments how a weakened press allowed a Baltimore police officer to nearly go unscrutinized after killing a man (it's worth [reading how things turned out when the officer was put on the stand](http://articles.baltimoresun.com/2009-08-05/news/0908040089_1_mckissick-forrest-suspect).)
 
 - title: Distraught People, Deadly Results
   source: The Washington Post
@@ -12,19 +12,21 @@
     An in-depth story focused specifically on how police respond when confronting mentally unstable suspects.
   url: http://www.washingtonpost.com/national/how-the-washington-post-is-examining-police-shootings-in-the-us/2015/06/29/f42c10b2-151b-11e5-9518-f9e0a8959f32_story.html
 
-- title: "Police Have Killed at Least 1,083 Americans Since Michael Brown's Death"
-  source:  VICE News
-  url: https://news.vice.com/article/police-have-killed-at-least-1083-americans-since-michael-browns-death
-
 
 - title: Is Google More Accurate Than the FBI?
   source: The Marshall Project
   url: https://www.themarshallproject.org/2015/07/02/is-google-more-accurate-than-the-fbi
   description: |
-    An in-depth overview of both the official and the independent crowdsourced efforts in counting police-involved homicides.
+    An in-depth overview of the official and the independent crowdsourced efforts (and techniques) to count police-involved homicides.
 
-- title: Deadly Force, in Black and White - ProPublica (propublica.org)
-  url: http://www.propublica.org/article/deadly-force-in-black-and-white
+- title: Data on Use of Force by Police Across U.S. Proves Almost Useless
+  date: 2015-08-11
+  url: http://www.nytimes.com/2015/08/12/us/data-on-use-of-force-by-police-across-us-proves-almost-useless.html
+  source: The New York Times
+  description: |
+    The Justice Department attempts to analyze police shootings nationwide but finds that the data is flawed. Some large police forces, such as the NYPD and Detroit, could not or would not provide numbers.
+
+
 
 - title: Nobody Knows How Many Americans The Police Kill Each Year
   source: FiveThirtyEight
@@ -34,6 +36,28 @@
 - title: Another (Much Higher) Count Of Homicides By Police
   source: FiveThirtyEight
   url: http://fivethirtyeight.com/datalab/another-much-higher-count-of-police-homicides/
+
+
+- title: Nobody counts police killings in the U.S.
+  url: http://www.stltoday.com/news/local/crime-and-courts/nobody-counts-police-killings-in-the-u-s/article_8ec76c48-4414-5861-9183-134c75a4be10.html
+  source: St. Louis Post-Dispatch
+  description: |
+    A Post-Dispatch analysis of the data from 2005-12 shows more than 1,100 departments — or roughly 6 percent of the country’s law enforcement agencies — have reported a killing by an officer or private citizen that is considered justifiable.
+
+
+
+
+
+- title: "Police Killings Rise Slightly, Though Increased Focus May Suggest Otherwise"
+  source: New York Times
+  url: http://www.nytimes.com/2015/05/01/us/no-sharp-rise-seen-in-police-killings-though-increased-focus-may-suggest-otherwise.html?referer=&_r=0
+
+- title: "Deadly Force, in Black and White"
+  source: ProPublica
+  url: http://www.propublica.org/article/deadly-force-in-black-and-white
+  description: |
+     A ProPublica analysis of federally collected data on fatal police shootings found that young black males, age 15 to 19, were killed by police at a rate of 31.17 per million, compared to 1.47 per million of white males in that age range.
+
 
 - title: "Deadspin Police-Shooting Database Update: We're Still Going"
   source: Deadspin/Gawker
@@ -49,10 +73,14 @@
 - title: "Police officers' names still secret 3 years after shooting"
   source: The Associated Press
   url: http://bigstory.ap.org/article/73a2b9956b4d4b91912fa67d44a0ffbc/police-officers-names-still-secret-3-years-after-shooting
+  description: |
+     Gregory McDaniel was shot twice during a police drug raid on a South Carolina home where he was sleeping in 2012, but prosecutors have refused to release the officer's name.
 
 - title: "About The Counted: why and how the Guardian is counting US police killings"
   source: The Guardian
   url: http://www.theguardian.com/us-news/ng-interactive/2015/jun/01/about-the-counted
+  description: |
+    The Guardian explains why and how it intends to create a verified crowdsourced system of tracking killings by law enforcement.
 
 - title: That Pareto Guy? Turns Out He’s Pretty Smart
   source: Nick Selby, CEO of StreetCred Software
@@ -64,6 +92,12 @@
   source: The Wall Street Journal
   url: http://www.wsj.com/articles/hundreds-of-police-killings-are-uncounted-in-federal-statistics-1417577504
 
+- title: "Death by Law Enforcement: What the data tells us – and what it doesn't"
+  source: Sunlight Foundation
+  description: |
+    An analysis of what's contained in the CDC's Wide-ranging Online Data for Epidemiologic Research (WONDER) and National Violent Death Reporting System (NVDRS) databases.
+  url: http://sunlightfoundation.com/blog/2014/08/25/cdc-data-tells-us-black-people-are-at-higher-risk-than-white-people-to-be-killed-police/
+
 - title: Visualization of Police-Involved Homicides in the U.S. Since 2011
   source: KQED
   description: |
@@ -74,6 +108,10 @@
   source: Sunlight Foundation
   url: https://sunlightfoundation.com/blog/2015/05/01/baltimores-open-but-not-current-police-data/
 
+
+- title: "Police Have Killed at Least 1,083 Americans Since Michael Brown's Death"
+  source:  VICE News
+  url: https://news.vice.com/article/police-have-killed-at-least-1083-americans-since-michael-browns-death
 
 - title: Philadelphia Cops Shoot and Kill People at 6 Times the Rate of the NYPD
   url: http://www.motherjones.com/politics/2015/03/philadelphia-police-officer-involved-shootings

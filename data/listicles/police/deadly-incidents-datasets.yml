@@ -33,23 +33,44 @@
   data_file_title: Zipped CSV
   data_file_url: http://interactive.guim.co.uk/2015/the-counted/thecounted-data.zip
 
-- source: Deadspin
-  landing_page_title: The Deadspin Police-Shooting Database
-  landing_page_url: http://regressing.deadspin.com/deadspin-police-shooting-database-update-were-still-go-1627414202
-  data_file_title: Google Sheets CSV
-  data_file_url: https://docs.google.com/spreadsheets/d/1cEGQ3eAFKpFBVq1k2mZIy5mBPxC6nBTJHzuSWtZQSVw/export?format=csv&gid=0
-
 - source: 'The Seattle Times project, "Shielded By The Law"'
   landing_page_title: The seattletimes/police-killings Github repo
   landing_page_url: https://github.com/seattletimes/police-killings/
   data_file_title: Raw CSV file
   data_file_url: https://github.com/seattletimes/police-killings/raw/master/data/deadly-force-data.csv
 
+
+- source: "Creative Loafing"
+  landing_page_title: "Metro Atlanta officer-involved fatal shootings"
+  landing_page_url: "http://clatl.com/atlanta/unanswered-cls-metro-atlanta-officer-involved-shooting-database/Content?oid=14487806"
+  data_file_title: "Google Sheets CSV"
+  data_file_url: "https://docs.google.com/spreadsheets/d/1jtfl2P74V2xD05JiGOXdHLJnM5Gjpiv5o-qf0ELn3Sc/export?format=csv&gid=0"
+
+- source: "Creative Loafing"
+  landing_page_title: "Metro Atlanta officer-involved non-fatal shootings"
+  landing_page_url: "https://docs.google.com/spreadsheets/d/1jtfl2P74V2xD05JiGOXdHLJnM5Gjpiv5o-qf0ELn3Sc/edit#gid=397182373"
+  data_file_title: "Google Sheets CSV"
+  data_file_url: "https://docs.google.com/spreadsheets/d/1jtfl2P74V2xD05JiGOXdHLJnM5Gjpiv5o-qf0ELn3Sc/export?format=csv&gid=397182373"
+
+
+- source: Deadspin
+  landing_page_title: The Deadspin Police-Shooting Database
+  landing_page_url: http://regressing.deadspin.com/deadspin-police-shooting-database-update-were-still-go-1627414202
+  data_file_title: Google Sheets CSV
+  data_file_url: https://docs.google.com/spreadsheets/d/1cEGQ3eAFKpFBVq1k2mZIy5mBPxC6nBTJHzuSWtZQSVw/export?format=csv&gid=0
+
+
 - source: "Killed By Police on Facebook, as scraped via FiveThirtyEight"
   landing_page_title: Another (Much Higher) Count Of Homicides By Police
   landing_page_url: http://fivethirtyeight.com/datalab/another-much-higher-count-of-police-homicides/
   data_file_title: Google Sheets CSV
   data_file_url: https://docs.google.com/a/fivethirtyeight.com/spreadsheets/d/1WwVDP8anxtQm-6C2g7pjmZkS_jdSomM7UDMonIX0b6k/export?format=csv&gid=0
+
+- source: "FBI Uniform Crime Reports"
+  landing_page_title: "Justifiable Homicide, by Weapon, Law Enforcement, 2009-2013"
+  landing_page_url: https://www.fbi.gov/about-us/cjis/ucr/crime-in-the-u.s/2013/crime-in-the-u.s.-2013/offenses-known-to-law-enforcement/expanded-homicide/expanded_homicide_data_table_14_justifiable_homicide_by_weapon_law_enforcement_2009-2013.xls
+  data_file_title: Excel spreadsheet
+  data_file_url: https://www.fbi.gov/about-us/cjis/ucr/crime-in-the-u.s/2013/crime-in-the-u.s.-2013/offenses-known-to-law-enforcement/expanded-homicide/expanded_homicide_data_table_14_justifiable_homicide_by_weapon_law_enforcement_2009-2013.xls/output.xls
 
 - source: Killed by Police
   landing_page_title: Killedbypolice.net yearly tabular reports
@@ -94,3 +115,9 @@
 - source: Los Angeles Times
   landing_page_title: "Homicide Report; filtered by Officer-Involved homicides"
   landing_page_url: http://homicide.latimes.com/officer_involved/true/year/all
+
+
+- source: Palm Beach Post and WPTV5
+  landing_page_title: "Police shootings: Deputies shielded by the badge"
+  landing_page_url: http://apps.mypalmbeachpost.com/lineoffire/
+

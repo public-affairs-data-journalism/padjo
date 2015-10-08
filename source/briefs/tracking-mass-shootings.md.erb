@@ -13,7 +13,7 @@ listed: true
 
 Here's a short list of projects attempting to count either gun-related casualties and/or mass killing events in America:
 
-<% content_listicle('mass-shootings', 'shootings-data-projects').each do |t| %>
+<% content_listicle('mass-shootings', 'mass-projects').each do |t| %>
 <%= render_content_resource_row(t) %>
 <% end %>
 
@@ -21,14 +21,14 @@ Here's a short list of projects attempting to count either gun-related casualtie
 
 # Articles and stories
 
-<% content_listicle('mass-shootings', 'shootings-articles').each do |t| %>
+<% content_listicle('mass-shootings', 'mass-articles').each do |t| %>
 <%= render_content_resource_element(t) %>
 <% end %>
 
 
 # Datasets
 
-<% listicle('mass-shootings', 'shootings-datasets').each do |t| %>
+<% listicle('mass-shootings', 'mass-datasets').each do |t| %>
 <div class="item feature" style="margin-bottom:5.5em;">
   <div class="image">
     <a href="<%=t.url %>">

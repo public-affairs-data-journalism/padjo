@@ -10,6 +10,10 @@
     A landing page that leads to a repository of data files that contain tallies of arrest-related deaths, including by state, over various time frames of study.
   url: http://www.bjs.gov/index.cfm?ty=tp&tid=82
 
+- title: Final Report of the President’s Task Force on 21st Century Policing
+  url: http://www.cops.usdoj.gov/pdf/taskforce/TaskForce_FinalReport.pdf
+  source: U.S. Department of Justice
+
 - title: An Assessment of Deadly Force in the Philadelphia Police Department
   source: U.S. Department of Justice
   url: https://www.documentcloud.org/documents/1691753-cops-w0753-pub.html
@@ -24,6 +28,13 @@
 - title: FBI Justifiable Homicide (yearly summaries)
   source: Federal Bureau of Investigation
   url: https://www.fbi.gov/about-us/cjis/ucr/crime-in-the-u.s/2012/crime-in-the-u.s.-2012/offenses-known-to-law-enforcement/expanded-homicide/expanded_homicide_data_table_14_justifiable_homicide_by_weapon_law_enforcement_2008-2012.xls
+
+- title: International Association of Police Chiefs
+  description: The IAPC was directed by Congress to gather data about the excessive use of force.
+  url: http://www.theiacp.org/Portals/0/pdfs/Publications/2001useofforce.pdf
+  description: |
+    This 2001 report was their last, due to an end of federal funding that year, according to the [St. Louis Dispatch](http://www.stltoday.com/news/local/crime-and-courts/nobody-counts-police-killings-in-the-u-s/article_8ec76c48-4414-5861-9183-134c75a4be10.html).
+
 
 - title: General Order - Investigation Of Officer Involved Shootings And Discharges
   source: San Francisco Police Department
