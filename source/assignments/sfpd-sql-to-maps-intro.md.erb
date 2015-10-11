@@ -1,0 +1,53 @@
+---
+title: Porting Data from SQL to Maps
+description: |
+  A introduction to moving around SQL and exporting the data to a visualization.
+date: 2015-10-13
+points: 5
+assigned: true
+references: 
+  - /tutorials/sql-admin/getting-started-with-sqlite-browser
+  - /tutorials/mapping/quick-spreadsheet-to-map
+
+deliverables: |
+  Create a Google __document__ (i.e. like any other word document) in your __PADJO2015__ folder named: __PADJO2015-SFPD-SQL-TO-MAP__
+
+  In this document, simply: 
+
+  1. A short paragraph explaining to me what is going on in the map you made.
+
+  2. Copy and paste the SQL code you used to filter the SFPD crime dataset I gave you.
+
+  3. Include a link to your online map visualization
+
+  4. Include a screenshot of the online map visualization
+
+requirements:
+  - |
+      Download this zipped sqlite database of SFPD incident reports (2012-2013) and open it in SQLite browser:  [sfpd_incident_reports_2012_2013.sqlite.zip](http://stash.padjo.org/dumps/sql/sfpd_incident_reports_2012_2013.sqlite.zip)
+  - |
+    The descriptive paragraph just needs to describe what the map purports to show.
+
+  - The SQL statement you use should look fairly similar to the one in the tutorial, but try to filter on some other condition at least. And you'll also need to include the two columns for geo-coordinate data.
+  - |
+      You can use whatever mapping solution you like, though I recommend either: CartoDB, Google MyMaps, or Fusion Tables. [Check the tutorial here for more info](/tutorials/mapping/quick-spreadsheet-to-map)
+---
+
+
+This exercise is simply to make sure you can get the [SQLite Database Browser installed](/tutorials/sql-admin/getting-started-with-sql-browser).
+
+Download the [SPFD dataset for 2012 and 2013](http://stash.padjo.org/dumps/sql/sfpd_incident_reports_2012_2013.sqlite.zip).
+
+Do a SQL query statement similar to this:
+
+
+~~~sql
+SELECT Category, Descript, Resolution, Date, Time
+  FROM sfpd_incidents 
+  WHERE Time > "18:00"
+~~~
+
+
+Export the data and make into a map, similar to this:
+
+<iframe width="100%" height="520" frameborder="0" src="https://dundee.cartodb.com/viz/31df1b04-5d22-11e5-b446-0e6e1df11cbf/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>

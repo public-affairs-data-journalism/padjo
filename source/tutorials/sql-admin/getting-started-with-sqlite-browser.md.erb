@@ -1,5 +1,7 @@
 ---
 title: Getting started with SQLite Browser
+description: |
+  A quick how-to on just getting started with the SQLite Browser
 references:
   - title: Getting Started with SQLite and Sequel Pro
     url: http://fall2014.padjo.org/tutorials/databases/getting-around-sqlite-and-sequel-pro/
@@ -10,23 +12,145 @@ references:
     url: http://fall2014.padjo.org/tutorials/databases/getting-around-sqlite-and-sequel-pro/
     description: |
       How to select data from a SQL database. Again, different SQL clients, but same concepts. SQL syntax (for the most part) will also be the same.
+
+  - title: Zipped SQLite file of SFPD assault reports, 2003 to 2013
+    url: http://stash.padjo.org/dumps/sql/sfpd_assault_reports_2003_2013.sqlite.zip
+  - title: SFPD Incidents - from 1 January 2003
+    description: Just in case you want to download your own dataset
+    source: SF OpenData
+    url: https://data.sfgov.org/Public-Safety/SFPD-Incidents-from-1-January-2003/tmnf-yvry
 ---
 
-# Installing the SQLite browser
 
-<% content_card "Stanford Journalism Lab installation" %>
-If you are a Stanford Journalism student, the Macs in the McClatchy lab already have the SQLite Browser installed. But you should install it on your own computers, too, for your own convenience
+
+__SQL is difficult.__ For this course, it's going to be the single most difficult subject for most people, because it is a programming language. And even professional programmers find it challenging.
+
+However, we're learning it for two important reasons:
+
+1. To efficiently load and process datasets of 1,000,000+ rows. With Google Sheets, we run into performance issues with even just 10,000 rows.
+2. To have a language for describing _exactly_ what we want to do with the data.
+
+That second point will be the difficult concept. So this short walkthrough is intended to introduce the first point.
+
+# Installing the SQLite Database browser
+
+<% content_card "Stanford Journalism Lab installation" do %>
+If you are a Stanford Journalism student, the Macs in the McClatchy lab already have the SQLite Browser installed. But you should install it on your own computers, too, for your own convenience.
 <% end %>
+
+You can download SQLite Database Browser from its homepage: [http://sqlitebrowser.org/](http://sqlitebrowser.org/)
+
+
 
 ## How to open a database file
 
-
+![image](/files/images/tutorials/sql/sqlite-browser-sfpd-db-structure.png)
 
 
 ## How to browse the data
 
+![image](/files/images/tutorials/sql/sqlite-browser-sfpd-db-browse.png)
 
 
 ## How to write a query
 
-##  
+![image](files/images/tutorials/sql/sqlite-browser-sfpd-db-execute-sql.png)
+
+~~~sql
+SELECT IncidntNum FROM sfpd_incidents LIMIT 10
+~~~
+
+
+~~~sql
+SELECT IncidntNum 
+  FROM sfpd_incidents 
+  LIMIT 10
+~~~
+
+~~~sql
+SELECT IncidntNum, Category 
+  FROM sfpd_incidents 
+  LIMIT 10
+~~~
+
+
+Cause an error by using the wrong field name ("Description"):
+
+~~~sql
+SELECT IncidntNum, Category, Description
+  FROM sfpd_incidents 
+  LIMIT 10
+~~~
+
+~~~sql
+SELECT IncidntNum, Category, Descript 
+  FROM sfpd_incidents 
+  LIMIT 10
+~~~
+
+
+~~~sql
+SELECT Category, Descript, Resolution, Date, Time
+  FROM sfpd_incidents 
+  WHERE Time > "18:00"
+  LIMIT 10
+~~~
+
+
+
+
+---------
+
+
+## WHERE
+
+~~~sql
+SELECT Category, Descript, Resolution, Date, Time
+  FROM sfpd_incidents 
+  WHERE Time = 18:00
+  LIMIT 10
+~~~
+
+The error:
+
+        near ":00": syntax error: 
+
+
+Use quotation marks for non-numerical values
+
+
+~~~sql
+SELECT Category, Descript, Resolution, Date, Time
+  FROM sfpd_incidents 
+  WHERE Time = "18:00"
+  LIMIT 10
+~~~
+
+
+~~~sql
+SELECT Category, Descript, Resolution, Date, Time
+  FROM sfpd_incidents 
+  WHERE Time > "18:00"
+  LIMIT 10
+~~~
+
+
+
+### Change the LIMIT
+
+
+~~~sql
+SELECT Category, Descript, Resolution, Date, Time
+  FROM sfpd_incidents 
+  WHERE Time > "18:00"
+  LIMIT 100
+~~~
+
+
+#### Removing the `LIMIT`
+
+~~~sql
+SELECT Category, Descript, Resolution, Date, Time
+  FROM sfpd_incidents 
+  WHERE Time > "18:00"
+~~~

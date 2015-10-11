@@ -5,21 +5,26 @@ layout: home
 ---
 
 <% content_card "Today's lesson" do %>
+
+
+  <%= render_content_resource_element("/tutorials/mapping/quick-spreadsheet-to-map") %>
+
+
+  <%= render_content_resource_element("/tutorials/sql-admin/getting-started-with-sqlite-browser") %>
+
+  <h3><a href="/assignments/">Assignments</a></h3>
+  <%= render_content_resource_element("/assignments/sfpd-sql-to-maps-intro/") %>
+
+  <p><a href="http://stash.padjo.org/dumps/sql/sfpd_assault_reports_2003_2013.sqlite.zip">SFPD Assaults 2003 - 2013</a></p>
+
+
+
+<p>-------</p>
+
   <%= render_content_resource_element("/briefs/tracking-police-involved-homicides") %>
+
   <%= render_content_resource_element("/briefs/tracking-mass-shootings/") %>
 
-  
-  <p><strong>Today's datasets:</strong> 
-
-  <div><a href="http://slate-interactives-prod.elasticbeanstalk.com/gun-deaths/getCSV.php">Slate's count of all gun homicides</a></div>
-
-  <div><a href="http://shootingtracker.com/tracker/2014MASTER.csv">Mass Shooting Tracker 2014 data</a></div>
-
-  <div><a href="https://docs.google.com/spreadsheets/d/1XV4mZi3gYDgwx5PrLwqqHTUlHkwkV-6uy_yeJh3X46o/">Mother Jones Mass Shooting database</a></div>
-
-
-
-  </p>
 <% end %>
 
 
