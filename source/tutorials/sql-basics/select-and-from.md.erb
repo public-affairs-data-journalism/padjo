@@ -1,0 +1,165 @@
+---
+title: SELECTing rows FROM data tables
+prefix: SQLite
+description: |
+  The syntax for retrieving and displaying data from a SQLite tables
+takeaways:
+  - Where to type in a query and how to execute it in [DB Browser for SQLite](http://sqlitebrowser.org/) (or your SQL client of choice).
+  - How `SELECT 'hello, world'` is different from `SELECT 'hello', 'world'`
+  - That `SELECT name, state FROM baby_names` is the same as `select name,state    from           baby_names`
+  - What the star symbol -- i.e. `*` -- means in context of `SELECT` and `FROM`
+  - Why `SELECT 'name' FROM baby_names` will *not* get the same result as `SELECT "name" from baby_names`
+
+
+
+references:
+  - title: "SELECT As Understood by SQLite"
+    description: The official documentation for the SELECT statement.
+    url: https://www.sqlite.org/lang_select.html
+  - title: The SELECT statement and FROM clause
+    url: http://fall2014.padjo.org/tutorials/databases/sql-select-and-from/
+    description: This tutorial for the 2014 session covers similar ground and uses San Francisco crime data.
+---
+
+<% content_card("Get the data") do  %>
+
+Download one of the following datasets for this data -- I recommend downloading the smallest file: 
+
+__[ssa_baby_names--2010_2014--all.sqlite.zip](http://stash.padjo.org/data/ssa_baby_names--2010_2014--all.sqlite.zip)__
+
+<% data_listicle('ssa_baby_names').each do |d| %>
+ <%= render_content_resource_element(d) %>
+ <% end %>
+<% end %>
+
+
+
+# The SELECT statement
+
+You can guess what the __SELECT__ statement does: it's what we use to query the database for data. From the [SQLite documentation](https://www.sqlite.org/lang_select.html):
+
+> The result of a SELECT is zero or more rows of data where each row has a fixed number of columns. A SELECT statement does not make any changes to the database.
+
+There's not many kinds of __statements__ in SQL, and 95% of our queries will involve using the __SELECT__ statement. As a corollary -- if you read the excerpt above -- this means most what we generally do with SQL databases does _not_ alter the data, i.e. creating, updating, and deleting data.
+
+
+## Trying a basic `SELECT`
+
+Let's get right into executing a query.
+
+Open a database file -- I'm assuming you've downloaded and unzipped __[ssa_baby_names--2010_2014--all.sqlite.zip](http://stash.padjo.org/data/ssa_baby_names--2010_2014--all.sqlite.zip)__
+
+If you are using the client, __DB Browser for SQLite__, select the __Execute SQL tab__  and type the following into the first input box:
+
+~~~sql
+SELECT 100;
+~~~
+
+Then hit the __Play__ button (or better yet, the keyboard shortcut: __Ctrl + Return__).
+
+The result should look something like this (note that I've left off the __semi-colon__, which is optional here but is generally used to denote the end of a command):
+
+![image](/files/images/tutorials/sql-basics/sqlite-db-browser-select-100-result.png)
+
+
+Here's an animated GIF of the process:
+
+![GIF: sqlite-db-browser-select-100.gif](/files/images/tutorials/sql-basics/sqlite-db-browser-select-100.gif)
+
+
+<% content_card("More text, fewer screenshots", :class => 'warning') do %>
+From this point on, I'll be displaying the input and output of these examples as just text, rather than screenshotting the GUI. 
+
+This is partly to emphasize that whatever graphical client we use is merely a user-friendly shell for the code we execute. Also, text is a lot easier to produce for these tutorials.
+<% end %>
+
+
+### What does it mean?
+
+We asked the database to "select the _number 100_" and it obliged. The result of that "query" is simply the number `100`, returned as a single column (with a header of `100`) and a single row.
+
+### Selecting multiple values
+
+In SQL syntax, we can specify a series of values to select by separating them with __commas__; note in the example below, it's only the __commas__ that delimit the values; whitespace and newlines have no effect.
+
+~~~sql
+SELECT 100, 200,   -300,
+    -42;
+~~~
+
+The result is just...more values, each in their own column:
+
+| 100 | 200 | -300 | -42 |
+|-----|-----|------|-----|
+| 100 | 200 | -300 | -42 |
+{:.table-sql}
+
+
+### Specifying literal text strings
+
+We can specify __literal text strings__ by enclosing a word in __single quotes__ (i.e. __apostrophes__):
+
+~~~sql
+SELECT 'hello', 'world'
+~~~
+
+The result:
+
+| 'hello' | 'world' |
+|---------|---------|
+| hello   | world   |
+{:.table-sql}
+
+I re-emphasize the term _literal_ here; the previous query selected the _literal_ words `'hello'` and `'world'`, separately. What if we wanted to select the _phrase_, `'hello, world'`?
+
+We just enclose the phrase in single quotes, which specifies that we want `hello` and `world` again, literally, but as a single string connected with a _literal_ comma and space:
+
+~~~sql
+SELECT 'hello, world';
+~~~
+
+Result:
+
+| 'hello, world' |
+|----------------|
+| hello, world   |
+{.table-sql}
+
+### Text strings without the quotes?
+
+What happens if you _omit_ the single quotes, as we did in the first example queries with just numbers (e.g. `SELECT 100, 200, 300`)?
+
+~~~sql
+SELECT hello
+~~~
+
+You should get an error message:
+
+~~~
+Error: no such column: hello
+~~~
+
+Without the single-quotes, the SQLite interpreter interprets `hello` as something __non-literal__, such as the the name of a _column_ or some other SQLite-specific command. So when I use the term _literal_, I mean, just the plain, ordinary value that a text string has for __humans__, rather than the special meaning that it might have for the computer.
+
+If it's not obvious by now, the word `SELECT` has a special meaning to the SQLite interpreter, as it is a keyword in the syntax of the SQLite language. The following query would return an error, because it doesn't make sense to the interpreter:
+
+~~~sql
+SELECT SELECT
+~~~
+
+What if we wanted to `SELECT` the _literal_ text string of `'SELECT'`? Again, by using the single-quotes, we specify to the interpreter that we want the word "SELECT", _literally_:
+
+~~~sql
+SELECT 'SELECT'
+~~~
+
+
+| 'SELECT' |
+|----------|
+| SELECT   |
+{.sql-table}
+
+
+Are you literally tired of seeing the word _literal_ explained over and over?? I belabor the point here because _not_ knowing when to use single-quotes --  or if you're new to programming in general, the importance concept of computer syntax -- will bite you very hard, very soon. But don't worry, we'll reiterate the concept by the end of the lesson.
+
+

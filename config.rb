@@ -19,6 +19,8 @@ puts config[:services]
 ## SETTINGS
 set :layout, :page
 page "/weeks/*", :layout => "week_layout"
+page "/tutorials/*", :layout => "tutorial_layout"
+
 page "/assignments/*", :layout => "assignment_layout"
 
 

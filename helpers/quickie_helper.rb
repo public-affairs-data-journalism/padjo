@@ -21,6 +21,7 @@ def content_card(title = nil, opts = {}, &blk) # takes block
   txt = ""
   txt += content_tag(:div, title, :class => 'header') if title
   txt += content_tag :div, rtext, :class => 'body'
-  concat content_tag(:div, txt, :class => 'content-card')
+  klasses = o[:class] ? "content-card #{o[:class]}" : "content-card"
+  concat content_tag(:div, txt, :class => klasses)
 end
 

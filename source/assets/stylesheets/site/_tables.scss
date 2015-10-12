@@ -1,0 +1,17 @@
+.table-sql{
+  max-width: 100%;
+  font-family: $font-family-monospace;
+
+  tbody{
+    td{
+      border: thin dashed #333;
+    }
+  }
+
+  th{
+    border: 1px solid #333;
+    border-bottom: 2px solid black;
+    background: #eee;
+  }
+
+}

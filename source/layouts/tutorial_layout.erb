@@ -1,0 +1,22 @@
+<%- tutorial = TutorialResource(current_page) %>
+
+<% content_for :crumb do %>
+  <%= link_to 'Tutorials', '/tutorials' %>
+<% end %>
+
+<% wrap_layout :page do %>
+
+<% unless tutorial.takeaways.empty? %>
+<section class="sec takeaways" id="takeaways">
+  <h2>The Takeaways</h2>
+  <ul class="list list-unstyled">
+    <% tutorial.takeaways.each do |t| %>
+      <li><%=markdownify t%></li>
+    <% end %>
+  </ul>
+</section>
+<% end %>
+
+
+<%= yield %>
+<% end %>

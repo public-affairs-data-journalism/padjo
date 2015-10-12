@@ -1,4 +1,8 @@
 <% assignment = AssignmentResource(current_page) %>
+<% content_for :crumb do %>
+  <%= link_to 'Tutorials', '/tutorials' %>
+<% end %>
+
 
 <% wrap_layout :page do %>
   <div class="card card-block">
