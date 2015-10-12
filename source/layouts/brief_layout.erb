@@ -1,0 +1,9 @@
+<%- article = ContentResource(current_page) %>
+
+<% content_for :crumb do %>
+  <%= link_to 'Briefs and Readings', '/briefs' %>
+<% end %>
+
+<% wrap_layout :page do %>
+<%= yield %>
+<% end %>

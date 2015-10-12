@@ -1,10 +1,12 @@
 def render_toc(opts = {})
   return %Q{
+
 ## Table of contents
 {:.no_toc}
 
 * Table of contents
 {:toc}
+
 }
 end
 
