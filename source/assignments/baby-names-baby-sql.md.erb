@@ -1,0 +1,30 @@
+---
+title: Baby steps with SQLite and baby names data
+---
+
+
+Download the data: 
+
+- [`ssa_baby_names--1950_2014--all.sqlite.zip`](http://stash.padjo.org/data/ssa_baby_names--1950_2014--all.sqlite.zip)
+
+
+
+
+- Find the year, and how many babies, for which your name was the most popular across the United States (i.e. with a `state` of `USA`). Write the query to show only the year and the number of babies.
+- For the U.S., select all rows with your name for all available years, export to CSV, make a line chart.
+- Find the five states for which your name was most popular in the year 2014. Then, use that list of states in a second query to get all of the records for your name/sex, export it, create a pivot chart.
+
+
+## Charting Kanye, Beyonce, and Taylor
+
+~~~sql
+SELECT name, year, count
+FROM baby_names
+WHERE 
+  state = 'USA' 
+  AND ((name = 'Kanye' AND sex = 'M')
+  OR (name = 'Beyonce' AND sex = 'F')
+  OR (name = 'Taylor' AND sex 'F'))
+ORDER BY year, name
+~~~  
+

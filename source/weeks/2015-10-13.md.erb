@@ -1,13 +1,88 @@
 ---
-title: Data Joins
+title: SQL Syntax and Aggregations
 description: |
-  The ability to join two or more datasets is one of the most powerful techniques of the data journalist. We learn the SQL syntax to express these joins.
+  A real grounding in basic SQL syntax. We won't cover much that we can't already do with a spreadsheet, but with SQL, we'll learn how to do it with much bigger datasets.
+
 date: 2015-10-13
 ---
 
-October 15 -  from the Sacramento Bee to speak.
+# SQL Basic Boot Camp
+
+This week we'll be covering a lot of SQL syntax. It won't be much fun. To get a preview of what I want you to be able to do (soon): the [SQL midterm from last year](http://fall2014.padjo.org/2014-10-23/).
 
 
 ## Guest speaker for October 15: Phillip Reese
 
-Phillip Reese is the computer-assisted reporting genius at the Sacramento Bee and one of my former colleagues. He and fellow Bee reporter Cynthia Hubert were [finalists for the 2014 Pulitzer in Investigative Reporting](http://www.sacbee.com/news/investigations/nevada-patient-busing/) for their reporting on a Las Vegas mental hospital that bused more than 1,500 psychiatric patients out to 48 states in 5 years.
+
+<a href="http://www.pulitzer.org/files/2014/investigative-reporting/sacbee/01sacbee2014.pdf"><img src="/files/images/assignments/readings/bee-james-coy-brown-nevada-lede.jpg" alt="sac bee cover story"></a>
+
+Phillip Reese is the computer-assisted reporting genius at the Sacramento Bee and one of my former colleagues. He and fellow Bee reporter Cynthia Hubert were [finalists for the 2014 Pulitzer in Investigative Reporting](http://www.pulitzer.org/2014_investigative_reporting_finalist_2) for their reporting on a Las Vegas mental hospital that bused more than 1,500 psychiatric patients out to 48 states in 5 years.
+
+Please read the following stories from that [Pulitzer finalist series](http://www.pulitzer.org/2014_investigative_reporting_finalist_2), as well as a couple of others from Reese's past work:
+
+- [Cast out by Nevada, he finds kindness](http://www.pulitzer.org/files/2014/investigative-reporting/sacbee/01sacbee2014.pdf)
+- [Busing of patients rife in Nevada](http://www.pulitzer.org/files/2014/investigative-reporting/sacbee/02sacbee2014.pdf)
+- [The Nevada busing investigation: How The Bee did this story](http://www.sacbee.com/news/investigations/nevada-patient-busing/article2586365.html)
+- [Million-dollar hospital bills rise sharply in Northern California](http://www.sacbee.com/2012/03/11/4328036/million-dollar-hospital-bills.html)
+- [Unsolved killings in South Sacramento](https://docs.google.com/file/d/0B6IBlUS1jXOuQmhleGgyNHJ2eE0/edit?usp=sharing)
+
+
+## Basic use of SQL to just get the data... 
+
+TODO: Move this to its own tutorial
+
+...and then get the h*ll out and into a more usable data environment, such as a spreadsheet. 
+
+In the section below, I describe how to extract all the reported robberies in San Francisco from `2011` to `2014`, starting with the database of __all__ the reports:
+
+With the [San Francisco Police incident data](https://data.sfgov.org/Public-Safety/SFPD-Incidents-from-1-January-2003/tmnf-yvry), we were restricted to looking at it in bite-sized chunks because it doesn't all fit into a spreadsheet.
+
+However, with SQL, we can now just [download ALL the San Francisco Police incident data as one big CSV](https://data.sfgov.org/api/views/tmnf-yvry/rows.csv?accessType=DOWNLOAD) (this ends up being 300+MB)
+
+__Then import as CSV into your SQL client__ (this can admittedly be difficult depending on the client and its interface).
+
+At this point, we don't know enough how to work with date and time values properly in SQLite. So I recommend treating `Date` as merely a text field, excerpting it to get the text that represents a _year_ (i.e. `'2014'`). And then filtering on that substring.
+
+
+First, we figure out how to even select the year from the `Date` field. Notice how I use `LIMIT` so that we don't run the query on _every_ row.
+
+~~~sql
+SELECT SUBSTR(Date, 7, 4) FROM incidents LIMIT 5
+~~~
+
+Test it out on a condition of being equal to `'2015'`
+
+~~~sql
+SELECT * FROM incidents 
+WHERE SUBSTR(Date, 7, 4) = '2014'
+LIMIT 5
+~~~
+
+
+Then get all the `'2014'` rows by removing the `LIMIT` clause:
+
+~~~sql
+SELECT * FROM incidents 
+WHERE SUBSTR(Date, 7, 4) = '2014'
+~~~
+
+
+Use `BETWEEN` to find incidents within a range of years:
+
+~~~sql
+SELECT * FROM incidents 
+WHERE SUBSTR(Date, 7, 4) BETWEEN  '2011' AND '2014'
+~~~
+
+Filter by a `Category`
+
+~~~sql
+SELECT * FROM incidents 
+WHERE 
+  SUBSTR(Date, 7, 4) BETWEEN  '2011' AND '2014'
+  AND Category = "ROBBERY"
+~~~
+
+With as much SQL as we know now, it's just easier to export this and import into a proper spreadsheet.
+
+
