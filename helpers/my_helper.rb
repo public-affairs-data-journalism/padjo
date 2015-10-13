@@ -32,6 +32,16 @@ def described_link_to_resource(obj, opts = {})
    end
 end
 
+def described_inline_link_to_resource(obj, opts = {})
+   resource = to_content_resource(obj)
+   linktxt = my_link_to_resource(resource, opts)
+   if resource.description?
+      return "#{linktxt} &ndash; #{resource.description}"
+   else
+      return linktxt
+   end
+end
+
 
 def render_content_resource_box(obj, opts = {})
   box = render_content_resource_element(obj, opts)

@@ -5,26 +5,23 @@
 <% end %>
 
 <% wrap_layout :page do %>
-
-<div>
-  <% if tutorial.next_tutorials? %>
-    Next:
+<% if tutorial.next_tutorials? %>
+  <div class="next tutorials">
+    <strong>Next tutorials:</strong>
      <% tutorial.next_tutorials.each do |t| %>
        <%= described_link_to_resource(t) %>
     <% end %>
-  <% end %>
-</div>
+  </div>
+<% end %>
 
-
-<div>
-  <% if tutorial.previous_tutorials? %>
-      Previous:
-     <% tutorial.previous_tutorials.each do |t| %>
-      <%= described_link_to_resource(t) %>
-    <% end %>
-  <% end %>
-</div>
-
+<% if tutorial.previous_tutorials? %>
+  <div class="previous tutorials">
+        <strong>Previous tutorials:</strong>
+       <% tutorial.previous_tutorials.each do |t| %>
+        <%= described_link_to_resource(t) %>
+      <% end %>
+  </div>
+<% end %>
 
 <% unless tutorial.takeaways.empty? %>
 <section class="sec takeaways" id="takeaways">
@@ -42,4 +39,27 @@
 
 
 <%= yield %>
+
+
+<hr>
+
+<% if tutorial.next_tutorials? %>
+  <div class="next tutorials">
+    <strong>Next tutorials:</strong>
+     <% tutorial.next_tutorials.each do |t| %>
+       <%= described_link_to_resource(t) %>
+    <% end %>
+  </div>
+<% end %>
+
+<% if tutorial.previous_tutorials? %>
+  <div class="previous tutorials">
+        <strong>Previous tutorials:</strong>
+       <% tutorial.previous_tutorials.each do |t| %>
+        <%= described_link_to_resource(t) %>
+      <% end %>
+  </div>
+<% end %>
+
+
 <% end %>

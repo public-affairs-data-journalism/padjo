@@ -1,30 +1,180 @@
 ---
 title: Baby steps with SQLite and baby names data
+assigned: true
+points: 5
+date: 2015-10-15
+description: |
+  Practice SQL and find out more about your name using the Social Security Administration's baby name data
+deliverables: |
+  Make a Google Document in your PADJO2015 folder named: __PADJO2015-BABY-KANYE__.
+
+  Then answer the questions in the [problem set below](#mark-problem-set)
+
+requirements:
+  - The answers to each problem should include the SQL queries you used to get the data.
+  - If the problem requires a visualization, embed a screenshot of the visualization and include the link to it.
+  - You will have to create a separate spreadsheet to do the necessary pivot tables and charting for this exercise. But the document named __PADJO2015-BABY-KANYE__ is the one that gets graded.
 ---
 
 
-Download the data: 
+# Problem set
+
+(Note: this section just contains the problems to do. Keep reading until the end to see more instructions as well as an example in action)
+
+Create a Google Document in your PADJO2015 folder. For each of these problems, paste the SQL query (or queries) needed to get the data. Then post a link and screenshot to a visualization, as required.
+
+
+1. Find the year, and how many babies, for which your name was the most popular across the United States (i.e. with a `state` of `USA`). Write the query to show only the columns for year and the number of babies.
+2. Using the `totals` table (this is the only problem that requires it), select all of the records for the state of California, for both boys and girls. Create a visualization in which we see the change-over-time in boy versus girl babies, according to the SSA data. Select _only_ the rows pertaining to either boy or girl babies (there's a third value for `sex`) in the `totals` table.
+3. For the U.S., select all rows with your name for all available years, export to CSV, import into a spreadsheet, and make a line chart.
+4. Find the 5 states for which your name was most popular in the year 2014. Then, use that list of states in a second query to get all of the records for your name/sex, export it, create a pivot chart. Hint: this requires two separate queries.
+5. Think of some other name (or names), tied to someone (or something) famous, that you hypothesize might have __noticeably__ gone up or down over the years, either as a nationwide or just a statewide trend. Query the database for the data behind that name, export it to a spreadsheet, create a visualization (i.e. a histogram or line chart). The name "Elvis" during Elvis Presley's rise to fame would be interesting, for example (but do something else besides Elvis).
+
+
+# The tutorials
+
+You'll probably need to at least read these tutorials on SQL:
+
+- <%= described_inline_link_to_resource('/tutorials/sql-basics/select-and-from') %>
+- <%= described_inline_link_to_resource('/tutorials/sql-basics/limit-and-order/') %>
+- <%= described_inline_link_to_resource('/tutorials/sql-basics/where-clause-as-filter/') %>
+- <%= described_inline_link_to_resource('/tutorials/sql-basics/booleans-expressions-for-sql/') %>
+
+
+
+# Instructions and Background Information
+
+__Download the data:__ 
+
+I've taken the [baby name data from the U.S. Social Security Administration](http://www.ssa.gov/oact/babynames/limits.html), filtered it to the years 1950 to 2014, and compiled it into one SQLite database:
 
 - [`ssa_baby_names--1950_2014--all.sqlite.zip`](http://stash.padjo.org/data/ssa_baby_names--1950_2014--all.sqlite.zip)
 
+This SQLite database contains two tables, `totals` and `baby_names`:
+
+
+### The `totals` table
+
+This is actually an aggregate of the `baby_names` records so that we can see how many total babies and names were recorded per state and year and sex.
+
+Here's a sample query:
+
+~~~sql
+SELECT * from totals 
+WHERE year > 2011 AND year < 2014 
+AND state = 'IA'
+~~~
+
+And the result:
+
+| state | sex | year | baby_count | name_count |
+|-------|-----|------|------------|------------|
+| IA    | All | 2012 |      27458 |       1261 |
+| IA    | F   | 2012 |      12440 |        664 |
+| IA    | M   | 2012 |      15018 |        597 |
+| IA    | All | 2013 |      27733 |       1282 |
+| IA    | F   | 2013 |      12628 |        668 |
+| IA    | M   | 2013 |      15105 |        614 |
+{:.table-sql}
 
 
 
-- Find the year, and how many babies, for which your name was the most popular across the United States (i.e. with a `state` of `USA`). Write the query to show only the year and the number of babies.
-- For the U.S., select all rows with your name for all available years, export to CSV, make a line chart.
-- Find the five states for which your name was most popular in the year 2014. Then, use that list of states in a second query to get all of the records for your name/sex, export it, create a pivot chart.
+
+### The `baby_names` table
+
+The `baby_names` table contains one row for each baby name -- by sex, year of birth, and U.S. state -- in which at least 5 babies were given that name. 
+
+Examples of what the data contains, in English:
+
+- A record for the 27 boy babies with the name of "__Zeus__" born in __California__ in the year __2010__.
+- A record for the 13 boy babies with the name of "__Zeus__" born in __Texas__ in the year __2010__.
+- A record for the 68 boy babies with the name of "__Zeus__" born in __nationwide__ (i.e. `state` is equal to `USA`) in the year __2010__.
+
+Here's a SQL query to get the above records:
+
+~~~sql
+SELECT * 
+FROM baby_names 
+WHERE year = 2010 
+  AND name = "Zeus"
+~~~
+
+And here's what the table looks like:
+
+| state | sex | year | name | count |
+|-------|-----|------|------|-------|
+| CA    | M   | 2010 | Zeus |    27 |
+| TX    | M   | 2010 | Zeus |    13 |
+| USA   | M   | 2010 | Zeus |    68 |
+{:.table-sql}
 
 
-## Charting Kanye, Beyonce, and Taylor
+### Inconsistencies in the data
+
+First of all, why are there __68__ boys recorded with the name Zeus nationwide, but only two state records for California and Texas, totaling to 40 boys named Zeus? Because the SSA does not include records for names for a given year, region, and sex, in which the __total number of babies is fewer than 5__. 
+
+This is for privacy reasons: if you had a friend named "ZeusTheMagicDragon". And SSA records showed that only one such boy was born in the entire history of the U.S., you'd be able to know what state and year your friend was born in.
+
+OK, the above information isn't particularly relevant to doing this exercise, but it may explain a few holes in the data... 
+
+<a id="mark-problem-set"></a>
+
+
+# Example: Charting Kanye, Beyonce, and Taylor
+
+Besides reading the tutorials, here's an example of querying and charting the baby data that might help you.
+
+Let's hypothesize that the names "Kanye" and "Beyonce" were very rare baby names until the rise of Kanye West and Beyoncé Knowles, respectively. Let's also hypothesize that "Taylor", as a _female_ name, became more popular with the rise of Taylor Swift. 
+
+To keep the analysis simple, we'll look at the numbers __nationwide__. And let's just at years starting from `1980`.
+
+How would we show that as a chart?
+
+We would need to query the `baby_names` table for the `name`, `year`, and `count` values. 
+
+And we would want a combination of these conditions:
+
+- The `state` is `USA` _and_ 
+- The `year` is _greater than or equal to_ `1980` 
+- and then any of the following three conditions:
+  - The `name` is `Kanye` _and_ the `sex` is `'M'`
+  - The `name` is `Beyonce` _and_ the `sex` is `'F'`
+  - The `name` is `Taylor` _and_ the `sex` is `'F'`
+
+The query would look something like this (note that ordering the query's results is not necessary):
 
 ~~~sql
 SELECT name, year, count
 FROM baby_names
 WHERE 
-  state = 'USA' 
-  AND ((name = 'Kanye' AND sex = 'M')
-  OR (name = 'Beyonce' AND sex = 'F')
-  OR (name = 'Taylor' AND sex 'F'))
+  state = 'USA'
+  AND year >= 1980
+  AND (
+    (name = 'Kanye' AND sex = 'M') 
+    OR (name = 'Beyonce' AND sex = 'F')
+    OR (name = 'Taylor' AND sex = 'F')
+  )
 ORDER BY year, name
-~~~  
+~~~
+
+
+### Exporting the data in DB Browser for SQLite
+
+When the query successfully executes and you get the results, in the __lower right__, there's an icon to click (it's the only one). It should show an option to __Export to CSV__:
+
+![image](/files/images/assignments/screenshots/sql-kanye-sample-export-db-browser.png)
+
+### Creating a pivot table
+
+This you should already know how to do:
+
+<%= render_content_resource_element '/tutorials/spreadsheets/basic-agg-pivot-tables' %> 
+
+Here is what I produced for this particular exercise if you need a refresher:
+
+- This [is the imported CSV data](https://docs.google.com/spreadsheets/d/15ED_PLxu7wiL6lMm7oefne8kWjeePW1Qwl12ySaOpig/edit#gid=311693009).
+- [This is the pivot table](https://docs.google.com/spreadsheets/d/15ED_PLxu7wiL6lMm7oefne8kWjeePW1Qwl12ySaOpig/edit#gid=1976592298), with the names listed as __rows__ and the years listed as __columns__.
+- [This is the line chart](https://docs.google.com/spreadsheets/d/15ED_PLxu7wiL6lMm7oefne8kWjeePW1Qwl12ySaOpig/edit#gid=1484121400) (I've customized the axes to have a logarithmic scale as Taylor is a much more popular name, generally, than Kanye or Beyonce):
+
+<iframe width="100%" height="400" src="https://docs.google.com/spreadsheets/d/15ED_PLxu7wiL6lMm7oefne8kWjeePW1Qwl12ySaOpig/pubchart?oid=119222252&amp;format=interactive"></iframe>
 

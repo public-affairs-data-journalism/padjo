@@ -6,24 +6,14 @@ layout: home
 
 <% content_card "Today's lesson" do %>
 
+<%= render_content_resource_element "/weeks/2015-10-13" %>
 
-  <%= render_content_resource_element("/tutorials/mapping/quick-spreadsheet-to-map") %>
+<p>Make sure to read the articles by guest lecturer Phillip Reese before Oct. 15.</p>
 
+<p>The assignment due on <strong>Thursday, October 15:</strong></p>
 
-  <%= render_content_resource_element("/tutorials/sql-admin/getting-started-with-sqlite-browser") %>
+<%= render_content_resource_element "/assignments/baby-names-baby-sql" %>
 
-  <h3><a href="/assignments/">Assignments</a></h3>
-  <%= render_content_resource_element("/assignments/sfpd-sql-to-maps-intro/") %>
-
-  <p><a href="http://stash.padjo.org/dumps/sql/sfpd_assault_reports_2003_2013.sqlite.zip">SFPD Assaults 2003 - 2013</a></p>
-
-
-
-<p>-------</p>
-
-  <%= render_content_resource_element("/briefs/tracking-police-involved-homicides") %>
-
-  <%= render_content_resource_element("/briefs/tracking-mass-shootings/") %>
 
 <% end %>
 

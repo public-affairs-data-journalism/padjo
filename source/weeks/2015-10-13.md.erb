@@ -2,16 +2,47 @@
 title: SQL Syntax and Aggregations
 description: |
   A real grounding in basic SQL syntax. We won't cover much that we can't already do with a spreadsheet, but with SQL, we'll learn how to do it with much bigger datasets.
-
+assignments:
+  - /assignments/baby-names-baby-sql
 date: 2015-10-13
+references:
+  - title: SQL tutorials from Fall 2014
+    url: http://fall2014.padjo.org/tutorials#databases
+    description: |
+      These tutorials cover the same ground as this year's SQL tutorials, just with a different dataset.
 ---
 
 # SQL Basic Boot Camp
 
 This week we'll be covering a lot of SQL syntax. It won't be much fun. To get a preview of what I want you to be able to do (soon): the [SQL midterm from last year](http://fall2014.padjo.org/2014-10-23/).
 
+Relevant tutorials for this week:
 
-## Guest speaker for October 15: Phillip Reese
+- <%= described_inline_link_to_resource('/tutorials/sql-basics/select-and-from') %>
+- <%= described_inline_link_to_resource('/tutorials/sql-basics/limit-and-order/') %>
+- <%= described_inline_link_to_resource('/tutorials/sql-basics/where-clause-as-filter/') %>
+- <%= described_inline_link_to_resource('/tutorials/sql-basics/booleans-expressions-for-sql/') %>
+
+
+
+## Google Trends
+
+As an aside, it's fun to explore [Google Trends](https://www.google.com/trends/), which gives insight to the kinds of things people across the world are searching for on Google.
+
+The <a href="https://www.google.com/trends/explore#q=news%2C%20sex&geo=US&date=now%201-d&cmpt=q&tz=America%2FCancun
+">following chart purports to show the relative frequency of searches for "news" and "sex"</a>, respectively, in the United States, according to Eastern Time (the filtering by world region and time zone are important):
+
+<script type="text/javascript" src="//www.google.com/trends/embed.js?hl=en-US&q=news,+sex&geo=US&date=now+1-d&cmpt=q&tz=America/Cancun&tz=America/Cancun&content=1&cid=TIMESERIES_GRAPH_0&export=5&w=800&h=430"></script>
+
+I also mention a great talk by [Peter Norvig](http://norvig.com/), Google's research director, the "[Unreasonable Effectiveness of Data](https://www.youtube.com/watch?v=yvDCzhbjYWs)"
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/yvDCzhbjYWs" frameborder="0" allowfullscreen></iframe>
+
+Here it is in [paper form](http://static.googleusercontent.com/media/research.google.com/en//pubs/archive/35179.pdf). His chapter [on n-grams in the Beautiful Data book is also a great, accessible read](http://norvig.com/ngrams/), if you're curious to how Google can figure out what people actually _mean_ even when they make typos.
+
+
+
+# Guest speaker for October 15: Phillip Reese
 
 
 <a href="http://www.pulitzer.org/files/2014/investigative-reporting/sacbee/01sacbee2014.pdf"><img src="/files/images/assignments/readings/bee-james-coy-brown-nevada-lede.jpg" alt="sac bee cover story"></a>

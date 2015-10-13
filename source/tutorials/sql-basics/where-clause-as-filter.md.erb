@@ -3,6 +3,9 @@ title: Using the WHERE clause to filter data in SQL
 description: |
   How to retrieve rows based on whether they match specified values.
 ranking: 520
+next: /tutorials/sql-basics/booleans-expressions-for-sql
+previous: /tutorials/sql-basics/limit-and-order
+listed: true
 takeaways:
   - Where the `WHERE` clause fits in relation to `SELECT` and `FROM`
   - What the equals sign, `=`, means in SQL.
@@ -26,6 +29,15 @@ references:
 ---
 
 <%= render_toc %>
+
+<% content_card("Get the data") do  %>
+For this lesson, download the following file, which is a SQLite database built from the [U.S. Social Security Administration file of popular baby names](http://www.ssa.gov/oact/babynames/limits.html): 
+
+- [`ssa_baby_names--2010_2014--all.sqlite.zip`](http://stash.padjo.org/data/ssa_baby_names--2010_2014--all.sqlite.zip)
+
+Unzip it, and open the `sqlite` file using the SQLite client of your choice (e.g. [DB Browser for SQLite](http://sqlitebrowser.org/))
+<% end %>
+
 
 # Set conditions with `WHERE`
 

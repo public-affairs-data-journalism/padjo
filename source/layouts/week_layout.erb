@@ -1,6 +1,6 @@
 <% wrap_layout :page do %>
   <%- week = WeekResource(current_page) %>
-
+  <h4>The week of <%=friendly_date week.date%></h4>
 
   <% if week.lessons? %>
   <section id="lessons" class="lessons">

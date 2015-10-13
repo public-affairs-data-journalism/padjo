@@ -3,7 +3,7 @@ title: LIMIT and ORDER BY in SQL Queries
 ranking: 511
 description: |
   How to specify the quantity and arrangement of data rows returned by the SQL database.
-listed: true
+listed: false
 previous: /tutorials/sql-basics/select-and-from
 next: /tutorials/sql-basics/where-clause-as-filter
 takeaways:
@@ -18,6 +18,17 @@ references:
     title: The ORDER BY clause
     source: SQLite documentation
 ---
+
+
+<%= render_toc %>
+
+<% content_card("Get the data") do  %>
+For this lesson, download the following file, which is a SQLite database built from the [U.S. Social Security Administration file of popular baby names](http://www.ssa.gov/oact/babynames/limits.html): 
+
+- [`ssa_baby_names--2010_2014--all.sqlite.zip`](http://stash.padjo.org/data/ssa_baby_names--2010_2014--all.sqlite.zip)
+
+Unzip it, and open the `sqlite` file using the SQLite client of your choice (e.g. [DB Browser for SQLite](http://sqlitebrowser.org/))
+<% end %>
 
 
 
