@@ -1,0 +1,23 @@
+---
+title: Using the WHERE clause to filter data in SQL
+description: |
+  How to retrieve rows based on whether they match specified values.
+takeaways:
+  - Where the `WHERE` clause fits in relation to `SELECT` and `FROM`
+  - What the equals sign, `=`, means in SQL.
+  - The use of `AND` and `OR` to specify multiple conditions.
+  - Why `SELECT * from baby_names WHERE 1 = 1` will return all rows from the `baby_names` table.
+  - Why `SELECT * from baby_names WHERE 1 = 2` will return no rows from the `baby_names` table.
+  - |
+    Recognizing the difference between: 
+    - `'name' = 'name'`
+    - `"name" = 'name'`
+    - `'name' = 'Name'`
+    - `"name" = 'Name'`
+    - `"name" = "Name"`
+
+references: 
+  - title: WHERE clause filtering
+    source: SQLite documentation
+    url: https://www.sqlite.org/lang_select.html#whereclause    
+---

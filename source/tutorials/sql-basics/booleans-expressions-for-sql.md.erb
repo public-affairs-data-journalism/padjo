@@ -1,0 +1,16 @@
+---
+title: Using Boolean Expressions in Filtering SQL Queries
+description: |
+  How to filter SQL data using comparison operators, such as "greater than" and "not equal to"
+listed: true
+takeaways:
+  - |
+    The meaning of each of these operators:
+    - `!=`
+    - `>=` and `>`
+    - `<=` and `<`
+  - Using parentheses to prioritize the order of how the expressions are evaluated.
+  - Why `SELECT * FROM baby_names WHERE name = 'Daniel' OR 1 = 1` will return _every_ row in `baby_names`.
+  - Why `SELECT * FROM baby_names WHERE name = 'Daniel' AND name = 'Dan'` will return _no_ rows in `baby_names`
+---
+
