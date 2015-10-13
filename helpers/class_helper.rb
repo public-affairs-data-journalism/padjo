@@ -40,3 +40,8 @@ end
 def schedule_last_week_date
   schedule.last.date
 end
+
+# catslug is part of tutorials/catslug/*.*
+def tutorial_category(catslug)
+  tutorials.select{|t| t.path =~ /tutorials\/#{catslug}/}
+end

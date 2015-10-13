@@ -9,7 +9,8 @@ takeaways:
   - What the star symbol -- i.e. `*` -- means in context of `SELECT` and `FROM`
   - Why `SELECT 'name' FROM baby_names` will *not* get the same result as `SELECT "name" from baby_names`
 
-
+listed: true
+ranking: 505
 
 references:
   - title: "SELECT As Understood by SQLite"
@@ -23,17 +24,14 @@ references:
 
 <%= render_toc %>
 
-
 <% content_card("Get the data") do  %>
+For this lesson, download the following file: 
 
-Download one of the following datasets for this data -- I recommend downloading the smallest file: 
+- [`ssa_baby_names--2010_2014--all.sqlite.zip`](http://stash.padjo.org/data/ssa_baby_names--2010_2014--all.sqlite.zip)
 
-__[ssa_baby_names--2010_2014--all.sqlite.zip](http://stash.padjo.org/data/ssa_baby_names--2010_2014--all.sqlite.zip)__
-
-<% data_listicle('ssa_baby_names').each do |d| %>
- <%= render_content_resource_element(d) %>
- <% end %>
+Unzip it, and open the `sqlite` file using the SQLite client of your choice (e.g. [DB Browser for SQLite](http://sqlitebrowser.org/))
 <% end %>
+
 
 
 
@@ -50,7 +48,9 @@ There's not many kinds of __statements__ in SQL, and 95% of our queries will inv
 
 Let's get right into executing a query.
 
-Open a database file -- I'm assuming you've downloaded and unzipped __[ssa_baby_names--2010_2014--all.sqlite.zip](http://stash.padjo.org/data/ssa_baby_names--2010_2014--all.sqlite.zip)__
+Open a database file -- I'm assuming you've downloaded and unzipped the following file:
+
+- [`ssa_baby_names--2010_2014--all.sqlite.zip`](http://stash.padjo.org/data/ssa_baby_names--2010_2014--all.sqlite.zip)
 
 If you are using the client, __DB Browser for SQLite__, select the __Execute SQL tab__  and type the following into the first input box:
 
@@ -126,7 +126,7 @@ Result:
 | 'hello, world' |
 |----------------|
 | hello, world   |
-{.table-sql}
+{:.table-sql}
 
 ### Text strings without the quotes?
 

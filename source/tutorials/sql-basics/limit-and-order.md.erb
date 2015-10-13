@@ -1,9 +1,197 @@
 ---
 title: LIMIT and ORDER BY in SQL Queries
+ranking: 511
 description: |
   How to specify the quantity and arrangement of data rows returned by the SQL database.
+listed: true
+previous: /tutorials/sql-basics/select-and-from
 takeaways:
   - How to sort results by a column in ascending and descending order.
-  - How to sort by multiple columns
-  - The difference between sorting values alphabetically and numerically  
+  - How to sort by multiple columns.
+  - How to show only the top 5 rows of an ordered result set.
+references:
+  - url: https://www.sqlite.org/lang_select.html#limitoffset
+    title: The LIMIT clause
+    source: SQLite documentation
+  - url: https://www.sqlite.org/lang_select.html#orderby
+    title: The ORDER BY clause
+    source: SQLite documentation
+
 ---
+
+
+
+# The `LIMIT` clause
+
+With `SELECT`, we were able to specify exactly how many _columns_ we wanted in the returned dataset. With `LIMIT`, we can restrict the number of _rows_ returned:
+
+~~~sql
+SELECT * 
+FROM baby_names
+LIMIT 1;
+~~~
+
+Result:
+
+| state | sex | year |  name  | count |
+|-------|-----|------|--------|-------|
+| AK    | F   | 2010 | Sophia |    60 |
+{:.table-sql}
+
+Pretty easy, there's not much more to `LIMIT` than the keyword itself, followed by the number of rows we want to see.
+
+Why use `LIMIT` when, well, we could just have _all_ the data? Remember that _more_ data is not always better. But the main concern is that in the real-world, retrieving data rows takes computational time. `LIMIT` is a good way to reduce the execution time. Even before you get to exporting data, returning 1,000,000 rows will just be slower than returning 10 rows, all other things being equal. 
+
+
+## Mind the ordering of the syntax
+
+At this point, we've only covered three different clauses. So the key thing to notice is the specific order and arrangement of the SQL statement: just as `FROM` comes after the `SELECT` clause, `LIMIT` comes after both. 
+
+Thus, the following queries will not work:
+
+~~~sql
+SELECT * 
+LIMIT 1
+FROM baby_names;
+~~~
+
+~~~sql
+SELECT * 
+LIMIT 1
+FROM baby_names;
+~~~
+
+
+# The `ORDER BY` clause
+
+The `ORDER BY` clause, as you can imagine, let's us specify the sorting _order_ of the returned data rows. 
+
+The basic syntax is: 
+
+    ORDER BY "some_column_name"
+
+Here's a standalone example:
+
+~~~sql
+SELECT * 
+FROM baby_names
+ORDER BY count;
+~~~
+
+The truncated results:
+
+| state | sex | year |  name  | count |
+|-------|-----|------|--------|-------|
+| AK    | F   | 2010 | Alayna |     5 |
+| AK    | F   | 2010 | Alicia |     5 |
+| AK    | F   | 2010 | Aliyah |     5 |
+| AK    | F   | 2010 | Amber  |     5 |
+| AK    | F   | 2010 | Andrea |     5 |
+{:.table-sql}
+
+
+## Sorting in descending order
+
+By default, `ORDER BY` sorts in __ascending__ order. When it comes to numbers, that means _smallest_ first.
+
+If we want to find the rows with the _largest_ `count` values, we use the `DESC` keyword. The syntax looks like this:
+
+    ORDER BY "some_column_name" DESC
+
+If we want to explicitly specify __ascending__ order, we use the `ASC` keyword:
+
+    ORDER BY "some_column_name" ASC
+
+
+To sort the baby names table in _descending_ order of `count`:
+
+~~~sql
+SELECT * 
+FROM baby_names
+ORDER BY count DESC;
+~~~
+
+The truncated results:
+
+| state | sex | year |   name   | count |
+|-------|-----|------|----------|-------|
+| USA   | F   | 2010 | Isabella | 22883 |
+| USA   | F   | 2012 | Sophia   | 22267 |
+| USA   | M   | 2010 | Jacob    | 22082 |
+| USA   | F   | 2011 | Sophia   | 21816 |
+| USA   | F   | 2013 | Sophia   | 21147 |
+{:.table-sql}
+
+
+
+## Sorting by multiple columns
+
+In the case when the column to sort by has duplicate values, i.e. a _tie_, we can specify more columns to use in the sorting criteria. Just add more column names and ordering keywords -- i.e. `ASC` and `DESC` -- separated by __commas__. The `ORDER BY` keywords are only used once.
+
+
+The following (somewhat nonsensical) query will return the rows in reverse-alphabetical order of `state`, then in ascending order of `count`, i.e. the least common names:
+
+~~~sql
+SELECT * 
+FROM baby_names
+ORDER BY state DESC, count ASC;
+~~~
+
+The truncated results:
+
+| state | sex | year |   name  | count |
+|-------|-----|------|---------|-------|
+| WY    | F   | 2010 | Ali     |     5 |
+| WY    | F   | 2010 | Alice   |     5 |
+| WY    | F   | 2010 | Allie   |     5 |
+| WY    | F   | 2010 | Ariana  |     5 |
+| WY    | F   | 2010 | Arianna |     5 |
+| WY    | F   | 2010 | Aubree  |     5 |
+{:.table-sql}
+
+To modify the order so that the most recent `year` and the _most common_ names are on top:
+
+~~~sql
+SELECT * 
+FROM baby_names
+ORDER BY state DESC, year DESC, count DESC;
+~~~
+
+
+| state | sex | year |   name   | count |
+|-------|-----|------|----------|-------|
+| WY    | F   | 2014 | Olivia   |    40 |
+| WY    | M   | 2014 | Jackson  |    34 |
+| WY    | F   | 2014 | Brooklyn |    32 |
+| WY    | F   | 2014 | Emma     |    32 |
+| WY    | M   | 2014 | Mason    |    30 |
+{:.table-sql}
+
+
+
+
+# How `ORDER BY` and `LIMIT` go together
+
+
+Being able to order the result rows is particularly useful when using `LIMIT`, as it allows us to quickly return just the "top 3" or "bottom 10" of the results.
+
+The `ORDER BY` clause goes _after_ the `FROM` clause but _before_ the `LIMIT`.
+
+This example query returns `name` in reverse-alphabetical order and shows only the top 3 results:
+
+~~~sql
+SELECT name
+FROM baby_names
+ORDER BY name DESC
+LIMIT 3;
+~~~
+
+
+|   name  |
+|---------|
+| Zzyzx   |
+| Zyyon   |
+| Zyyanna |
+{:.table-sql}
+
+

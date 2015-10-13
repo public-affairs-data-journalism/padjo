@@ -1,0 +1,13 @@
+---
+title: SQL Basics
+category_slug: sql-basics
+layout: page
+---
+
+<h2>Tutorials:</h2>
+
+<% tutorials =  tutorial_category(current_page.data.category_slug)%>
+<% tutorials.each do |t| %>
+<div class="tutorial"><%=my_link_to_resource t %></div>
+<% end %>
+

@@ -7,8 +7,23 @@ h2#table-of-contents{
 
 }
 #markdown-toc{
-  margin-left: 2.5em;
   margin-bottom: 2.5em;
+
+  >li{
+    font-size: 1.3rem;
+    font-weight: bold;
+    ul{
+      >li{
+        font-size: 1.2rem;
+        font-weight: 400;
+        li{
+          font-size: 1.05rem;
+        }
+      }
+    }
+
+  }
+
 }
 
 
@@ -30,7 +45,7 @@ h2#table-of-contents{
   }
 
   ul, ol{
-    padding-left: 0.8em;
+    padding-left: 1.0em;
   }
 }
 

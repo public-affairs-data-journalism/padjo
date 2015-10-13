@@ -5,9 +5,6 @@ class TutorialResource < MiddlemanContentResource
     @takeaways = obj.data.takeaways || []
   end
 
-  def listed?
-    assigned?
-  end
 end
 
 def TutorialResource(obj)
