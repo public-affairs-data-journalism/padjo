@@ -11,6 +11,10 @@ class ContentResource
   def date_slug
     @date.strftime("%Y-%m-%d") if @date
   end
+
+  def description?
+    !(@description.nil? || @description.empty?)
+  end
 end
 
 

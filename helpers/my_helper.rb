@@ -22,6 +22,16 @@ def my_link_to_resource(obj, opts = {})
   return link_to(title, url, opts)
 end
 
+def described_link_to_resource(obj, opts = {})
+   resource = to_content_resource(obj)
+   linktxt = my_link_to_resource(resource, opts)
+   if resource.description?
+      content_tag :div, "#{linktxt} &ndash; #{resource.description}", :class => 'content-resource'
+   else
+      content_tag :div, linktxt, :class => 'content-resource'
+   end
+end
+
 
 def render_content_resource_box(obj, opts = {})
   box = render_content_resource_element(obj, opts)

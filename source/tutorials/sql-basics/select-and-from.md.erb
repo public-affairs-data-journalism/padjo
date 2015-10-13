@@ -8,6 +8,7 @@ takeaways:
   - That `SELECT name, state FROM baby_names` is the same as `select name,state    from           baby_names`
   - What the star symbol -- i.e. `*` -- means in context of `SELECT` and `FROM`
   - Why `SELECT 'name' FROM baby_names` will *not* get the same result as `SELECT "name" from baby_names`
+next: /tutorials/sql-basics/limit-and-order
 
 listed: true
 ranking: 505
@@ -166,3 +167,260 @@ SELECT 'SELECT'
 Are you literally tired of seeing the word _literal_ explained over and over?? I belabor the point here because _not_ knowing when to use single-quotes --  or if you're new to programming in general, the importance concept of computer syntax -- will bite you very hard, very soon. But don't worry, we'll reiterate the concept by the end of the lesson.
 
 
+# Using the `FROM` clause to select data from tables
+
+So selecting values such as `'hello'` and `100` is not very exciting, nor does it make much sense. What we really want to do is select values from our _data tables_. To do that, we use the `FROM` keyword to specify from _which_ table we want the data.
+
+Remember that in our data file -- [`ssa_baby_names--2010_2014--all.sqlite.zip`](http://stash.padjo.org/data/ssa_baby_names--2010_2014--all.sqlite.zip) -- there are __2__ tables: 
+
+- `baby_names` -- which has 600,000+ rows for every combination of baby name, sex, year, and state:
+
+![image](files/images/tutorials/sql-basics/browse-baby_names.png)
+
+
+- `totals`, which has a mere 780 rows representing every combination of year, state, and sex:
+
+![image](/files/images/tutorials/sql-basics/browse-baby_totals.png)
+
+
+## Select one column from one table
+
+Let's get right into the syntax. To select the `state` column from all the rows in the `totals` table:
+
+~~~sql
+SELECT state
+FROM totals;
+~~~
+
+The result as a screenshot:
+
+![image](/files/images/tutorials/sql-basics/select-state--baby_totals.png)
+
+
+Take particular note of the log window, which gives some statistics about the result:
+
+~~~
+780 Rows returned from: SELECT state
+FROM totals; (took 5ms)
+~~~
+
+In other words, every row from the `totals` table was returned, but only the `state` column.
+
+
+Let's repeat the previous `SELECT` statement but now choose the `baby_names` table:
+
+~~~sql
+SELECT state
+FROM baby_names;
+~~~
+
+
+![image](/files/images/tutorials/sql-basics/select-state--baby_names.png)
+
+
+The _preview_ of the returned data rows looks the same as before, but the results log shows that many, _many_ more data rows were returned:
+
+~~~
+633608 Rows returned from: SELECT state
+FROM baby_names; (took 45ms)
+~~~
+
+
+## Choosing multiple columns from a table
+
+Selecting one column at a time is not very exciting. To select multiple columns, simply list each column's name as a __comma-delimited__ list. Here's 3 columns from `baby_names`:
+
+~~~sql
+SELECT name, state, year
+FROM baby_names;
+~~~
+
+![image](/files/images/tutorials/sql-basics/select-state--baby_names-3.png)
+
+The ordering of the __columns__ is dictated by the order of the column names in the `SELECT` statement:
+
+~~~sql
+SELECT year, sex, state, name
+FROM baby_names;
+~~~
+
+![image](/files/images/tutorials/sql-basics/select-state--baby_names-4.png)
+
+
+
+## Error messages
+
+### Trying to select non-existent columns
+
+Let's go back to the `totals` table, but use the same query as above otherwise:
+
+~~~sql
+SELECT year, sex, state, name
+FROM totals;
+~~~
+
+The results log should display an error message:
+
+![image](/files/images/tutorials/sql-basics/select-state--baby_totals-error.png)
+
+The relevant part of that error message is:
+
+      no such column: name
+
+
+If you browse the `totals` table, you'll see that there is no `name` column, hence, the error.
+
+### Trying to select columns without a table
+
+Here's a query that will return a similar error of column `name` not found:
+
+~~~sql
+SELECT name, sex, state;
+~~~
+
+I've completely omitted the `FROM` clause, which means I haven't specified a table. So the error message is technically true -- a `name` column can't be found. But it's maddeningly vague.
+
+You might be looking at this thinking that only an idiot could ever forget the `FROM` clause -- there's literally only two keywords to remember, right? But when you include the half-dozen clauses (and countless other keywords) we're about to learn, it might surprise you how often you forget to include `FROM` because you assume the computer can read your mind as to which table you want to access. So, fair warning.
+
+
+### Trying to select from a non-existent table
+
+Again, you might think, _what kind of idiot would SELECT FROM a table that doesn't exist_? The most common situation is when the table's name is misspelled:
+
+
+~~~sql
+SELECT name, sex
+FROM babynames
+~~~
+
+So now you're thinking: _But there's only 2 tables, can't the computer fix it like the way my phone has autocorrect?_.
+
+Sorry, but there's no autocorrect when it comes to executing SQL statements.
+
+
+
+## Using * to select all columns
+
+Sometimes (but not always) it's nice just to select all the columns in a table without having to type all their names out. Use the __star__ operator, i.e. `*`, after the `SELECT` keyword:
+
+~~~sql
+SELECT *
+FROM totals;
+~~~
+
+![image](/files/images/tutorials/sql-basics/select-state--baby_totals-all-cols.png)
+
+
+## Other selection minutiae
+
+OK, we've basically covered the core concept: the syntax for selecting data rows from a single table:
+
+~~~sql
+SELECT column_a, column_b
+FROM my_table;
+~~~
+
+But how do you select columns from multiple tables? The answer to that is surprisingly complicated -- we won't get to it this week. 
+
+In the meantime, here are a few things and concepts about SQL syntax that aren't __fundamental__ -- i.e. you probably won't memorize them -- but that are worth mentioning because they reinforce the strict and peculiar logic of the SQL language that we've seen so far. Also, they _will_ become relevant as we cover more advanced data-wrangling techniques in SQL.
+
+
+### Selecting columns repeatedly
+
+If you can select a column once, you can select it more than once:
+
+~~~sql
+SELECT name, year, name, year, name, name
+FROM baby_names
+~~~
+
+![image](/files/images/tutorials/sql-basics/select-state--baby_names-repeat.png)
+
+Note how the number of rows returned is still the number of rows total in the `baby_names` table, i.e. the number of columns has no effect on the number of rows.
+
+Why would we need to refer to one column multiple times in the same `SELECT` statement? What if I told you SQL had functions that can transform text in the same way that spreadsheets do?
+
+~~~sql
+SELECT name, UPPER(name), LOWER(name)
+FROM baby_names
+~~~
+
+![image](/files/images/tutorials/sql-basics/select-state--baby_names-upper-lower.png)
+
+We'll get to those functions soon enough...
+
+### Selecting values and columns
+
+Remember this query?
+
+~~~sql
+SELECT 100;
+~~~
+
+What happens if we include a `FROM` clause? And throw in a couple of column names for good measure?
+
+~~~sql
+SELECT name, 100, state  FROM baby_names;
+~~~
+
+The result is the number `100` for _every row_ retrieved from the `baby_names` table:
+
+![image](files/images/tutorials/sql-basics/select-state--baby_names-100-cols.png)
+
+Why would that ever be useful? To be honest, there's not a ton of obvious use cases for including a constant value in the results. But we may run into its use in real-world scenarios down the road...
+
+
+# Single-quotes and double-quotes
+
+Earlier in this tutorial, we covered the use of single-quotes in denoting __string literals__, or as I refer to them, text strings with _literal_ values. To review:
+
+
+~~~sql
+SELECT name, 'name' 
+FROM baby_names;
+~~~
+
+![image](/files/images/tutorials/sql-basics/select-namename-single-quotes.png)
+
+
+We already know what happens when we don't enclose `name` in quotes: it's treated as an __identifier__ for the column, `name`:
+
+~~~sql
+SELECT name, name 
+FROM baby_names;
+~~~
+
+But what if we use __double-quotes__ around `name`? If you've ever used another programming language in which you can enclose text strings in either single- or double-quotes, you should be curious about it:
+
+
+~~~sql
+SELECT name, "name" 
+FROM baby_names;
+~~~
+
+The result is that SQLite interprets `"name"` as a __column identifier__, i.e., the column known by the name of `name`:
+
+
+![image](/files/images/tutorials/sql-basics/select-namename-double-quotes.png)
+
+To reiterate the difference, try this query (oh, by the way, the _case_ of the letters do not matter for an _identifier_:
+
+~~~sql
+SELECT name, NAME, "NaMe", 'name'
+FROM baby_names;
+~~~
+
+![image](/files/images/tutorials/sql-basics/select-namename-name-NAME-quoted-name.png)
+
+
+# Conclusion
+
+If this is your first time with a programming language, all of these details should seem overwhelming. That's fine; as I said before, the most important takeaway is how to `SELECT` data `FROM` a table:
+
+
+~~~sql
+SELECT column_a, column_b
+FROM my_table;
+~~~
+
+All the other details in this lesson are described so that you begin to appreciate just how _literal_ and simple-minded the interpreter will be when reading your SQL code. With SQL, we'll become significantly more powerful in our data-crunching ability, but it requires becoming significantly more careful and specific in how we talk to our computers.

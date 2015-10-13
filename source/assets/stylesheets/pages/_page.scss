@@ -10,11 +10,11 @@ h2#table-of-contents{
   margin-bottom: 2.5em;
 
   >li{
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: bold;
     ul{
       >li{
-        font-size: 1.2rem;
+        font-size: 1.15rem;
         font-weight: 400;
         li{
           font-size: 1.05rem;
@@ -38,6 +38,12 @@ h2#table-of-contents{
     margin-top: 2.0em;
     margin-bottom: 0.8em;
   }
+
+  h2, h3{
+    margin-top: 2.0em;
+  }
+
+
   /* standard markdown images */
   /*hack until media wrap is better implemented */
   p > img:first-child, iframe, video{

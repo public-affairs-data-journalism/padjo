@@ -1,9 +1,20 @@
 class TutorialResource < MiddlemanContentResource
-  attr_reader :takeaways
+  attr_reader :takeaways, :next_tutorials, :previous_tutorials
   def initialize(obj)
     super(obj)
     @takeaways = obj.data.takeaways || []
+    @next_tutorials = Array(obj.data.next)
+    @previous_tutorials = Array(obj.data.previous)
   end
+
+  def next_tutorials?
+    !@next_tutorials.empty?
+  end
+
+  def previous_tutorials?
+    !@previous_tutorials.empty?
+  end
+
 
 end
 

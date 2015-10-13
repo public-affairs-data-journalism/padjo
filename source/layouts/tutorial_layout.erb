@@ -6,6 +6,26 @@
 
 <% wrap_layout :page do %>
 
+<div>
+  <% if tutorial.next_tutorials? %>
+    Next:
+     <% tutorial.next_tutorials.each do |t| %>
+       <%= described_link_to_resource(t) %>
+    <% end %>
+  <% end %>
+</div>
+
+
+<div>
+  <% if tutorial.previous_tutorials? %>
+      Previous:
+     <% tutorial.previous_tutorials.each do |t| %>
+      <%= described_link_to_resource(t) %>
+    <% end %>
+  <% end %>
+</div>
+
+
 <% unless tutorial.takeaways.empty? %>
 <section class="sec takeaways" id="takeaways">
   <h2>The Takeaways</h2>

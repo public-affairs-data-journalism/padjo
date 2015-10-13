@@ -22,3 +22,381 @@ references:
     source: SQLite documentation
     url: https://www.sqlite.org/lang_select.html#whereclause    
 ---
+
+<%= render_toc %>
+
+# Set conditions with `WHERE`
+
+The `WHERE` clause allows us to set the _conditions_ by which rows are fetched from data tables. A __condition__ is some kind of expression that evaluates to either __true__ or __false__.
+
+For example, the following query will return all rows in which the `name` column is __equal__ to the text string of `'Sarah'`:
+
+~~~sql
+SELECT * 
+FROM baby_names
+WHERE name = 'Sarah';
+~~~
+
+For each row in the database, the value in the column `name` is checked to see if it is equal to `'Sarah'`. If __true__, then the row is included in the result. Otherwise, it is filtered out.
+
+The truncated result:
+
+| state | sex | year |  name | count |
+|-------|-----|------|-------|-------|
+| AK    | F   | 2010 | Sarah |    16 |
+| AL    | F   | 2010 | Sarah |   127 |
+| AR    | F   | 2010 | Sarah |    40 |
+| AZ    | F   | 2010 | Sarah |    99 |
+| CA    | F   | 2010 | Sarah |   696 |
+{:.table-sql}
+
+And that's the gist of it. As we'll see in the next sections, the `WHERE` clause can be stacked with as many conditional expressions as we want. But no matter how convoluted the `WHERE` clause can get, the SQLite database will test all of its conditions for each row, and only the rows that pass all the conditions will be returned.
+
+# Requiring multiple conditions with `AND`
+
+The `AND` keyword is used to specify multiple _requirements_. For example, if we want only rows that have a `name` of `'Sarah'` _and_ a `year` of `2012`:
+
+~~~sql
+SELECT * 
+FROM baby_names
+WHERE name = 'Sarah'
+  AND year = 2012;
+~~~
+
+The truncated results:
+
+| state | sex | year |  name | count |
+|-------|-----|------|-------|-------|
+| AK    | F   | 2012 | Sarah |     6 |
+| AL    | F   | 2012 | Sarah |   101 |
+| AR    | F   | 2012 | Sarah |    32 |
+| AZ    | F   | 2012 | Sarah |    77 |
+| CA    | F   | 2012 | Sarah |   573 |
+{:.table-sql}
+
+
+We can add as many conditions as we'd like:
+
+~~~sql
+SELECT * 
+FROM baby_names
+WHERE name = 'Sarah'
+  AND year = 2012
+  AND state = 'USA'
+~~~
+
+| state | sex | year |  name | count |
+|-------|-----|------|-------|-------|
+| USA   | F   | 2012 | Sarah |  5167 |
+| USA   | M   | 2012 | Sarah |     6 |
+{:.table-sql}
+
+
+
+Though, of course, the more required conditions we add, the fewer the results that will meet all of the conditions:
+
+
+~~~sql
+SELECT * 
+FROM baby_names
+WHERE name = 'Sarah'
+  AND year = 2012
+  AND state = 'USA'
+  AND sex = 'M'
+~~~
+
+
+| state | sex | year |  name | count |
+|-------|-----|------|-------|-------|
+| USA   | M   | 2012 | Sarah |     6 |
+{:.table-sql}
+
+
+
+## Mutually exclusive and logically impossible conditions
+
+With the `AND` keyword, it's very easy to unintentionally set conditions that are impossible for _any_ row to meet:
+
+~~~sql
+SELECT * 
+FROM baby_names
+WHERE name = 'Sarah'
+  AND name = 'Daniel';
+~~~
+
+
+If you execute the above query, it will return 0 rows. This is because each row can only have one `name` value; thus, while it is possible to find rows in which `sex` is `M` and `name` is `Sarah`, it is _logically impossible_ to have rows in which the `name` is both `'Sarah'` _and_ `'Daniel'`.
+
+Likewise, the following query would return 0 rows:
+
+~~~sql
+SELECT * 
+FROM baby_names
+WHERE name = 'Dan'
+  AND name = 'Daniel';
+~~~
+
+Even though we often think of people named `'Daniel'` as also being `'Dan'`, the database considers them to be two completely separate values (though in a later chapter, we'll see how to match on _partial_ values).
+
+What's very important to realize -- so important I'll reiterate the point at the end of this lesson -- is that a logically impossible query __will not raise an error message__. The SQL syntax is perfectly fine in both of the above examples, so the interpreter won't complain. 
+
+So when the result of a query is 0 -- and you are not expecting it to be 0 -- take a careful look at the logic of your conditional expressions.
+
+
+
+# Specifying optional conditions with `OR`
+
+While it's impossible for a row to have a `name` be `'Sarah'` _and_ `'Daniel'`, it is perfectly reasonable for a row to be either `'Sarah'` _or_ `'Daniel'`. In the example below, I'll include an `ORDER BY` and `LIMIT` clause, both of which follow the `WHERE` clause, to show the first 5 results by largest `COUNT`:
+
+~~~sql
+SELECT * 
+FROM baby_names
+WHERE name = 'Sarah'
+  OR name = 'Alyssa'
+ORDER BY count DESC
+LIMIT 5;
+~~~
+
+
+Result:
+
+| state | sex | year |  name  | count |
+|-------|-----|------|--------|-------|
+| USA   | F   | 2010 | Alyssa |  6978 |
+| USA   | F   | 2010 | Sarah  |  6308 |
+| USA   | F   | 2011 | Alyssa |  6001 |
+| USA   | F   | 2011 | Sarah  |  5541 |
+| USA   | F   | 2012 | Sarah  |  5167 |
+{:.table-sql}
+
+Unlike `AND`, the more `OR` conditions you include, the more the result set could _potentially_ expand.
+
+The following query would return all rows with a `name` of `'Sarah'` or all rows with a `sex` of `'F'` -- i.e. all girl names and the relatively few rows that correspond to boys named `'Sarah'`:
+
+~~~sql
+SELECT * 
+FROM baby_names
+WHERE name = 'Sarah'
+  OR sex = 'F'
+~~~
+
+
+## Use parentheses to explicitly state the order
+
+It's possible to create very complex combinations of conditions even with just `AND` and `OR`:
+
+~~~sql
+SELECT * 
+FROM baby_names
+WHERE year = 2014 OR state = 'NY' AND sex = 'F' OR name = 'Madison' 
+  AND year = 2011 
+~~~
+
+So the SQLite syntax does define the order of operations here, i.e. whether the `OR` conditions are evaluated after the `AND` conditions. This is similar to how in standard arithmetic, there is a rule that states that the multiplication operation happens before the addition operation:
+
+      10 + 9 * 2
+
+But rather than memorize how the rules of order in SQLite, _just use parentheses_, for readability, if nothing else. For example, the above arithmetic expression is equivalent to this:
+
+      10 + (9 * 2)
+
+
+Here's one way to organize the previous SQL statement (note how I use whitespace to make it even more readable):
+
+~~~sql
+SELECT * 
+FROM baby_names
+WHERE (year = 2014 OR state = 'NY' AND sex = 'F') 
+  OR (name = 'Madison'  AND year = 2011) 
+~~~
+
+i.e. Select all rows for girls born in New York in the year 2014; __or__, all rows for babies named `'Madison'` in the year 2011.
+
+Here's another way to rearrange that query with completely different results:
+
+~~~sql
+SELECT * 
+FROM baby_names
+WHERE (year = 2014 OR state = 'NY') 
+  AND (sex = 'F' OR name = 'Madison'  AND year = 2011);
+~~~
+
+I don't even know how to parse the above as something that makes sense in English. But it "works", in that it returns some results, even though I'm not going to waste energy figuring out the implications. 
+
+In general, if you can't translate your query into plain English, you may want to rethink what it is you think you are doing.
+
+
+# Be careful with matching text strings
+
+Filtering on numeric values is pretty straightforward:
+
+~~~sql
+SELECT * 
+FROM baby_names
+WHERE year = 2014
+~~~
+
+But text strings, with how they can be interpreted _literally_ or _non-literally_, can be the source of errors when trying to perform matches with them.
+
+## Case sensitivity
+
+A common error is trying to match a value but incorrectly specifying the _case_ (i.e. _upper_ or _lower_) of the alphabet letters. The following queries are valid SQL but would return 0 results in the given data set, in which all the baby names have the first-letter capitalized and the `state` initials upper-cased:
+
+~~~sql
+SELECT * FROM baby_names WHERE name = 'sarah'
+~~~
+
+~~~sql
+SELECT * from baby_names WHERE name = 'SARAH'
+~~~
+
+~~~sql
+SELECT * from baby_names WHERE state = 'Ny'
+~~~
+
+
+## Differentiate between single- and double- quotes
+
+In [SQLite (and in standard SQL)](https://sqlite.org/lang_keywords.html), a text string enclosed in __single quotes__ is interpreted as a __string literal__. Ergo, the following query would return all records for babies who were _literally_ named `'Name'` (at least according to Social Security Administration records):
+
+~~~sql
+SELECT * 
+FROM baby_names
+WHERE name = 'Name'
+~~~
+
+| state | sex | year | name | count |
+|-------|-----|------|------|-------|
+| MD    | F   | 2010 | Name |    11 |
+| USA   | F   | 2010 | Name |    11 |
+| MD    | M   | 2010 | Name |    13 |
+| USA   | M   | 2010 | Name |    13 |
+| MD    | M   | 2011 | Name |    10 |
+| USA   | M   | 2011 | Name |    10 |
+{:.table-sql}
+
+But what happens we enclose `'Name'` in __double-quotes__?
+
+
+~~~sql
+SELECT * 
+FROM baby_names
+WHERE name = "Name"
+~~~
+
+The result set will include _every record_ in `baby_names`. Why? Because by enclosing `Name` in _double-quotes_, the interpreter sees `"Name"` as _the column "name"_ (remember that column identifiers are case-_insensitive_). So, the conditional expression is basically this:
+
+      Match all rows in which the value in the `name` column is
+      equal to the value in the `Name` column, 
+      i.e. equal to itself
+
+
+Granted, this is a pretty weird situation -- who names their child "Name" in the first place? But it's just an example of the ambiguity that can crop up in real-world data, and why it's important to memorize some of the specifics of computer language syntax.
+
+
+# An empty result set is not an error
+
+As I said before, a query can return an empty set of results but still be grammatically correct, as far as the SQL interpreter is concerned. The obvious example is when the query contains conditions that can _never_ be true. Here's an easy one:
+
+~~~sql
+SELECT * 
+FROM baby_names
+WHERE 1 = 2;
+~~~
+
+This is not a condition you would generally ever use in a real-world SQL query, but it is _valid_: return all rows for which the value of `1` is equal to the value of `2`. Well, that is _never_ true, so that query will always return no rows no matter what database you call it on.
+
+Here's another logical impossibility:
+
+~~~sql
+SELECT * 
+FROM baby_names
+WHERE name = "Madison"
+  AND year = 2012 
+  AND year = 2013;
+~~~
+
+The query returns 0 results, not because there were no babies named `'Madison'` in 2012 or 2013, but because the query is looking for rows in which the `year` value is simultaneously 2012 __and__ 2013. The author of the above query likely meant to use `OR`, but the SQLite interpreter will not make that assumption:
+
+~~~sql
+SELECT * 
+FROM baby_names
+WHERE name = "Madison"
+  AND (year = 2012 OR year = 2013);
+~~~
+
+
+But be careful. Just because a query returns 0 results _does not necessarily_ mean that the query is logically flawed. For example, the following query on this particular dataset will return 0 rows:
+
+~~~sql
+SELECT * 
+FROM baby_names
+WHERE name = "Sue" AND sex = 'M';
+~~~
+
+It's not logically impossible that somewhere in America, a boy has been named `'Sue'`. After all, Shel Silverstein [wrote a poem about such a boy and Johnny Cash put it to music](https://en.wikipedia.org/wiki/A_Boy_Named_Sue). But apparently, not enough parents have chosen "Sue" as a boy's name for it to show up in the data. 
+
+In other words, the result has 0 rows because the data just isn't _there_. But the query itself is perfectly fine.
+
+Finally, there are times when you'll get results _in spite_ of the logic being flawed:
+
+~~~sql
+SELECT name, count
+FROM baby_names
+WHERE state = 'CA' AND year = 2014 OR sex = 'M'
+ORDER BY count DESC
+LIMIT 1;
+~~~
+
+The result:
+
+|  name | count |
+|-------|-------|
+| Jacob | 22082 |
+{:.table-sql}
+
+Is that the correct answer? Yes, it is most definitely the correct answer for how the query was stated. But this is what the query is in plain English:
+
+    Select the top baby name with the most number of babies
+    among baby names in California for the year 2014, 
+      or among all boy names
+
+But what if the query author wanted to find _this_ instead:
+
+    Select the top baby name with the most number of babies
+    among baby names for boys in California for the year 2014.
+
+Then the query should have been this:
+
+~~~sql
+SELECT name, count
+FROM baby_names
+WHERE state = 'CA' AND year = 2014 AND sex = 'M'
+ORDER BY count DESC
+LIMIT 1;
+~~~
+
+And the result would be markedly different:
+
+| name | count |
+|------|-------|
+| Noah |  2761 |
+{:.table-sql}
+
+And yet, in the erroneous version of the query, the SQLite interpreter _does not throw an error_. 
+
+
+So if you haven't gotten the point by now, here it is: __Logic is hard__. While you will eventually get good enough at SQLite syntax to avoid making the kind of mistakes that cause the computer to show an error message, the hard part is realizing when you might have made a mistake, even if the computer doesn't tell you so.
+
+In other words, be prepared to become a better logical thinker. Because the computer won't be reading your mind.
+
+
+
+
+
+
+
+
+
+
+
