@@ -1,28 +1,252 @@
 ---
 title: |
-  Using LIKE, IN, and wildcards to match multiple values in SQL
+  Using LIKE, IN, BETWEEN, and wildcards to match multiple values in SQL
 ranking: 524
 description: |
-  There are several ways for 
+  Ways to match terms 
 takeaways:
-  - How the `IN` and `NOT IN` operators work.
   - How the `LIKE` operator works.
   - That `LIKE` is case insensitive.
   - What the `%` and `_` wildcards stand for.
-
+  - How the `IN` and `NOT IN` operators work.
+  - How to use `BETWEEN` 
 references:
   - title: The IN and NOT IN operators
     url: http://www.sqlite.org/lang_expr.html#in_op
     source: SQLite documentation
   - title: The LIKE operator
     url: http://www.sqlite.org/lang_expr.html#like
-listed: true
+listed: false
 ---
 
 <%= render_toc %>
 
+<% content_card("Get the data") do  %>
+For this lesson, download the following file, which is a SQLite database built from the [U.S. Social Security Administration file of popular baby names](http://www.ssa.gov/oact/babynames/limits.html): 
+
+- [`ssa_baby_names--2010_2014--all.sqlite.zip`](http://stash.padjo.org/data/ssa_baby_names--2010_2014--all.sqlite.zip)
+
+Unzip it, and open the `sqlite` file using the SQLite client of your choice (e.g. [DB Browser for SQLite](http://sqlitebrowser.org/))
+<% end %>
 
 
+
+# LIKE
+
+The `LIKE` operator is used to match text string patterns. In terms of syntax structure, it fits into a boolean expression just as  an __equals__ sign normally would:
+
+~~~sql
+SELECT * FROM baby_names
+  WHERE name LIKE 'Megan';
+~~~
+
+Its functionality is similar too, though by default, `LIKE` will match English alphabet characters without regard to capitalization (i.e. case-insensitive):
+
+~~~sql
+SELECT * FROM baby_names
+  WHERE state LIKE 'ny';
+~~~
+
+
+## Using LIKE with wildcards
+
+The true power of `LIKE` comes with the use of wildcards.
+
+### Match zero-or-more characters with `%`
+
+The __percentage sign__ -- `%` -- is a stand-in for "zero-or-more characters".
+
+In other words, to get all names that begin with `Zara`, including  just `Zara`:
+
+
+~~~sql
+SELECT * FROM baby_names
+  WHERE name LIKE 'Zara%';
+~~~
+
+Here's a sample of the output:
+
+| state | sex | year |   name  | count |
+|-------|-----|------|---------|-------|
+| USA   | F   | 2013 | Zara    |   627 |
+| USA   | F   | 2013 | Zarah   |    80 |
+| USA   | F   | 2013 | Zarayah |    13 |
+| USA   | F   | 2013 | Zarai   |     9 |
+| USA   | F   | 2013 | Zaraya  |     9 |
+| USA   | F   | 2013 | Zarahi  |     8 |
+| USA   | F   | 2013 | Zarae   |     7 |
+| USA   | F   | 2013 | Zaray   |     6 |
+{:.table-sql}
+
+To get all names that __end__ in `zara`, including `Zara` (don't mind the capitalization below; remember that `LIKE` will do a case-insensitive match):
+
+~~~sql
+SELECT * FROM baby_names
+  WHERE name LIKE '%Zara';
+~~~
+
+A sample of the output:
+
+| state | sex | year |   name  | count |
+|-------|-----|------|---------|-------|
+| USA   | F   | 2014 | Zara    |   754 |
+| USA   | F   | 2014 | Jahzara |    74 |
+| USA   | F   | 2014 | Chizara |    26 |
+| USA   | F   | 2014 | Azara   |    22 |
+| USA   | F   | 2014 | Jazara  |     8 |
+| USA   | F   | 2014 | Ozara   |     5 |
+{:.table-sql}
+
+
+And to get all names that have `Zara` in them, _somewhere_ -- either at the beginning, the end, or in the middle -- including just `Zara`:
+
+~~~sql
+SELECT * FROM baby_names
+  WHERE name LIKE '%Zara%';
+~~~
+
+A sample of the output:
+
+| state | sex | year |   name   | count |
+|-------|-----|------|----------|-------|
+| USA   | F   | 2014 | Zara     |   754 |
+| USA   | F   | 2014 | Zarah    |    91 |
+| USA   | F   | 2014 | Jahzara  |    74 |
+| USA   | F   | 2014 | Chizara  |    26 |
+| USA   | F   | 2014 | Chizaram |    23 |
+| USA   | F   | 2014 | Azara    |    22 |
+| USA   | F   | 2014 | Jazarah  |    18 |
+{:.table-sql}
+
+
+And one more relatively common variation: Names that begin with `za` and end in `ra`, including `Zara`:
+
+~~~sql
+SELECT * FROM baby_names
+  WHERE name LIKE 'za%ra';
+~~~
+
+
+Sample output:
+
+| state | sex | year |  name  | count |
+|-------|-----|------|--------|-------|
+| USA   | F   | 2011 | Zara   |   444 |
+| USA   | F   | 2011 | Zahra  |   245 |
+| USA   | F   | 2011 | Zaira  |   153 |
+| USA   | F   | 2011 | Zahara |   149 |
+{:.table-sql}
+
+
+### Match any single character with `_`
+
+The __underscore__ character -- `_` -- is used to match __one of any kind of character__. 
+
+To match all __3-letter__ names that begin with `Jo` and end with _any_ character:
+
+~~~sql
+SELECT * FROM baby_names
+  WHERE name LIKE 'Jo_';
+~~~
+
+
+Sample output:
+
+| state | sex | year | name | count |
+|-------|-----|------|------|-------|
+| USA   | F   | 2014 | Joy  |   687 |
+| USA   | F   | 2014 | Joi  |    91 |
+| USA   | M   | 2014 | Joe  |   488 |
+| USA   | M   | 2014 | Jon  |   374 |
+| USA   | M   | 2014 | Job  |    80 |
+| USA   | M   | 2014 | Joy  |    23 |
+
+{:.table-sql}
+
+
+Two important things to note:
+
+1. The underscore matches _only one_ character, so the results in the above query will only return 3-letter names, not a name such as `'John'`
+2. The underscore matches _at least one_ character, so the results do _not_ include `'Jo'`
+
+Try running the previous query using `%` instead of `_` to see the difference.
+
+
+## NOT LIKE
+
+The `NOT` keyword can be used to negate a `LIKE` operator, similar to what `!=` is to `=`.
+
+To find all names that begin with the letter `J` but do _not_ have the letter `e` in them:
+
+~~~sql
+SELECT * from baby_names
+WHERE name LIKE 'J%n' 
+  AND name NOT LIKE '%e%';
+~~~
+
+Sample output:
+
+| state | sex | year |   name   | count |
+|-------|-----|------|----------|-------|
+| USA   | F   | 2014 | Jwan     |     5 |
+| USA   | M   | 2014 | Jackson  | 12121 |
+| USA   | M   | 2014 | John     | 10600 |
+| USA   | M   | 2014 | Jonathan |  8035 |
+| USA   | M   | 2014 | Jaxon    |  7635 |
+
+__Note:__ There must be better ways to phrase the above query. In fact, I can't think of a time where I've actually used `NOT LIKE` except just now, which may explain the lameness of my example. But I include `NOT LIKE` because its existence and functionality is a natural consequence with how `NOT` and `LIKE` and the rest of SQLite syntax works. You may not actually use it, but it is there, because of course it's there.
+
+
+
+
+
+
+# Using `IN` to match against multiple possibilities
+
+The `IN` keyword can be seen as a way to clean up multiple `OR` conditions. The following two queries are equivalent:
+
+
+~~~sql
+SELECT * FROM baby_names
+  WHERE state = 'CA'
+    OR state = 'NY'
+    OR state = 'TX';
+~~~
+
+~~~sql
+SELECT * FROM baby_names
+  WHERE state IN('CA', 'NY', 'TX');
+~~~
+
+
+## Using `NOT IN` to exclude multiple possibilities
+
+The `NOT IN` comparator works the same as if we used multiple conditions that used `!=` and were joined with `AND` (i.e. _not_ `OR`).
+
+The following query finds all data rows in which the state is _neither_ California, New York, nor Texas:
+
+~~~sql
+SELECT * FROM baby_names
+  WHERE state != 'CA'
+    AND state != 'NY'
+    AND state != 'TX';
+~~~
+
+Or, I guess if you prefer to think of things in `OR`, this would work too:
+
+~~~sql
+SELECT * FROM baby_names
+  WHERE NOT(state  ='CA'
+     OR state = 'NY'
+     OR state = 'TX');
+~~~
+
+Both of the above formulations is equivalent to this use of `NOT IN`:
+
+~~~sql
+SELECT * FROM baby_names
+  WHERE state NOT IN('CA', 'NY', 'TX');
+~~~
 
 
 
