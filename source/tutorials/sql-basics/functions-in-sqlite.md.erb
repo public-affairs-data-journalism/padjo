@@ -3,22 +3,438 @@ title: Functions for transforming text and numbers in SQL
 ranking: 531
 description: |
   Think of these as spreadsheet functions.
+previous: /tutorials/sql-basics/fuzzy-matching-like-in-where
 takeaways: 
+  - How to use a function.
+  - Whether or not a function alters the original data tables.
   - How to use the `LENGTH` function to get the length of a string.
+  - How to perform arithmetic on columns
   - How to use the `ABS` and  `ROUND` functions to transform numerical values.
-  - How to concatenate two or more text strings with the `||` operator.
   - How to transform text strings with the functions `LOWER` and `UPPER`
   - How to excerpt text strings with the functions `LTRIM`, `RTRIM`, `SUBSTR`, and `REPLACE`.
-  - How to concatenate multiple strings with the `||` operator.
-  - How to use the `PRINTF` function to create a new text string from other text strings.
-listed: false
+listed: true
 references:
   - title: SQLite Core Functions
     url: https://www.sqlite.org/lang_corefunc.html
     source: SQLite documentation
 ---
 
+If you've ever used functions in a spreadsheet, [such as the `ROUND` function which _rounds_ a decimal number to the nearest integer](https://support.google.com/docs/answer/3093440?vid=1-635804628909342251-2744638423), this chapter won't feel too alien to you.
 
-Sample question:
+It's not too hard to understand the purpose of functions, but you'll probably worry about how you can possibly memorize all the different functions out there. In this lesson, I list virtually all of what I would consider the kind-of-infrequently to frequently-used functions for the average user -- and then a few more. There's not too much to memorize. My main intent is for you to know how to just _use_ functions. You can always look them up as you go.
 
-The longest name in US with the most babies.
+
+
+# Basic definition and syntax of a function
+
+
+__First, some definitions:__ For the purposes of this tutorial, a __function__ refers to a chunk of code that can _act_ upon values passed into it. The functions we work with will each have a defined keyword, e.g. `UPPER` and `LENGTH`. The values that we pass into a function as input are usually referred to as __arguments__ (though sometimes I'll just say "input value"). 
+
+Below is an example of the `UPPER` __function__. The __argument__ -- the text string, `'hello there'` -- is enclosed in parentheses in the function call:
+
+~~~sql
+SELECT UPPER('hello there');
+~~~
+
+The `UPPER` function returns a new text string that is the _transformation_ of `'hello there'`. As you can guess from the name `UPPER`, the new text string will consist of upper-cased letters. Run the snippet above in your SQL client. The output should look like this:
+
+
+| UPPER('hello there') |
+|----------------------|
+| HELLO THERE          |
+{:.table-sql}
+
+
+It's important to know that while functions return a transformed version of their input, they do not _modify_ the original data. For example, if we were to run `UPPER` on the `name` column of `baby_names`, the _results_ will contain upper-cased versions of each `name` value. But the original data will be _unchanged_.
+
+(Basically, `SELECT` statements will never change the underlying data)
+
+
+
+__Where can functions be used?__ Functions can be used wherever a column identifier or value is used.
+
+Before we get to the list of functions themselves, here's a few quick examples of how and where functions are used.
+
+## Transforming values to display
+
+
+Here are functions applied to the string `'hello'`:
+
+~~~sql
+SELECT 'hello', LENGTH('hello'), UPPER('hello');
+~~~
+
+Output:
+
+| 'hello' | LENGTH('hello') | UPPER('hello') |
+|---------|-----------------|----------------|
+| hello   |               5 | HELLO          |
+{:.table-sql}
+
+
+Functions can also be applied to columns:
+
+~~~sql
+SELECT name, LENGTH(name), UPPER(name)
+  FROM baby_names
+  LIMIT 1;
+~~~
+
+Output:
+
+|  name | LENGTH(name) | UPPER(name) |
+|-------|--------------|-------------|
+| Aaban |            5 | AABAN       |
+{:.table-sql}
+
+(Again, the original data in the `name` column is left unchanged)
+
+
+
+## Transforming values in the `WHERE` clause
+
+Functions can be used to transform values that are conditionally tested, i.e. in the `WHERE` clause:
+
+~~~sql
+SELECT *
+FROM baby_names
+WHERE UPPER(name) = 'BILLY'
+LIMIT 5;
+~~~
+
+Take note how the function is only applied in the `WHERE` clause; the `name` value that is _returned_ by the query for display is unaffected, i.e. the `name` is _not_ uppercased:
+
+| state | sex | year |  name | count |
+|-------|-----|------|-------|-------|
+| AL    | M   | 2010 | Billy |    15 |
+| AR    | M   | 2010 | Billy |    11 |
+| AZ    | M   | 2010 | Billy |     5 |
+| CA    | M   | 2010 | Billy |    38 |
+| FL    | M   | 2010 | Billy |    22 |
+{:.table-sql}
+
+(Hopefully this makes it very clear that the `UPPER` function _does not_ transform the original data, if I haven't repeated myself enough on that point)
+
+## Transforming values in the `ORDER BY` clause
+
+Functions can be used anywhere that column identifiers are used. We know that we can `ORDER BY` columns, so it logically follows that we can also `ORDER BY` the results of functions on columns. 
+
+The following query uses the `LENGTH` function to orders names by longest to shortest -- i.e. number of characters in the name -- then by the `count` field, from largest to smallest:
+
+~~~sql
+SELECT name, count
+FROM baby_names
+ORDER BY LENGTH(name) DESC,
+      count DESC
+LIMIT 5;
+~~~
+
+The results:
+
+|       name      | count |
+|-----------------|-------|
+| Christianjoseph |     7 |
+| Gabrielalexande |     6 |
+| Christopherjame |     5 |
+| Jaydenalexander |     5 |
+| Christopherjohn |     5 |
+{:.table-sql}
+
+
+# Useful functions to know
+
+Since you can define your own functions in SQLite -- something I've never actually tried -- there are theoretically an unlimited number of functions to utilize and memorize. But the number of [core functions in SQLite](https://www.sqlite.org/lang_corefunc.html) isn't huge, and of those, I probably know a dozen and use just a handful in 95% of the situations.
+
+What I'm trying to say is that it's not particularly important to memorize function names; as long as you know what _can_ be done -- and how they fit in the general SQL syntax -- you'll easily remember the useful functions. For everything else, you'll know how to look them up.
+
+So here's a list of functions that are generally useful. I've split it up into two arbitrary categories: functions that return numbers, and functions that return text strings.
+
+## Functions that return numbers
+
+
+### LENGTH
+
+`LENGTH` takes in a single argument -- usually a text string -- and returns the number of characters in that string. The following query returns a single row and single column which contains the smallest value of `LENGTH`, i.e. the smallest number of characters that any name in `baby_names` can have:
+
+~~~sql
+SELECT LENGTH(name)
+  FROM baby_names
+  ORDER BY LENGTH(name)
+  LIMIT 1;
+~~~
+
+The output:
+
+| LENGTH(name) |
+|--------------|
+|            2 |
+{:.table-sql}
+
+Using this result, we can then run a separate query to generate a list of the all the shortest names in the database (assuming that more than one name has `LENGTH` of `2`):
+
+~~~sql
+SELECT name
+  FROM baby_names
+  WHERE LENGTH(name) = 2;
+~~~
+
+An excerpt of that list (there will be many duplicates, of course, since each name appears for each state and each year):
+
+| name |
+|------|
+| Ab   |
+| Ac   |
+| Aj   |
+| Jo   |
+| Jr   |
+| Ty   |
+{:.table-sql}
+
+### Arithmetic operators
+
+These are technically not functions, but I include them here because their purpose and place are similar to functions that transforming numbers.
+
+The standard arithmetic operators are available: 
+
+- addition: `+`
+- subtraction: `-`
+- multiplication: `*`
+- division: `/`
+- modulo: `%`
+
+
+addition, subtraction (`-`)
+
+~~~sql
+SELECT 10 + 3,
+  10 - 3,
+  10 * 3,
+  10 / 3,
+  10 % 3;
+~~~
+
+
+The output:
+
+| 10 + 3 | 10 - 3 | 10 * 3 | 10 / 3 | 10 % 3 |
+|--------|--------|--------|--------|--------|
+|     13 |      7 |     30 |      3 |      1 |
+{:.table-sql}
+
+Take note of the result of `10 / 3` -- by default, the result is truncated to a whole number (i.e. integer) -- `3`.
+
+To get a decimal result, one of the operands needs to be a decimal number. If both operands happen to be integers, one trick is to multiply either operand by `1.0`, which doesn't change the quantity but "converts" the operand to a decimal for calculation purposes:
+
+~~~sql
+SELECT 10 / 3,
+  10.0 / 3,
+  10 / (3 * 1.0);
+~~~
+
+The output:
+
+| 10 / 3 |     10.0 / 3     |  10 / (3 * 1.0)  |
+|--------|------------------|------------------|
+|      3 | 3.33333333333333 | 3.33333333333333 |
+{:.table-sql}
+
+Like functions, arithmetic operations can be applied to an entire column of results. The example below uses the `totals` table and divides the `name_count` by `baby_count`, the result of which is a rough estimate of average number of babies per name, for a given `state`, `year`, and `sex`:
+
+~~~sql
+SELECT *, baby_count / name_count
+FROM totals
+LIMIT 5;
+~~~
+
+
+The output:
+
+| state | sex | year | baby_count | name_count | baby_count / name_count |
+|-------|-----|------|------------|------------|-------------------------|
+| AK    | F   | 2010 |       2407 |        222 |                      10 |
+| AK    | F   | 2011 |       2515 |        235 |                      10 |
+| AK    | F   | 2012 |       2290 |        216 |                      10 |
+| AK    | F   | 2013 |       2426 |        225 |                      10 |
+| AK    | F   | 2014 |       2527 |        231 |                      10 |
+{:.table-sql}
+
+To get a decimal result:
+
+~~~sql
+SELECT *, 1.0 * baby_count / name_count
+FROM totals
+LIMIT 5;
+~~~
+
+Output:
+
+| state | sex | year | baby_count | name_count | 1.0 * baby_count / name_count |
+|-------|-----|------|------------|------------|-------------------------------|
+| AK    | F   | 2010 |       2407 |        222 |              10.8423423423423 |
+| AK    | F   | 2011 |       2515 |        235 |              10.7021276595745 |
+| AK    | F   | 2012 |       2290 |        216 |              10.6018518518519 |
+| AK    | F   | 2013 |       2426 |        225 |              10.7822222222222 |
+| AK    | F   | 2014 |       2527 |        231 |              10.9393939393939 |
+{:.table-sql}
+
+And as we've seen before, we can sort by the result of an arithmetic operation:
+
+~~~sql
+SELECT *, baby_count / name_count
+FROM totals
+ORDER BY baby_count / name_count DESC
+LIMIT 5;
+~~~
+
+Output:
+
+| state | sex | year | baby_count | name_count | baby_count / name_count |
+|-------|-----|------|------------|------------|-------------------------|
+| USA   | M   | 2014 |    1901376 |      13977 |                     136 |
+| USA   | M   | 2010 |    1913851 |      14241 |                     134 |
+| USA   | M   | 2013 |    1881463 |      14012 |                     134 |
+| USA   | M   | 2011 |    1893230 |      14329 |                     132 |
+| USA   | M   | 2012 |    1889414 |      14216 |                     132 |
+{:.table-sql}
+
+Note: the above results aren't terribly interesting...We don't expect the variety of names to grow linearly with total number of babies, so it makes sense that if you divide the total number of babies born in the entire U.S. by total number of names, you'll get a bigger average than for any given state.
+
+
+
+### ABS and ROUND
+
+Not too much to say here:
+
+- `ABS` returns the absolute value of a number.
+
+- `ROUND` rounds a given number to a specified number of decimal places.
+
+`ROUND` is one example of a function that takes more than 1 argument. Its second argument specifies the number of decimal places to round to:
+
+      SELECT ROUND(3.1415, 2);
+      # output: 3.14
+
+The second argument is optional and assumed to be `0` if omitted:
+
+      SELECT ROUND(3.1415);
+      # output: 3.0
+
+An frivolous example of `ROUND` using the previous SQL example with `totals`:
+
+~~~sql
+SELECT baby_count, name_count, ROUND(1.0 * baby_count / name_count, 1)
+FROM totals
+ORDER BY baby_count / name_count DESC
+LIMIT 5;
+~~~
+
+The output:
+
+| baby_count | name_count | ROUND(1.0 * baby_count / name_count, 1) |
+|------------|------------|-----------------------------------------|
+|    1901376 |      13977 |                                   136.0 |
+|    1913851 |      14241 |                                   134.4 |
+|    1881463 |      14012 |                                   134.3 |
+|    1893230 |      14329 |                                   132.1 |
+|    1889414 |      14216 |                                   132.9 |
+{:.table-sql}
+
+Note the somewhat inconsistent ordering (the 5th row value of the last column is bigger than the 4th row's value). This is because I `ORDER BY` the integer division but chose to display the result of a rounded decimal division. SQLite won't throw an error if we're inconsistent in what we `SELECT` versus what we `ORDER BY` (or filter by with `WHERE`).
+
+
+
+## Functions that return text
+
+### LOWER and UPPER
+
+Pretty straightforward: `LOWER` and `UPPER` change alphabetical letters to all lowercase and uppercase, respectively. These are frequently used to do case insensitive matches without using `LIKE`:
+
+~~~sql
+SELECT * FROM baby_names
+WHERE UPPER(name) = 'DANIEL';
+~~~
+
+### LTRIM and RTRIM
+
+These functions each take __two__ arguments: the first is the column/value to be acted on. The second argument is a text string of characters to be _trimmed_ from either the left or right side of the first argument. If the second argument is omitted, `LTRIM` and `RTRIM` will remove any empty spaces on the left and right side, respectively.
+
+In the example query below, I select the first 5 rows in which `name` has a length greater than `10`. Each row has 3 columns:
+
+- An uppercased version of `name`
+- An uppercased version of `name` in which all consecutive `A` characters are removed from the left side
+- An uppercased version of `name` in which all consecutive occurrences of the characters `'A'`, `'E'`, `'N'`, and `'S'`, are removed from the right side
+
+Basically, the key concept is that we can pass results of one function into another function's argument, e.g. `LTRIM(UPPER(name), 'A')` -- and yes, the parentheses _can_ get obnoxious:
+
+~~~sql
+SELECT UPPER(name), 
+  LTRIM(UPPER(name), 'A'), RTRIM(UPPER(name), 'AENS') 
+FROM baby_names
+WHERE LENGTH(name) > 10
+LIMIT 5;
+~~~
+
+Output:
+
+| UPPER(name)  | LTRIM(UPPER(name), 'A') | RTRIM(UPPER(name), 'AENS') |
+|--------------|-------------------------|----------------------------|
+| AALIYAHMARIE | LIYAHMARIE              | AALIYAHMARI                |
+| AALIYAHROSE  | LIYAHROSE               | AALIYAHRO                  |
+| AALIYAHROSE  | LIYAHROSE               | AALIYAHRO                  |
+| AARONMICHAEL | RONMICHAEL              | AARONMICHAEL               |
+| ABDALRAHMAN  | BDALRAHMAN              | ABDALRAHM                  |
+{:.table-sql}
+
+
+### Use SUBSTR to excerpt strings
+
+The `SUBSTR` function -- short for "substring" -- takes at least two arguments as well as an optional third argument:
+
+1. A text string (value or column identifier).
+2. The number of characters, starting from the left side, from which to cut the string.
+3. The total length in characters of the substring. If omitted, `SUBSTR` returns all characters starting from the position specified in the second argument.
+
+
+A quick example, using just a plain text string of `'Hello world'`:
+
+~~~sql
+SELECT 'Hello world', 
+  SUBSTR('Hello world', 3),
+  SUBSTR('Hello world', 3, 4);
+~~~
+
+| 'Hello world' | SUBSTR('Hello world', 3) | SUBSTR('Hello world', 3, 4) |
+|---------------|--------------------------|-----------------------------|
+| Hello world   | llo world                | llo                         |
+{:.table-sql}
+
+
+
+### The REPLACE function
+
+The `REPLACE` function takes 3 arguments:
+
+1. A text string/column identifier
+2. A text string pattern _to be replaced_ in that first argument.
+3. A text string pattern _to replace_ the pattern in the second argument, if found.
+
+~~~sql
+SELECT 'Hello', 
+  REPLACE('Hello', 'H', 'J');
+~~~
+
+Output:
+
+| 'Hello' | REPLACE('Hello', 'H', 'J') |
+|---------|----------------------------|
+| Hello   | Jello                      |
+{:.table-sql}
+
+
+# More to come
+
+There are [other functions](https://www.sqlite.org/lang_corefunc.html) -- for the sake of brevity, I've purposely left out the functions for combining strings and to work with dates for their own lessons. But again, this lesson was just to familiarize you with how functions work and where they fit in the syntax.
+
+
+
+

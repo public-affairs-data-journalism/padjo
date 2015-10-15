@@ -72,6 +72,10 @@
   data_file_title: Excel spreadsheet
   data_file_url: https://www.fbi.gov/about-us/cjis/ucr/crime-in-the-u.s/2013/crime-in-the-u.s.-2013/offenses-known-to-law-enforcement/expanded-homicide/expanded_homicide_data_table_14_justifiable_homicide_by_weapon_law_enforcement_2009-2013.xls/output.xls
 
+- source: Mapping Police Violence
+  landing_page_title: Police Violence Reports
+  landing_page_url: http://mappingpoliceviolence.org/reports/
+
 - source: Killed by Police
   landing_page_title: Killedbypolice.net yearly tabular reports
   landing_page_url: http://killedbypolice.net/

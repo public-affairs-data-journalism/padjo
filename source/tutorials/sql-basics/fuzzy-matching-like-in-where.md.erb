@@ -1,7 +1,7 @@
 ---
 title: |
   Using LIKE, IN, BETWEEN, and wildcards to match multiple values in SQL
-ranking: 524
+ranking: 526
 description: |
   Ways to match terms 
 takeaways:
@@ -16,7 +16,8 @@ references:
     source: SQLite documentation
   - title: The LIKE operator
     url: http://www.sqlite.org/lang_expr.html#like
-listed: false
+listed: true
+previous: /tutorials/sql-basics/booleans-expressions-for-sql
 ---
 
 <%= render_toc %>
@@ -237,8 +238,8 @@ Or, I guess if you prefer to think of things in `OR`, this would work too:
 ~~~sql
 SELECT * FROM baby_names
   WHERE NOT(state  ='CA'
-     OR state = 'NY'
-     OR state = 'TX');
+            OR state = 'NY'
+            OR state = 'TX');
 ~~~
 
 Both of the above formulations is equivalent to this use of `NOT IN`:
@@ -247,6 +248,41 @@ Both of the above formulations is equivalent to this use of `NOT IN`:
 SELECT * FROM baby_names
   WHERE state NOT IN('CA', 'NY', 'TX');
 ~~~
+
+
+# Specifying a range with BETWEEN
+
+The `BETWEEN` keyword is pretty straightforward. The structure of the clause is:
+
+    some_value_or_column BETWEEN lower_bound AND upper_bound 
+
+So instead of this:
+
+~~~sql
+SELECT * FROM baby_names
+  WHERE year >= 2010 AND year <= 2014
+~~~
+
+We can write this:
+
+~~~sql
+SELECT * FROM baby_names
+  WHERE year BETWEEN 2010 AND 2014
+~~~
+
+Note that `BETWEEN` is __inclusive__ of _both_ endpoints -- e.g. in the above example, rows with `year` of `2010` or `2014` are also included.
+
+There's a couple of advantages with `BETWEEN`:
+
+1. It prevents the all-too common mistake of screwing up the greater-than and less-than signs.
+2. The comparative operation is done only once, as opposed to two separate comparisons (i.e. is `x` greater than equal to `a` and is `x` less than or equal to `b`). The performance savings is probably not that big of a deal for us, though.
+
+
+
+
+
+
+
 
 
 
