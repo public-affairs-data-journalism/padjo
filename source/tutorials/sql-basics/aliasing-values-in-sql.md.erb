@@ -1,9 +1,150 @@
 ---
 title: Aliasing Columns and Tables in SQL Databases
 listed: false
+description: |
+  A short lesson on how to give human-readable names for otherwise messily-named values and identifiers. 
 ranking: 534
+previous: /tutorials/sql-basics/functions-in-sqlite
+next: /tutorials/sql-aggregates/group-by-in-sql
 takeaways:
   - How to use the `AS` keyword. And how `AS` is optional (but recommended).
   - How to alias a column and table name.
   - How to alias the result of a function.
 ---
+
+
+
+<%= render_toc %>
+
+<% content_card("Get the data") do  %>
+For this lesson, download the following file, which is a SQLite database built from the [U.S. Social Security Administration file of popular baby names](http://www.ssa.gov/oact/babynames/limits.html): 
+
+- [`ssa_baby_names--2010_2014--all.sqlite.zip`](http://stash.padjo.org/data/ssa_baby_names--2010_2014--all.sqlite.zip)
+
+Unzip it, and open the `sqlite` file using the SQLite client of your choice (e.g. [DB Browser for SQLite](http://sqlitebrowser.org/))
+<% end %>
+
+
+# Renaming a selected column header
+
+In the [chapter on functions](next: /tutorials/sql-basics/functions-in-sqlite), you might have noticed that when `SELECT`ing a result of a function, the  header for that column -- by default -- was the function call itself. This tended to look messy:
+
+~~~sql
+SELECT name, UPPER(name), LENGTH(name)
+FROM baby_names
+LIMIT 1;
+~~~
+
+|  name | UPPER(name) | LENGTH(name) |
+|-------|-------------|--------------|
+| Aaban | AABAN       |            5 |
+{:.table-sql}
+
+Using the `AS` keyword, we can __alias__ the function calls in the `SELECT` clause to something...not so function-yish:
+
+~~~sql
+SELECT name, UPPER(name) AS upname, LENGTH(name) AS chars
+FROM baby_names
+LIMIT 1;
+~~~
+
+|  name | upname | chars |
+|-------|--------|-------|
+| Aaban | AABAN  |     5 |
+{:.table-sql}
+
+We can also re-name column identifiers to our liking:
+
+~~~sql
+SELECT name AS whatev, UPPER(name) AS upname, LENGTH(name) AS chars
+FROM baby_names
+LIMIT 1;
+~~~
+
+| whatev | upname | chars |
+|--------|--------|-------|
+| Aaban  | AABAN  |     5 |
+{:.table-sql}
+
+
+# Referring to aliases
+
+We might alias a column header for purely aesthetic reasons. But there's utility, too. Without aliases, this is how we would select the `LENGTH` of a `name` _and_ sort in descending order by it:
+
+
+~~~sql
+SELECT name, LENGTH(name)
+FROM baby_names
+ORDER BY LENGTH(name) DESC
+LIMIT 2;
+~~~
+
+
+|       name      | LENGTH(name) |
+|-----------------|--------------|
+| Christianjoseph |           15 |
+| Christopherjame |           15 |
+{:.table-sql}
+
+
+However, if we define an alias for a column name passed to `SELECT`, we can then re-use that alias elsewhere in the statement:
+
+~~~sql
+SELECT name, LENGTH(name) AS x
+FROM baby_names
+ORDER BY x DESC
+LIMIT 2;
+~~~
+
+|       name      | x  |
+|-----------------|----|
+| Christianjoseph | 15 |
+| Christopherjame | 15 |
+{:.table-sql}
+
+We can also reuse an alias in the `WHERE` clause; the query below looks for the longest name among names which have been bestowed upon at least 50 babies in a given year, state, and sex:
+
+~~~sql
+SELECT name, count, LENGTH(name) AS x
+FROM baby_names
+WHERE count >= 50
+ORDER BY x DESC, count DESC
+LIMIT 1;
+~~~
+
+|     name     | count | x  |
+|--------------|-------|----|
+| Michelangelo |    74 | 12 |
+{:.table-sql}
+
+
+# Aliasing table names
+
+We can alias table names too, though there's really no effect for what we've done so far. But just be aware that it _can_ be done because it will be very useful when we learn how to join multiple tables together:
+
+~~~sql
+SELECT *
+FROM baby_names AS some_other_name_I_like;
+~~~
+
+
+# AS is optional
+
+I highly recommend that you always use `AS` for clarity of reading. But technically, the interpreter doesn't require it. So you will see code in the wild that looks like this:
+
+
+~~~sql
+SELECT name a, LENGTH(name) b
+FROM baby_names
+ORDER BY b DESC
+LIMIT 2;
+~~~
+
+|        a        | b  |
+|-----------------|----|
+| Christianjoseph | 15 |
+| Christopherjame | 15 |
+{:.table-sql}
+
+Omitting the `AS` saves us the time of typing in those two characters and removes a little clutter from the query -- for the tradeoff, in my opinion, of readability. To paraphrase a well-known aphorism among programmers: "You will spend far more time reading your own code than writing it." So the time you save in writing your code will generally not offset the time lost when trying to re-read it and figuring out what the heck you were doing.
+

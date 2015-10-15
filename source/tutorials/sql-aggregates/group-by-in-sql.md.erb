@@ -1,4 +1,394 @@
 ---
 title: Using GROUP BY to create aggregates in SQL
+description: |
+  With the use of the GROUP BY clause, we gain the ability to aggregate our data based on values in a given column or columns. At the very least, this let's us count the number of unique values in that column.
+takeaways:
+  - How to find all unique values in a given column.
+  - Where `GROUP BY` fits in with `SELECT`, `WHERE`, and `ORDER BY`.
+next: /tutorials/sql-aggregates/group-functions-in-sql
+previous: /tutorials/sql-basics/aliasing-values-in-sql
+
 ---
 
+
+# The problem with granular data
+
+The SQL examples with the baby names data have, so far, been a little cumbersome. With just the 2010 to 2014 data, a single `name`, because the `baby_names` table enumerates every combination of `name`, `state`, `year`, and `sex`.
+
+So for a name such as `Taylor`, which is common for both sexes:
+
+- __51__ states (50 states plus `USA`)
+- __2__ sexes (`'M'` and `'F'`)
+- __5__ years (2010 to 2014)
+
+&ndash; we can expect to see __510__ different rows when doing this query:
+
+~~~sql
+SELECT * FROM baby_names
+WHERE name = 'Taylor';
+~~~
+
+That query actually produces __460__ rows, which means that for some combination of state, sex, and year, there were fewer than 5 babies named `'Taylor'`. Finding which scenario yielded fewer than five Taylor's is an interesting question on its own, to be tackled much later.
+
+For now, we have a much more basic problem: How do we total the number of `'Taylor'` named babies, i.e. the total of the `count` column? Actually, we'll save that one for the _next lesson_.
+
+So let's step back even further and ask an even more basic question: _Just how many different baby names _are_ there?
+
+## Remember to pivot
+
+First, it's important to remember that even if you stopped reading, right now, and learned nothing else about SQL, you still have a way to find number of different baby names: just export the `baby_names` table [into a spreadsheet and create a pivot table](/spreadsheets/maps-earthquakes-spreadsheets-part-3). Then list the `name` field as __rows__. That would pull out all the unique `name` values.
+
+But exporting and importing is a pain. Also, the data _might_ just be too big to fit into some spreadsheets. It'd be nice if we could do that aggregation of the data _within_ SQLite.
+
+At it's most basic usage, this filtering of unique values is what the `GROUP BY` clause can do.
+
+# How to GROUP BY a column
+
+Here's the basic syntax for a `GROUP BY`, without any other clauses except `SELECT` and `FROM`:
+
+~~~sql
+SELECT name FROM baby_names
+GROUP BY name;
+~~~
+
+The example output:
+
+|    name   |
+|-----------|
+| Aaban     |
+| Aabha     |
+| Aabriella |
+| Aadam     |
+| Aadan     |
+{:.table-sql}
+
+If you look at the results __log__, you should see this:
+
+    46359 Rows returned from: SELECT name FROM baby_names
+    GROUP BY name (took 188ms)
+
+In other words, there are exactly __46,359__ unique baby names nationwide, among both boys and girls, as recorded by the Social Security Administration for the years 2010 to 2014.
+
+But is that _right?_ I mean, did we actually use `GROUP BY` correctly, and are we interpreting the results log correctly? We don't _really_ know, because we didn't previously know exactly how many unique baby names there are, and thus have no frame of reference. 
+
+So let's group by a column of which we _do_ know the number of unique values. Well, we do know that the dataset spans from `2010` to `2014`. A grouping by `year` should yield 5 rows:
+
+~~~sql
+SELECT year FROM baby_names
+GROUP BY year;
+~~~
+
+The results log:
+
+    5 Rows returned from: SELECT year FROM baby_names
+    GROUP BY year; (took 123ms)
+
+The output:
+
+| year |
+|------|
+| 2010 |
+| 2011 |
+| 2012 |
+| 2013 |
+| 2014 |
+{:.table-sql}
+
+
+If you went through the American school system, or looked at the American flag recently, you probably remember the fact that we have 50 states. Let's confirm that 50 different states exist in the data:
+
+~~~sql
+SELECT state FROM baby_names
+GROUP BY state;
+~~~
+
+The results log:
+
+    52 Rows returned from: SELECT state FROM baby_names
+    GROUP BY state; (took 158ms)
+
+As it turns out, there are 52 different `state` values: `DC` for District of Columbia, and `USA` for the rows representing nationwide data.
+
+
+Let's do one more query to confirm an assumption most of us may have automatically made: does the SSA only categorize babies as either boy or girl, i.e. `M` or `F`?
+
+~~~sql
+SELECT sex FROM baby_names
+GROUP BY sex;
+~~~
+
+The results log:
+
+    2 Rows returned from: SELECT sex FROM baby_names
+    GROUP BY sex; (took 899ms)
+
+# Where __GROUP BY__ fits into the SQL statement
+
+Before learning of the other nuances and features of `GROUP BY`, let's see where it fits in with all the other SQL clauses we've learned so far.
+
+
+## GROUP BY and WHERE
+
+The `WHERE` clause goes _before_ the `GROUP BY` clause:
+
+How do we find out the number of unique baby names just for _boys_? Filter upon `sex = 'M'`:
+
+(Note: in case this isn't already clear from previous examples, I don't need to display the `sex` field via `SELECT` in order to refer to it in the `WHERE` clause):
+
+~~~sql
+SELECT name FROM baby_names
+WHERE sex = 'M'
+GROUP BY name;
+~~~
+
+The results log:
+
+      21193 Rows returned from: SELECT name FROM baby_names
+      WHERE sex = 'M'
+      GROUP BY name; (took 171ms)
+
+We'll count the number of [girl names in the next lesson](/tutorials/sql-aggregates/group-functions-in-sql). For now, let's filter by `state` and count number of unique names where `state = 'USA'`:
+
+~~~sql
+SELECT name FROM baby_names
+WHERE state = 'USA'
+GROUP BY name;
+~~~
+
+The results log:
+
+    46359 Rows returned from: SELECT name FROM baby_names
+    WHERE state = 'USA'
+    GROUP BY name; (took 683ms)
+
+Note that the number of rows -- 46,359 -- is the exact same as it was when in our very first `GROUP BY` query. This is not just a coincidence. This is a consequence of our data set. Rows with `USA` refer to a nationwide count. Remember that the Social Security Administration omits rows in which the `count` of babies is _less than_ `5`. So if, for a relatively rare name, such as `'Obama'`, and given a relatively small state, such as Wyoming, if there were fewer than `5` babies, boy _or_ girl, for all the years 2010 to 2014 -- then that name _would not show up_ for the state of Wyoming.
+
+However, for every baby name that garnered 5 babies or more in Wyoming, by definition, it would be included in the `USA` data -- even if that name _only_ appeared in Wyoming. In other words, _every_ baby name that is recorded for every state will, by definition, be included in the `USA` data. And that is why these two queries result in the exact number of rows for unique values in `name`:
+
+
+~~~sql
+SELECT name FROM baby_names
+GROUP BY name;
+~~~
+
+~~~sql
+SELECT name FROM baby_names
+WHERE state = 'USA'
+GROUP BY name;
+~~~
+
+
+One more `WHERE` example: let's restrict the count of unique names to those that begin with the letter `A` and end either in the letter `x` or `z`:
+
+~~~sql
+SELECT name FROM baby_names
+WHERE 
+  name LIKE 'A%' 
+  AND (name LIKE '%x' OR name LIKE '%z')
+GROUP BY name;
+~~~
+
+The total number of rows is __51__. Here's the sample output:
+
+|    name    |
+|------------|
+| Aaraiz     |
+| Aariz      |
+| Abdelaziz  |
+| Abdiaziz   |
+| Abdoulaziz |
+| Abdulaziz  |
+{:.table-sql}
+
+
+## GROUP BY and ORDER BY
+
+The `GROUP BY` clause needs to appear _before_ the `ORDER BY` -- which makes a little intuitive sense, in that the ordering operation should be done after the possible result rows are filtered and pruned.
+
+To reuse the previous query and sort it in reverse alphabetical order, and then limit the results to `5` (we already know that `LIMIT` comes after the `ORDER BY`:
+
+~~~sql
+SELECT name FROM baby_names
+WHERE 
+  name LIKE 'A%' 
+  AND (name LIKE '%x' OR name LIKE '%z')
+GROUP BY name
+ORDER BY name DESC
+LIMIT 5;
+~~~
+
+Here's the output:
+
+|  name |
+|-------|
+| Aziz  |
+| Azeez |
+| Ayaz  |
+| Ashaz |
+| Artez |
+{:.table-sql}
+
+
+## Grouping by an alias
+
+This is just a refresher of the [previous lesson on aliases](/tutorials/sql-basics/aliasing-values-in-sql), in which we learned that aliases can be used wherever column identifiers are used. 
+
+Ergo, to enumerate all the possible lengths of names in `baby_names` and then list them in ascending order:
+
+
+~~~sql
+SELECT LENGTH(name) as z 
+FROM baby_names
+GROUP BY z
+ORDER BY z ASC;
+~~~
+
+Sample output:
+
+| z |
+|---|
+| 2 |
+| 3 |
+| 4 |
+| 5 |
+{:.table-sql}
+
+
+
+
+# Grouping by multiple columns
+
+Finding unique values within a single column is interesting. Oftentimes, we want to find all unique combinations between the values of two or more fields. The syntax for this is to pass multiple field names into the __GROUP BY__ clause, separated by commas.
+
+Let's do a trivial example; we know that there are 2 and 5 unique values for `sex` and `year`, respectively. Doing a `GROUP BY` on both columns should yield 10 rows:
+
+~~~sql
+SELECT sex, year
+FROM baby_names
+GROUP BY sex, year;
+~~~
+
+The results log:
+
+    10 Rows returned from: SELECT sex, year
+    FROM baby_names
+    GROUP BY sex, year; (took 1206ms)
+
+The results:
+
+| sex | year |
+|-----|------|
+| F   | 2010 |
+| F   | 2011 |
+| F   | 2012 |
+| F   | 2013 |
+| F   | 2014 |
+| M   | 2010 |
+| M   | 2011 |
+| M   | 2012 |
+| M   | 2013 |
+| M   | 2014 |
+{:.table-sql}
+
+## A quick note about GROUP BY and column order
+
+A very _good_ question to ask is: __does it matter what order I list the columns to group by__? In other words, does the previous query return the same results as the following query?
+
+~~~sql
+SELECT sex, year
+FROM baby_names
+GROUP BY year, sex;
+~~~
+
+Run it yourself to find out.
+
+Here's my results log:
+
+    10 Rows returned from: SELECT sex, year
+    FROM baby_names
+    GROUP BY year, sex; (took 2318ms)
+
+Here's the output -- note that the order of the columns in the results will not change unless we change the `SELECT` clause as well:
+
+| sex | year |
+|-----|------|
+| F   | 2010 |
+| M   | 2010 |
+| F   | 2011 |
+| M   | 2011 |
+| F   | 2012 |
+| M   | 2012 |
+| F   | 2013 |
+| M   | 2013 |
+| F   | 2014 |
+| M   | 2014 |
+{:.table-sql}
+
+First of all, the important thing to know is that the _number of rows and columns_ __remains the same__, i.e. 10 rows and 2 columns. This should logically follow from the [commutative rule of multiplication](https://en.wikipedia.org/wiki/Commutative_property):
+
+          5 (years) * 2 (sexes) = 2 (sexes) * 5 (years)
+
+However, the _ordering_ of the rows has changed. When we prioritized grouping by `sex`, the first 5 rows looked like this:
+
+| sex | year |
+|-----|------|
+| F   | 2010 |
+| F   | 2011 |
+| F   | 2012 |
+| F   | 2013 |
+| F   | 2014 |
+{:.table-sql}
+
+
+When prioritizing by `year`, the year values are essentially collected and ordered, and then for each `year` value, the `sex` value is shown. I've reordered the columns to make the difference more obvious:
+
+| year | sex |
+|------|-----|
+| 2010 | F   |
+| 2010 | M   |
+| 2011 | F   |
+| 2011 | M   |
+{:.table-sql}
+
+
+There's actually a performance difference too, but that requires discussing the [topic of indexes](http://sqlite.1065341.n5.nabble.com/Order-of-columns-in-group-by-statement-affects-query-performance-td68402.html)...which we don't need to worry about at the moment. However, it's enough to appreciate how the SQLite software behaves based on how we prioritize things -- in this case, the columns for `GROUP BY`. And yet even though the calculation process is different, the _content_ of the result remains the same.
+
+
+# Being selective while grouping
+
+In the previous section, we've already seen that `SELECT` can operate independently of `GROUP BY`, in that the list of columns for `SELECT` can be different in order than the one `GROUP BY`.
+
+However, it is also possible in SQLite for the `SELECT` clause to list columns _not_ referred to in the `GROUP BY`:
+
+~~~sql
+SELECT sex, year
+FROM baby_names
+GROUP BY sex;
+~~~
+
+The result:
+
+| sex | year |
+|-----|------|
+| F   | 2014 |
+| M   | 2014 |
+{:.table-sql}
+
+
+Or even simpler:
+
+~~~sql
+SELECT year
+FROM baby_names
+GROUP BY sex;
+~~~
+
+
+| year |
+|------|
+| 2014 |
+| 2014 |
+{:.table-sql}
+
+
+(more to come)

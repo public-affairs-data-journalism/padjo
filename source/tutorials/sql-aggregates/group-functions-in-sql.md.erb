@@ -3,3 +3,25 @@ title: Group functions in SQL
 ---
 
 https://www.sqlite.org/lang_aggfunc.html
+
+
+
+In a previous example, we found the number of unique boy names by executing this query:
+
+~~~sql
+SELECT name FROM baby_names
+WHERE sex = 'M'
+GROUP BY name;
+~~~
+
+If we wanted to find the number of girls, we could easily alter the `WHERE` condition:
+
+~~~sql
+SELECT name FROM baby_names
+WHERE sex = 'F'
+GROUP BY name;
+~~~
+
+__But__ we could get both bits of information in a single query 
+
+

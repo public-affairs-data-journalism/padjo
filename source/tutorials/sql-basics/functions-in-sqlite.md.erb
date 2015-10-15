@@ -4,6 +4,7 @@ ranking: 531
 description: |
   Think of these as spreadsheet functions.
 previous: /tutorials/sql-basics/fuzzy-matching-like-in-where
+next: /tutorials/sql-basics/aliasing-values-in-sql
 takeaways: 
   - How to use a function.
   - Whether or not a function alters the original data tables.
@@ -18,6 +19,18 @@ references:
     url: https://www.sqlite.org/lang_corefunc.html
     source: SQLite documentation
 ---
+
+<%= render_toc %>
+
+<% content_card("Get the data") do  %>
+For this lesson, download the following file, which is a SQLite database built from the [U.S. Social Security Administration file of popular baby names](http://www.ssa.gov/oact/babynames/limits.html): 
+
+- [`ssa_baby_names--2010_2014--all.sqlite.zip`](http://stash.padjo.org/data/ssa_baby_names--2010_2014--all.sqlite.zip)
+
+Unzip it, and open the `sqlite` file using the SQLite client of your choice (e.g. [DB Browser for SQLite](http://sqlitebrowser.org/))
+<% end %>
+
+
 
 If you've ever used functions in a spreadsheet, [such as the `ROUND` function which _rounds_ a decimal number to the nearest integer](https://support.google.com/docs/answer/3093440?vid=1-635804628909342251-2744638423), this chapter won't feel too alien to you.
 
