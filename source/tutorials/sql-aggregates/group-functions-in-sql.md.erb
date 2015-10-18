@@ -6,6 +6,13 @@ https://www.sqlite.org/lang_aggfunc.html
 
 
 
+## SELECT COUNT(*)
+
+SELECT COUNT(*) FROM baby_names
+
+
+## GROUP BY count
+
 In a previous example, we found the number of unique boy names by executing this query:
 
 ~~~sql
@@ -22,6 +29,53 @@ WHERE sex = 'F'
 GROUP BY name;
 ~~~
 
-__But__ we could get both bits of information in a single query 
+__But__ we could get both bits of information in a single query:
 
 
+~~~sql
+SELECT sex, COUNT(*)
+FROM baby_names
+GROUP BY sex;
+~~~
+
+Note that we don't have to rely on the count.
+
+
+| sex | COUNT(*) |
+|-----|----------|
+| F   |   350993 |
+| M   |   282615 |
+{:.table-sql}
+
+
+
+~~~sql
+SELECT name, AVG(count)
+FROM baby_names
+WHERE name = 'Daniel'
+~~~
+
+
+
+## AVG
+
+~~~sql
+SELECT name, 
+  AVG(count) AS average_count
+FROM baby_names
+WHERE sex = 'M'
+  AND state = 'USA'
+GROUP BY name
+ORDER BY average_count DESC
+LIMIT 5;
+~~~
+
+
+|   name  | average_count |
+|---------|---------------|
+| Jacob   |       19245.4 |
+| Mason   |       17601.4 |
+| Noah    |       17578.2 |
+| William |       16889.0 |
+| Ethan   |       16820.4 |
+{:.table-sql}
