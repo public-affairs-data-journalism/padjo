@@ -1,0 +1,13 @@
+<% unless tutorial.takeaways.empty? %>
+<section class="sec takeaways" id="takeaways">
+  <h2>The Takeaways</h2>
+
+<p>By the end of this tutorial, make sure you can answer these questions: </p>
+
+  <ul class="list">
+    <% tutorial.takeaways.each do |t| %>
+      <li class="takeaway"><%=markdownify t%></li>
+    <% end %>
+  </ul>
+</section>
+<% end %>

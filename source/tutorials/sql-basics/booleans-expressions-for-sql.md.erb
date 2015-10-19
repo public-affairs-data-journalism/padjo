@@ -15,24 +15,18 @@ takeaways:
   - How to use the `NOT` keyword
   - The many different ways to say the same thing
 
+pre_partials:
+  - /partials/tutorials/sql_ssa_baby_names_intro
 ---
+
+<%= render_toc %>
+
 
 __Word of warning__: This tutorial has very little to do with SQL specifically. Instead, it covers the more common ways to express logical comparisons. If that's something you've done in another programming language, then you can basically skip this chapter.
 
 If you're new to programming, the bad news is that this will seem like a wall of new syntax and minutiae. There's no way to get past that perception until you practice it a little and slowly realize that there's _not_ many actual new things to memorize, it's just that -- as in plain English -- there's many different ways to describe things as _true_ or _false_ -- and you will be clumsy at it, at first.
 
 The good news is that these logical operations are universal to math and programming. They're useful and essential in SQL, and everywhere else, too. I cover a battery of examples and variations, but for 90% of your actual work, you can easily get by with the most simple kinds of statements.
-
-
-<%= render_toc %>
-
-<% content_card("Get the data") do  %>
-For this lesson, download the following file, which is a SQLite database built from the [U.S. Social Security Administration file of popular baby names](http://www.ssa.gov/oact/babynames/limits.html): 
-
-- [`ssa_baby_names--2010_2014--all.sqlite.zip`](http://stash.padjo.org/data/ssa_baby_names--2010_2014--all.sqlite.zip)
-
-Unzip it, and open the `sqlite` file using the SQLite client of your choice (e.g. [DB Browser for SQLite](http://sqlitebrowser.org/))
-<% end %>
 
 
 

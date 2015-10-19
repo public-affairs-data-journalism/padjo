@@ -54,6 +54,10 @@ body{
 }
 
 .content-resource{
+  &.item{
+      margin-top: 1.5em;
+      margin-bottom: 1.2em;
+  }
   h1{
     font-size: $font-size-h5;
   }
@@ -61,8 +65,7 @@ body{
     @extend .img-responsive !optional;
     margin-bottom: 0.5em;
   }
-  margin-top: 1.5em;
-  margin-bottom: 1.2em;
+
   .title, .source{
     font-size: $font-size-medium;
   }

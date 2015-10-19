@@ -19,21 +19,16 @@ references:
 listed: true
 next: /tutorials/sql-basics/functions-in-sqlite
 previous: /tutorials/sql-basics/booleans-expressions-for-sql
+pre_partials:
+  - /partials/tutorials/sql_ssa_baby_names_intro
 ---
 
 <%= render_toc %>
 
-<% content_card("Get the data") do  %>
-For this lesson, download the following file, which is a SQLite database built from the [U.S. Social Security Administration file of popular baby names](http://www.ssa.gov/oact/babynames/limits.html): 
-
-- [`ssa_baby_names--2010_2014--all.sqlite.zip`](http://stash.padjo.org/data/ssa_baby_names--2010_2014--all.sqlite.zip)
-
-Unzip it, and open the `sqlite` file using the SQLite client of your choice (e.g. [DB Browser for SQLite](http://sqlitebrowser.org/))
-<% end %>
 
 
 
-# LIKE
+# The LIKE operator for fuzzy matching
 
 The `LIKE` operator is used to match text string patterns. In terms of syntax structure, it fits into a boolean expression just as  an __equals__ sign normally would:
 
@@ -162,7 +157,6 @@ Sample output:
 | USA   | M   | 2014 | Jon  |   374 |
 | USA   | M   | 2014 | Job  |    80 |
 | USA   | M   | 2014 | Joy  |    23 |
-
 {:.table-sql}
 
 
@@ -195,6 +189,7 @@ Sample output:
 | USA   | M   | 2014 | John     | 10600 |
 | USA   | M   | 2014 | Jonathan |  8035 |
 | USA   | M   | 2014 | Jaxon    |  7635 |
+{:.table-sql}
 
 __Note:__ There must be better ways to phrase the above query. In fact, I can't think of a time where I've actually used `NOT LIKE` except just now, which may explain the lameness of my example. But I include `NOT LIKE` because its existence and functionality is a natural consequence with how `NOT` and `LIKE` and the rest of SQLite syntax works. You may not actually use it, but it is there, because of course it's there.
 

@@ -1,0 +1,459 @@
+---
+title: Aggregate functions in SQL
+description: |
+  How to calculate sum, average, and other aggregates with the GROUP BY clause.
+listed: true
+ranking: 615
+references:
+  - title: Aggregate Functions
+    source: SQLite documentation
+    url: https://www.sqlite.org/lang_aggfunc.html
+takeaways:
+  - How to count the number of rows in a table using `COUNT`.
+  - Where aggregate functions can and can be used.
+  - How to find the biggest or smallest value in a column.
+  - How to find the sum and average of a column.
+  - Why it is bad practice, when doing an aggregate query, to include columns. that are not being aggregated.
+next: /tutorials/sql-aggregates/group-by-and-aggregate-functions
+previous: /tutorials/sql-aggregates/group-by-in-sql
+pre_partials:
+  - /partials/tutorials/sql_ssa_baby_names_intro
+---
+
+<%= render_toc %>
+
+
+
+# Basic syntax of aggregate functions
+
+Aggregate functions are used to perform calculations such as the __sum__ or __average__ of a group of values. [They](https://www.sqlite.org/lang_aggfunc.html) all take at least __one argument__ -- typically the name of the column of which we want to sum or average the values.
+
+~~~sql
+SELECT SUM(some_column)
+FROM some_table;
+~~~
+
+
+#### How aggregate functions change the result
+
+Aggregate functions will return _only_ the aggregate value of the resulting rows. In the above example, even if `some_table` has 20,000 rows, the query result be a single value, i.e. something like this:
+
+| SUM(some_column) |
+|------------------|
+| 92999           |
+{:.table-sql}
+
+In other words, aggregate functions fundamentally change the _form_ of the result.
+
+#### Where can aggregate functions be used?
+
+Aggregate functions, unlike other core functions, can only be called as part of the `SELECT` clause. 
+
+So this query will not work (nor does it make any sense):
+
+~~~sql
+SELECT some_column
+FROM some_table
+where SUM(some_column) > 100;
+~~~
+
+To put it more simply: just __keep your aggregate functions at the beginning of the__ `SELECT` statement.
+
+
+
+# The COUNT function
+
+Note: this section reiterates the previous introduction, except using the SSA baby name data, as well as describing the `COUNT` function.
+
+The most basic kind of aggregation is to simply _count_ the number of rows. Previously, we were able to get a count of result rows by looking at the __results log__ after doing a query:
+
+![/image](files/images/tutorials/sql-basics/results-log-count.png)
+
+However, that was only a _side effect_ of doing a standard query, and a convenience provided by the GUI client. As we've noticed so far when learning SQL, we should be _explicit_ in asking for exactly what we want. 
+
+## How to use `COUNT` in a query
+
+Using the `COUNT` function, we can query the database to return the total number of rows in a table. Aggregate functions are used only after the __SELECT__ clause. 
+
+The __COUNT__ function takes a single argument. The most common is to simply use __the star__ -- this tells `COUNT` to provide a count of all the rows in the result:
+
+~~~sql
+SELECT COUNT(*)
+FROM baby_names;
+~~~
+
+The result:
+
+| COUNT(*) |
+|----------|
+|   633608 |
+{:.table-sql}
+
+
+Of course, we can count more specific things, such as: _how many girl baby names were there in California in the year 2012?_
+
+~~~sql
+SELECT COUNT(*)
+FROM baby_names
+WHERE state = 'CA'
+  AND sex = 'F'
+  AND year = 2012;
+~~~
+
+The result:
+
+| COUNT(*) |
+|----------|
+|     4088 |
+{:.table-sql}
+
+
+## The results of aggregate functions
+
+Notice how `COUNT` and other aggregate functions _collapse_ the result rows into a __single value__.
+
+Without an aggregate function, `SELECT * FROM baby_names;` should have returned all 633,608 result rows. However, an aggregate function is applied across all the rows in the result set and returns a _single aggregate value_. In other words, counting up 633,608 individual rows returns just a single answer: "there are 633,608 rows."
+
+Note: _However_, using `GROUP BY`, we can specify how the results should be grouped and aggregated, if we want, for example, to do a `COUNT` of result rows per `state`. This is where things get tricky. 
+
+We'll learn [how to use `GROUP BY` in concert with aggregate functions in the next tutorial](/tutorials/sql-aggregates/group-by-and-aggregate-functions). For now, let's just learn about the other aggregate functions.
+
+<a id="mark-first-agg-warning"></a>
+
+### The problem with including columns that aren't being aggregated
+
+Let's repeat the above query, except include the other columns to provide some context. And while we're at it, we'll alias the `COUNT` function call:
+
+~~~sql
+SELECT state, sex, year, 
+  COUNT(*) as total_count
+FROM baby_names
+WHERE state = 'CA'
+  AND sex = 'F'
+  AND year = 2012;
+~~~
+
+The result:
+
+| state | sex | year | total_count |
+|-------|-----|------|-------------|
+| CA    | F   | 2012 |        4088 |
+{:.table-sql}
+
+
+That makes sense, as `state` and `sex` and `year` show the only possible values that were allowed by the `WHERE` clause. 
+
+But this is a bit deceptive of how the query actually works. It's better to illustrate with an example: what happens when we want to do a count for _all_ years? In which case, we just remove the `AND year = 2012` from the clause:
+
+
+~~~sql
+SELECT state, sex, year, 
+  COUNT(*) as total_count
+FROM baby_names
+WHERE state = 'CA'
+  AND sex = 'F';
+~~~
+
+
+| state | sex | year | total_count |
+|-------|-----|------|-------------|
+| CA    | F   | 2014 |       20109 |
+{:.table-sql}
+
+
+Notice how the `year` column is listed as `2014`, which makes the result seem as if it is specifically for _only_ `2014`. Remember that _aggregate functions reduce the result set to a single value_. We know that `year` contains __5__ different possible values (i.e. years 2010 through 2014), but the query is designed to return only a single row. So why is it `2014`? It may just be random, for all we know. 
+
+The upshot is: __do not include columns that aren't being aggregated__.
+
+I'll reiterate this at the end of the lesson, so moving on... 
+
+
+### COUNT(*) vs COUNT(column)
+
+The `COUNT` function takes in a single argument. The use of the __star__ tells `COUNT` to simply count all rows in the result set. However, we can pass in the name of a column to get a count of non-`NULL` values:
+
+~~~sql
+SELECT COUNT(state)
+FROM baby_names;
+~~~
+
+This actually results in the same number (i.e. `633608`) as before. This is because __there are no non__-`NULL` values in `state`, i.e. _non-existent_ values. We actually haven't covered `NULL` yet and this particular database includes no `NULL` values...so, we'll revisit this issue later.
+
+
+### The difference between the count column and the COUNT function
+
+As a side-note, it's worth wondering how the interpreter tells the difference between `count`, the _column_, and the `COUNT` function. Recall that column identifiers and SQLite keywords are interpreted case-insensitively. So the following three queries are equivalent _and_ valid:
+
+~~~sql
+SELECT count(count) FROM baby_names;
+
+SELECT COUNT(COUNT) FROM baby_names;
+
+SELECT COUNT("COUNT") FROM baby_names;
+~~~
+
+The short answer: because that's just part of the SQL syntax and grammar. The interpreter knows that `count`, by itself, must refer to some kind of identifier, i.e. a column name. And invoking `count(whatever)`, `count` is interpreted as a function call.
+
+Another takeaway: try not to name your columns something like `count`, or `sum`, or even `name`, because it gets confusing. Obviously, I didn't follow that rule with the SSA baby names database.
+
+
+# Other aggregate functions
+
+There aren't many built-in aggregate functions in SQLite. [Here's the official list](https://www.sqlite.org/lang_aggfunc.html); I believe all of them are generally useful for data work, though I won't cover `GROUP_CONCAT` because it's a bit specialized (and can be confusing).
+
+## The SUM function
+
+The `SUM` function returns the sum of a group's values. It takes in one argument, typically the name of the column of which we want to sum the values. Here is the summation of all the `count` values in `baby_names`:
+
+~~~sql
+SELECT SUM(count) 
+FROM baby_names;
+~~~
+
+The result:
+
+| SUM(count) |
+|------------|
+|   33723213 |
+{:.table-sql}
+
+
+This is a non-nonsensical number. Remember that the `baby_names` table contains a row for every state _and_ for the U.S. (i.e. `state = 'USA'`) as a whole. So we're in effect, double-counting the counts. 
+
+So let's use a `WHERE` clause to remove the `USA` rows:
+
+~~~sql
+SELECT SUM(count)
+FROM baby_names
+WHERE state != 'USA';
+~~~
+
+The answer:
+
+| SUM(count) |
+|------------|
+|   15449605 |
+{:.table-sql}
+
+Or, to just sum the `USA` rows:
+
+~~~sql
+SELECT SUM(count)
+FROM baby_names
+WHERE state = 'USA';
+~~~
+
+The answer:
+
+| SUM(count) |
+|------------|
+|   18273608 |
+{:.table-sql}
+
+
+Why the huge disparity? Again, it has something to do with how the [Social Security Administration removes rows in which the `count` is *less than* 5](http://www.ssa.gov/oact/babynames/limits.html) -- the individual states have more names/year/sex records that would fall under that exemption.
+
+
+What happens when you try to sum values that are not numbers?
+
+~~~sql
+SELECT SUM(name)
+FROM baby_names;
+~~~
+
+
+SQLite treats non-numbers as 0.0. Since the `name` column is completely full of non-numbers, the answer should be predictable:
+
+| SUM(name) |
+|-----------|
+|       0.0 |
+{:.table-sql}
+
+
+
+
+## The AVG function
+
+The `AVG` function returns an average from a group of values. The following query will find the average `count` (again, the `count` column, _not_ the `COUNT` function) per name, for the `USA` in the `year` `2014`:
+
+~~~sql
+SELECT AVG(count)
+FROM baby_names
+WHERE state = 'USA'
+  AND year = 2014;
+~~~
+
+|    AVG(count)    |
+|------------------|
+| 53.2240959710105 |
+{:.table-sql}
+
+With `AVG`, it's common to use `ROUND` if you don't need the decimal precision:
+
+~~~sql
+SELECT ROUND(AVG(count))
+FROM baby_names
+WHERE state = 'USA'
+  AND year = 2014;
+~~~
+
+| ROUND(AVG(count)) |
+|-------------------|
+|                53 |
+{:.table-sql}
+
+
+In other words, there are about 53 babies for each boy name, nationwide, in the year 2014.
+
+
+## The MAX and MIN functions
+
+The `MAX` and `MIN` functions return the biggest and smallest value, respectively, of a given group of values.
+
+We already know the minimum number of babies -- i.e. `count` -- for any given name, state, year, and sex, [is 5](http://www.ssa.gov/oact/babynames/limits.html). But we can confirm that using the `MIN` function on `count`:
+
+~~~sql
+SELECT MIN(count)
+FROM baby_names;
+~~~
+
+The result:
+
+| MIN(count) |
+|------------|
+|          5 |
+{:.table-sql}
+
+
+To find the highest number of babies that has ever been named `'Daniel'`, at least between 2010 and 2014, for any single U.S. state:
+
+~~~sql
+SELECT MAX(count)
+FROM baby_names
+WHERE state != 'USA'
+  AND name = 'Daniel';
+~~~
+
+The answer:
+
+| MAX(count) |
+|------------|
+|       3131 |
+{:.table-sql}
+
+
+### The difference between MAX/MIN and LIMIT & ORDER
+
+If you [remember the lesson on the `LIMIT` and `ORDER` clauses](/tutorials/sql-basics/limit-and-order), you could argue that we had a perfectly fine way to find the biggest and smallest value for any given column.
+
+For example, to find the smallest quantity of `count`:
+
+~~~sql
+SELECT count
+FROM baby_names
+ORDER BY count ASC
+LIMIT 1;
+~~~
+
+And the biggest number of babies named `'Daniel'` in a single U.S. state:
+
+~~~sql
+SELECT count
+FROM baby_names
+WHERE state != 'USA'
+  AND name = 'Daniel'
+ORDER BY count DESC
+LIMIT 1;
+~~~
+
+Both the `MIN/MAX` and the `LIMIT` & `ORDER BY` queries return the same answer. So why use one over the other? Well, the `LIMIT` and `ORDER BY` queries have the advantage of actually returning the entire row, which we can do by doing `SELECT *`, and thus giving us needed context, such as: what `year` and `state` the `3131` Daniels were born into:
+
+
+~~~sql
+SELECT *
+FROM baby_names
+WHERE state != 'USA'
+  AND name = 'Daniel'
+ORDER BY count DESC
+LIMIT 1;
+~~~
+
+| state | sex | year |  name  | count |
+|-------|-----|------|--------|-------|
+| CA    | M   | 2010 | Daniel |  3131 |
+{:.table-sql}
+
+
+That seems significantly more useful than what `MAX` can provide. So read on for one example of where `MAX` and `MIN` have their uses.
+
+
+## Performing multiple aggregate functions
+
+Just like how more than one of the non-aggregate functions -- e.g. `LENGTH`, `LTRIM`, `UPPER`, etc. -- can be used in a `SELECT` clause, the same applies to aggregate functions.
+
+For example, to find the most and the least number of _boy_ babies named `'Daniel'`, nationwide, as well as the average and the sum across all the years in the `baby_names` table:
+
+
+~~~sql
+SELECT SUM(count), ROUND(AVG(count)),
+  MIN(count), MAX(count)
+FROM baby_names
+WHERE state = 'USA'
+  AND name = 'Daniel'
+  AND sex = 'M';
+~~~
+
+
+| SUM(count) | ROUND(AVG(count)) | MIN(count) | MAX(count) |
+|------------|-------------------|------------|------------|
+|      73346 |           14669.0 |      13829 |      15815 |
+{:.table-sql}
+
+
+So this is one example of how `MAX/MIN` is different than using `ORDER BY` & `LIMIT 1` -- the latter is limited to either showing the biggest or smallest of a value. So while both approaches can theoretically result in the same actual answer, what we use simply depends on the kind of query we want to make.
+
+Or, to repeat something I've said before: there's always more than one way to get an answer.
+
+
+
+# Do not include columns that aren't being aggregated
+
+I [realize I covered this topic earlier](#mark-first-agg-warning), but it is very easy to mess up as we get into more complicated queries. This is why I believe it is worth reiterating before we finish this tutorial.
+
+Recall the query needed to count all the rows in a given table:
+
+~~~sql
+SELECT COUNT(*)
+FROM baby_names;
+~~~
+
+And the answer:
+
+| COUNT(*) |
+|----------|
+|   633608 |
+{:.table-sql}
+
+
+What happens if we include all the columns along with the `COUNT` function?
+
+~~~sql
+SELECT *, COUNT(*)
+FROM baby_names;
+~~~
+
+
+The result:
+
+| state | sex | year |  name | count | COUNT(*) |
+|-------|-----|------|-------|-------|----------|
+| USA   | M   | 2014 | Zyrin |     5 |   633608 |
+{:.table-sql}
+
+
+How is one to interpret this result? That the boy name of `Zyrin` had 633,608 rows? Of course not. Why did the database choose to return that specific name, year, sex, and state? Who knows?
+
+And that's why it is best practice to only include the columns that you are counting/averaging/summing/etc. 
+
+
+Note: For those of you who are curious about SQL in general to an unhealthy degree, [SQLite is one of the few variations of SQL](http://comments.gmane.org/gmane.comp.db.sqlite.general/91383) that allow the mixing of aggregate and non-aggregate columns. However, many other flavors of SQL do not. Or, if they do, the results are even more arbitrary than in SQLite. This is why I strongly suggest, out of habit, that you follow the rule of not mixing non-aggregate and aggregate columns. Because other SQL variations -- notably [PostgreSQL](http://www.postgresql.org/) -- will not let you be as sloppy.

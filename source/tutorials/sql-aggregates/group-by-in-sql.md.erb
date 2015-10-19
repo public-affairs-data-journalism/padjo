@@ -1,14 +1,20 @@
 ---
 title: Using GROUP BY to create aggregates in SQL
+listed: true
+ranking: 603
 description: |
   With the use of the GROUP BY clause, we gain the ability to aggregate our data based on values in a given column or columns. At the very least, this let's us count the number of unique values in that column.
 takeaways:
   - How to find all unique values in a given column.
   - Where `GROUP BY` fits in with `SELECT`, `WHERE`, and `ORDER BY`.
-next: /tutorials/sql-aggregates/group-functions-in-sql
+next: /tutorials/sql-aggregates/aggregate-functions-in-sql
 previous: /tutorials/sql-basics/aliasing-values-in-sql
-
+pre_partials:
+  - /partials/tutorials/sql_ssa_baby_names_intro
 ---
+
+<%= render_toc %>
+
 
 
 # The problem with granular data
@@ -147,7 +153,7 @@ The results log:
       WHERE sex = 'M'
       GROUP BY name; (took 171ms)
 
-We'll count the number of [girl names in the next lesson](/tutorials/sql-aggregates/group-functions-in-sql). For now, let's filter by `state` and count number of unique names where `state = 'USA'`:
+We'll count the number of [girl names in a later lesson](/tutorials/sql-aggregates/aggregate-functions-in-sql). For now, let's filter by `state` and count number of unique names where `state = 'USA'`:
 
 ~~~sql
 SELECT name FROM baby_names

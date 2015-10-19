@@ -1,0 +1,17 @@
+<% if tutorial.next_tutorials? %>
+  <div class="next tutorials">
+    <strong>Next tutorials:</strong>
+     <% tutorial.next_tutorials.each do |t| %>
+       <%= described_link_to_resource(t) %>
+    <% end %>
+  </div>
+<% end %>
+
+<% if tutorial.previous_tutorials? %>
+  <div class="previous tutorials">
+        <strong>Previous tutorials:</strong>
+       <% tutorial.previous_tutorials.each do |t| %>
+        <%= described_link_to_resource(t) %>
+      <% end %>
+  </div>
+<% end %>

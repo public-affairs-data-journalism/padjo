@@ -1,14 +1,19 @@
 ---
-title: Group functions in SQL
+title: Using GROUP BY and aggregate functions in SQL
+listed: true
+ranking: 622
+description: |
+  With GROUP BY, we can specify the groups of data for which we want to sum, count, and average.
+previous: /tutorials/sql-aggregates/aggregate-functions-in-sql
+next: /tutorials/sql-aggregates/having-clause-filter-aggregates
+pre_partials:
+  - /partials/tutorials/sql_ssa_baby_names_intro
 ---
 
-https://www.sqlite.org/lang_aggfunc.html
+<%= render_toc %>
 
 
 
-## SELECT COUNT(*)
-
-SELECT COUNT(*) FROM baby_names
 
 
 ## GROUP BY count
@@ -49,15 +54,9 @@ Note that we don't have to rely on the count.
 
 
 
-~~~sql
-SELECT name, AVG(count)
-FROM baby_names
-WHERE name = 'Daniel'
-~~~
 
 
-
-## AVG
+## AVG and GROUP BY
 
 ~~~sql
 SELECT name, 
@@ -79,3 +78,5 @@ LIMIT 5;
 | William |       16889.0 |
 | Ethan   |       16820.4 |
 {:.table-sql}
+
+

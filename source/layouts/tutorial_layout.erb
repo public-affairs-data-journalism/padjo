@@ -4,38 +4,21 @@
   <%= link_to 'Tutorials', '/tutorials' %>
 <% end %>
 
+<% content_for :pre_page_content do %>
+
+  <%= partial '/partials/tutorials/next_and_pre_tutorials', locals: {:tutorial => tutorial} %>
+
+
+  <%= partial '/partials/tutorials/takeaways_tutorials', locals: {:tutorial => tutorial} %>
+
+
+
+
+<% end %>
+
 <% wrap_layout :page do %>
-<% if tutorial.next_tutorials? %>
-  <div class="next tutorials">
-    <strong>Next tutorials:</strong>
-     <% tutorial.next_tutorials.each do |t| %>
-       <%= described_link_to_resource(t) %>
-    <% end %>
-  </div>
-<% end %>
 
-<% if tutorial.previous_tutorials? %>
-  <div class="previous tutorials">
-        <strong>Previous tutorials:</strong>
-       <% tutorial.previous_tutorials.each do |t| %>
-        <%= described_link_to_resource(t) %>
-      <% end %>
-  </div>
-<% end %>
 
-<% unless tutorial.takeaways.empty? %>
-<section class="sec takeaways" id="takeaways">
-  <h2>The Takeaways</h2>
-
-<p>By the end of this tutorial, make sure you can answer these questions: </p>
-
-  <ul class="list">
-    <% tutorial.takeaways.each do |t| %>
-      <li class="takeaway"><%=markdownify t%></li>
-    <% end %>
-  </ul>
-</section>
-<% end %>
 
 
 <%= yield %>
@@ -43,23 +26,8 @@
 
 <hr>
 
-<% if tutorial.next_tutorials? %>
-  <div class="next tutorials">
-    <strong>Next tutorials:</strong>
-     <% tutorial.next_tutorials.each do |t| %>
-       <%= described_link_to_resource(t) %>
-    <% end %>
-  </div>
-<% end %>
 
-<% if tutorial.previous_tutorials? %>
-  <div class="previous tutorials">
-        <strong>Previous tutorials:</strong>
-       <% tutorial.previous_tutorials.each do |t| %>
-        <%= described_link_to_resource(t) %>
-      <% end %>
-  </div>
-<% end %>
+<%= partial '/partials/tutorials/next_and_pre_tutorials', locals: {:tutorial => tutorial} %>
 
 
 <% end %>

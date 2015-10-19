@@ -10,6 +10,21 @@
       </div>
     </div>
 
+    <div class="pre-page-content">
+
+      <%=yield_content :pre_page_content %>
+
+       <%- pre_partials = current_page.data.pre_partials %>
+        <%- if pre_partials.present? %>
+          <section class="pre-partials">
+            <%- for partial_name in pre_partials %>
+              <div class="partial">
+                <%= partial partial_name %>
+              </div>
+            <%- end %>
+          </section>
+        <%- end %>
+    </div>
 
     <div class="page-content">
       <%= yield %>
