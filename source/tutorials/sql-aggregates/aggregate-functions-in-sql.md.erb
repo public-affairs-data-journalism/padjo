@@ -10,7 +10,8 @@ references:
     url: https://www.sqlite.org/lang_aggfunc.html
 takeaways:
   - How to count the number of rows in a table using `COUNT`.
-  - Where aggregate functions can and can be used.
+  - How to count unique values in a column.
+  - Where aggregate functions can and can be used in a SQL statement.
   - How to find the biggest or smallest value in a column.
   - How to find the sum and average of a column.
   - Why it is bad practice, when doing an aggregate query, to include columns. that are not being aggregated.
@@ -195,6 +196,59 @@ SELECT COUNT("COUNT") FROM baby_names;
 The short answer: because that's just part of the SQL syntax and grammar. The interpreter knows that `count`, by itself, must refer to some kind of identifier, i.e. a column name. And invoking `count(whatever)`, `count` is interpreted as a function call.
 
 Another takeaway: try not to name your columns something like `count`, or `sum`, or even `name`, because it gets confusing. Obviously, I didn't follow that rule with the SSA baby names database.
+
+
+## Using DISTINCT to count unique values
+
+Sometimes we don't care about the total number of rows, but the number of _unique_ values within a particular column. The keyword `DISTINCT` -- followed by a column name -- can be used as an argument in any aggregate function call (though it mostly makes sense for the `COUNT` function).
+
+Let's practice it on a column of which we know the unique number of values: 
+
+~~~sql
+SELECT COUNT(DISTINCT sex)
+FROM baby_names;
+~~~
+
+Result:
+
+| COUNT(DISTINCT sex) |
+|---------------------|
+|                   2 |
+{:.table-sql}
+
+
+
+To get the number of unique names:
+
+~~~sql
+SELECT COUNT(DISTINCT name)
+FROM baby_names;
+~~~
+
+The result:
+
+
+| COUNT(DISTINCT name) |
+|----------------------|
+|                46359 |
+{:.table-sql}
+
+
+The result of `COUNT` and `DISTINCT` is similar to the count delivered by the __results log__ when doing a `GROUP BY` the `name` column:
+
+~~~sql
+SELECT name
+FROM baby_names
+GROUP BY name;
+~~~
+
+    46359 Rows returned from: SELECT name
+    FROM baby_names
+    GROUP BY name; (took 178ms)
+
+Of course, the difference is that `COUNT(DISTINCT name)` returns a single value: the count of rows returned by the `GROUP BY` query.
+
+[In the next lesson](/tutorials/sql-aggregates/group-by-and-aggregate-functions), we'll find out how useful it can be to do `COUNT(DISTINCT)` _and_ a `GROUP BY` clause. But first, let's get acquainted with the rest of the aggregate functions.
 
 
 # Other aggregate functions

@@ -1,0 +1,96 @@
+
+
+# Download files
+
+~~~sh
+BASE_URL="https://docs.google.com/spreadsheets/d/1nJ4NdcghBkCAeiZ3CKKcMZBgfkoGm5SdS-1w07_bzbw/export?format=csv&gid"
+
+# download tracks
+curl -s "$BASE_URL=1749375398" > source/files/data/pop_music_db/tracks.csv
+curl -s "$BASE_URL=1780760193" > source/files/data/pop_music_db/artists.csv
+curl -s "$BASE_URL=482080351" > source/files/data/pop_music_db/albums.csv
+curl -s "$BASE_URL=2031077802" > source/files/data/pop_music_db/awards.csv
+
+~~~
+
+
+# Create the database
+
+~~~sh
+BASE_DIR=source/files/data/pop_music_db
+DB_PATH=$BASE_DIR/pop_music_db.sqlite
+rm -f $DB_PATH
+
+# initialize the database and create the artists table
+echo "CREATE TABLE artists (
+  name VARCHAR NOT NULL, 
+  real_first_name VARCHAR NOT NULL, 
+  real_middle_name VARCHAR NOT NULL, 
+  real_last_name VARCHAR NOT NULL, 
+  birthdate DATE NOT NULL, 
+  birth_city VARCHAR NOT NULL, 
+  birth_province VARCHAR NOT NULL, 
+  birth_country VARCHAR NOT NULL, 
+  wikipedia_url VARCHAR NOT NULL, 
+  wikipedia_image_url VARCHAR NOT NULL
+); CREATE INDEX artists_name_idx ON artists(name);" | sqlite3 $DB_PATH 
+
+
+# Create the albums table
+echo "CREATE TABLE albums (
+  artist_name VARCHAR NOT NULL, 
+  title VARCHAR NOT NULL, 
+  id VARCHAR NOT NULL,
+  release_date DATE, 
+  us_sales INTEGER, 
+  peak_aus INTEGER, 
+  peak_can INTEGER, 
+  peak_fra INTEGER, 
+  peak_ger INTEGER, 
+  peak_uk INTEGER, 
+  peak_us INTEGER, 
+  riaa_platinum INTEGER, 
+  wikipedia_url VARCHAR, 
+  wikipedia_image_url VARCHAR
+); CREATE INDEX albums_id_idx ON albums(uid);
+"  | sqlite3 $DB_PATH 
+
+
+
+echo "CREATE TABLE tracks (
+  album_id VARCHAR NOT NULL, 
+  title VARCHAR NOT NULL, 
+  number INTEGER NOT NULL, 
+  length VARCHAR(6) NOT NULL, 
+  length_seconds INTEGER NOT NULL, 
+  single_release_date DATE, 
+  peak_aus INTEGER, 
+  peak_can INTEGER, 
+  peak_fra INTEGER, 
+  peak_ger INTEGER, 
+  peak_uk INTEGER, 
+  peak_us INTEGER, 
+  riaa_platinum INTEGER
+); CREATE INDEX tracks_album_id_idx ON tracks(album_id);
+"  | sqlite3 $DB_PATH 
+
+echo "CREATE TABLE awards (
+  artist_name VARCHAR(13) NOT NULL, 
+  name VARCHAR(21) NOT NULL, 
+  year INTEGER NOT NULL, 
+  nominated_title VARCHAR(70) NOT NULL, 
+  category VARCHAR(72) NOT NULL, 
+  result VARCHAR(9)
+); CREATE INDEX awards_artists_name_idx ON awards(artist_name);
+" | sqlite3 $DB_PATH 
+~~~
+
+
+Insert the data
+
+~~~sh
+csvsql $BASE_DIR/awards.csv   --db sqlite:///$DB_PATH --insert --no-create 
+csvsql $BASE_DIR/artists.csv  --db sqlite:///$DB_PATH --insert --no-create 
+csvsql $BASE_DIR/albums.csv   --db sqlite:///$DB_PATH --insert --no-create 
+csvsql $BASE_DIR/tracks.csv   --db sqlite:///$DB_PATH --insert --no-create 
+~~~

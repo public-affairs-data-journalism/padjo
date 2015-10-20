@@ -1,0 +1,45 @@
+
+
+
+# Find all number #1 hits in canada that did not top out in USA
+
+~~~sql
+SELECT * 
+FROM tracks
+WHERE peak_us > 1
+  AND peak_can = 1;
+~~~
+
+
+Vice versa:
+
+~~~sql
+SELECT * 
+FROM tracks
+WHERE peak_us = 1
+  AND peak_can > 1;
+~~~
+
+
+Find longest track that hit number 1
+
+~~~sql
+SELECT * 
+FROM tracks
+WHERE peak_us = 1
+ORDER BY length_seconds DESC
+LIMIT 1;
+~~~
+
+Find longest track that hit platinum
+
+~~~sql
+SELECT * 
+FROM tracks
+WHERE riaa_platinum > 0
+ORDER BY length_seconds DESC
+LIMIT 1;
+~~~
+
+
+

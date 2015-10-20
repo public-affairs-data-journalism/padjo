@@ -1,0 +1,71 @@
+
+
+
+
+# Find all artists who have won at least one Grammy
+
+~~~sql
+SELECT DISTINCT artists.name
+FROM awards
+INNER JOIN artists
+    ON awards.artist_name = artists.name
+
+WHERE awards.result = 'Won' 
+  AND awards.name = 'Grammy Awards'
+~~~
+
+
+
+# List all artists with one Grammy win
+
+~~~sql
+SELECT artists.name, awards.name, 
+awards.year, awards.category, 
+awards.nominated_title
+FROM awards
+INNER JOIN artists
+    ON awards.artist_name = artists.name
+
+WHERE awards.result = 'Won' AND awards.name = 'Grammy Awards'
+~~~
+
+
+# The name and age of the artist to have released a platinum track at the youngest age, and the name of the track
+
+~~~sql
+SELECT artists.name, tracks.title,
+  (tracks.single_release_date - artists.birthdate) AS age
+FROM artists
+INNER JOIN tracks
+    ON tracks.artist_name = artists.name
+WHERE tracks.riaa_platinum > 0
+ORDER BY age ASC
+~~~
+
+
+
+How about peaked in the US at #1?
+
+~~~sql
+SELECT artists.name, tracks.title,
+  (tracks.single_release_date - artists.birthdate) AS age
+FROM artists
+INNER JOIN tracks
+    ON tracks.artist_name = artists.name
+WHERE tracks.peak_us = 1
+ORDER BY age ASC
+~~~
+
+
+How about the artist who created a multi-platinum album at the youngest age?
+
+~~~sql
+SELECT artists.name, albums.title,
+  (albums.release_date - artists.birthdate) AS age
+FROM artists
+INNER JOIN albums
+    ON albums.artist_name = artists.name
+WHERE albums.riaa_platinum > 1
+ORDER BY age ASC
+~~~
+

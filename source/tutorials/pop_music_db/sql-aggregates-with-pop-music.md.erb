@@ -1,0 +1,13 @@
+
+
+# Count Grammy wins per artist
+
+~~~sql
+SELECT artist_name, COUNT(*) AS grammy_count
+FROM awards
+WHERE awards.name = 'Grammy Awards' 
+  AND awards.result = 'Won'
+GROUP BY artist_name
+ORDER BY grammy_count DESC;
+~~~  
+

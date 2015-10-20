@@ -14,9 +14,252 @@ pre_partials:
 
 
 
+# The inconvenience of aggregate results
+
+In the previous lesson, [we learned about aggregate functions](/tutorials/sql-aggregates/aggregate-functions-in-sql), such as `COUNT` and `SUM`. We also learned that aggregate functions reduce a result set to a single value. The query below counts the number of rows and sums the `count` column (reminder: the `count` column has nothing to do with the `COUNT` function), effectively giving us the number of boy and girl names, and the total number of boy and girl babies nationwide for the year 2014:
+
+~~~sql
+SELECT COUNT(*), SUM(count)
+FROM baby_names
+WHERE year = 2014
+  AND state = 'USA';
+~~~
+
+The result: 
+
+| COUNT(*) | SUM(count) |
+|----------|------------|
+|    33044 |    3670151 |
 
 
-## GROUP BY count
+If we wanted to calculate this aggregate for _each_ `sex`, we would have to do two queries:
+
+
+##### For boys
+
+~~~sql
+SELECT COUNT(*), SUM(count)
+FROM baby_names
+WHERE year = 2014
+  AND state = 'USA'
+  AND sex = 'M';
+~~~
+
+The result: 
+
+| COUNT(*) | SUM(count) |
+|----------|------------|
+|    13977 |    1901376 |
+
+##### For girls
+
+~~~sql
+SELECT COUNT(*), SUM(count)
+FROM baby_names
+WHERE year = 2014
+  AND state = 'USA'
+  AND sex = 'F';
+~~~
+
+The result: 
+
+| COUNT(*) | SUM(count) |
+|----------|------------|
+|    19067 |    1768775 |
+
+
+It works, but it's a bit cumbersome. Besides running two different queries, we don't get the convenience of having the answers of these queries in a single table for easy comparison. 
+
+It'd be nice to be able to do something similar to a pivot table:
+
+| sex | COUNT of rows | SUM of count |
+|-----|---------------|--------------|
+| M   |         13977 |      1901376 |
+| F   |         19067 |      1768775 |
+
+
+# Using GROUP BY to aggregate across multiple groups
+
+This is where the `GROUP BY` clause comes in. As we saw in the above examples, without a `GROUP BY`, an aggregate function treats the entire result set as a single group and returns a single value.
+
+But _with_ a `GROUP BY`, we tell the SQLite interpreter, _"Hey, perform those aggregate calculations on these groups"_.
+
+To get a pivot-table-like answer, in which we perform an aggregate calculation for each unique value in given column, we simply `GROUP BY` that column. Here it is for `sex`:
+
+~~~sql
+SELECT sex, COUNT(*), SUM(count)
+FROM baby_names
+WHERE year = 2014
+  AND state = 'USA'
+GROUP BY sex;
+~~~
+
+
+| sex | COUNT(*) | SUM(count) |
+|-----|----------|------------|
+| F   |    19067 |    1768775 |
+| M   |    13977 |    1901376 |
+
+Note that I include `sex` in the `SELECT` clause. In the previous lesson, I strongly advised that you *not* include columns that aren't being aggregated. _However_, we can think of any column in a `GROUP BY` clause as being aggregated. Thus, it's fine to include a `GROUP BY` column in the `SELECT` clause as well.
+
+If we hadn't done so in the previous example, the result would be a bit ambiguous:
+
+~~~sql
+SELECT COUNT(*), SUM(count)
+FROM baby_names
+WHERE year = 2014
+  AND state = 'USA'
+GROUP BY sex;
+~~~
+
+
+| COUNT(*) | SUM(count) |
+|----------|------------|
+|    19067 |    1768775 |
+|    13977 |    1901376 |
+
+
+Let's try doing this same aggregate, but by `year`:
+
+~~~sql
+SELECT year, COUNT(*), SUM(count)
+FROM baby_names
+WHERE year = 2014
+  AND state = 'USA'
+GROUP BY year;
+~~~
+
+
+The answer:
+
+
+| year | COUNT(*) | SUM(count) |
+|------|----------|------------|
+| 2014 |    33044 |    3670151 |
+
+The above answer is not very useful because the `WHERE year = 2014` restricts the result to only rows with a `year` of 2014. Simply remove that part of the conditional expression to get all 5 years:
+
+
+
+~~~sql
+SELECT year, COUNT(*), SUM(count)
+FROM baby_names
+WHERE state = 'USA'
+GROUP BY year;
+~~~
+
+
+The result:
+
+
+| year | COUNT(*) | SUM(count) |
+|------|----------|------------|
+| 2010 |    34041 |    3686589 |
+| 2011 |    33869 |    3646730 |
+| 2012 |    33684 |    3643336 |
+| 2013 |    33203 |    3626802 |
+| 2014 |    33044 |    3670151 |
+
+
+And to get a break down of boy versus girl names, by year, we simply `GROUP BY` both columns. In the example below, I also alias the aggregate functions to produce nicer output:
+
+~~~sql
+SELECT year, sex,
+  COUNT(*) AS name_count, 
+  SUM(count) AS baby_count
+FROM baby_names
+WHERE state = 'USA'
+GROUP BY year, sex;
+~~~
+
+The result:
+
+| year | sex | name_count | baby_count |
+|------|-----|------------|------------|
+| 2010 | F   |      19800 |    1772738 |
+| 2010 | M   |      14241 |    1913851 |
+| 2011 | F   |      19540 |    1753500 |
+| 2011 | M   |      14329 |    1893230 |
+| 2012 | F   |      19468 |    1753922 |
+| 2012 | M   |      14216 |    1889414 |
+| 2013 | F   |      19191 |    1745339 |
+| 2013 | M   |      14012 |    1881463 |
+| 2014 | F   |      19067 |    1768775 |
+| 2014 | M   |      13977 |    1901376 |
+
+
+I'm not sure why there are so many girl names versus boy names: 19,067 vs 14,977 in 2014, a 21% difference. Or why there are more boy babies than girl babies -- 1.90 million versus 1.77 million, i.e. 51.7% boys versus 48.3% girls.
+
+But if we account for the fact that the Social Security Administration doesn't include names that had 5 or fewer babies, then it's possible that because girls seem to receive a wider variety of names, more girls receive _rare_ names, and thus, more girl babies are likely to be uncounted.
+
+Let's do a query for babies nationwide: a group `COUNT` and `SUM`, but for just the year 2014 and for names with _fewer than 10_ babies per sex. This will give us some insight to how many girl babies have rare names:
+
+~~~sql
+SELECT sex,
+  COUNT(*) AS name_count, 
+  SUM(count) AS baby_count
+FROM baby_names
+WHERE state = 'USA'
+  AND count < 10
+  AND year = 2014
+GROUP BY sex;
+~~~
+
+
+| sex | name_count | baby_count |
+|-----|------------|------------|
+| F   |       8222 |      53370 |
+| M   |       5914 |      38259 |
+
+There are a lot of rare girl names. But are there enough to make up the 130,000 gap between the total `count` gap between boys and girls? Even if we assume that there are __20,000__ girl names that were each given to 4 babies in 2014, that only adds up to 80,000 more girls. So it's unlikely that the fact that girls have a wider variety of names is enough to account for the  gap between the `SUM` of `count` for each `sex`.
+
+As it turns out, the ratio for babies in the United States has long been 51 to 49 percent in favor of boys, according to this [March 30, 2015 NPR report, "Why Are More Baby Boys Born Than Girls?"](http://www.npr.org/sections/health-shots/2015/03/30/396384911/why-are-more-baby-boys-born-than-girls). The summary of the report is: the imbalance may be due to the fact that more
+female fetuses are lost during pregnancy.
+
+Note: because of how the Social Security Administration tallies these baby numbers, it may just be total coincidence that we observe an approximation of the 51% to 49% boy vs. girl gap in the baby names data. If you want to pursue that topic further, I'd go with [the Centers for Disease Control and Prevention's birth data](http://www.cdc.gov/nchs/births.htm).
+
+
+# Reproducing the `totals` table
+
+
+~~~sql
+SELECT state, sex, year,
+  SUM(count) AS baby_count,
+  COUNT(*) AS name_count
+FROM baby_names
+GROUP BY state, sex, year
+~~~
+
+And to get the rows for `'All'`, which is simply a group count/sum without splitting it by `sex`:
+
+~~~sql
+SELECT state, 'All', year,
+  SUM(count) AS baby_count,
+  COUNT(*) AS name_count
+FROM baby_names
+GROUP BY state, year
+~~~
+
+
+The above two queries is what was used to generate the `totals` table -- you can assume I just exported their results into one CSV, then created the `totals` table via import.
+
+
+
+# The fun and danger of GROUP BY COUNT
+
+
+(show how easy it is to mess up)
+(show this after the main examples?)
+(show a chart)
+
+
+
+
+
+
+# Counting by groups
+
+
 
 In a previous example, we found the number of unique boy names by executing this query:
 
@@ -56,7 +299,193 @@ Note that we don't have to rely on the count.
 
 
 
+
+## Count unique names
+
+
+~~~sql
+SELECT COUNT(DISTINCT name)
+FROM baby_names;
+~~~
+
+The result:
+
+| COUNT(DISTINCT name) |
+|----------------------|
+|                46359 |
+
+
+To count unique names per `sex`:
+
+~~~sql
+SELECT sex, COUNT(DISTINCT name)
+FROM baby_names
+GROUP BY sex;
+~~~
+
+
+| sex | COUNT(DISTINCT name) |
+|-----|----------------------|
+| F   |                29229 |
+| M   |                21193 |
+
+
+To do it by `year`:
+
+~~~sql
+SELECT year, COUNT(DISTINCT name)
+FROM baby_names
+GROUP BY year;
+~~~
+
+It seems that the total number of names has decreased over the years:
+
+| year | COUNT(DISTINCT name) |
+|------|----------------------|
+| 2010 |                31603 |
+| 2011 |                31418 |
+| 2012 |                31236 |
+| 2013 |                30774 |
+| 2014 |                30579 |
+
+
+
+
+And we can do a count of unique names by `year` and `sex`:
+
+~~~sql
+SELECT sex, year, COUNT(DISTINCT name)
+FROM baby_names
+GROUP BY sex, year;
+~~~
+
+The downward trend of unique names appears to exist for both boys and girls:
+
+| sex | year | COUNT(DISTINCT name) |
+|-----|------|----------------------|
+| F   | 2010 |                19800 |
+| F   | 2011 |                19540 |
+| F   | 2012 |                19468 |
+| F   | 2013 |                19191 |
+| F   | 2014 |                19067 |
+| M   | 2010 |                14241 |
+| M   | 2011 |                14329 |
+| M   | 2012 |                14216 |
+| M   | 2013 |                14012 |
+| M   | 2014 |                13977 |
+
+
+Let's do one more: a count of unique names, by `state` and `year`, but just for the states of California and Texas:
+
+~~~sql
+SELECT state, year, COUNT(DISTINCT name)
+FROM baby_names
+WHERE state IN('CA', 'TX')
+GROUP BY state, year;
+~~~
+
+It appears that Texas, unlike California and the rest of the nation, has a slight upward bump in unique names from 2010 to 2014.
+
+
+------------
+
+
+
+## MAX/MIN and GROUP BY
+
+Top 10 girl names, nationwide, ordered by descending order of their maximum count over the 2010 to 2014 period. Note that we don't have to `GROUP BY` the `sex` or `state` columns because we know those are restricted to `F` and `USA`:
+
+~~~sql
+SELECT name, MAX(count) AS max_count, 
+  MIN(count) AS min_count,
+  AVG(count) AS avg_count
+FROM baby_names
+WHERE state = 'USA' AND sex = 'F'
+GROUP BY name
+ORDER BY max_count DESC
+LIMIT 5;
+~~~
+
+
+|   name   | max_count | min_count | avg_count |
+|----------|-----------|-----------|-----------|
+| Isabella |     22883 |     16950 |   19266.8 |
+| Sophia   |     22267 |     18490 |   20866.4 |
+| Emma     |     20902 |     17322 |   19735.2 |
+| Olivia   |     19674 |     17012 |   17924.6 |
+| Ava      |     15586 |     15211 |   15441.4 |
+
+
+
+Ordering it by the biggest difference between the `MAX` and `MIN` of their `count` values. 
+
+
+~~~sql
+SELECT name, 
+  MAX(count) - MIN(count) AS max_change,
+  MAX(count) AS max_count, 
+  MIN(count) AS min_count,
+  AVG(count) AS avg_count
+FROM baby_names
+WHERE state = 'USA' AND sex = 'F'
+GROUP BY name
+ORDER BY max_change DESC
+LIMIT 5;
+~~~
+
+The result:
+
+|    name   | max_change | max_count | min_count | avg_count |
+|-----------|------------|-----------|-----------|-----------|
+| Harper    |       6935 |      9564 |      2629 |    6461.6 |
+| Isabella  |       5933 |     22883 |     16950 |   19266.8 |
+| Aria      |       4990 |      5893 |       903 |    3421.0 |
+| Charlotte |       4694 |     10048 |      5354 |    7712.4 |
+| Alexis    |       4061 |      8249 |      4188 |    5808.0 |
+
+
+Note that this calculation doesn't tell us if the name is becoming more or less popular, since we don't know when the `MAX` happened with respect to the `MIN` value. We'd have to do a separate (non-aggregate) query based on the names given above:
+
+~~~sql
+SELECT name, year, count
+FROM baby_names
+WHERE name IN ('Harper', 'Isabella', 'Aria', 'Charlotte', 'Alexis')
+  AND state = 'USA'
+  AND sex = 'F'
+ORDER BY name, year;
+~~~
+
+
+Rather than print out the table, I'll just show you what it looks like as a visualized pivot table on Google Sheets:
+
+|           |  2010 |  2011 |  2012 |  2013 |  2014 |
+|-----------|-------|-------|-------|-------|-------|
+| Alexis    |  8249 |  6510 |  5337 |  4756 |  4188 |
+| Aria      |   903 |  1979 |  3226 |  5104 |  5893 |
+| Charlotte |  5354 |  6418 |  7468 |  9274 | 10048 |
+| Harper    |  2629 |  4668 |  7179 |  8268 |  9564 |
+| Isabella  | 22883 | 19870 | 19058 | 17573 | 16950 |
+
+
+
+- [The data](https://docs.google.com/spreadsheets/d/1r29plVC1QftuUi21GGE1R1jfBE_zuziqkuUK36l4LkU/edit#gid=0) (i.e. the spreadsheet)
+- [The pivot table](https://docs.google.com/spreadsheets/d/1r29plVC1QftuUi21GGE1R1jfBE_zuziqkuUK36l4LkU/edit#gid=1089087814)
+- [The chart](https://docs.google.com/spreadsheets/d/1r29plVC1QftuUi21GGE1R1jfBE_zuziqkuUK36l4LkU/edit#gid=2121726131)
+
+<iframe width="100%" height="450" src="https://docs.google.com/spreadsheets/d/1r29plVC1QftuUi21GGE1R1jfBE_zuziqkuUK36l4LkU/pubchart?oid=1881364816&amp;format=interactive"></iframe>
+
+This ranking of names -- by biggest difference between `MAX` and `MIN` -- seems to contain two types of names: 
+
+- Very popular names in 2010, e.g. `'Isabella'` and `'Alexis'`, which steeply decline in popularity by 2015.
+- Relatively uncommon names in 2010, e.g. `'Harper'`, `'Aria'`, and `'Charlotte'`, which become much more popular in 2015. The name `'Aria'`, in particular, sees a 6.5x increase.
+
+
+
+
 ## AVG and GROUP BY
+
+
+The boy baby names, nationwide, with the highest average count of babies over the years 2010 to 2014:
 
 ~~~sql
 SELECT name, 
@@ -79,4 +508,48 @@ LIMIT 5;
 | Ethan   |       16820.4 |
 {:.table-sql}
 
+
+Let's do it by `MAX`:
+
+
+~~~sql
+SELECT name, 
+  MAX(count) AS max_count
+FROM baby_names
+WHERE sex = 'M'
+  AND state = 'USA'
+GROUP BY name
+ORDER BY max_count DESC
+LIMIT 5;
+~~~
+
+
+We see that the name `'Liam'` shows up in this ranking, which suggests that maybe either the name has just recently become popular, or is on a downturn, for `'Liam'` not to appear in the top 5 by average:
+
+|  name | max_count |
+|-------|-----------|
+| Jacob |     22082 |
+| Mason |     19488 |
+| Noah  |     19144 |
+| Liam  |     18342 |
+| Ethan |     17985 |
+{:.table-sql}
+
+
+
+# Mistakes
+
+
+
+Common mistake:
+
+~~~sql
+SELECT name, MAX(count) AS max_count, 
+  MIN(count) AS min_count
+FROM baby_names
+WHERE state = 'USA' ## this needs  to have sex, as well
+GROUP BY name
+ORDER BY max_count DESC
+LIMIT 10;
+~~~
 

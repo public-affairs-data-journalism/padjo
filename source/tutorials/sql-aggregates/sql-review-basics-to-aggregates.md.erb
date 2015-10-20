@@ -1,0 +1,392 @@
+
+
+
+# Find the 3 most popular names
+
+- select most popular names
+- Find the 3 most popular names by girls
+- Find the 3 most popular names for boys
+- GRAPH Select * rows by year for name
+
+
+# Find the longest name
+
+- by sex
+- by state
+- by year
+
+# the most popular 2 letter name
+
+
+# The most popular name that starts with Z
+
+# the most popular name with at least one x
+
+# The most popular name with at least 2 z's in it
+
+select * from  baby_names
+where name like '%z%z%'
+
+# names that have all five vowels
+
+SELECT * from baby_names
+where 
+name LIKE '%a%'
+AND name LIKE '%e%'
+AND name LIKE '%i%'
+AND name LIKE '%o%'
+AND name LIKE '%u%'
+
+
+# the most popular letters for names (nationwide)
+
+SELECT SUBSTR(name, 1, 1) as first_initial,
+  SUM(count) AS total_count 
+FROM baby_names
+WHERE year = 2014
+  AND state = 'USA'
+GROUP BY first_initial
+ORDER BY total_count DESC
+LIMIT 5
+
+
+(wouldn't it be nice to find the strangest state?)
+
+
+Then group by year, find over time:
+
+~~~sql
+SELECT SUBSTR(name, 1, 1) as first_initial, year,
+  SUM(count) AS total_count 
+FROM baby_names
+WHERE state = 'USA'
+GROUP BY first_initial, year
+ORDER BY first_initial, year, total_count DESC
+~~~
+
+
+## Find the averages
+
+
+
+
+
+
+-----------------------
+
+
+
+# Biggest change in name popularity by ratio of max min
+
+~~~sql
+SELECT name
+FROM baby_names
+WHERE 
+  state = 'USA' 
+  AND sex = 'F'
+GROUP BY name
+HAVING MIN(count) > 1000
+ORDER BY ((MAX(count) - MIN(count)) / MIN(count)) DESC
+LIMIT 5;
+~~~
+
+
+sub query:
+
+~~~sql
+SELECT name, year, count
+FROM baby_names
+WHERE 
+  state = 'USA' 
+  AND sex = 'F'
+  AND name IN (SELECT name
+      FROM baby_names
+      WHERE 
+        state = 'USA' 
+        AND sex = 'F'
+      GROUP BY name
+      HAVING MIN(count) > 1000
+      ORDER BY ((MAX(count) - MIN(count)) / MIN(count)) DESC
+      LIMIT 5)
+~~~
+
+
+
+# Top names today that were not top names 50 years ago
+
+~~~sql
+SELECT name 
+FROM baby_names
+WHERE year = 1950 
+  AND state = 'USA'
+  AND sex = 'M'
+ORDER BY count DESC
+LIMIT 25
+~~~
+
+
+Answer:
+
+
+~~~sql
+SELECT name 
+FROM baby_names
+WHERE name NOT IN
+  (SELECT name 
+    FROM baby_names
+    WHERE year = 1950 
+      AND state = 'USA'
+      AND sex = 'M'
+    ORDER BY count DESC
+    LIMIT 25)
+  AND year = 2014
+  AND state = 'USA'
+  AND sex = 'M'
+ORDER BY count DESC
+LIMIT 25
+~~~
+
+
+# Top names 50 years ago that are not popular in 2014
+
+
+Answer:
+
+
+~~~sql
+SELECT name 
+FROM baby_names
+WHERE name NOT IN
+  (SELECT name 
+    FROM baby_names
+    WHERE year = 2014 
+      AND state = 'USA'
+      AND sex = 'M'
+    ORDER BY count DESC
+    LIMIT 25)
+  AND year = 1950
+  AND state = 'USA'
+  AND sex = 'M'
+ORDER BY count DESC
+LIMIT 25
+~~~
+
+
+## What about girls
+
+~~~sql
+SELECT name 
+FROM baby_names
+WHERE name NOT IN
+  (SELECT name 
+    FROM baby_names
+    WHERE year = 2014 
+      AND state = 'USA'
+      AND sex = 'F'
+    ORDER BY count DESC
+    LIMIT 25)
+  AND year = 1950
+  AND state = 'USA'
+  AND sex = 'F'
+ORDER BY count DESC
+LIMIT 25
+~~~
+
+
+# Count of popular names in 1950 but not in 2014
+
+~~~sql
+SELECT COUNT(DISTINCT name) 
+FROM baby_names
+WHERE 
+  name IN
+  (SELECT name 
+    FROM baby_names
+    WHERE year = 1950 
+      AND state = 'USA'
+      AND sex = 'F'
+    ORDER BY count DESC
+    LIMIT 200)
+AND
+  name NOT IN
+  (SELECT name 
+    FROM baby_names
+    WHERE year = 2014 
+      AND state = 'USA'
+      AND sex = 'F'
+    ORDER BY count DESC
+    LIMIT 200)
+ORDER BY name
+~~~
+
+## Popular names in 1990 but not in 2014
+
+~~~sql
+SELECT COUNT(DISTINCT name) 
+FROM baby_names
+WHERE 
+  name IN
+  (SELECT name 
+    FROM baby_names
+    WHERE year = 1990 
+      AND state = 'USA'
+      AND sex = 'F'
+    ORDER BY count DESC
+    LIMIT 200)
+AND
+  name NOT IN
+  (SELECT name 
+    FROM baby_names
+    WHERE year = 2014 
+      AND state = 'USA'
+      AND sex = 'F'
+    ORDER BY count DESC
+    LIMIT 200)
+ORDER BY name
+~~~
+
+
+
+
+~~~sql
+SELECT COUNT(DISTINCT name) 
+FROM baby_names
+WHERE 
+  name IN
+  (SELECT name 
+    FROM baby_names
+    WHERE year = 2000 
+      AND state = 'USA'
+      AND sex = 'F'
+    ORDER BY count DESC
+    LIMIT 200)
+AND
+  name NOT IN
+  (SELECT name 
+    FROM baby_names
+    WHERE year = 2014 
+      AND state = 'USA'
+      AND sex = 'F'
+    ORDER BY count DESC
+    LIMIT 200)
+~~~
+
+
+
+## Names that are in the popular list for both years
+
+Note that we don't need the `LIMIT` in the main query, since the subquery restricts us to 25 names.
+
+### For girls, names in 1950 and 2014
+
+~~~sql
+SELECT DISTINCT name 
+FROM baby_names
+WHERE name IN
+  (SELECT name 
+    FROM baby_names
+    WHERE year = 1950 
+      AND state = 'USA'
+      AND sex = 'F'
+    ORDER BY count DESC
+    LIMIT 200)
+AND name in 
+    (SELECT name 
+    FROM baby_names
+    WHERE year = 2014 
+      AND state = 'USA'
+      AND sex = 'F'
+    ORDER BY count DESC
+    LIMIT 200)
+~~~
+
+
+
+
+
+
+### For boys in 1950 and 2014
+
+
+~~~sql
+SELECT DISTINCT name 
+FROM baby_names
+WHERE name IN
+  (SELECT name 
+    FROM baby_names
+    WHERE year = 1950 
+      AND state = 'USA'
+      AND sex = 'M'
+    ORDER BY count DESC
+    LIMIT 25)
+AND name in 
+    (SELECT name 
+    FROM baby_names
+    WHERE year = 2014 
+      AND state = 'USA'
+      AND sex = 'M'
+    ORDER BY count DESC
+    LIMIT 25)
+~~~
+
+Do it by state, Nebraska:
+
+~~~sql
+SELECT DISTINCT name 
+FROM baby_names
+WHERE name IN
+  (SELECT name 
+    FROM baby_names
+    WHERE year = 1950 
+      AND state = 'NE'
+      AND sex = 'M'
+    ORDER BY count DESC
+    LIMIT 50)
+AND name in 
+    (SELECT name 
+    FROM baby_names
+    WHERE year = 2014 
+      AND state = 'NE'
+      AND sex = 'M'
+    ORDER BY count DESC
+    LIMIT 50)
+~~~
+
+
+California:
+
+~~~sql
+SELECT DISTINCT name 
+FROM baby_names
+WHERE name IN
+  (SELECT name 
+    FROM baby_names
+    WHERE year = 1950 
+      AND state = 'CA'
+      AND sex = 'M'
+    ORDER BY count DESC
+    LIMIT 50)
+AND name in 
+    (SELECT name 
+    FROM baby_names
+    WHERE year = 2014 
+      AND state = 'CA'
+      AND sex = 'M'
+    ORDER BY count DESC
+    LIMIT 50)
+~~~
+
+
+
+
+
+
+
+
+
+
+
+# Find the biggest changing boy names
+
+
+
