@@ -1,0 +1,63 @@
+
+
+## Make a SQL table
+
+~~~sh
+mydb=SOMEDATABASEFILE.sqlite
+# the command
+sqlite3 $mydb \
+<<< "
+.headers on
+SELECT *
+FROM inspections
+LIMIT 5;
+" |
+sed 's/^/|/' | sed 's/$/|/' |
+sed -e '1a\
+|-' | sed -e '$a\
+{:.table-sql}'
+~~~
+
+Alternatively:
+
+~~~sh
+function qtq(){
+  sed -e '1i\
+  .headers on
+' | sqlite3 $mydb |
+sed 's/^/|/' | sed 's/$/|/' |
+sed -e '1a\
+|-' | sed -e '$a\
+{:.table-sql}'
+}
+~~~
+
+
+Usage:
+
+~~~sh
+$ qtq <<< "SELECT * FROM sometable;"
+~~~
+
+Or better yet:
+
+~~~sh
+$ pbpaste | qtq | pbcopy
+~~~
+
+
+Or even better:
+
+~~~sh
+$ pbpaste | qtq | tee /dev/tty | pbcopy
+~~~
+
+
+Things I learned:
+
+- Standard input syntax for strings
+- How to append a line with sed
+- Refreshed my memory on standard input for functions
+- Finally used `tee` properly
+- Discovered `/dev/tty`
+- Learned how to pipe into sqlite3

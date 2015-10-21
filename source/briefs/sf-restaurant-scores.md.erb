@@ -1,0 +1,199 @@
+# How to download, import, and analyze San Francisco restaurant inspection data using SQLite3 and csvkit from the command-line.
+
+First of all, thank goodness for  [Christopher Groskopf](https://twitter.com/onyxfish)'s [csvkit](http://csvkit.readthedocs.org/en/latest/index.html), in particular [csvsql](http://csvkit.readthedocs.org/en/latest/scripts/csvsql.html), which can parse a CSV and turn it into properly-flavored SQL to pass into an app.
+
+The [SF restaurant inspection data has a landing page here](https://data.sfgov.org/Health-and-Social-Services/Restaurant-Scores/stya-26eb).
+
+The actual data is in an external directory:
+
+- [PDF that describes the file](https://extxfer.sfdph.org/food/File%20Specifications.pdf)
+- [Direct link to ZIP file](https://extxfer.sfdph.org/food/SFFoodProgram_Complete_Data.zip)
+
+The rest of this is just one giant Bash script (OS X 10.10). `csvsql` has a convenient command that will read in a CSV file and generate a `CREATE TABLE` statement:
+
+    $ csvsql some.csv --dialect sqlite --tables some_table_name
+
+I ran that to generate the initial `CREATE TABLE` commands, which I adjusted to my own liking.
+
+
+~~~sh
+############## 
+# Setup your workspace
+BASE_DIR=source/files/data/sf_food_program_db
+DB_PATH=$BASE_DIR/sf_food_program_db.sqlite
+ZIP_DIR=/tmp/sffoodzips
+mkdir -p $ZIP_DIR
+mkdir -p $BASE_DIR
+
+################ 
+# Download the files into $ZIP_DIR
+curl https://extxfer.sfdph.org/food/SFFoodProgram_Complete_Data.zip \
+      -o $ZIP_DIR/SFFoodProgram_Complete_Data.zip
+unzip $ZIP_DIR/SFFoodProgram_Complete_Data.zip -d $ZIP_DIR
+
+#################
+# Build the database
+
+# First remove the existing database file, if any
+rm -f $DB_PATH
+
+## Create the businesses table
+echo "CREATE TABLE businesses (
+  business_id INTEGER NOT NULL, 
+  name VARCHAR, 
+  address VARCHAR, 
+  city VARCHAR, 
+  postal_code INTEGER, 
+  latitude FLOAT, 
+  longitude FLOAT, 
+  phone_number BIGINT, 
+  TaxCode VARCHAR, 
+  business_certificate INTEGER, 
+  application_date DATE, 
+  owner_name VARCHAR, 
+  owner_address VARCHAR, 
+  owner_city VARCHAR, 
+  owner_state VARCHAR, 
+  owner_zip VARCHAR
+);" | sqlite3 $DB_PATH
+
+
+
+## Create the inspections table
+echo "CREATE TABLE inspections (
+  business_id INTEGER NOT NULL, 
+  Score INTEGER, 
+  date DATE, 
+  type VARCHAR
+);" | sqlite3 $DB_PATH
+
+## Create the violations table
+echo "CREATE TABLE violations (
+  business_id VARCHAR NOT NULL, 
+  date DATE NOT NULL, 
+  ViolationTypeID INTEGER NOT NULL, 
+  risk_category VARCHAR(20), 
+  description VARCHAR(100)
+);" | sqlite3 $DB_PATH
+
+
+#####################
+# Insert the data
+
+## The businesses data
+## Note that it's encoded as `windows-1252`, hence the `iconv` call to 
+## convert it to UTF-8
+iconv -f windows-1252 -t UTF-8 \
+      < $ZIP_DIR/businesses_plus.csv | 
+      csvsql --db sqlite:///$DB_PATH --insert --no-create \
+      --tables businesses
+
+## Insert the inspections data
+csvsql $ZIP_DIR/inspections_plus.csv  \
+    --db sqlite:///$DB_PATH --insert --no-create \
+    --tables inspections
+
+## The dates come as `YYYYMMDD`; this update statement
+## changes it to `YYYY-MM-DD`
+echo "UPDATE inspections
+  SET date = SUBSTR(date, 1, 4) || '-' || 
+             SUBSTR(date, 5, 2) || '-' || 
+             SUBSTR(date, 7, 2);
+" | sqlite3 $DB_PATH
+
+## Insert the violations data 
+## (this will take awhile)
+csvsql $ZIP_DIR/violations_plus.csv  \
+    --db sqlite:///$DB_PATH --insert --no-create --tables violations
+
+## The dates come as `YYYYMMDD`; this update statement
+## changes it to `YYYY-MM-DD`
+echo "UPDATE violations
+  SET date = SUBSTR(date, 1, 4) || '-' || 
+             SUBSTR(date, 5, 2) || '-' || 
+             SUBSTR(date, 7, 2);
+" | sqlite3 $DB_PATH
+
+
+
+#############
+# Add indexes to the table
+
+echo "
+CREATE INDEX business_id_o_businesses_idx ON businesses(business_id);
+CREATE INDEX name_o_businesses_idx ON businesses(name);
+CREATE INDEX phone_o_businesses_idx ON businesses(phone_number);
+
+CREATE INDEX business_id_date_o_inspections_idx ON inspections(business_id, date);
+CREATE INDEX date_o_inspections_idx ON inspections(date);
+CREATE INDEX business_id_date_o_violations_idx ON violations(business_id, date);
+
+CREATE INDEX date_o_violations_idx ON violations(date);
+CREATE INDEX date_o_violation_type_id_idx ON violations(ViolationTypeID);
+" | sqlite3 $DB_PATH
+~~~
+
+
+When everything is done, we can write a query to test out the data.
+
+The following query asks:
+
+- Find every business with __"Starbucks"__ in its __name__
+  - that has had an inspection with a __date__ in __2015__
+  - and that inspection resulted in a __score__ below __90__ points
+  - and that inspection found at least one __"High Risk"__ violation
+
+Then, for every violation that is found above, display:
+
+- The __name__ of the business
+- The __address__ of the business
+- The __score__ of the inspection in which the violation was found
+- The __date__ of that inspection
+- The __description__ of the violation
+
+And list the violations in __ascending__ order of the __score__ of its respective inspection.
+
+Passing that query via shell:
+
+~~~sh
+echo "
+.headers on
+SELECT businesses.name AS biz_name, 
+  businesses.address AS biz_address,
+  inspections.Score AS score,
+  CAST(inspections.date AS CHAR)  AS inspection_date,
+  violations.description AS violation_description,
+  inspections.*
+FROM businesses
+INNER JOIN inspections
+    ON businesses.business_id = inspections.business_id
+INNER JOIN violations
+    ON inspections.business_id = violations.business_id 
+       AND inspections.date = violations.date 
+
+WHERE inspection_date > "2014" 
+  AND biz_name LIKE '%STARBUCKS%'
+  AND score < 90
+  AND violations.risk_category = 'High Risk'
+ORDER BY score;
+"  | sqlite3 $DB_PATH 
+~~~
+
+
+The result:
+
+
+|        biz_name        |   biz_address    | score | inspection_date |          violation_description          |
+|------------------------|------------------|-------|-----------------|-----------------------------------------|
+| Starbucks Coffee Co    | 0264 Kearny St   |    85 | 2014-01-03      | Improper cooling methods                |
+| STARBUCKS COFFEE       | 1298 HOWARD St   |    87 | 2013-04-29      | Unclean hands or improper use of gloves |
+| Starbucks Coffee       | 201 Powell St    |    87 | 2015-03-17      | Unclean hands or improper use of gloves |
+| STARBUCKS              | 350 RHODE ISLAND |    89 | 2014-03-19      | No hot water or running water           |
+| STARBUCKS COFFEE #9219 | 333 MARKET St    |    89 | 2014-10-03      | High risk food holding temperature      |
+| STARBUCKS COFFEE CO    | 1231 MARKET St   |    89 | 2014-12-30      | Unclean hands or improper use of gloves |
+
+
+
+Note: I didn't double check these results against the online database. But it seems to check out for a couple of the places I eyeballed.
+
+For example, here's [the entry for Starbucks on 333 Market St](https://101g-xnet.sfdph.org:8443/ords/f?p=132:2:641579148441956::NO::P2_LOCATIONID:1085)

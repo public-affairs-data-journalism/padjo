@@ -2,7 +2,99 @@
 title: "Data Joins, More SQL, More Visualizations"
 description: |
   The ability to join two or more datasets is one of the most powerful techniques of the data journalist. We learn the SQL syntax to express these joins. 
-note: |
+xtranote: |
   More sophisticated joins to find needles in haystacks and haystacks without needles.
 date: 2015-10-20
 ---
+
+__Action item:__ Sign up for CartoDB using your Stanford account. [Here are some instructions courtesy Stanford GIS. Follow them](https://gist.github.com/dannguyen/305c118f155bd1887da0).
+
+
+
+
+
+# Phillip Reese
+
+Some thoughts about his visit last week:
+
+
+## The map
+
+![image](/images/briefs/screenshots/preese-patient-dumping-sacbee-map.png)
+
+I've heard Phillip talk about his project but I keep forgetting that this map was one of the key things that blew it into a huge story. Later on in the quarter we'll talk about the design of maps, and the many ways they can mislead. Another problem of maps are that, depending on the software we use, they show too broad of a view.
+
+But here, a nationwide picture is exactly what was needed. This was not just a Vegas to Sacramento problem.
+
+## "Data joins"
+
+We take mapping tools for granted but mapping involves a kind of data join:
+
+- A table of geographical data, such as addresses. In the Sacbee story, it would have been the destination of Greyhound buses.
+- A table of geocoordinate data, matched up to each address. This is what we see when we type in a Google Map query.
+
+In the Bee patient dumping story, there was another kind of data joining: given the names of patients, Bee reporters had to look them up -- via phonebook or other people finder tools -- to confirm that they were patients of the hospital and that they were bused out.
+
+In that sense, the kinds of table joining we do with databases is not any different in scope or intent than what we do as reporters when connecting the dots.
+
+
+
+### Tools to keep tabs
+
+Phillip talked about using the [Page Monitor Chrome plugin](https://chrome.google.com/webstore/detail/page-monitor/pemhgklkefakciniebenbfclihhmmfcd?hl=en) to monitor pages he knows gets regularly updated with updates.
+
+Note: not every page is worth monitoring -- e.g. it is probably not a good idea to set it to "twitter.com", for example. You want pages that change in a fairly routine and limited manner, and not more than once a day, unless you want to be notified constantly about it. For things like blogs, you're better off using a RSS feed reader.
+
+But for static pages, Page Monitor might be great for you. Some examples:
+
+- [Texas death row](https://www.tdcj.state.tx.us/death_row/dr_offenders_on_dr.html) - to see when people arrive or leave death row, or have some other facet about it change.
+- [The Bureau of Transportation Statistics](http://www.transtats.bts.gov/releaseinfo.asp) that they update each time that they add or update one of their datasets.
+
+
+
+
+
+# Examples of joins
+
+
+### The Sun Sentinel's toll records
+
+The [Sun Sentinel Pulitzer story on Florida's speeding cops](/briefs/florida-missing-speeding-cops) involved a join between three datasets:
+
+- A table containing transponders belonging to Florida police. 
+- A table of SunPass toll booth records that track transponder number, the identity of the toll both that the transponder registered with, and when the transponder passed through.
+- A table, probably made up by hand, of each toll booth and where it was physically located, from which distance between booths could be calculated.
+
+Here's another fun story with SunPass data: [Technology, take-home cars let South Florida cops slip out early](http://articles.sun-sentinel.com/2012-12-09/news/fl-cops-technology-20121209_1_squad-car-south-florida-cops-sunpass-toll-records)
+
+> South Florida police officers used to return to the station at the end of a shift to turn in their paperwork and patrol cars. But technology has revolutionized a cop's workday, and those laptops, radios and take-home cruisers make it possible to go AWOL or duck out of work early...SunPass toll records analyzed by the Sun Sentinel found cops from Plantation to Miami cutting out before their shifts ended, sometimes signing off via the radio from locales nowhere near their jurisdiction.
+
+### A Pulitzer made possible with databases
+
+[Daniel Gilbert might not have been able to do his Pulitzer Prize winning investigation](http://www.pulitzer.org/citation/2010-Public-Service) into oil and gas royalties [had his editor not paid for him to take a week long bootcamp into learning databases](http://www.cjr.org/reports/serious_fun_with_numbers.php):
+
+> What Gilbert learned in Missouri turned out to be indispensable. He took his spreadsheets with him, and learned how to transfer the data from Excel to Microsoft Access, a database management program better suited to large searches. (Funnily enough, Gilbert actually had a copy of Access on his desktop back in Bristol; he just didn’t know what it was for.) __And he absorbed a basic programming language called Structured Query Language, or SQL, which allowed him to search for specific patterns in his data__.
+
+> Eventually, Gilbert got his data cleaned and organized enough to be able to write his fundamental query: Show me the accounts that correspond to wells where oil or gas has been produced, but royalties have not been paid. What he found was damning. “Of about 750 individual accounts in escrow, between 22 percent and 55 percent received no royalty payments during months when the corresponding wells produced gas over an 18-month period,” Gilbert wrote in the first of an eight-part series. As for royalty payments that had been made, $24 million was lying in escrow, in dispute. Over the course of the series, Gilbert explained the history of the dispute, took the state gas and oil board to task, and showed that citizens who were allegedly owed thousands were being told they were entitled to less than a dime. His series spurred the Virginia legislature to investigate ways to distribute the money in escrow to the people who own it. In April, Gilbert won the Pulitzer Prize for Public Service.
+
+### Dollars for Docs
+
+Probably my biggest investigative project. This story that looked at faculty conflicts of interests was as easy as joining two lists:
+
+- A list of names and U.S. states of practice of doctors who had a financial relationship with drug companies.
+- A list of names of doctors who work at universities where no financial relationship is allowed.
+
+[Med Schools Flunk at Keeping Faculty Off Pharma Speaking Circuit](http://www.propublica.org/article/medical-schools-policies-on-faculty-and-drug-company-speaking-circuit):
+
+> As medical schools wrestle with how to keep drug companies from corrupting their faculties, Stanford University is often lauded for its tough stance.
+
+> The school was one of the first to stop sales representatives from roaming its halls in 2006. It cut off the flow of free lunches and trinkets emblazoned with drug names. And last year, in a blow to its physicians’ wallets, Stanford banned them from giving paid promotional talks for pharmaceutical companies.
+
+> One thing it didn’t do was make sure its faculty followed that rule.
+
+> A ProPublica investigation found that more than a dozen of the school’s doctors were paid speakers in apparent violation of its policy—two of them earning six figures since last year.
+
+> Dr. Philip Pizzo, the dean of Stanford’s medical school, sent an e-mail to all medical school staff last week calling the conduct “unacceptable.” Some doctors’ excuses, he wrote, were “difficult if not impossible to reconcile with our policy.”
+
+
+

@@ -19,7 +19,11 @@ body{
   margin-bottom: 2.5em;
 }
 
-
+.content-box{
+  outline: #ddd solid 1px;
+  padding: 0.1em 0.4em;
+  margin: 0.5em 0;
+}
 // .content-box{
 //   margin-bottom: 0.8em;
 //   .content-resource{

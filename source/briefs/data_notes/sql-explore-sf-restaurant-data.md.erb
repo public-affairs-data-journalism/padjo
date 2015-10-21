@@ -1,0 +1,698 @@
+---
+title: Using SQL to explore restaurant data
+description: |
+  A overview of why and how we use SQL to explore and analyze data.
+---
+
+
+<% content_card "The SF health dataset" do %>
+
+__Data to use: [San Francisco restaurants inspection data](/files/data/sf_food_program_db/sf_food_program_db.sqlite)__
+
+<% end %>
+
+<%= render_toc %>
+
+
+
+If you're struggling with learning SQL, it helps to take a step back and think about why we're even learning it in the first place. This guide is meant to be a walkthrough of how I think when exploring a dataset and how that translate into actual SQL commands.
+
+So treat this as an iterative exploration of the data, starting with relatively simple syntax to find the simple things we first want to know about.
+
+Throughout this guide, I'll try to link to relevant tutorials. Try to follow this walkthrough and think about how to solve some of the questions I pose, but feel free to check the tutorials for more detailed explanations.
+
+
+<%= render_content_resource_box '/tutorials/sql-basics/select-and-from' %>
+
+<%= render_content_resource_box '/tutorials/sql-aggregates/aggregate-functions-in-sql' %>
+
+
+
+# Let's just SELECT and COUNT
+
+What should we first ask about a new database? How many rows it contains. Exactly how many restaurant and eatery-type establishments are required to undergo health inspections in all of San Francisco? 5,000? 25,000? Knowing even that simple fact will quickly lead to other questions.
+
+
+## A sidenote about GUIs and conveniences
+
+
+If you're using a client such as [DB Browser for SQLite](http://sqlitebrowser.org/), then you're used to the convenience of its data navigating features. For you, finding out how many rows in a given table is just a matter of pressing the __Browse Data__ function and looking at the big number in the lower left of the window:
+
+![image](/files/images/tutorials/sql-walk/sf-food/dbbrowser_browse_gui_count.png)
+
+So why bother writing a query to count rows for a table?
+
+Don't get me wrong; DB Browser is great (and [generously given away via open source](https://github.com/sqlitebrowser/sqlitebrowser)). But it's just one tool and one approach to data work --specifically, to allow spreadsheet-users to interact with SQL without having to learn complicated SQL commands.
+
+We also crave simplicity, but because we aspire to do complicated and intensive data analysis, we should _gravitate_ towards being able to directly _command_ our computers (or, in this case, a database).
+
+What does directly commanding our SQLite database look like? Well, you [can always work straight from the command-line](https://www.sqlite.org/cli.html). It's just you, and the interpreter waiting for you to ask it a question:
+
+![blue cli of fun](/files/images/tutorials/sql-walk/sf-food/blue-sqlite3-cli.gif)
+
+Actually, this is probably not the time to discover the CLI -- at least when you're trying to learn SQL. But just keep in mind that it *is* possible to move past the GUI, and that comes both with the familiarity of typing things out and being able to think about _how to explore the data_, regardless of interface.
+
+So, back to getting a count of rows:
+
+~~~sql
+SELECT COUNT(*)
+FROM businesses;
+~~~
+
+
+
+<%= render_content_resource_box '/tutorials/sql-basics/limit-and-order' %>
+
+<%= render_content_resource_box({
+  url: 'http://fall2014.padjo.org/tutorials/databases/sql-order-limit/', 
+  title: 'Limiting and ordering SQL results [Fall 2014]', 
+  description: """A few keywords to prettify and organize the results of SQL queries."""
+  })
+%>
+
+
+
+
+Let's look at a few of the rows:
+
+~~~sql
+SELECT *
+FROM businesses
+LIMIT 5;
+~~~
+
+The output is too wide to comfortably show on this page so I'll do a `PRAGMA table_info(businesses);` call to get the schema layout:
+
+| cid |         name         |   type  | notnull | dflt_value | pk |
+|-----|----------------------|---------|---------|------------|----|
+|   0 | business_id          | INTEGER |       1 |            |  0 |
+|   1 | name                 | VARCHAR |       0 |            |  0 |
+|   2 | address              | VARCHAR |       0 |            |  0 |
+|   3 | city                 | VARCHAR |       0 |            |  0 |
+|   4 | postal_code          | INTEGER |       0 |            |  0 |
+|   5 | latitude             | FLOAT   |       0 |            |  0 |
+|   6 | longitude            | FLOAT   |       0 |            |  0 |
+|   7 | phone_number         | BIGINT  |       0 |            |  0 |
+|   8 | TaxCode              | VARCHAR |       0 |            |  0 |
+|   9 | business_certificate | INTEGER |       0 |            |  0 |
+|  10 | application_date     | DATE    |       0 |            |  0 |
+|  11 | owner_name           | VARCHAR |       0 |            |  0 |
+|  12 | owner_address        | VARCHAR |       0 |            |  0 |
+|  13 | owner_city           | VARCHAR |       0 |            |  0 |
+|  14 | owner_state          | VARCHAR |       0 |            |  0 |
+|  15 | owner_zip            | VARCHAR |       0 |            |  0 |
+{:.table-sql}
+
+
+Most of the columns aren't that interesting, other than perhaps `address`, `latitude`, and `longitude`, if we want to later map things. The `owner_address` is potentially interesting. But for now, let's just stick to the `name` column:
+
+~~~sql
+SELECT name
+FROM businesses
+LIMIT 10;
+~~~
+
+
+<%= render_content_resource_box '/tutorials/sql-basics/where-clause-as-filter' %>
+
+<%= render_content_resource_box({
+  url: 'http://fall2014.padjo.org/tutorials/databases/sql-order-limit/', 
+  title: 'Conditional filtering with WHERE [Fall 2014]', 
+  description: """The WHERE clause is where SQL starts to become very interesting for searching large datasets. With WHERE, we can now filter the results according to conditions we explicitly set."""
+  })
+%>
+
+
+
+How many places serve up pizza in San Francisco? One rough way to estimate is to look for all businesses with `'PIZZA'` in the name:
+
+~~~sql
+SELECT name
+FROM businesses
+WHERE name = 'PIZZA'
+LIMIT 10;
+~~~
+
+This returns 0 results because the query is limited to finding all places in which the name is _literally_`'PIZZA'`, which doesn't include "Pizza Hut" or even "Pizza" (i.e. non-uppercase).
+
+<%= render_content_resource_box '/tutorials/sql-basics/fuzzy-matching-like-in-where' %>
+
+
+This is where the `LIKE` clause and wildcards come in handy. We can specify all names that _begin_ with `'PIZZA'` and not worry about the capitalization:
+
+~~~sql
+SELECT name
+FROM businesses
+WHERE name LIKE 'PIZZA%'
+LIMIT 10;
+~~~
+
+We get everything from `'PIZZA HUT'` to `'Pizza Orgasmica & Brewing Co.'`. But our wildcard will leave out places in which `'pizza'` is at the middle or end of a name, such as `'Dominos Pizza'`. That's easy to fix:
+
+~~~sql
+SELECT name
+FROM businesses
+WHERE name LIKE '%PIZZA%'
+LIMIT 10;
+~~~
+
+That change in the query nets us places as exotic as `'AT&T -Room 2130 Derby Grill/Port Walk Pizza [145178]'`.
+
+
+To answer our original question - _how many pizza places are in San Francisco?_ - let's use a `COUNT` function just to get the number of results:
+
+~~~sql
+SELECT COUNT(*)
+FROM businesses
+WHERE name LIKE '%PIZZA%';
+~~~
+
+
+# Checking out the inspections table
+
+OK, now that we've seen a bit of the `businesses` table, let's look at what the `inspections` table has. Let's repeat some of our previous exploration technique and first find out how many rows the `inspections` table has:
+
+
+~~~sql
+SELECT COUNT(*)
+FROM inspections;
+~~~
+
+
+More than 30,000, which is definitely more than the 7,000+ businesses. What does this mean exactly? Intuitively, we can guess that each business can have _one or more_ inspections, i.e. a _one-to-many_ relationship. Let's check out the first few rows of `inspections`:
+
+
+~~~sql
+SELECT *
+FROM inspections
+LIMIT 5;
+~~~
+
+| business_id | Score |    date    |          type         |
+|-------------|-------|------------|-----------------------|
+|          10 |       | 2014-08-07 | Reinspection/Followup |
+|          10 |    94 | 2014-07-29 | Routine - Unscheduled |
+|          10 |       | 2014-01-24 | Reinspection/Followup |
+|          10 |    92 | 2014-01-14 | Routine - Unscheduled |
+|          10 |    98 | 2012-11-14 | Routine - Unscheduled |
+{:.table-sql}
+
+
+
+
+OK, that `business_id` column should look familiar -- it shows up in the `businesses` table. Here, it appears to repeat itself, as if all of these inspections were on a single business. Another key takeaway is that not all inspections result in a `Score` being given.
+
+However, the _main_ takeaway is that there appears to be no `name` column in `inspections`, so we can't do a simple query to find the inspections for a given `'PIZZA HUT'`:
+
+~~~sql
+SELECT *
+FROM inspections
+WHERE name = 'PIZZA HUT';
+~~~
+
+
+## Practicing aggregates
+
+Let's practice our aggregate queries, beyond `COUNT`.
+
+<%= render_content_resource_box '/tutorials/sql-aggregates/aggregate-functions-in-sql' %>
+
+
+
+First, we don't even know how old or how freshly updated this dataset is. So let's use `MIN` and `MAX` on the `date` field
+
+~~~sql
+SELECT MIN(date), MAX(date)
+FROM inspections;
+~~~
+
+
+| MIN(date)  | MAX(date)  |
+|------------|------------|
+| 2012-10-01 | 2015-12-30 |
+{:.table-sql}
+
+
+Seeing how I'm writing this on __October 20, 2015__, i.e. `2015-10-20`, I'm not sure how there's already an inspection with the date of `2015-12-30`. So right away, we've learned that the data is not in perfect shape. Or that our assumptions -- i.e. every record in `inspections` corresponds to an inspection that has actually occurred.
+
+I'm curious to what that is, so let's just do a plain `SELECT` and `WHERE` using the result from the previous query:
+
+~~~sql
+SELECT *
+FROM inspections
+WHERE date = '2015-12-30';
+~~~
+
+| business_id | Score |    date    |         type        |
+|-------------|-------|------------|---------------------|
+|       34181 |       | 2015-12-30 | Routine - Scheduled |
+|             |       |            |                     |
+{:.table-sql}
+
+Uh OK, looks like events that are "Scheduled" are in this table. Let's do one more query and see how many future events there are:
+
+
+~~~sql
+SELECT *
+FROM inspections
+WHERE date > '2015-10-20';
+~~~
+
+| business_id | Score |    date    |         type        |
+|-------------|-------|------------|---------------------|
+|       76245 |       | 2015-11-20 | New Ownership       |
+|       34181 |       | 2015-12-30 | Routine - Scheduled |
+{:.table-sql}
+
+OK, only two events are actually in the future. You'd think there'd be more than that in all of the city of San Francisco...so this is the kind of thing we would ask a public information officer about it. My bet is that it's a typo, but who knows...
+
+
+### Calculating the characteristics of a dataset
+
+Let's focus on the __score__ of these inspections, notably, their range and average. We can start by using the __average__, __minimum__, and __maximum__ functions:
+
+~~~sql
+SELECT AVG(Score),
+  MAX(Score),
+  MIN(Score)
+FROM inspections;
+~~~
+
+
+|    AVG(Score)    | MAX(Score) | MIN(Score) |
+|------------------|------------|------------|
+| 91.5912412959659 |        100 |         42 |
+{:.table-sql}
+
+
+Let's throw in aliases and a rounding function to make the headers more attractive:
+
+~~~sql
+SELECT ROUND(AVG(Score)) AS avg_score,
+  MAX(Score) AS max_score,
+  MIN(Score) AS min_score
+FROM inspections;
+~~~
+
+| avg_score | max_score | min_score |
+|-----------|-----------|-----------|
+|      92.0 |       100 |        42 |
+{:.table-sql}
+
+
+We saw that there were multiple kinds of reports. Do they all have scores? An easy way to find out is to include the `type` column in the output _and_ `GROUP BY` it. Let's throw in a `COUNT` function to get a count of report types, too:
+
+<%= render_content_resource_box '/tutorials/sql-aggregates/group-by-in-sql' %>
+
+
+
+~~~sql
+SELECT 
+  type,
+  COUNT(*) as total_count,
+  ROUND(AVG(Score)) AS avg_score,
+  MAX(Score) AS max_score,
+  MIN(Score) AS min_score
+FROM inspections
+GROUP BY type;
+~~~
+
+
+|                type               | total_count | avg_score | max_score | min_score |
+|-----------------------------------|-------------|-----------|-----------|-----------|
+| Administrative or Document Review |           6 |           |           |           |
+| Complaint                         |        1894 |           |           |           |
+| Complaint Reinspection/Followup   |         200 |           |           |           |
+| Emergency Response Investigation  |           1 |           |           |           |
+| Foodborne Illness Investigation   |         104 |           |           |           |
+| Multi-agency Investigation        |           4 |           |           |           |
+| New Construction                  |        1290 |           |           |           |
+| New Ownership                     |        1917 |           |           |           |
+| Non-inspection site visit         |        1045 |           |           |           |
+| Reinspection/Followup             |        6722 |      85.0 |        85 |        85 |
+| Routine - Scheduled               |          87 |      86.0 |        86 |        86 |
+| Routine - Unscheduled             |       17678 |      92.0 |       100 |        42 |
+| Special Event                     |           2 |           |           |           |
+{:.table-sql}
+
+
+As it turns out, there are only 3 types of reports that are scored:
+
+- `Reinspection/Followup` 
+- `Routine - Scheduled`
+- `Routine - Unscheduled`
+
+We can re-jigger our previous query to only include reports that have an actual `Score`:
+
+
+<%= render_content_resource_box({url: 'http://fall2014.padjo.org/tutorials/databases/sql-null/', title: 'The null state in databases', description: "This tutorial is from last year's class. Even though it uses MySQL, the syntax is pretty much the same."})
+%>
+
+~~~sql
+SELECT 
+  type,
+  COUNT(*) as total_count,
+  ROUND(AVG(Score)) AS avg_score,
+  MAX(Score) AS max_score,
+  MIN(Score) AS min_score
+FROM inspections
+WHERE Score IS NOT NULL
+GROUP BY type;
+~~~
+
+|          type         | total_count | avg_score | max_score | min_score |
+|-----------------------|-------------|-----------|-----------|-----------|
+| Reinspection/Followup |           1 |      85.0 |        85 |        85 |
+| Routine - Scheduled   |           1 |      86.0 |        86 |        86 |
+| Routine - Unscheduled |       17375 |      92.0 |       100 |        42 |
+{:.table-sql}
+
+
+
+Strangely, only `1` report of the non-routine-unscheduled type has a score. That could be a data entry error. Either way, grouping by `type` is not particularly interesting.
+
+
+## Create a substring to group by
+
+So let's group by _time period_. Let's get the aggregate tally in the previous query, but for each different _year_. There is no _year_ column so we have to make our own from the `date` column. I'll just go with the easy `SUBSTR` function:
+
+<%= render_content_resource_box '/tutorials/sql-basics/functions-in-sqlite' %>
+
+Let's test it out by itself:
+
+~~~sql
+SELECT SUBSTR(date, 1, 4) AS year
+FROM inspections
+LIMIT 5;
+~~~
+
+That works. Let's do a group count to get a breakdown of inspections by year, because we don't even know how far back the records go:
+
+~~~sql
+SELECT SUBSTR(date, 1, 4) AS year,
+  COUNT(*)
+FROM inspections
+GROUP BY year;
+~~~
+
+| year | COUNT(*) |
+|------|----------|
+| 2012 |     2929 |
+| 2013 |    10789 |
+| 2014 |    10820 |
+| 2015 |     6412 |
+{:.table-sql}
+
+We know from a previous query that the _earliest_ `date` is `2012-10-01`, so it makes sense that `2012` is short. And `2015` has two months yet to go (as of publication date). So it looks like the SF health department averages roughly 10,000 inspection activities a year.
+
+Now let's see if the average or range of scores has changed per given year:
+
+~~~sql
+SELECT
+  SUBSTR(date, 1, 4) AS year,
+  COUNT(*) as total_count,
+  ROUND(AVG(Score)) AS avg_score,
+  MAX(Score) AS max_score,
+  MIN(Score) AS min_score
+FROM inspections
+WHERE Score IS NOT NULL
+GROUP BY year;
+~~~
+
+| year | total_count | avg_score | max_score | min_score |
+|------|-------------|-----------|-----------|-----------|
+| 2012 |        1477 |      92.0 |       100 |        52 |
+| 2013 |        6077 |      91.0 |       100 |        42 |
+| 2014 |        6309 |      92.0 |       100 |        46 |
+| 2015 |        3514 |      92.0 |       100 |        54 |
+{:.table-sql}
+
+Looks like things are pretty boring with a year-by-year analysis. We could try a grouping by _year_ and _month_ to see if there are any interesting peaks or valleys (i.e. holiday seasons):
+
+~~~sql
+SELECT
+  SUBSTR(date, 1, 7) AS year_month,
+  COUNT(*) as total_count,
+  ROUND(AVG(Score)) AS avg_score,
+  MAX(Score) AS max_score,
+  MIN(Score) AS min_score
+FROM inspections
+WHERE Score IS NOT NULL
+GROUP BY year_month;
+~~~
+
+
+| year_month | total_count | avg_score | max_score | min_score |
+|------------|-------------|-----------|-----------|-----------|
+| 2012-10    |         636 |      93.0 |       100 |        55 |
+| 2012-11    |         451 |      91.0 |       100 |        55 |
+| 2012-12    |         390 |      91.0 |       100 |        52 |
+| 2013-01    |         539 |      91.0 |       100 |        58 |
+| 2013-02    |         464 |      92.0 |       100 |        60 |
+| 2013-03    |         533 |      92.0 |       100 |        54 |
+| 2013-04    |         596 |      92.0 |       100 |        56 |
+| 2013-05    |         503 |      91.0 |       100 |        54 |
+| 2013-06    |         478 |      91.0 |       100 |        54 |
+| 2013-07    |         416 |      90.0 |       100 |        49 |
+| 2013-08    |         549 |      93.0 |       100 |        55 |
+| 2013-09    |         553 |      91.0 |       100 |        51 |
+| 2013-10    |         584 |      92.0 |       100 |        42 |
+| 2013-11    |         478 |      91.0 |       100 |        58 |
+| 2013-12    |         384 |      91.0 |       100 |        55 |
+| 2014-01    |         456 |      91.0 |       100 |        62 |
+| 2014-02    |         681 |      92.0 |       100 |        59 |
+| 2014-03    |         722 |      92.0 |       100 |        67 |
+| 2014-04    |         827 |      93.0 |       100 |        60 |
+| 2014-05    |         640 |      91.0 |       100 |        46 |
+| 2014-06    |         738 |      92.0 |       100 |        53 |
+| 2014-07    |         281 |      90.0 |       100 |        63 |
+| 2014-08    |         399 |      91.0 |       100 |        63 |
+| 2014-09    |         500 |      92.0 |       100 |        55 |
+| 2014-10    |         457 |      91.0 |       100 |        47 |
+| 2014-11    |         361 |      91.0 |       100 |        56 |
+| 2014-12    |         247 |      89.0 |       100 |        54 |
+| 2015-01    |         380 |      91.0 |       100 |        60 |
+| 2015-02    |         385 |      92.0 |       100 |        57 |
+| 2015-03    |         533 |      92.0 |       100 |        55 |
+| 2015-04    |         520 |      92.0 |       100 |        54 |
+| 2015-05    |         376 |      91.0 |       100 |        62 |
+| 2015-06    |         388 |      92.0 |       100 |        64 |
+| 2015-07    |         267 |      91.0 |       100 |        54 |
+| 2015-08    |         380 |      92.0 |       100 |        60 |
+| 2015-09    |         285 |      92.0 |       100 |        59 |
+{:.table-sql}
+
+Without graphing the data, we can't tell if there are any noticeable cyclical trends. Though it does seem that the months of December have significantly fewer inspections.
+
+How about the __day of the week__? We might suspect that inspections on weekends, or maybe even on a Monday, can differ based on how on top of things a restaurant is.
+
+[This requires use of SQLite's `STRFTIME` function](https://www.sqlite.org/lang_datefunc.html), which, if you've never used before...it's one that you gradually learn, after much effort. I'll just show the result with `STRFTIME` and passing in `'%w'` as the first argument:
+
+~~~sql
+SELECT
+  STRFTIME('%w', date) as week_day,
+  COUNT(*) as total_count,
+  ROUND(AVG(Score)) AS avg_score,
+  MAX(Score) AS max_score,
+  MIN(Score) AS min_score
+FROM inspections
+WHERE Score IS NOT NULL
+GROUP BY week_day;
+~~~
+
+
+| week_day | total_count | avg_score | max_score | min_score |
+|----------|-------------|-----------|-----------|-----------|
+|        0 |         351 |      97.0 |       100 |        77 |
+|        1 |        2982 |      91.0 |       100 |        46 |
+|        2 |        3868 |      91.0 |       100 |        53 |
+|        3 |        3955 |      91.0 |       100 |        50 |
+|        4 |        3285 |      92.0 |       100 |        42 |
+|        5 |        2691 |      93.0 |       100 |        51 |
+|        6 |         245 |      97.0 |       100 |        79 |
+{:.table-sql}
+
+What does `0` stand for, i.e. is the beginning of the week _Monday_ or _Sunday_ (it differs between software and languages, much to everyone's profound frustration)? We could look it up, but I think it's safe to say that `0` stands for _Sunday_, given how few inspections happen then. Likewise, a weekday of `6` seems to correspond to _Saturday_.
+
+
+
+
+## Manually querying across tables
+
+
+Let's go back to the `businesses` table. It contains human-readable identifiers for places, such as the restaurant's `name` and `address`. The `inspections` table contains important information about how those restaurants have _performed_ in health inspections.
+
+Let's pretend we only care about __In-N-Out Burger__ (BTW, you can see its [inspection history on the SF health department's webpage](https://101g-xnet.sfdph.org:8443/ords/f?p=132:2:641579148441956::NO::P2_LOCATIONID:5104)). I pick In-N-Out Burger because I know there is only _one_ in all of San Francisco and I love In-N-Out Burger, as do all great people.
+
+This is the query I would use to get the relevant fields from `businesses`: name, address, latitude, longitude, and business_id:
+
+~~~sql
+SELECT business_id, name, address, latitude, longitude
+FROM businesses
+WHERE name LIKE 'In-N-Out Burger';
+~~~
+
+| business_id |       name      |     address      |  latitude |  longitude  |
+|-------------|-----------------|------------------|-----------|-------------|
+|        5104 | In-N-Out Burger | 333 Jefferson St | 37.807923 | -122.417887 |
+{:.table-sql}
+
+We can use the result (i.e. `business_id = 5104`) to retrieve all of the inspections associated with In-N-Out. When it comes to the `inspections` table, we care about the `date` of the inspection, the `type` of inspection, and when it happened:
+
+~~~sql
+SELECT date, type, Score
+FROM inspections
+WHERE business_id = '5104';
+~~~
+
+|    date    |          type         | Score |
+|------------|-----------------------|-------|
+| 2012-12-24 | Routine - Unscheduled |   100 |
+| 2013-10-10 | Routine - Unscheduled |   100 |
+| 2014-04-03 | Routine - Unscheduled |    98 |
+| 2014-04-03 | Complaint             |       |
+| 2015-05-20 | Routine - Unscheduled |   100 |
+{:.table-sql}
+
+Looks like In-N-Out did pretty good, though apparently someone had something to complain about...
+
+But one of the inspections yielded a score of less than a perfect `100`, which implies that some problem was found.
+
+But how do we find those specific problems found in a given inspection? That's where the `violations` table comes in.
+
+
+# The violations table
+
+OK, we know the drill. First, how many rows are there?
+
+~~~sql
+SELECT COUNT(*)
+FROM violations;
+~~~
+
+Roughly 44,000, which means on average, there are a few more than 1 violation per inspection.
+
+What are the data columns in the `violations` table?
+
+~~~sql
+SELECT *
+FROM violations
+LIMIT 3;
+~~~
+
+| business_id |    date    | ViolationTypeID | risk_category |                    description                     |
+|-------------|------------|-----------------|---------------|----------------------------------------------------|
+|          10 | 2014-01-14 |          103154 | Low Risk      | Unclean or degraded floors walls or ceilings       |
+|          10 | 2014-01-14 |          103145 | Low Risk      | Improper storage of equipment utensils or linens   |
+|          10 | 2014-01-14 |          103119 | Moderate Risk | Inadequate and inaccessible handwashing facilities |
+|             |            |                 |               |                                                    |
+{:.table-sql}
+
+## Manually querying violations for a given restaurant
+
+I'll skip the exploration via aggregates -- let's pretend I need to know, in a hurry, what sin In-N-Out has committed. How do we match up violation to business? Looks like `violations` also keeps track of `business_id`; modifying our previous query using `inspections`:
+
+
+~~~sql
+SELECT date, risk_category, description
+FROM violations
+WHERE business_id = '5104';
+~~~
+
+|    date    | risk_category |                   description                    |
+|------------|---------------|--------------------------------------------------|
+| 2014-04-03 | Low Risk      | Unapproved or unmaintained equipment or utensils |
+{:.table-sql}
+
+
+..._Meh_...? Well good to know it's not vermin. Again, you can check out [In-N-Out's record on the SF health data site](https://101g-xnet.sfdph.org:8443/ords/f?p=132:2:641579148441956::NO::P2_LOCATIONID:5104).
+
+
+# Joins
+
+All this manual querying makes it difficult to do anything more than just a one-by-one lookup. That's where __joins__ come in.
+
+
+<%= render_content_resource_box({url: 'http://fall2014.padjo.org/tutorials/database-joins/sql-inner-join/', title: 'Inner Join in SQL', description: "This tutorial is from last year's class. Even though it uses MySQL, the syntax is pretty much the same."})
+%>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Ignore all this stuff below for now!
+
+...
+
+## Dirtiest Starbucks?
+
+~~~sql
+SELECT businesses.name AS biz_name, 
+  businesses.address AS biz_address,
+  inspections.Score AS score,
+  CAST(inspections.date AS CHAR)  AS inspection_date,
+  violations.description AS violation_description
+FROM businesses
+INNER JOIN inspections
+    ON businesses.business_id = inspections.business_id
+INNER JOIN violations
+    ON inspections.business_id = violations.business_id 
+       AND inspections.date = violations.date 
+
+WHERE inspection_date > "2014" 
+  AND biz_name LIKE '%STARBUCKS%'
+  AND score < 90
+  AND violations.risk_category = 'High Risk'
+ORDER BY score;
+~~~
+
+|        biz_name        |   biz_address    | score | inspection_date |          violation_description          |
+|------------------------|------------------|-------|-----------------|-----------------------------------------|
+| Starbucks Coffee Co    | 0264 Kearny St   |    85 | 2014-01-03      | Improper cooling methods                |
+| Starbucks Coffee       | 201 Powell St    |    87 | 2015-03-17      | Unclean hands or improper use of gloves |
+| STARBUCKS COFFEE #9219 | 333 MARKET St    |    89 | 2014-10-03      | High risk food holding temperature      |
+| STARBUCKS COFFEE CO    | 1231 MARKET St   |    89 | 2014-12-30      | Unclean hands or improper use of gloves |
+| STARBUCKS              | 350 RHODE ISLAND |    89 | 2014-03-19      | No hot water or running water           |
+{:.table-sql}
+
+
+
+## Applying a categorization to group by
+
+
+~~~sql
+SELECT 
+  (CASE WHEN  
+    name LIKE '%STARBUCKS%'
+    THEN 'Starbucks'
+    ELSE 'Peets' END) AS  "company",
+  address, business_id
+
+FROM businesses 
+  
+WHERE 
+  name  LIKE '%STARBUCKS%' 
+  OR name LIKE '%PEET%'
+~~~
