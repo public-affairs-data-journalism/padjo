@@ -33,6 +33,33 @@ sed -e '1a\
 ~~~
 
 
+Or:
+
+~~~sh
+function qtq(){
+  sed -e '1i\
+.headers on' | 
+  sqlite3 $mydb |
+  csvformat -d \| |
+  csvlook |
+  sed -e '$a\
+{:.table-sql}'
+}
+~~~
+
+
+~~~sh
+echo "SELECT name, address
+FROM businesses
+WHERE name LIKE 'PIZZA%'
+LIMIT 5;" | sqlite3 $mydb | csvformat -d \| | csvlook |
+sed -e '$a\
+{:.table-sql}'
+
+~~~
+
+
+
 Usage:
 
 ~~~sh
@@ -61,3 +88,4 @@ Things I learned:
 - Finally used `tee` properly
 - Discovered `/dev/tty`
 - Learned how to pipe into sqlite3
+- how to use realpath

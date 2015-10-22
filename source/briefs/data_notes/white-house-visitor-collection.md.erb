@@ -1,0 +1,48 @@
+
+
+
+General info:
+https://www.whitehouse.gov/goodgovernment/tools/visitor-records
+
+Headers info:
+https://www.whitehouse.gov/files/disclosures/visitors/WhiteHouse-WAVES-Key-1209.txt
+
+Socrata Info:
+https://open.whitehouse.gov/dataset/White-House-Visitor-Records-Requests/p86s-ychb
+
+Download:
+https://open.whitehouse.gov/api/views/p86s-ychb/rows.csv?accessType=DOWNLOAD
+
+POLITCO story on visitors:
+
+http://www.politico.com/agenda/story/2015/07/jon-stewarts-secret-white-house-visits-000178?hp=t3_r
+
+[Exploring the White House visitors database](http://www.washingtonpost.com/blogs/ask-the-post/post/exploring-the-white-house-visitors-database/2012/05/20/gIQA7aWFZU_blog.html)
+
+http://www.mediamatters.org/print/research/2013/05/21/the-right-wing-medias-failed-white-house-log-co/194165
+
+[Data Shows Ron Dermer Persona Non Grata at White House](http://jpupdates.com/2015/04/15/data-shows-ron-dermer-persona-non-grata-at-white-house/)
+
+Fix the dates:
+
+~~~sh
+csvsql wh-rows.csv --insert --no-constraints \
+  --tables whvisitors --db sqlite:///whtemp.sqlite
+~~~
+
+
+~~~sh
+csvcut -c 'APPT_START_DATE,APPT_END_DATE,APPT_CANCEL_DATE,LastEntryDate'
+~~~
+
+
+Add some indexes
+
+
+
+
+
+~~~sh
+CREATE IND
+
+~~~

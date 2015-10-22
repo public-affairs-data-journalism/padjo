@@ -1,24 +1,24 @@
 .table-condensed{
   th, td{
-    padding: 0.5 * $table-cell-padding;
+    padding: 0.45 * $table-cell-padding;
   }
 }
 
 .table-sql{
+  font-size: 0.9rem;
   max-width: 100%;
   min-width: 35%;
   width: auto;
   font-family: $font-family-monospace;
   @extend .table-condensed;
-
   tbody{
     td{
-      border: thin dashed #333;
+      border: thin dashed #555;
     }
   }
 
   th{
-    border: 1px solid #333;
+    border: 1px solid #555;
     border-bottom: 2px solid black;
     background: #eee;
   }

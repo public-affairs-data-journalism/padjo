@@ -28,10 +28,47 @@ Throughout this guide, I'll try to link to relevant tutorials. Try to follow thi
 
 
 
-# Let's just SELECT and COUNT
 
-What should we first ask about a new database? How many rows it contains. Exactly how many restaurant and eatery-type establishments are required to undergo health inspections in all of San Francisco? 5,000? 25,000? Knowing even that simple fact will quickly lead to other questions.
+# What's in the data?
 
+The San Francisco Department of Health is responsible for food facility inspections. [Here is the landing page for the inspections program](https://www.sfdph.org/dph/EH/Food/Score/default.asp), which includes a chart describing their scoring system: 90 to 100 points is "Good". Getting below a 85 means there were probably "several high-risk violations".
+
+If you look closely, you'll see a link to a public-facing searchable database:
+
+[https://101g-xnet.sfdph.org:8443/ords/f?p=132:1](https://101g-xnet.sfdph.org:8443/ords/f?p=132:1)
+
+Yeah, that URL isn't particularly human-friendly. But the search is straightforward. Here's the detail page for a [particular restaurant](https://101g-xnet.sfdph.org:8443/ords/f?p=132:2:641579148441956::NO::P2_LOCATIONID:5104): 
+
+![imgur](https://camo.githubusercontent.com/fcd8059a6767164bed57bdbf67df0c4fffa34626/687474703a2f2f692e696d6775722e636f6d2f355952477a476e2e706e67)
+
+### Getting the data
+
+To download the raw data, they host [a ZIP file containing 3 files](https://extxfer.sfdph.org/food/SFFoodProgram_Complete_Data.zip). 
+
+If you want to skip the trouble of importing the CSV data into SQLite, feel free to use my database file here:
+
+- [`sf_food_program_db.sqlite`](/files/data/sf_food_program_db/sf_food_program_db.sqlite)
+
+
+### What's in the data
+
+The SQLite database contains 3 tables from the 3 CSV files:
+
+- `businesses` - unique identifiers, names, addresses, geospatial coordinates, and other data related to each individual business
+- `inspections` - contains a row for each inspection, including the business_id of the inspected business, the score it received (if applicable), the date of the inspection, and the reason for the inspection
+- `violations` - contains a row for every violation, including the severity and a short description of the violation. It contains business_id and an inspection date which can presumably be used to join against the inspections data.
+
+Here's a [PDF user manual of what's in the data](https://extxfer.sfdph.org/food/File%20Specifications.pdf).
+
+
+# What's in the table of businesses?
+
+
+So what should we first ask about a new database? No matter what table we start with, it's always worth asking: _how many rows are in the table?_. 
+
+If we start with the `businesses` table, the answer to this query is ostensibly a rough estimate of the restaurants, eateries, and other food-serving establishments in all of San Francisco. And just how many is that, exactly? 5,000? 25,000? Knowing even a ballpark estimate will quickly lead to other questions.
+
+So let's start with a `SELECT` and `COUNT`.
 
 ## A sidenote about GUIs and conveniences
 
@@ -51,6 +88,8 @@ What does directly commanding our SQLite database look like? Well, you [can alwa
 ![blue cli of fun](/files/images/tutorials/sql-walk/sf-food/blue-sqlite3-cli.gif)
 
 Actually, this is probably not the time to discover the CLI -- at least when you're trying to learn SQL. But just keep in mind that it *is* possible to move past the GUI, and that comes both with the familiarity of typing things out and being able to think about _how to explore the data_, regardless of interface.
+
+## Let's just SELECT and COUNT
 
 So, back to getting a count of rows:
 
@@ -109,8 +148,19 @@ Most of the columns aren't that interesting, other than perhaps `address`, `lati
 ~~~sql
 SELECT name
 FROM businesses
-LIMIT 10;
+LIMIT 5;
 ~~~
+
+I'm not sure why the first entry contains a blank name...but it's a sign for things to come, in terms of discovering just how messy this dataset can be...
+
+|         name         |
+|----------------------|
+|                      |
+| 100% Dessert Cafe    |
+| 1001 Castro St       |
+| 101 Super Mart, Inc. |
+| 1058 Hoagie          |
+{:.table-sql}
 
 
 <%= render_content_resource_box '/tutorials/sql-basics/where-clause-as-filter' %>
@@ -123,8 +173,10 @@ LIMIT 10;
 %>
 
 
+### Pizza, pizza?
 
-How many places serve up pizza in San Francisco? One rough way to estimate is to look for all businesses with `'PIZZA'` in the name:
+
+How many places serve up pizza in San Francisco? One way to get a lower-bound estimate is to filter for all businesses with `'PIZZA'` in the name:
 
 ~~~sql
 SELECT name
@@ -133,10 +185,11 @@ WHERE name = 'PIZZA'
 LIMIT 10;
 ~~~
 
-This returns 0 results because the query is limited to finding all places in which the name is _literally_`'PIZZA'`, which doesn't include "Pizza Hut" or even "Pizza" (i.e. non-uppercase).
+
+
+The above query returns __0 results__ because the query is limited to finding all places in which the name is _literally_`'PIZZA'`, which doesn't include "Pizza Hut" or even "Pizza" (i.e. non-uppercase).
 
 <%= render_content_resource_box '/tutorials/sql-basics/fuzzy-matching-like-in-where' %>
-
 
 This is where the `LIKE` clause and wildcards come in handy. We can specify all names that _begin_ with `'PIZZA'` and not worry about the capitalization:
 
@@ -147,13 +200,31 @@ WHERE name LIKE 'PIZZA%'
 LIMIT 10;
 ~~~
 
+
+|---------------------------------|
+|  name                           |
+|---------------------------------|
+|  PIZZA HUT                      |
+|  PIZZA HUT #758280              |
+|  PIZZA INFERNO                  |
+|  Pizza Express                  |
+|  Pizza Joint                    |
+|  Pizza Joint                    |
+|  Pizza Joint & Grill            |
+|  Pizza Joint and Grill          |
+|  Pizza Orgasmica                |
+|  Pizza Orgasmica & Brewing Co.  |
+|---------------------------------|
+{:.table-sql}
+
+
 We get everything from `'PIZZA HUT'` to `'Pizza Orgasmica & Brewing Co.'`. But our wildcard will leave out places in which `'pizza'` is at the middle or end of a name, such as `'Dominos Pizza'`. That's easy to fix:
 
 ~~~sql
 SELECT name
 FROM businesses
 WHERE name LIKE '%PIZZA%'
-LIMIT 10;
+LIMIT 5;
 ~~~
 
 That change in the query nets us places as exotic as `'AT&T -Room 2130 Derby Grill/Port Walk Pizza [145178]'`.
@@ -168,7 +239,7 @@ WHERE name LIKE '%PIZZA%';
 ~~~
 
 
-# Checking out the inspections table
+# Inspecting the inspections table
 
 OK, now that we've seen a bit of the `businesses` table, let's look at what the `inspections` table has. Let's repeat some of our previous exploration technique and first find out how many rows the `inspections` table has:
 
@@ -512,7 +583,9 @@ GROUP BY week_day;
 |        6 |         245 |      97.0 |       100 |        79 |
 {:.table-sql}
 
-What does `0` stand for, i.e. is the beginning of the week _Monday_ or _Sunday_ (it differs between software and languages, much to everyone's profound frustration)? We could look it up, but I think it's safe to say that `0` stands for _Sunday_, given how few inspections happen then. Likewise, a weekday of `6` seems to correspond to _Saturday_.
+What does `0` stand for? That is, does _the beginning of the week_ start on the Monday or Sunday? (the definition differs between software and languages, which yes, is very annoying). 
+
+We could look it up, but I think it's safe to say that `0` stands for _Sunday_, given how few inspections happen then. Likewise, a weekday of `6` seems to correspond to _Saturday_.
 
 
 
