@@ -1,44 +1,161 @@
 
 
+scout the database
 
-General info:
-https://www.whitehouse.gov/goodgovernment/tools/visitor-records
-
-Headers info:
-https://www.whitehouse.gov/files/disclosures/visitors/WhiteHouse-WAVES-Key-1209.txt
-
-Socrata Info:
-https://open.whitehouse.gov/dataset/White-House-Visitor-Records-Requests/p86s-ychb
-
-Download:
-https://open.whitehouse.gov/api/views/p86s-ychb/rows.csv?accessType=DOWNLOAD
-
-POLITCO story on visitors:
-
-http://www.politico.com/agenda/story/2015/07/jon-stewarts-secret-white-house-visits-000178?hp=t3_r
-
-[Exploring the White House visitors database](http://www.washingtonpost.com/blogs/ask-the-post/post/exploring-the-white-house-visitors-database/2012/05/20/gIQA7aWFZU_blog.html)
-
-http://www.mediamatters.org/print/research/2013/05/21/the-right-wing-medias-failed-white-house-log-co/194165
-
-[Data Shows Ron Dermer Persona Non Grata at White House](http://jpupdates.com/2015/04/15/data-shows-ron-dermer-persona-non-grata-at-white-house/)
-
-Fix the dates:
 
 ~~~sh
-csvsql wh-rows.csv --insert --no-constraints \
-  --tables whvisitors --db sqlite:///whtemp.sqlite
+cat  wh-rows.csv | csvcut -c APPT_START_DATE | 
+  awk '!(NR%10)' | ag -o '.{1,12}' | 
+  sort | uniq
 ~~~
 
 
 ~~~sh
-csvcut -c 'APPT_START_DATE,APPT_END_DATE,APPT_CANCEL_DATE,LastEntryDate'
+
+#paste <(head -n 10 wh-rows.csv | csvcut -C 'APPT_START_DATE,APPT_END_DATE,APPT_CANCEL_DATE,LastEntryDate') \
+#  <(head -n 10 wh-rows.csv |    
+#  csvcut -c 'APPT_START_DATE,APPT_END_DATE,APPT_CANCEL_DATE,LastEntryDate' |
+
+
+DB_NAME=whx.sqlite
+sqlite3 $DB_NAME <<EOF
+CREATE TABLE whvisitors (
+  "NAMELAST" VARCHAR, 
+  "NAMEFIRST" VARCHAR, 
+  "NAMEMID" VARCHAR, 
+  "UIN" VARCHAR, 
+  "BDGNBR" VARCHAR, 
+  "Type of Access" VARCHAR, 
+  "TOA" VARCHAR, 
+  "POA" VARCHAR, 
+  "TOD" VARCHAR, 
+  "POD" VARCHAR, 
+  "APPT_MADE_DATE" DATETIME, 
+  "APPT_START_DATE" DATETIME, 
+  "APPT_END_DATE" DATETIME, 
+  "APPT_CANCEL_DATE" DATETIME, 
+  "Total_People" INTEGER, 
+  "LAST_UPDATEDBY" DATETIME, 
+  "POST" VARCHAR, 
+  "LastEntryDate" DATETIME, 
+  "TERMINAL_SUFFIX" VARCHAR, 
+  visitee_namelast VARCHAR, 
+  visitee_namefirst VARCHAR, 
+  "MEETING_LOC" VARCHAR, 
+  "MEETING_ROOM" VARCHAR, 
+  "CALLER_NAME_LAST" VARCHAR, 
+  "CALLER_NAME_FIRST" VARCHAR, 
+  "CALLER_ROOM" VARCHAR, 
+  "Description" VARCHAR, 
+  "RELEASE_DATE" DATETIME
+);
+EOF
+
+
+cat wh-rows.csv | head -n 40 | 
+    sed -E \
+        -e 's#([0-9]+)/([0-9]+)/([0-9][0-9][0-9][0-9])#\3-\1-\2#g' `#mv 4-digit year` \
+        -e 's#([0-9]+)/([0-9]+)/([0-9][0-9]) #20\3-\1-\2 #g' `#pad year` \
+        -e 's#-([0-9])-#-0\1-#g' `# pad the month` \
+        -e 's#(-[0-9][0-9])-([0-9]) #\1-0\2 #g' `# pad the day` \
+        -e 's/([0-9]) ([0-9]:)/\1 0\2/g' | # pad the hour  
+    csvsql --insert --no-create \
+        --tables whvisitors --db sqlite:///$DB_NAME
+
+
+
+
+curl -O http://www.whitehouse.gov/files/disclosures/visitors/WhiteHouse-WAVES-Released-1210.zip
+
+unzip WhiteHouse-WAVES-Released-1210.zip
+
+sqlite3 $DB_NAME <<EOF
+CREATE TABLE whvisitors_2009 (
+  "NAMELAST" VARCHAR, 
+  "NAMEFIRST" VARCHAR, 
+  "NAMEMID" VARCHAR, 
+  "UIN" VARCHAR, 
+  "BDGNBR" VARCHAR, 
+  "ACCESS_TYPE" VARCHAR, 
+  "TOA" VARCHAR, 
+  "POA" VARCHAR, 
+  "TOD" VARCHAR, 
+  "POD" VARCHAR, 
+  "APPT_MADE_DATE" DATETIME, 
+  "APPT_START_DATE" DATETIME, 
+  "APPT_END_DATE" DATETIME, 
+  "APPT_CANCEL_DATE" DATETIME, 
+  "Total_People" INTEGER, 
+  "LAST_UPDATEDBY" DATETIME, 
+  "POST" VARCHAR, 
+  "LastEntryDate" DATETIME, 
+  "TERMINAL_SUFFIX" VARCHAR, 
+  visitee_namelast VARCHAR, 
+  visitee_namefirst VARCHAR, 
+  "MEETING_LOC" VARCHAR, 
+  "MEETING_ROOM" VARCHAR, 
+  "CALLER_NAME_LAST" VARCHAR, 
+  "CALLER_NAME_FIRST" VARCHAR, 
+  "CALLER_ROOM" VARCHAR, 
+  "Description" VARCHAR, 
+  "RELEASE_DATE" DATE
+);
+EOF
+
+
+
+cat WhiteHouse-WAVES-Released-1210.csv |
+    sed -E \
+        -e 's#([0-9]+)/([0-9]+)/([0-9]{4}) ([0-9]+:[0-9]{2}(,|$))#\3-\1-\2 \4#g' `#mv 4-digit-yr w/0 am/pm` \
+        -e 's#([0-9]+)/([0-9]+)/([0-9][0-9]) #20\3-\1-\2 #g' `#pad year` \
+        -e 's#-([0-9])-#-0\1-#g' `# pad the month` \
+        -e 's#(-[0-9][0-9])-([0-9]) #\1-0\2 #g' `# pad the day` \
+        -e 's/([0-9]) ([0-9]:)/\1 0\2/g' `#pad the hour` |     
+        # now pad the AM/PM dates
+    sed -E \
+        -e 's#([0-9])/([0-9])/([0-9]{4}) ([0-9]+:)#\1/0\2/\3 \4#g' `# pad the day` \
+        -e 's#([0-9])/([0-9]{2})/([0-9]{4}) ([0-9]+:)#0\1/\2/\3 \4#g' `# pad the month` \
+        -e 's#([0-9])/([0-9]{2})/([0-9]{4}) ([0-9]:)#\1/\2/\3 0\4#g' `# pad the hour` \
+        -e 's/([0-9]{2}:[0-9]{2}:[0-9]{4}) ([AP]M)/\1\2/g' `# remove AM/PM space` |              
+    csvsql --insert --no-create \
+        --tables whvisitors_2009  --db sqlite:///$DB_NAME
+
+
+
+
 ~~~
+
+
 
 
 Add some indexes
 
+~~~sh
+sqlite3 $DB_NAME <<EOF 
+CREATE INDEX full_name_idx_on_whvisitors ON 
+  whvisitors(NAMELAST, NAMEFIRST);
+CREATE INDEX appt_start_date_idx_on_whvisitors ON 
+  whvisitors(APPT_START_DATE);
+CREATE INDEX visitee_namelast_on_whvisitors ON 
+  whvisitors(visitee_namelast);
+CREATE INDEX full_name_idx_on_whvisitors_2009 ON 
+  whvisitors_2009(NAMELAST, NAMEFIRST);
+CREATE INDEX appt_start_date_idx_on_whvisitors_2009 ON 
+  whvisitors_2009(APPT_START_DATE);
+CREATE INDEX visitee_namelast_on_whvisitors_2009 ON 
+  whvisitors_2009(visitee_namelast);
 
+CREATE INDEX visitee_namefirst_on_whvisitors ON 
+  whvisitors(visitee_namefirst);
+CREATE INDEX visitee_namefirst_on_whvisitors_2009 ON 
+  whvisitors_2009(visitee_namefirst);
+
+CREATE INDEX visitee_name_on_whvisitors ON 
+  whvisitors(visitee_namelast, visitee_namefirst );  
+CREATE INDEX visitee_name_on_whvisitors_2009 ON 
+  whvisitors_2009(visitee_namelast, visitee_namefirst);
+EOF
+~~~
 
 
 

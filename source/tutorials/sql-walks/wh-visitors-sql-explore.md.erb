@@ -1,0 +1,1133 @@
+---
+title: Learning about the White House through its visitors
+description: |
+  What can we learn about the White House from nearly 5 million visitor records?
+---
+
+<%= render_toc %>
+
+Another example of using SQL to just explore data before doing any real analysis.
+
+(Notes incomplete...)
+
+
+Data to be posted...
+
+# Informational links
+
+## About the data source
+
+- [General info](https://www.whitehouse.gov/goodgovernment/tools/visitor-records)
+- [Headers info](https://www.whitehouse.gov/files/disclosures/visitors/WhiteHouse-WAVES-Key-1209.txt)
+- [Socrata Info](https://open.whitehouse.gov/dataset/White-House-Visitor-Records-Requests/p86s-ychb)
+- [Direct download from Socrata](https://open.whitehouse.gov/api/views/p86s-ychb/rows.csv?accessType=DOWNLOAD)
+
+
+
+[Exploring the White House visitors database from the White House](http://www.washingtonpost.com/blogs/ask-the-post/post/exploring-the-white-house-visitors-database/2012/05/20/gIQA7aWFZU_blog.html)
+
+
+[The Right-Wing Media's Failed White House Log Conspiracies - Media Matters](http://www.mediamatters.org/print/research/2013/05/21/the-right-wing-medias-failed-white-house-log-co/194165)
+
+
+
+
+
+
+### Get the count of total visitors
+
+TKaggregate(I'll link to the lesson...)
+
+
+~~~sql
+SELECT COUNT(*)
+FROM whvisitors;
+~~~
+
+|----------|
+| COUNT(*) |
+|----------|
+|  4837028 |
+|----------|
+{:.table-sql}
+
+
+### Get the time span of the database
+
+~~~sql
+SELECT MIN(APPT_START_DATE),
+  MAX(APPT_START_DATE)
+FROM whvisitors;
+~~~
+
+|-----------------------+-----------------------|
+|  MIN(APPT_START_DATE) | MAX(APPT_START_DATE)  |
+|-----------------------+-----------------------|
+|  1/14/14              | 9/9/14                |
+|-----------------------+-----------------------|
+{:.table-sql}
+
+
+### Ignoring bad date data (for now)
+
+
+Oops, looks like the date formats are inconsistent. Rather than try to fix it, let's just work with dates that _are_ properly formatted:
+
+~~~sql
+SELECT MIN(APPT_START_DATE),
+  MAX(APPT_START_DATE)
+FROM whvisitors
+WHERE APPT_START_DATE BETWEEN '2009' AND '2016';
+~~~
+
+|------------------------+-----------------------|
+|  MIN(APPT_START_DATE)  | MAX(APPT_START_DATE)  |
+|------------------------+-----------------------|
+|  2009-01-20 11:30:00PM | 2015-06-30 21:30      |
+|------------------------+-----------------------|
+{:.table-sql}
+
+
+### Just checking to see how many bad dates there are
+
+And about how many are _not_ properly formatted?
+
+~~~sql
+SELECT COUNT(*)
+FROM whvisitors
+WHERE APPT_START_DATE NOT BETWEEN '2009' AND '2016';
+~~~
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  18632     |
+|------------|
+{:.table-sql}
+
+Not too many.
+
+
+## Aggregate counts
+
+
+ 
+### How many visitors per year?
+
+~~~sql
+SELECT SUBSTR(APPT_START_DATE,1, 4) AS yr, COUNT(*)
+FROM whvisitors
+WHERE APPT_START_DATE BETWEEN '2009' AND '2016'
+GROUP BY yr;
+~~~
+
+
+|-------+-----------|
+|  yr   | COUNT(*)  |
+|-------+-----------|
+|  2009 | 276641    |
+|  2010 | 968676    |
+|  2011 | 954156    |
+|  2012 | 932131    |
+|  2013 | 432240    |
+|  2014 | 837403    |
+|  2015 | 417144    |
+|-------+-----------|
+{:.table-sql}
+
+
+
+### Number of visitors by day?
+
+~~~sql
+SELECT DATE(APPT_START_DATE) AS day, COUNT(*)
+FROM whvisitors
+WHERE APPT_START_DATE BETWEEN '2009' AND '2016'
+GROUP BY day
+ORDER BY day ASC
+LIMIT 5;
+~~~
+
+|-------------+-----------|
+|  day        | COUNT(*)  |
+|-------------+-----------|
+|             | 5199      |
+|  2009-01-20 | 51        |
+|  2009-01-21 | 9         |
+|  2009-01-22 | 2         |
+|  2009-01-23 | 3         |
+|-------------+-----------|
+{:.table-sql}
+
+
+
+What does it look like from the bottom?
+
+~~~sql
+SELECT DATE(APPT_START_DATE) AS day, COUNT(*)
+FROM whvisitors
+WHERE APPT_START_DATE BETWEEN '2009' AND '2016'
+GROUP BY day
+ORDER BY day DESC
+LIMIT 5;
+~~~
+
+|-------------+-----------|
+|  day        | COUNT(*)  |
+|-------------+-----------|
+|  2015-06-30 | 1224      |
+|  2015-06-29 | 1013      |
+|  2015-06-28 | 605       |
+|  2015-06-27 | 4031      |
+|  2015-06-26 | 5656      |
+|-------------+-----------|
+{:.table-sql}
+
+For all we know, this is a result of 2009 not having many records...
+
+
+# Examining who is visited
+
+
+How exactly is President Obama referred to in this field? And how reliable is it?
+
+## Scoping out the names
+
+
+~~~sql
+SELECT visitee_namelast, visitee_namefirst 
+FROM whvisitors
+LIMIT 5;
+~~~
+
+A whole lot of empty fields
+
+|-------------------+--------------------|
+|  visitee_namelast | visitee_namefirst  |
+|-------------------+--------------------|
+|                   |                    |
+|                   |                    |
+|                   |                    |
+|                   |                    |
+|                   |                    |
+|-------------------+--------------------|
+{:.table-sql}
+
+### Looking for valid names
+
+~~~sql
+SELECT visitee_namelast, visitee_namefirst 
+FROM whvisitors
+WHERE visitee_namelast IS NOT NULL AND
+  visitee_namefirst IS NOT NULL
+LIMIT 5;
+~~~
+
+A little better:
+
+|-------------------+--------------------|
+|  visitee_namelast | visitee_namefirst  |
+|-------------------+--------------------|
+|  &                | POTUS              |
+|  &                | POTUS              |
+|  &                | POTUS              |
+|  &                | POTUS              |
+|  &                | POTUS              |
+|-------------------+--------------------|
+{:.table-sql}
+
+
+### Doing a group count
+
+
+~~~sql
+SELECT visitee_namelast, 
+  visitee_namefirst,
+  COUNT(*) AS ct 
+FROM whvisitors
+WHERE visitee_namelast IS NOT NULL 
+  AND visitee_namefirst IS NOT NULL
+GROUP BY visitee_namelast, visitee_namefirst
+ORDER BY ct DESC
+LIMIT 10;
+~~~
+
+|-------------------+-------------------+----------|
+|  visitee_namelast | visitee_namefirst | ct       |
+|-------------------+-------------------+----------|
+|  OFFICE           | VISITORS          | 2943727  |
+|  Lierman          | Kyle              | 18465    |
+|  Lambrew          | Jeanne            | 18256    |
+|  /                | POTUS             | 12024    |
+|  HETZEL           | OFFICE            | 10688    |
+|  Jenkins          | Brad              | 7208     |
+|  Foster           | Heather           | 6834     |
+|  BOLLINGER        | CHELSEA           | 6662     |
+|  DOEBLER          | MAX               | 6110     |
+|  Utech            | Dan               | 6082     |
+|-------------------+-------------------+----------|
+{:.table-sql}
+
+Who is "Kyle Lierman"? Why are there so few famous names? Where's FLOTUS?
+
+
+### The effect of NULLs
+
+~~~sql
+SELECT visitee_namelast, 
+  visitee_namefirst,
+  COUNT(*) AS ct 
+FROM whvisitors
+WHERE visitee_namelast IS NULL 
+  OR visitee_namefirst IS NULL
+GROUP BY visitee_namelast, visitee_namefirst
+ORDER BY ct DESC
+LIMIT 10;
+~~~
+
+Looks like a lot of rows have empty name fields. And also, different capitalization:
+
+|-------------------+-------------------+---------|
+|  visitee_namelast | visitee_namefirst | ct      |
+|-------------------+-------------------+---------|
+|                   | POTUS             | 138966  |
+|  POTUS            |                   | 75951   |
+|                   | POTUS/FLOTUS      | 38274   |
+|                   |                   | 24802   |
+|                   | potus             | 14924   |
+|                   | FLOTUS            | 14923   |
+|  FLOTUS           |                   | 6159    |
+|  POTUS/FLOTUS     |                   | 5622    |
+|  VPOTUS           |                   | 4279    |
+|                   | VPOTUS            | 4109    |
+|-------------------+-------------------+---------|
+{:.table-sql}
+
+For now, we need to include `NULL`s
+
+
+~~~sql
+SELECT visitee_namelast, 
+  visitee_namefirst,
+  COUNT(*) AS ct 
+FROM whvisitors
+GROUP BY visitee_namelast, visitee_namefirst
+ORDER BY ct DESC
+LIMIT 10;
+~~~
+
+
+|-------------------+-------------------+----------|
+|  visitee_namelast | visitee_namefirst | ct       |
+|-------------------+-------------------+----------|
+|  OFFICE           | VISITORS          | 2943727  |
+|                   | POTUS             | 138966   |
+|  POTUS            |                   | 75951    |
+|                   | POTUS/FLOTUS      | 38274    |
+|                   |                   | 24802    |
+|  Lierman          | Kyle              | 18465    |
+|  Lambrew          | Jeanne            | 18256    |
+|                   | potus             | 14924    |
+|                   | FLOTUS            | 14923    |
+|  /                | POTUS             | 12024    |
+|-------------------+-------------------+----------|
+{.table-sql}
+
+
+
+
+### Matching on UPCASE
+
+We still can't get an accurate count, so let's use `UPPER`
+
+~~~sql
+SELECT UPPER(visitee_namelast), 
+  UPPER(visitee_namefirst),
+  COUNT(*) AS ct 
+FROM whvisitors
+GROUP BY UPPER(visitee_namelast), 
+  UPPER(visitee_namefirst)
+ORDER BY ct DESC
+LIMIT 10;
+~~~
+
+This is better:
+
+|--------------------------+--------------------------+----------|
+|  UPPER(visitee_namelast) | UPPER(visitee_namefirst) | ct       |
+|--------------------------+--------------------------+----------|
+|  OFFICE                  | VISITORS                 | 2943728  |
+|                          | POTUS                    | 153936   |
+|  POTUS                   |                          | 75951    |
+|                          | POTUS/FLOTUS             | 38749    |
+|                          |                          | 24802    |
+|  LIERMAN                 | KYLE                     | 19881    |
+|  LAMBREW                 | JEANNE                   | 18939    |
+|                          | FLOTUS                   | 15246    |
+|  /                       | POTUS                    | 12024    |
+|  DOEBLER                 | MAX                      | 10712    |
+|--------------------------+--------------------------+----------|
+{:.table-sql}
+
+
+### Aliasing columns
+
+~~~sql
+SELECT UPPER(visitee_namelast) AS v_last_name, 
+  UPPER(visitee_namefirst) v_first_name,
+  COUNT(*) AS ct 
+FROM whvisitors
+GROUP BY v_last_name,
+  v_first_name
+ORDER BY ct DESC
+LIMIT 10;
+~~~
+
+
+|--------------+--------------+----------|
+|  v_last_name | v_first_name | ct       |
+|--------------+--------------+----------|
+|  OFFICE      | VISITORS     | 2943728  |
+|              | POTUS        | 153936   |
+|  POTUS       |              | 75951    |
+|              | POTUS/FLOTUS | 38749    |
+|              |              | 24802    |
+|  LIERMAN     | KYLE         | 19881    |
+|  LAMBREW     | JEANNE       | 18939    |
+|              | FLOTUS       | 15246    |
+|  /           | POTUS        | 12024    |
+|  DOEBLER     | MAX          | 10712    |
+|--------------+--------------+----------|
+{:.table-sql}
+
+
+
+
+
+
+
+## Working with NULLs
+
+
+
+
+## Using IFNULL to normalize some values
+
+There's some funkiness to how functions work on `NULL` values. It's better to use `IFNULL` to explicitly set the value, i.e "if NULL, make the field to `'WHATEV'`":
+
+~~~sql
+SELECT 
+  UPPER(IFNULL(visitee_namelast, 'whatev!!!')) AS v_last_name, 
+  UPPER(IFNULL(visitee_namefirst, 'whatev!!!')) AS v_first_name,
+  COUNT(*) AS ct 
+FROM whvisitors
+GROUP BY v_last_name, v_first_name
+ORDER BY ct DESC
+LIMIT 10;
+~~~
+
+|-------------|--------------|---------|
+| v_last_name | v_first_name |    ct   |
+|-------------|--------------|---------|
+| OFFICE      | VISITORS     | 2943728 |
+| WHATEV!!!   | POTUS        |  153936 |
+| POTUS       | WHATEV!!!    |   75951 |
+| WHATEV!!!   | POTUS/FLOTUS |   38749 |
+| WHATEV!!!   | WHATEV!!!    |   24802 |
+| LIERMAN     | KYLE         |   19881 |
+| LAMBREW     | JEANNE       |   18939 |
+| WHATEV!!!   | FLOTUS       |   15246 |
+| /           | POTUS        |   12024 |
+| DOEBLER     | MAX          |   10712 |
+|-------------|--------------|---------|
+{:.table-sql}
+
+
+### Do some hacky normalization of names
+
+Sometimes visitors to `POTUS` are listed as first name `POTUS` and other times, as just _last_ name `POTUS`. Which means visits to the `POTUS` count as their own rows:
+
+|-------------|--------------|--------|
+| v_last_name | v_first_name |   ct   |
+|-------------|--------------|--------|
+| WHATEV!!!   | POTUS        | 153936 |
+| POTUS       | WHATEV!!!    |  75951 |
+{:.table-sql}
+
+This is kind of inconvenient. 
+
+So let's make a new kind of column:
+
+- If the last name is NULL, make it equal to the first name
+- and if the first name is null, make it equal to the last name
+- If both are null, then both fields just end up as null
+
+~~~sql
+SELECT 
+  UPPER(IFNULL(visitee_namelast, visitee_namefirst)) AS v_last_name, 
+  UPPER(IFNULL(visitee_namefirst, visitee_namelast)) AS v_first_name,
+  COUNT(*) AS ct 
+FROM whvisitors
+GROUP BY v_last_name, v_first_name
+ORDER BY ct DESC
+LIMIT 10;
+~~~
+
+Now all the `POTUS / POTUS` are put together:
+
+|---------------+--------------+----------|
+|  v_last_name  | v_first_name | ct       |
+|---------------+--------------+----------|
+|  OFFICE       | VISITORS     | 2943728  |
+|  POTUS        | POTUS        | 229887   |
+|  POTUS/FLOTUS | POTUS/FLOTUS | 44371    |
+|               |              | 24802    |
+|  FLOTUS       | FLOTUS       | 21407    |
+|  LIERMAN      | KYLE         | 19881    |
+|  LAMBREW      | JEANNE       | 18939    |
+|  /            | POTUS        | 12024    |
+|  DOEBLER      | MAX          | 10712    |
+|  HETZEL       | OFFICE       | 10688    |
+|---------------+--------------+----------|
+{:.table-sql}
+
+
+## Altering the database
+
+The previous call was really slow. That's because we basically created a new column, something the database hasn't __indexed__ (i.e. organized) for a optimized, efficient search.
+
+### Adding a column
+
+One such solution is to first __add a new column__
+
+~~~sql
+ALTER TABLE whvisitors
+  ADD COLUMN custom_visitee_cat_name VARCHAR;
+~~~
+
+### Fill a column with values
+
+This is known as doing an `UPDATE` operation. Note that it is a totally different structure than `SELECT`:
+
+~~~sql
+UPDATE whvisitors 
+  SET custom_visitee_cat_name = 
+          UPPER(IFNULL(visitee_namelast, visitee_namefirst))
+             || ', '
+             || UPPER(IFNULL(visitee_namefirst, visitee_namelast));  
+~~~
+
+Let's check out the result of that:
+
+~~~sql
+SELECT custom_visitee_cat_name,
+  COUNT(*) AS ct 
+FROM whvisitors
+GROUP BY custom_visitee_cat_name
+ORDER BY ct DESC
+LIMIT 10;
+~~~
+
+|-----------------------------+----------|
+|  custom_visitee_cat_name    | ct       |
+|-----------------------------+----------|
+|  OFFICE, VISITORS           | 2943728  |
+|  POTUS, POTUS               | 229887   |
+|  POTUS/FLOTUS, POTUS/FLOTUS | 44371    |
+|                             | 24802    |
+|  FLOTUS, FLOTUS             | 21407    |
+|  LIERMAN, KYLE              | 19881    |
+|  LAMBREW, JEANNE            | 18939    |
+|  /, POTUS                   | 12024    |
+|  DOEBLER, MAX               | 10712    |
+|  HETZEL, OFFICE             | 10688    |
+|-----------------------------+----------|
+{:.table-sql}
+
+
+### Index a column
+
+That above query ended up being _extremely slow_ -- nearly 30 seconds on a fast laptop.
+
+Now that we know that we want to look up things by `custom_visitee_cat_name`, the next thing we want to do is __index__ that column, i.e. tell the database that, "_Oh hey, we're going to be doing a lot of lookups on this, so get your ----in order plz_"
+
+
+Indexing a column isn't necessary, but it turns otherwise impossible/intolerable queries into speedy queries:
+
+~~~sql
+CREATE INDEX custom_visitee_cat_name_on_whvisitors ON 
+  whvisitors(custom_visitee_cat_name);
+~~~
+
+Repeating the previous `GROUP BY` query should be as much as _10 times faster_.
+
+### What kinds of "POTUS" are there?
+
+Alright, we now know that `'POTUS'` refers to the "President of the United States."
+
+Not everyone knows that: via the [r/veep subreddit](https://www.reddit.com/r/Veep/comments/3a5abs/i_am_english_and_have_watched_all_four_seasons/):
+
+> I am English and have watched all four seasons. Today I learned that POTUS was not the surname of the president before Selina...I am an idiot
+
+But we see that there are a _lot_ of variations of `POTUS`...just how many exactly?
+
+~~~sql
+SELECT COUNT(*) AS ct 
+FROM whvisitors
+WHERE custom_visitee_cat_name 
+  LIKE 'POTUS%';
+~~~
+
+What about things that end in `'POTUS'` ?
+
+|----------|
+|  ct      |
+|----------|
+|  275244  |
+|----------|
+{:.table-sql}
+
+
+
+~~~sql
+SELECT COUNT(*) AS ct 
+FROM whvisitors
+WHERE custom_visitee_cat_name 
+  LIKE '%POTUS';
+~~~
+
+|----------|
+|  ct      |
+|----------|
+|  256760  |
+|----------|
+{:.table-sql}
+
+And what about `'POTUS'` in the middle but not at the ends?
+
+~~~sql
+SELECT COUNT(*) AS ct 
+FROM whvisitors
+WHERE custom_visitee_cat_name 
+  LIKE '_%POTUS%_';
+~~~
+
+|---------|
+|  ct     |
+|---------|
+|  63636  |
+|---------|
+{:.table-sql}
+
+
+##### SIGH
+
+OK, `'POTUS'` _anywhere_ in the name of the visitee?
+
+~~~sql
+SELECT COUNT(*) AS ct 
+FROM whvisitors
+WHERE custom_visitee_cat_name 
+  LIKE '%POTUS%';
+~~~
+
+|----------|
+|  ct      |
+|----------|
+|  310853  |
+|----------|
+{:.table-sql}
+
+
+
+### An even better normalization
+
+Let's make a more normalized field:
+
+~~~sql
+ALTER TABLE whvisitors
+  ADD COLUMN custom_visitee_slug VARCHAR;
+~~~
+
+You can index the column now, if you want...
+
+(note how the index name doesn't really matter...just make it unique...)
+
+~~~sql
+CREATE INDEX mah_sluggy_index ON 
+  whvisitors(custom_visitee_slug);
+~~~
+
+
+...though generally it's better to wait until after you've done bulk updates...because after a column has been indexed, it has to reindex itself every time values are changed.
+
+#### Update the column, incrementally
+
+
+If neither the visitee's last name nor first name is `NULL`, set `visitee_normal_name` to the uppercased last and first name, joined by a comma. We can use what I showed in the first demo of `UPDATE`, except with a `WHERE` clause
+
+~~~sql
+UPDATE whvisitors
+SET custom_visitee_slug =
+  UPPER(visitee_namelast)
+  || ', '
+  || UPPER(visitee_namefirst)
+WHERE
+  visitee_namelast IS NOT NULL
+  AND visitee_namefirst IS NOT NULL;
+~~~
+
+(This will take about 30 seconds)
+
+
+Now, if the visitee's last_name is NULL, set `visitee_normal_name` equal to the visitee's uppercased first name.
+
+Note that I add an extra condition to the `WHERE` clause so I don't accidentally overwrite the existing `custom_visitee_slug`
+
+~~~sql
+UPDATE whvisitors
+SET custom_visitee_slug = 
+  UPPER(visitee_namelast)
+WHERE
+  visitee_namelast IS NOT NULL
+  AND custom_visitee_slug IS NULL
+~~~
+
+Finally, for all rows in which there is a `visitee_namefirst` but not a last name:
+
+~~~sql
+UPDATE whvisitors
+SET custom_visitee_slug = 
+  UPPER(visitee_namefirst)
+WHERE
+  visitee_namefirst IS NOT NULL
+  AND custom_visitee_slug IS NULL
+~~~
+
+### OK, now how many POTUSi are there?
+
+~~~sql
+SELECT custom_visitee_slug, 
+  COUNT(*) AS ct
+FROM whvisitors
+WHERE
+  custom_visitee_slug LIKE 'POTUS%'
+GROUP BY custom_visitee_slug
+ORDER BY ct DESC
+LIMIT 10;
+~~~
+
+|-----------------------+---------|
+|  custom_visitee_slug  | ct      |
+|-----------------------+---------|
+|  POTUS                | 229887  |
+|  POTUS/FLOTUS         | 44371   |
+|  POTUS/VPOTUS         | 961     |
+|  POTUS/JONES/DYER     | 6       |
+|  POTUS/LISA           | 6       |
+|  POTUS/COHEN MITCHELL | 5       |
+|  POTUS/MINH-HAI       | 4       |
+|  POTUS/ELLIE          | 2       |
+|  POTUS/FERIAL         | 1       |
+|  POTUS/MATTHEW        | 1       |
+|-----------------------+---------|
+{:.table-sql}
+
+And just to check...everything that _doesn't_ end with POTUS:
+
+~~~sql
+SELECT custom_visitee_slug, 
+  COUNT(*) AS ct
+FROM whvisitors
+WHERE
+  custom_visitee_slug LIKE '_%POTUS%'
+GROUP BY custom_visitee_slug
+ORDER BY ct DESC
+LIMIT 10;
+~~~
+
+|-------------------------+--------|
+|  custom_visitee_slug    | ct     |
+|-------------------------+--------|
+|  /, POTUS               | 12024  |
+|  VPOTUS                 | 8395   |
+|  AND, POTUS             | 4508   |
+|  HANKINS, POTUS/HANNAH  | 1366   |
+|  POTUS/VPOTUS           | 961    |
+|  FLOTUS, POTUS/         | 683    |
+|  /DESIREE, POTUS        | 590    |
+|  PEELE, POTUS/CHRISTIAN | 350    |
+|  HOLDREN, POTUS/CHRIS   | 320    |
+|  TWIGG, POTUS/CARRI     | 296    |
+|-------------------------+--------|
+{:.table-sql}
+
+
+<a href="https://www.flickr.com/photos/whitehouse/3484003189"><img class="img-responsive" src="https://farm4.staticflickr.com/3395/3484003189_15bed0d633_b_d.jpg"></a>
+
+
+
+
+
+
+
+## Who visited the POTUS?
+
+Let's just stick with `= 'POTUS'`...
+
+
+~~~sql
+SELECT 
+  NAMELAST,
+  NAMEFIRST,
+  custom_visitee_slug, 
+  COUNT(*) AS ct
+FROM whvisitors
+WHERE custom_visitee_slug = 'POTUS'
+GROUP BY NAMELAST, NAMEFIRST, custom_visitee_slug
+ORDER BY ct DESC
+LIMIT 10;
+~~~
+
+
+|-----------+-------------+---------------------+------|
+|  NAMELAST | NAMEFIRST   | custom_visitee_slug | ct   |
+|-----------+-------------+---------------------+------|
+|  Prather  | Alan        | POTUS               | 157  |
+|  Mottola  | AnnaMaria   | POTUS               | 109  |
+|  Rose     | Christopher | POTUS               | 95   |
+|  Boguslaw | Robert      | POTUS               | 89   |
+|  Clay     | Aaron       | POTUS               | 84   |
+|  Wilson   | Russell     | POTUS               | 84   |
+|  Sabo     | Eric        | POTUS               | 81   |
+|  Dewey    | Glenn       | POTUS               | 79   |
+|  Pelosi   | Nancy       | POTUS               | 68   |
+|  Fettig   | Jason       | POTUS               | 62   |
+|-----------+-------------+---------------------+------|
+{:.table-sql}
+
+For now, let's ignore the case-sensitive grouping problem...
+
+
+Are all of these people important? Sure...[Alan Prather is a biologist](https://plantbiology.natsci.msu.edu/directory/l-alan-prather/).
+
+But what about people who have visited the President just a _few_ times? Let's reverse the order of `ct`:
+
+~~~sql
+SELECT 
+  NAMELAST,
+  NAMEFIRST,
+  custom_visitee_slug, 
+  COUNT(*) AS ct
+FROM whvisitors
+WHERE custom_visitee_slug = 'POTUS'
+GROUP BY NAMELAST, NAMEFIRST, custom_visitee_slug
+ORDER BY ct ASC
+LIMIT 10;
+~~~
+
+
+|--------------+-------------+---------------------+-----|
+|  NAMELAST    | NAMEFIRST   | custom_visitee_slug | ct  |
+|--------------+-------------+---------------------+-----|
+|              | BRANDEE     | POTUS               | 1   |
+|              | DOUGLAS     | POTUS               | 1   |
+|              | SUSAN       | POTUS               | 1   |
+|  AABY        | CHRISTOPHER | POTUS               | 1   |
+|  AANGEENBRUG | ELIZABETH   | POTUS               | 1   |
+|  AARON       | ADRIENNE    | POTUS               | 1   |
+|  AARON       | ANITA       | POTUS               | 1   |
+|  AARON       | DANIEL      | POTUS               | 1   |
+|  AARON       | KATHERINE   | POTUS               | 1   |
+|  AARONSON    | BURTON      | POTUS               | 1   |
+|--------------+-------------+---------------------+-----|
+{:.table-sql}
+
+Just how many people are there?
+
+We need to do an aggregate count for when the count is _less than 5_ visits:
+
+~~~sql
+SELECT 
+  COUNT(*) AS ct
+FROM whvisitors
+WHERE custom_visitee_slug = 'POTUS'
+GROUP BY UPPER(NAMELAST), 
+  UPPER(NAMEFIRST), 
+  custom_visitee_slug
+HAVING ct < 5;
+~~~
+
+The result looks something like this:
+
+
+![/image](files/images/tutorials/sql-walk/wh-visitors/rare-visitor-count.png)
+
+Basically, a _lot_.
+
+
+# Do some research
+
+It's clear that doing a search for people who visited the president will not show just the important people. So let's start with someone we _know_ is famous:
+
+~~~sql
+select COUNT(*) from whvisitors
+where NAMELAST LIKE 'JORDAN' AND NAMEFIRST LIKE 'MICHAEL%';
+~~~
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  53        |
+|------------|
+{:.table-sql}
+
+That is _way_ too many...Let's narrow it down. We think Michael Jordan, the basketball player, will get a direct visit with the president:
+
+
+~~~sql
+select COUNT(*) from whvisitors
+where NAMELAST LIKE 'JORDAN' 
+AND NAMEFIRST LIKE 'MICHAEL%'
+AND custom_visitee_slug LIKE 'POTUS%';
+~~~
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  3         |
+|------------|
+{:.table-sql}
+
+
+Let's see the nature of these visits:
+
+
+~~~sql
+select NAMELAST,
+  NAMEFIRST,
+  NAMEMID,
+  APPT_START_DATE,
+  Total_People,
+  MEETING_ROOM,
+  Description,
+  custom_visitee_slug
+from whvisitors
+where NAMELAST LIKE 'JORDAN' 
+AND NAMEFIRST LIKE 'MICHAEL%'
+AND custom_visitee_slug LIKE 'POTUS%';
+~~~
+
+
+|-----------+-----------+---------+------------------+--------------+--------------+----------------------------+----------------------|
+|  NAMELAST | NAMEFIRST | NAMEMID | APPT_START_DATE  | Total_People | MEETING_ROOM | Description                | custom_visitee_slug  |
+|-----------+-----------+---------+------------------+--------------+--------------+----------------------------+----------------------|
+|  JORDAN   | MICHAEL   |         | 2011-03-17 18:00 | 609          | STATE FLOO   | ST PATRICK'S DAY RECEPTION | POTUS                |
+|  Jordan   | Michael   | J       | 2012-05-29 12:00 | 1            | Oval Offic   |                            | POTUS                |
+|  Jordan   | Michael   | J       | 2012-12-31 11:15 | 157          | SCA          |                            | POTUS                |
+|-----------+-----------+---------+------------------+--------------+--------------+----------------------------+----------------------|
+{:.table-sql}
+
+But it's hard to know for sure...apparently there are a lot of people named "Michael Jordan". From the [2009 White House Press Release](https://www.whitehouse.gov/blog/2009/10/30/transparency-you%E2%80%99ve-never-seen-0):
+
+> A lot of people visit the White House, up to 100,000 each month, with many of those folks coming to tour the buildings. __Given this large amount of data, the records we are publishing today include a few “false positives” – names that make you think of a well-known person, but are actually someone else.__  
+> 
+> In September, requests were submitted for the names of some famous or controversial figures __(for example Michael Jordan, William Ayers, Michael Moore, Jeremiah Wright, Robert Kelly ("R. Kelly"), and Malik Shabazz)__.  The well-known individuals with those names never actually came to the White House.  Nevertheless, we were asked for those names and so we have included records for those individuals who were here and share the same names.
+
+### How about LeBron?
+
+OK, we definitely know this guy has come by:
+
+<iframe width="853" height="480" src="https://www.youtube.com/embed/5Zrhun7VMXI?rel=0" frameborder="0" allowfullscreen></iframe>
+
+
+~~~sql
+select NAMELAST,
+  NAMEFIRST,
+  NAMEMID,
+  APPT_START_DATE,
+  Total_People,
+  MEETING_ROOM,
+  Description,
+  custom_visitee_slug
+from whvisitors
+where NAMELAST LIKE 'James' 
+AND NAMEFIRST LIKE 'Lebron%';
+~~~
+
+|-----------+-----------+---------+------------------+--------------+--------------+----------------------------------+----------------------|
+|  NAMELAST | NAMEFIRST | NAMEMID | APPT_START_DATE  | Total_People | MEETING_ROOM | Description                      | custom_visitee_slug  |
+|-----------+-----------+---------+------------------+--------------+--------------+----------------------------------+----------------------|
+|  James    | Lebron    | R       | 2013-01-28 11:30 | 83           | state floo   |                                  | POTUS                |
+|  James    | Lebron    | R       | 2014-01-14 12:30 | 85           | State Floo   | The event is on the State Floor. | POTUS                |
+|-----------+-----------+---------+------------------+--------------+--------------+----------------------------------+----------------------|
+{:.table-sql}
+
+
+## OK, let's copy from other people
+
+POLITCO story on secret visitors:
+
+[Jon Stewart’s secret White House visits](http://www.politico.com/agenda/story/2015/07/jon-stewarts-secret-white-house-visits-000178?hp=t3_r) - Obama, aides took unusual steps to cultivate “Daily Show” comic.
+
+> Jon Stewart slipped unnoticed into the White House in the midst of the __October 2011 budget fight__, summoned to an Oval Office coffee with President Barack Obama that he jokingly told his escort felt like being called into the principal’s office.
+> 
+> In __February 2014__, Obama again requested Stewart make the trip from Manhattan to the White House, this time for a midmorning visit hours before the president would go before television cameras to warn Russia that “there will be costs” if it made any further military intervention in Ukraine.
+
+
+The query:
+
+~~~sql
+SELECT *
+FROM whvisitors
+WHERE 
+  NAMELAST LIKE 'Stewart' 
+  AND NAMEFIRST LIKE 'Jon%'
+  AND 
+    (APPT_START_DATE LIKE '2011-10%' 
+      OR APPT_START_DATE LIKE '2014-02%');
+~~~
+
+Let me highlight a few important fields:
+
+Here is how Jon Stewart is described, and the type of appointment he made, including number of visitors:
+
+~~~sql
+SELECT
+  NAMELAST, NAMEFIRST, NAMEMID,
+  "Type of Access",
+  APPT_MADE_DATE,
+  APPT_START_DATE,
+  APPT_END_DATE,
+  Total_People
+FROM whvisitors
+WHERE 
+  NAMELAST LIKE 'Stewart' 
+  AND NAMEFIRST LIKE 'Jon%'
+  AND 
+    (APPT_START_DATE LIKE '2011-10%' 
+      OR APPT_START_DATE LIKE '2014-02%');
+~~~
+
+|-----------+-----------+---------+----------------+----------------------------+------------------+------------------+---------------|
+|  NAMELAST | NAMEFIRST | NAMEMID | Type of Access | APPT_MADE_DATE             | APPT_START_DATE  | APPT_END_DATE    | Total_People  |
+|-----------+-----------+---------+----------------+----------------------------+------------------+------------------+---------------|
+|  stewart  | jon       | n       | VA             | 2011-10-17 00:00:00.000000 | 2011-10-19 09:00 | 2011-10-19 23:59 | 1             |
+|  stewart  | jon       | n       | VA             | 2011-10-20 00:00:00.000000 | 2011-10-20 09:45 | 2011-10-20 23:59 | 1             |
+|  Stewart  | Jon       | n       | VA             | 2014-02-27 00:00:00.000000 | 2014-02-28 12:00 | 2014-02-28 23:59 | 2             |
+|  Stewart  | Jon       | n       | VA             | 2014-02-28 00:00:00.000000 | 2014-02-28 12:00 | 2014-02-28 23:59 | 1             |
+|  Stewart  | Jon       | n       | VA             | 2014-02-25 00:00:00.000000 | 2014-02-28 12:30 | 2014-02-28 23:59 | 1             |
+|-----------+-----------+---------+----------------+----------------------------+------------------+------------------+---------------|
+{:.table-sql}
+
+Things to notice:
+
+- Jon Stewart's last name
+- The "Type of Access" field (doesn't seem to be anything special)
+- The time difference between the appointment made and actual appointment
+- The number of people on each visit
+
+OK, let's look at a few other fields:
+
+~~~sql
+SELECT
+  lastEntryDate,
+  LAST_UPDATEDBY,
+  CALLER_NAME_LAST,
+  CALLER_NAME_FIRST,
+  MEETING_LOC,
+  MEETING_ROOM,
+  visitee_namelast,
+  visitee_namefirst
+FROM whvisitors
+WHERE 
+  NAMELAST LIKE 'Stewart' 
+  AND NAMEFIRST LIKE 'Jon%'
+  AND 
+    (APPT_START_DATE LIKE '2011-10%' 
+      OR APPT_START_DATE LIKE '2014-02%');
+~~~
+
+
+|-------------------+----------------+------------------+-------------------+-------------+--------------+------------------+--------------------|
+|  LastEntryDate    | LAST_UPDATEDBY | CALLER_NAME_LAST | CALLER_NAME_FIRST | MEETING_LOC | MEETING_ROOM | visitee_namelast | visitee_namefirst  |
+|-------------------+----------------+------------------+-------------------+-------------+--------------+------------------+--------------------|
+|  2011-10-17 17:19 | NK             | KOLACHALAM       | NAMRATA           | WH          | west wing    | Vega             | Dag                |
+|  2011-10-20 09:06 | NK             | KOLACHALAM       | NAMRATA           | WH          | west wing    | Vega             | Dag                |
+|  2014-02-27 17:44 | AB             | BRECKENRIDGE     | ANITA             | WH          | Oval Offic   |                  | POTUS              |
+|  2014-02-28 09:39 | AB             | BRECKENRIDGE     | ANITA             | WH          | Oval Offic   |                  | POTUS              |
+|  2014-02-25 10:50 | AB             | BRECKENRIDGE     | ANITA             | WH          | Oval Offic   |                  | POTUS              |
+|-------------------+----------------+------------------+-------------------+-------------+--------------+------------------+--------------------|
+{:.table-sql}
+
+
+Things to notice:
+
+- What room the visit took place in
+- Not all of these visits are listed as being with POTUS
+
+
+
+# Searching for the powerful people we don't know
+
+Obviously, POTUS is someone who is important. But what about all the other people out there?
+
+~~~sql
+SELECT
+  custom_visitee_slug,
+  COUNT(*) AS ct
+FROM whvisitors
+WHERE 
+  custom_visitee_slug NOT LIKE '%POTUS%'
+GROUP BY custom_visitee_slug
+ORDER BY ct DESC
+LIMIT 5;
+~~~
+
+|----------------------+----------|
+|  custom_visitee_slug | ct       |
+|----------------------+----------|
+|  OFFICE, VISITORS    | 2943728  |
+|  FLOTUS              | 21407    |
+|  LIERMAN, KYLE       | 19881    |
+|  LAMBREW, JEANNE     | 18939    |
+|  DOEBLER, MAX        | 10712    |
+|----------------------+----------|
+{:.table-sql}
+
+
+## Using what we know about visitor count
+
+
+~~~sql
+SELECT
+  custom_visitee_slug,
+  COUNT(*) AS ct
+FROM whvisitors
+WHERE 
+  custom_visitee_slug NOT LIKE '%POTUS%'
+  AND Total_People < 3
+GROUP BY custom_visitee_slug
+ORDER BY ct DESC
+LIMIT 10;
+~~~
+
+
+|----------------------+--------|
+|  custom_visitee_slug | ct     |
+|----------------------+--------|
+|  OFFICE, VISITORS    | 39532  |
+|  ZIENTS, JEFF        | 1556   |
+|  JAYARATNE, LADINI   | 1527   |
+|  TCHEN, TINA         | 1478   |
+|  METZENBAUM, SHELLEY | 1474   |
+|  FURMAN, JASON       | 1405   |
+|  SPERLING, GENE      | 1233   |
+|  MCDONOUGH, DENIS    | 1196   |
+|  KALIL, TOM          | 1164   |
+|  LIERMAN, KYLE       | 1155   |
+|----------------------+--------|
+{:.table-sql}
+
+
+(To be continued...)
