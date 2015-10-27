@@ -1,0 +1,65 @@
+SALDBPATH=./state-salaries.sqlite
+
+function dnj_cleanser(){
+  perl -ne  's/\$(?=[0-9])//g; print;'   # remove dollar signs
+}
+
+
+## get the schema
+# cat <(head -n 1000  nj-salaries.csv) <(tail -n 500 nj-salaries.csv)  |
+#   dnj_cleanser |
+#   csvsql -i sqlite --no-constraints --tables nj
+
+sqlite3 $SALDBPATH <<EOF
+DROP TABLE IF EXISTS nj;
+CREATE TABLE nj (
+  "CALENDAR_YEAR" INTEGER,
+  "CALENDAR_QUARTER" INTEGER,
+  "AS_OF_DATE" DATE,
+  "PAYROLL_ID" INTEGER,
+  "LAST_NAME" VARCHAR,
+  "FIRST_NAME" VARCHAR,
+  "MIDDLE_INITIAL" VARCHAR,
+  "SALARY_HOURLY_RATE" FLOAT,
+  "MASTER_DEPARTMENT_AGENCY_DESC" VARCHAR,
+  "MASTER_SECTION_DESC" VARCHAR,
+  "MASTER_TITLE_DESC" VARCHAR,
+  "EMPLOYEE_RELATIONS_GROUP" VARCHAR,
+  "COMPENSATION_METHOD" VARCHAR,
+  "MASTER_YTD_REGULAR_PAY" FLOAT,
+  "MASTER_YTD_OVERTIME_PAYMENTS" FLOAT,
+  "MASTER_YTD_ALL_OTHER_PAYMENTS" FLOAT,
+  "MASTER_YTD_EARNINGS" FLOAT,
+  "PAID_DEPARTMENT_AGENCY_DESC" VARCHAR,
+  "PAID_SECTION_DESC" VARCHAR,
+  "REGULAR_PAY" FLOAT,
+  "SUPPLEMENTAL_PAY" FLOAT,
+  "ONE_TIME_PAYMENTS" FLOAT,
+  "LEGISLATOR_OR_BACK_PAY" FLOAT,
+  "OVERTIME_PAYMENTS" FLOAT,
+  "CLOTHING_UNIFORM_PAYMENTS" FLOAT,
+  "RETROACTIVE_PAY" FLOAT,
+  "LUMP_SUM_PAY" FLOAT,
+  "CASH_IN_LIEU_MAINTENANCE" FLOAT,
+  "YTD_EARNINGS" FLOAT,
+  "RECORD_TYPE" VARCHAR
+);
+EOF
+
+# insert into the database
+
+csvgrep -c 1 -r '201[2-5]' < nj-salaries.csv |
+  csvcut -C FULL_NAME |
+  dnj_cleanser |
+  csvsql --no-constraints --no-inference  --no-create \
+         --insert --tables nj --db sqlite:///$SALDBPATH
+
+
+# Create the indexes
+sqlite3 $SALDBPATH <<EOF
+  CREATE INDEX first_name_on_nj ON nj(FIRST_NAME);
+  CREATE INDEX PAYROLL_ID_on_nj ON nj(PAYROLL_ID);
+  CREATE INDEX MASTER_DEPARTMENT_AGENCY_DESC_on_nj ON nj(MASTER_DEPARTMENT_AGENCY_DESC);
+  CREATE INDEX MASTER_SECTION_DESC_on_nj ON nj(MASTER_SECTION_DESC);
+  CREATE INDEX MASTER_TITLE_DESC_on_nj ON nj(MASTER_TITLE_DESC);
+EOF

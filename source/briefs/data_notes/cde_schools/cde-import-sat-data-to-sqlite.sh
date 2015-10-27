@@ -1,4 +1,6 @@
-sqlite3 cde-schools.sqlite <<EOF
+cdedbpath=../cde-schools.sqlite
+
+sqlite3 $cdedbpath <<EOF
 DROP TABLE IF EXISTS sat_scores;
 CREATE TABLE sat_scores (
   year VARCHAR,
@@ -27,10 +29,12 @@ EOF
 # Insert data
 for fn in *.csv; do
   csvsql --insert --no-create \
-  --tables sat_scores --db sqlite:///cde-schools.sqlite $fn
+  --tables sat_scores --db sqlite:///$cdedbpath $fn
 done
 
-sqlite3 cde-schools.sqlite <<EOF
+sqlite3 $cdedbpath <<EOF
   CREATE INDEX year_on_sat_scores ON sat_scores(year);
+  CREATE INDEX county_name_on_sat_scores ON sat_scores(county_name);
+
   CREATE INDEX cds_on_sat_scores ON sat_scores(cds);
 EOF

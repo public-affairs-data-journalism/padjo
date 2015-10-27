@@ -1,7 +1,8 @@
 # imports public school data
-
+cdedbpath=./cde-schools.sqlite
+rm $cdedbpath
 # create the table
-sqlite3 cde-schools.sqlite <<EOF
+sqlite3 $cdedbpath <<EOF
 DROP TABLE IF EXISTS pubschls;
 CREATE TABLE pubschls (
   "CDSCode" VARCHAR,
@@ -60,8 +61,21 @@ EOF
 iconv -f iso-8859-1 -t utf-8 < pubschls.txt |
   csvformat -t |
   csvsql --insert --no-create \
-    --tables pubschls --db sqlite:///cde-schools.sqlite
-# indexes
-sqlite3 cde-schools.sqlite <<EOF
+    --tables pubschls --db sqlite:///$cdedbpath
+
+# Create indexes
+sqlite3 $cdedbpath <<EOF
   CREATE INDEX CDSCode_on_pubschls ON pubschls(CDSCode);
+  CREATE INDEX county_on_pubschls ON pubschls(county);
 EOF
+
+
+
+########## optional
+## Get district codes
+
+#iconv -f iso-8859-1 -t utf-8 < pubschls.txt | csvcut -t -c CDSCode,District | sed -E 's/[0-9]{2}([0-9]{5})[0-9]{7}/\1/'
+
+## get county codes
+
+#iconv -f iso-8859-1 -t utf-8 < pubschls.txt | csvcut -t -c CDSCode,County | sed -E 's/([0-9]{2})[0-9]{5}[0-9]{7}/\1/'

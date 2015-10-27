@@ -1,4 +1,6 @@
-sqlite3 cde-schools.sqlite <<EOF
+cdedbpath=../cde-schools.sqlite
+
+sqlite3 $cdedbpath <<EOF
 DROP TABLE IF EXISTS kinder_vaccines;
 CREATE TABLE kinder_vaccines (
   year VARCHAR,
@@ -43,16 +45,18 @@ EOF
 
 
 for fn in *.csv; do
-  echo Inserting $fn
-  csvformat -U 1 <  $fn |
-    csvsql --insert --no-create \
-      --tables kinder_vaccines --db sqlite:///cde-schools.sqlite
+  echo "Inserting $fn"
+
+  csvformat -U 1 <  $fn |  # double-quote the fields
+          csvsql --insert --no-create \
+                 --tables kinder_vaccines --db sqlite:///$cdedbpath
 done
 
 
-sqlite3 cde-schools.sqlite <<EOF
+sqlite3 $cdedbpath <<EOF
   CREATE INDEX year_on_kinder_vaccines ON kinder_vaccines(year);
   CREATE INDEX school_code_on_kinder_vaccines ON kinder_vaccines(school_code);
+  CREATE INDEX county_on_kinder_vaccines ON kinder_vaccines(county);
 EOF
 
 
@@ -64,7 +68,7 @@ EOF
 #   head -n 6000 $fn |
 #   csvformat |
 #   csvsql --insert --no-create \
-#     --tables kinder_vaccines --db sqlite:///cde-schools.sqlite
+#     --tables kinder_vaccines --db sqlite:///$cdedbpath
 # done
 
 
@@ -72,7 +76,7 @@ EOF
 #   echo $n
 #   cat <(head -n 1 $fn) <(tail -n +$n $fn) | head -n 2 |
 #   csvsql --insert --no-create \
-#     --tables kinder_vaccines --db sqlite:///cde-schools.sqlite
+#     --tables kinder_vaccines --db sqlite:///$cdedbpath
 # done
 
 # creating a schema

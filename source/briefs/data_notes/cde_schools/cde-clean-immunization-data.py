@@ -51,6 +51,9 @@ headers_history = {
 
 
 
+
+
+
 common_headers = ['year',
     'school_code', 'county', 'school_type',
     'district_code', 'district_name', 'city', 'school_name',
@@ -66,7 +69,7 @@ common_headers = ['year',
 
 
 
-
+sheets = []
 for xlsname in glob(os.path.join('.', '*.xls*')):
     data = []
     # extract the year numbers from the file name
@@ -80,8 +83,9 @@ for xlsname in glob(os.path.join('.', '*.xls*')):
     book = open_workbook(xlsname)
     # open the first non-empty spreadsheet
     sheet = [s for s in book.sheets() if s.nrows > 0][0]
+    sheets.append(sheet)
     print(xlsname, "has", sheet.nrows, "rows")
-    for x in range(1, sheet.nrows - 1):
+    for x in range(1, sheet.nrows - 1): # note: we skip last row because it is just notes
         row = sheet.row_values(x)
         if re.search('\d{7}', str(row[0])):
             d = dict.fromkeys(common_headers, None)
