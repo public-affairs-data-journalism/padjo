@@ -52,7 +52,7 @@ CREATE TABLE whvisitors (
 EOF
 
 
-cat wh-rows.csv | head -n 40 | 
+cat wh-rows.csv | 
     sed -E \
         -e 's#([0-9]+)/([0-9]+)/([0-9][0-9][0-9][0-9])#\3-\1-\2#g' `#mv 4-digit year` \
         -e 's#([0-9]+)/([0-9]+)/([0-9][0-9]) #20\3-\1-\2 #g' `#pad year` \
@@ -161,5 +161,27 @@ EOF
 
 ~~~sh
 CREATE IND
+
+~~~
+
+
+~~~sh
+# Just the latest
+
+curl -LO http://www.whitehouse.gov/sites/default/files/disclosures/whitehouse-waves-2014_03.csv_.zip
+unzip waves-2014_03.csv_.zip
+
+cat whitehouse-waves-2014_03.csv | 
+    sed -E \
+        -e 's#([0-9]+)/([0-9]+)/([0-9][0-9][0-9][0-9])#\3-\1-\2#g' `#mv 4-digit year` \
+        -e 's#([0-9]+)/([0-9]+)/([0-9][0-9]) #20\3-\1-\2 #g' `#pad year` \
+        -e 's#-([0-9])-#-0\1-#g' `# pad the month` \
+        -e 's#(-[0-9][0-9])-([0-9]) #\1-0\2 #g' `# pad the day` \
+        -e 's/([0-9]) ([0-9]:)/\1 0\2/g' | # pad the hour  
+    csvsql --insert --no-create \
+        --tables whvisitors --db sqlite:///$DB_NAME
+
+
+
 
 ~~~
