@@ -3,9 +3,9 @@
 ## Make a SQL table
 
 ~~~sh
-mydb=SOMEDATABASEFILE.sqlite
+MYSQLITEDB=SOMEDATABASEFILE.sqlite
 # the command
-sqlite3 $mydb \
+sqlite3 $MYSQLITEDB \
 <<< "
 .headers on
 SELECT *
@@ -24,7 +24,7 @@ Alternatively:
 function qtq(){
   sed -e '1i\
   .headers on
-' | sqlite3 $mydb |
+' | sqlite3 $MYSQLITEDB |
 sed 's/^/|/' | sed 's/$/|/' |
 sed -e '1a\
 |-' | sed -e '$a\
@@ -39,7 +39,7 @@ Or:
 function qtq(){
   sed -e '1i\
 .headers on' | 
-  sqlite3 $mydb |
+  sqlite3 $MYSQLITEDB |
   csvformat -d \| |
   csvlook |
   sed -e '$a\
@@ -48,14 +48,15 @@ function qtq(){
 ~~~
 
 
+Sample usage:
+
 ~~~sh
 echo "SELECT name, address
 FROM businesses
 WHERE name LIKE 'PIZZA%'
-LIMIT 5;" | sqlite3 $mydb | csvformat -d \| | csvlook |
+LIMIT 5;" | sqlite3 $MYSQLITEDB | csvformat -d \| | csvlook |
 sed -e '$a\
 {:.table-sql}'
-
 ~~~
 
 
@@ -89,3 +90,18 @@ Things I learned:
 - Discovered `/dev/tty`
 - Learned how to pipe into sqlite3
 - how to use realpath
+
+
+
+
+
+# uploading to AWS
+
+~~~sh
+# set FNAME
+ZNAME=$FNAME.zip
+zip $ZNAME $FNAME
+aws s3 cp $ZNAME s3://stash.padjo.org/dumps/2015/$ZNAME --acl=public-read 
+  
+  
+~~~

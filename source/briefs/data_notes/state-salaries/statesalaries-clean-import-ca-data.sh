@@ -9,11 +9,11 @@ function d_ca_cleanser(){
 
 ## We can use csvsql to generate a pretty good CREATE TABLE
 ## statement based on a sample of the data
-cat <(head -n 1000  2014_StateDepartment.csv | tail -n +5) \
-    <(tail -n 200 2013_StateDepartment.csv)                \
-    <(tail -n 200 2012_StateDepartment.csv) |
-    d_ca_cleanser |
-    csvsql -i sqlite --no-constraints --tables ca
+# cat <(head -n 1000  2014_StateDepartment.csv | tail -n +5) \
+#     <(tail -n 200 2013_StateDepartment.csv)                \
+#     <(tail -n 200 2012_StateDepartment.csv) |
+#     d_ca_cleanser |
+#     csvsql -i sqlite --no-constraints --tables ca
 
 sqlite3 $SALDBPATH <<EOF
 DROP TABLE IF EXISTS ca;
@@ -53,11 +53,16 @@ EOF
 # insert the data
 for yr in 2012 2013 2014; do
   fname=${yr}_StateDepartment.csv
+  echo $fname
   # all together now
-  tail -n 5 | d_ca_cleanser |
-  csvsql --no-constraints --no-inference  --no-create \
-         --insert --tables ca --db sqlite:///$SALDBPATH
-done
+  sed '1,4d' < $fname |
+    d_ca_cleanser |
+    csvformat -U 1
+  #  |
+  #  head -n 10000 |
+  #  csvsql --no-constraints --no-inference  --no-create \
+#           --insert --tables ca --db sqlite:///$SALDBPATH
+done | wc -l
 
 
 sqlite3 $SALDBPATH <<EOF
