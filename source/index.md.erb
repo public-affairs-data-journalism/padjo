@@ -6,13 +6,47 @@ layout: home
 
 <% content_card "Today's lesson" do %>
 
-<%= render_content_resource_element "/weeks/2015-10-20" %>
 
-<%= render_content_resource_element "/briefs/data_notes/sql-explore-sf-restaurant-data" %>
+<%= markdownify(
+"""
 
-<h3><%=link_to '2014 SQL Midterm', 'http://www.padjo.org/2014-10-23/' %></h3>
+__Free pizza and SQL:__ [Nov. 9, data event with Google and us (and SQL!)](https://www.eventbrite.com/e/computational-journalism-exploring-big-civic-data-tickets-19303437100) (I'm pretty much requiring you to go to this)
 
-<h3><%=link_to 'SQL Join tutorial from 2014 with Twitter data', 'http://fall2014.padjo.org/tutorials/database-joins/sql-inner-join/' %></h3>
+
+## SQL Warmup
+
+This is similar to what the midterm will look like, except with less context. Look over the questions. Open the database. Tinker around. Try to answer some of these questions.
+
+[Download the prisons database](http://stash.padjo.org/dumps/2015/state-prisons.sqlite.zip). It contains the inmate databases from the states of [Texas](http://offender.tdcj.texas.gov/OffenderSearch/index.jsp) and [Florida](http://www.dc.state.fl.us/AppCommon/).
+
+For both states, write the queries that generate:
+
+- Total number of inmates
+- Total number of inmates, by sex and race
+- The 5 oldest inmates in prison.
+- The 5 youngest inmates in prison.
+- The 5 inmates who were oldest at the time of the crime that they were convicted of.
+- A list of the inmates who are serving time on murder convictions.
+- Same as above, except for inmates who are not serving life sentences.
+- Find the inmate serving the shortest sentence for a murder conviction.
+
+Some help:
+
+- The [landing page for the Florida data](http://www.dc.state.fl.us/pub/obis_request.html) contains information about its schema -- it's quite complicated, though I've only included 4 of the nearly 20 tables.
+- Here's [a list of murderers via the Florida database.](http://www.dc.state.fl.us/ActiveInmates/list.asp?DataAction=Filter&SexOffOnly=0&dcnumber=&LastName=a&FirstName=s&SearchAliases=on&Sex=ALL&Race=ALL&OffenseCategory=MU&ClassificationStatus=ALL&CurrentCustody=ALL&IdentifierType=ALL&Identifier=&EyeColor=ALL&HairColor=ALL&FromAge=&ToAge=&FromWeight=&ToWeight=&FromHeightFeet=&FromHeightInches=&ToHeight=&ToHeightFeet=&ToHeightInches=&ZipCode=&ScarType=ALL&ScarLocation=ALL&ScarDescription=&photosonly=&nophotos=on&items=20&CommitmentCounty=ALL&subjecttype=ALL&facility=ALL&workskill=ALL)
+- Here's [how the Texas Tribune uses the prison data](https://www.texastribune.org/library/data/texas-prisons/), though they work off a different version with different fields.
+
+
+""")
+
+
+
+%>
+
+<%= render_content_resource_element "/briefs/data_notes/cde_schools/immunization-sql-readme" %>
+
+<%= render_content_resource_element "/briefs/data_notes/medicare_providers/wsj-pulitzer-walkthrough" %>
+
 
 
 

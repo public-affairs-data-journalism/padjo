@@ -1,0 +1,939 @@
+
+- Download the file
+- Create a table
+- Import into table
+- Do ifelse
+
+Links
+
+- SSA
+- Create table syntax
+- Importing help
+- IFELSE in Excel
+- Case when
+- ABS
+- INSERT INTO
+
+
+## Download the data
+
+From [the Social Security Administration homepage](https://www.ssa.gov/oact/babynames/limits.html), click on the __National data__ file: [https://www.ssa.gov/oact/babynames/names.zip](https://www.ssa.gov/oact/babynames/names.zip)
+
+Unzip the file, it should contain text files for every year:
+
+![TK](TK)
+
+Open any one of them. For example, this is what the first five lines of __yob1990.txt__ looks like:
+
+    Jessica,F,46466
+    Ashley,F,45549
+    Brittany,F,36535
+    Amanda,F,34406
+    Samantha,F,25864
+
+The main takeaway is that there _are no column headers_. But we can make our own: `name`, `sex`, and `count`.
+
+## Creating a table with a SQL command:
+
+https://www.sqlite.org/lang_createtable.html
+
+~~~sql
+CREATE TABLE babynames(
+  "name" VARCHAR,
+  "sex" CHAR,
+  "count" INTEGER
+);
+~~~
+
+It doesn't really matter, you could even do this:
+
+~~~sql
+CREATE TABLE babynames(
+  "name" TEXT,
+  "sex" TEXT,
+  "count" INT
+);
+~~~
+
+### Execute the query
+
+You'll get a table that looks like this:
+
+![TK](Screenshot)
+
+
+### Importing via GUI
+
+Click __File > Import > Table from CSV...__  
+
+![TK](Screenshot)
+
+You'll have to select the file and type in the tablename, i.e. `babynames`
+
+It'll ask you if you want to really insert into an existing table. Click __Yes__.
+
+If you __Browse Data__, you'll see the names.
+
+### Save the data
+
+__File > Write Changes__ (or Cmd-S)
+
+
+# Working with the baby names data
+
+First, let's take `COUNT` (remember, try not to confuse the `COUNT(*)` function with the _column_ that happens to be named `count`: 
+
+~~~sql
+SELECT sex, COUNT(*)
+FROM babynames
+GROUP BY sex;
+~~~
+
+There's a greater number of female names than male names:
+
+|------+-----------|
+|  sex | COUNT(*)  |
+|------+-----------|
+|  F   | 15231     |
+|  M   | 9482      |
+|------+-----------|
+{:.table-sql}
+
+# Joining the tables
+
+~~~sql
+SELECT females.name, females.count,
+  males.name, males.count
+  FROM females
+  INNER JOIN males
+    ON females.name = males.name;
+~~~
+
+
+### Join female names to male names
+
+First, write a `SELECT` statement that filters for girls:
+
+~~~sql
+SELECT name, count
+FROM babynames
+WHERE sex = 'F';
+~~~
+
+|-----------+--------|
+|  name     | count  |
+|-----------+--------|
+|  Jessica  | 46466  |
+|  Ashley   | 45549  |
+|  Brittany | 36535  |
+|  Amanda   | 34406  |
+|  Samantha | 25864  |
+|-----------+--------|
+{:.table-sql}
+
+
+## Insert and create new table
+
+~~~sql
+CREATE TABLE girls(
+  "name" VARCHAR,
+  "count" INTEGER
+);
+~~~
+
+Insert into it:
+
+~~~sql
+INSERT INTO girls
+  SELECT name, count 
+    FROM babynames
+    WHERE sex = 'F';
+~~~
+
+Do the same for boys:
+
+~~~sql
+CREATE TABLE boys(
+  "name" VARCHAR,
+  "count" INTEGER
+);
+
+INSERT INTO boys
+  SELECT name, count 
+    FROM babynames
+    WHERE sex = 'M';
+~~~
+
+You should now have a database structure that looks like this:
+
+![TKIMG](TKIMG)
+
+TKEXPLAIN DROP.
+
+
+
+# Let's do some joins
+
+
+~~~sql
+SELECT 
+  girls.name, girls.count,
+  boys.name, boys.count
+FROM girls
+INNER JOIN boys
+  ON boys.name = girls.name;
+~~~
+
+|--------------+-------+-------------+--------|
+|  name        | count | name        | count  |
+|--------------+-------+-------------+--------|
+|  Jessica     | 46466 | Jessica     | 140    |
+|  Ashley      | 45549 | Ashley      | 239    |
+|  Brittany    | 36535 | Brittany    | 112    |
+|  Amanda      | 34406 | Amanda      | 96     |
+|  Samantha    | 25864 | Samantha    | 58     |
+{:.table-sql}
+
+It's worth noting that only 2,039 rows are returned from this statement, meaning that there are only 2,039 girl names that are also boy names.
+
+### Let's alias it
+
+~~~sql
+SELECT 
+  girls.name AS girl_name, 
+  girls.count AS girl_count,
+  boys.name AS boy_name, 
+  boys.count AS boy_count
+FROM girls
+INNER JOIN boys
+  ON boys.name = girls.name;
+~~~
+
+|--------------+------------+-------------+------------|
+|  girl_name   | girl_count | boy_name    | boy_count  |
+|--------------+------------+-------------+------------|
+|  Jessica     | 46466      | Jessica     | 140        |
+|  Ashley      | 45549      | Ashley      | 239        |
+|  Brittany    | 36535      | Brittany    | 112        |
+|  Amanda      | 34406      | Amanda      | 96         |
+|  Samantha    | 25864      | Samantha    | 58         |
+{:.table-sql}
+
+
+
+
+### Switch it around
+
+So how many boy names are also girl names?
+
+
+~~~sql
+SELECT 
+  girls.name AS girl_name, 
+  girls.count AS girl_count,
+  boys.name AS boy_name, 
+  boys.count AS boy_count
+FROM boys
+INNER JOIN girls
+  ON boys.name = girls.name;
+~~~
+
+|--------------+------------+-------------+------------|
+|  girl_name   | girl_count | boy_name    | boy_count  |
+|--------------+------------+-------------+------------|
+|  Michael     | 277        | Michael     | 65274      |
+|  Christopher | 188        | Christopher | 52323      |
+|  Matthew     | 125        | Matthew     | 44794      |
+|  Joshua      | 166        | Joshua      | 43214      |
+|  Daniel      | 148        | Daniel      | 33809      |
+{:.table-sql}
+
+
+It's still 2,039 rows. As we would expect. It doesn't matter what the order of the joins are. However, because we start with the `boys` table, in which the top boys are listed first, the most popular boy names take precedence.
+
+That's just the way the SSA baby name data works. 
+
+One more clean up: `boy_name` will _always_ be equal to `girl_name`, by definition of the join. So we can simplify the output like so:
+
+
+~~~sql
+SELECT 
+  girls.name AS name, 
+  girls.count AS girl_count,
+  boys.count AS boy_count
+FROM girls
+INNER JOIN boys
+  ON boys.name = girls.name;
+~~~
+
+(It doesn't matter whether we do `girls.name AS name` or `boys.name` AS name)
+
+|--------------+------------+------------|
+|  name        | girl_count | boy_count  |
+|--------------+------------+------------|
+|  Jessica     | 46466      | 140        |
+|  Ashley      | 45549      | 239        |
+|  Brittany    | 36535      | 112        |
+|  Amanda      | 34406      | 96         |
+|  Samantha    | 25864      | 58         |
+{:.table-sql}
+
+
+## Do some math
+
+~~~sql
+SELECT 
+  girls.name AS name, 
+  girls.count AS girl_count,
+  boys.count AS boy_count,
+  girls.count + boys.count AS total_count
+FROM girls
+INNER JOIN boys
+  ON boys.name = girls.name;
+~~~
+
+|--------------+------------+-----------+--------------|
+|  name        | girl_count | boy_count | total_count  |
+|--------------+------------+-----------+--------------|
+|  Jessica     | 46466      | 140       | 46606        |
+|  Ashley      | 45549      | 239       | 45788        |
+|  Brittany    | 36535      | 112       | 36647        |
+|  Amanda      | 34406      | 96        | 34502        |
+|  Samantha    | 25864      | 58        | 25922        |
+{:.table-sql}
+
+Find gender diff and order by it:
+
+~~~sql
+SELECT 
+  girls.name AS name, 
+  girls.count AS girl_count,
+  boys.count AS boy_count,
+  girls.count + boys.count AS total_count,
+  100 * (girls.count - boys.count) / (girls.count + boys.count)  AS gender_diff
+FROM girls
+INNER JOIN boys
+  ON boys.name = girls.name
+ORDER BY gender_diff;
+~~~
+
+|--------------+------------+-----------+-------------+--------------|
+|  name        | girl_count | boy_count | total_count | gender_diff  |
+|--------------+------------+-----------+-------------+--------------|
+|  Michael     | 277        | 65274     | 65551       | -99          |
+|  Christopher | 188        | 52323     | 52511       | -99          |
+|  Joshua      | 166        | 43214     | 43380       | -99          |
+|  Daniel      | 148        | 33809     | 33957       | -99          |
+|  Justin      | 138        | 30637     | 30775       | -99          |
+{:.table-sql}
+
+To find most gender ambiguous names, we want the absolute value of the difference to be close to 0. So let's order by that:
+
+~~~sql
+SELECT 
+  girls.name AS name, 
+  girls.count AS girl_count,
+  boys.count AS boy_count,
+  girls.count + boys.count AS total_count,
+  100 * (girls.count - boys.count) / (girls.count + boys.count)  AS gender_diff
+FROM girls
+INNER JOIN boys
+  ON boys.name = girls.name
+ORDER BY ABS(gender_diff);
+~~~
+
+|--------------+------------+-----------+-------------+--------------|
+|  name        | girl_count | boy_count | total_count | gender_diff  |
+|--------------+------------+-----------+-------------+--------------|
+|  Michal      | 69         | 69        | 138         | 0            |
+|  Layne       | 68         | 68        | 136         | 0            |
+|  Charley     | 56         | 56        | 112         | 0            |
+|  Adrean      | 16         | 16        | 32          | 0            |
+|  Yee         | 16         | 16        | 32          | 0            |
+{:.table-sql}
+
+Those are pretty rare names, let's add a `WHERE` clause to get names where there were at least 1,000 total babies:
+
+~~~sql
+SELECT 
+  girls.name AS name, 
+  girls.count AS girl_count,
+  boys.count AS boy_count,
+  girls.count + boys.count AS total_count,
+  100 * (girls.count - boys.count) / (girls.count + boys.count)  AS gender_diff
+FROM girls
+INNER JOIN boys
+  ON boys.name = girls.name
+WHERE total_count >= 1000
+ORDER BY ABS(gender_diff);
+~~~
+
+
+|--------------+------------+-----------+-------------+--------------|
+|  name        | girl_count | boy_count | total_count | gender_diff  |
+|--------------+------------+-----------+-------------+--------------|
+|  Infant      | 580        | 596       | 1176        | -1           |
+|  Taylor      | 7256       | 6574      | 13830       | 4            |
+|  Jessie      | 1116       | 1255      | 2371        | -5           |
+|  Casey       | 3261       | 4130      | 7391        | -11          |
+|  Dominique   | 1945       | 1485      | 3430        | 13           |
+{:.table-sql}
+
+
+## LEFT joins
+
+All girl names that had no boys
+
+~~~sql
+SELECT 
+  girls.name AS name, 
+  girls.count AS girl_count,
+  boys.count AS boy_count
+FROM girls
+LEFT JOIN boys
+  ON boys.name = girls.name;
+~~~
+
+While the order of names will have changed, you should see that the total number of rows is the same as the total number of rows in the original `babynames` table: `15,231`.
+
+~~~sql
+SELECT 
+  girls.name AS name, 
+  girls.count AS girl_count,
+  boys.count AS boy_count
+FROM girls
+LEFT JOIN boys
+  ON boys.name = girls.name
+WHERE boy_count is NULL;
+~~~
+
+The result is __13,192__ rows
+
+
+|-----------------+------------+------------|
+|  name           | girl_count | boy_count  |
+|-----------------+------------+------------|
+|  Breanna        | 2952       |            |
+|  Katrina        | 2479       |            |
+|  Alisha         | 2343       |            |
+|  Grace          | 2186       |            |
+|  Krista         | 2143       |            |
+{:.table-sql}
+
+_Now_, this is where the order of the tables matters:
+
+~~~sql
+SELECT 
+  boys.name AS name, 
+  girls.count AS girl_count,
+  boys.count AS boy_count
+FROM boys
+LEFT JOIN girls
+  ON boys.name = girls.name
+WHERE girl_count is NULL;
+~~~
+
+This query returns __7,443__ boy names that were not given to girl babies.
+
+|------------------+------------+------------|
+|  name            | girl_count | boy_count  |
+|------------------+------------+------------|
+|  Russell         |            | 2213       |
+|  Jack            |            | 1831       |
+|  Max             |            | 1791       |
+|  Clinton         |            | 1499       |
+|  Gerald          |            | 1451       |
+{:.table-sql}
+
+
+
+# Create a gender detector database
+
+
+1. Contains all girl names that are only girls
+2. Contains all boy names that are only boys
+3. Contains the 2xxx names.
+
+
+## Create a table
+
+~~~sql
+CREATE TABLE gendered_names(
+  "name" VARCHAR,
+  "gender" CHAR,
+  "ratio" INTEGER,
+  "total" INTEGER
+);
+~~~
+
+## Add exclusively girl names
+
+First do a select statement
+
+~~~sql
+SELECT girls.name, 
+  'F' AS gender,
+  100 AS ratio,
+  girls.count AS total
+FROM girls
+LEFT JOIN boys
+    ON girls.name = boys.name
+WHERE boys.name IS NULL;
+~~~
+
+Then prepend the `INSERT` statement:
+
+~~~sql
+INSERT INTO gendered_names
+  SELECT girls.name, 
+    'F' AS gender,
+    100 AS ratio,
+    girls.count AS total
+  FROM girls
+  LEFT JOIN boys
+      ON girls.name = boys.name
+  WHERE boys.name IS NULL;
+~~~
+
+Let's do exclusive boy names. Make `boys` the "left" table, i.e. in the `FROM` clause. And change the `WHERE` clause accordingly:
+
+~~~sql
+INSERT INTO gendered_names
+  SELECT boys.name, 
+    'M' AS gender,
+    100 AS ratio,
+    boys.count AS total
+  FROM boys
+  LEFT JOIN girls
+      ON girls.name = boys.name
+  WHERE girls.name IS NULL;
+~~~
+
+# Both boys and girls
+
+Finally, the names that have both boy and girl babies:
+
+~~~sql
+SELECT 
+  girls.name AS name, 
+  'F' AS gender,
+  100 * girls.count / (girls.count + boys.count) AS ratio,
+  girls.count + boys.count AS total
+FROM girls
+INNER JOIN boys
+  ON boys.name = girls.name
+WHERE girls.count >= boys.count;
+~~~
+
+|--------------+--------+-------+--------|
+|  name        | gender | ratio | total  |
+|--------------+--------+-------+--------|
+|  Jessica     | F      | 99    | 46606  |
+|  Ashley      | F      | 98    | 45788  |
+|  Brittany    | F      | 99    | 36647  |
+|  Amanda      | F      | 99    | 34502  |
+|  Samantha    | F      | 99    | 25922  |
+{:.table-sql}
+
+And for the boys; again, the order of the tables in `INNER JOIN` doesn't need to change. Just the `WHERE` clause and what we're selecting for, i.e. `'M' AS gender`:
+
+~~~sql
+SELECT 
+  boys.name AS name, 
+  'M' AS gender,
+  100 * boys.count / (girls.count + boys.count)  AS ratio,
+  girls.count + boys.count AS total
+FROM girls
+INNER JOIN boys
+  ON boys.name = girls.name
+WHERE girls.count < boys.count;
+~~~
+
+|--------------+--------+-------+--------|
+|  name        | gender | ratio | total  |
+|--------------+--------+-------+--------|
+|  Jordan      | M      | 46    | 22082  |
+|  Casey       | M      | 11    | 7391   |
+|  Angel       | M      | 18    | 4067   |
+|  Jessie      | M      | 5     | 2371   |
+|  Devon       | M      | 34    | 3053   |
+{:.table-sql}
+
+
+Do the inserts:
+
+
+~~~sql
+INSERT INTO gendered_names
+  SELECT 
+    girls.name AS name, 
+    'F' AS gender,
+    100 * girls.count / (girls.count + boys.count) AS ratio,
+    girls.count + boys.count AS total
+  FROM girls
+  INNER JOIN boys
+    ON boys.name = girls.name
+  WHERE girls.count >= boys.count;
+~~~
+
+~~~sql
+INSERT INTO gendered_names
+  SELECT 
+    boys.name AS name, 
+    'M' AS gender,
+    100 * boys.count / (girls.count + boys.count)  AS ratio,
+    girls.count + boys.count AS total
+  FROM girls
+  INNER JOIN boys
+    ON boys.name = girls.name
+  WHERE girls.count < boys.count;
+~~~
+
+
+The total rows in `gendered_names` should be:
+
+~~~sql
+SELECT
+  (SELECT COUNT(*) FROM babynames) AS all_names_count,
+  (SELECT COUNT(*) FROM gendered_names) as gendered_names_count,
+  (SELECT COUNT(*) FROM boys) AS boys_count,
+  (SELECT COUNT(*) FROM girls) AS girls_count;
+~~~
+
+|------------------+----------------------+------------+--------------|
+|  all_names_count | gendered_names_count | boys_count | girls_count  |
+|------------------+----------------------+------------+--------------|
+|  24713           | 22674                | 9482       | 15231        |
+|------------------+----------------------+------------+--------------|
+{:.table-sql}
+
+Note that `boys_count` + `girls_count` is equal to `all_names_count` but is _less than_ the `gendered_names_count` because overlapping names are only counted once.
+
+
+How many names are mostly male or female?
+
+
+~~~sql
+SELECT COUNT(*) 
+FROM gendered_names
+WHERE ratio >= 90;
+~~~
+
+Looks like the vast majority
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  21602     |
+|------------|
+{:.table-sql}
+
+
+
+Let's do a quick histogram:
+
+~~~sql
+SELECT ratio,
+  COUNT(*) AS names_count,
+  SUM(total) AS babies_count
+FROM gendered_names
+GROUP BY ratio
+ORDER BY ratio;
+~~~
+
+|-------|-------------|--------------|
+| ratio | names_count | babies_count |
+|       |             |              |
+|-------|-------------|--------------|
+|    50 |          48 |         3186 |
+|    51 |          11 |         1766 |
+|    52 |          36 |        17261 |
+|    53 |          31 |         2257 |
+|    54 |          37 |         2875 |
+{:.table-sql}
+
+
+Round to the nearest group of 10:
+
+~~~sql
+SELECT 
+  ((ratio / 10) * 10) as ratio_group,
+  COUNT(*) AS names_count,
+  SUM(total) AS babies_count
+FROM gendered_names
+GROUP BY ratio_group
+ORDER BY ratio_group;
+~~~
+
+
+|--------------+-------------+---------------|
+|  ratio_group | names_count | babies_count  |
+|--------------+-------------+---------------|
+|  50          | 298         | 52309         |
+|  60          | 250         | 20712         |
+|  70          | 228         | 44690         |
+|  80          | 296         | 86513         |
+|  90          | 967         | 2994068       |
+|  100         | 20635       | 751960        |
+|--------------+-------------+---------------|
+{:.table-sql}
+
+
+
+Mostly female names:
+
+~~~sql
+SELECT * 
+FROM gendered_names
+WHERE 
+   ratio BETWEEN 60 AND 80 
+   AND gender = 'F'
+ORDER BY total DESC;
+~~~
+
+|------------+--------+-------+--------|
+|  name      | gender | ratio | total  |
+|------------+--------+-------+--------|
+|  Kasey     | F      | 74    | 1797   |
+|  Tracy     | F      | 77    | 1630   |
+|  Mackenzie | F      | 76    | 1505   |
+|  Guadalupe | F      | 75    | 1107   |
+|  Blair     | F      | 62    | 803    |
+{:.table-sql}
+
+
+
+
+Mostly male names:
+
+~~~sql
+SELECT * 
+FROM gendered_names
+WHERE 
+   ratio BETWEEN 60 AND 80 
+   AND gender = 'M'
+ORDER BY total DESC;
+~~~
+
+|-------------+--------+-------+--------|
+|  name       | gender | ratio | total  |
+|-------------+--------+-------+--------|
+|  Jordan     | M      | 73    | 22082  |
+|  Devon      | M      | 67    | 3053   |
+|  Jaime      | M      | 61    | 2318   |
+|  Dakota     | M      | 80    | 1929   |
+|  Skyler     | M      | 74    | 1130   |
+{:.table-sql}
+
+
+
+
+## Let's do Florida universities
+
+
+Download the data here:
+
+https://prod.flbog.net:4445/pls/apex/f?p=140:30:0
+
+
+
+~~~sql
+SELECT gender,  ClassTitle,
+COUNT(*), AVG(AnnualSalary)
+FROM florida_u_salaries
+INNER JOIN
+  gendered_names
+WHERE FirstName = UPPER(gendered_names.name) 
+AND ClassTitle LIKE '%PROFESSOR%'
+
+GROUP BY gender, ClassTitle
+ORDER BY ClassTitle
+~~~
+
+
+~~~sql
+SELECT gender,  
+florida_u_salaries.*
+FROM florida_u_salaries
+INNER JOIN
+  gendered_names
+WHERE FirstName = UPPER(gendered_names.name) 
+ORDER BY CAST(AnnualSalary AS INTEGER) DESC
+LIMIT 10;
+~~~
+
+
+All together
+
+~~~sql
+SELECT COUNT(*), x.gender
+FROM 
+(SELECT gender,  
+florida_u_salaries.*
+FROM florida_u_salaries
+INNER JOIN
+  gendered_names
+WHERE FirstName = UPPER(gendered_names.name) 
+ORDER BY CAST(AnnualSalary AS INTEGER) DESC
+LIMIT 100) AS x
+GROUP BY x.gender
+~~~
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#### Now alias them
+
+Now let's write the exact query but let's rename the table and columns. It will have no real effect on the results of the query, just the column names:
+
+~~~sql
+SELECT 
+  females.name, females.count
+FROM babynames AS females
+WHERE sex = 'F';
+~~~
+
+Write the same query for male names:
+
+~~~sql
+SELECT 
+  males.name, males.count
+FROM babynames AS males
+WHERE sex = 'M';
+~~~
+
+|-------------|-------|
+|     name    | count |
+|-------------|-------|
+| Michael     | 65274 |
+| Christopher | 52323 |
+| Matthew     | 44794 |
+| Joshua      | 43214 |
+| Daniel      | 33809 |
+|-------------|-------|
+{:.table-sql}
+
+
+We've effectively created two tables: `females` and `males`. We _could_ export them into CSV, then reimport them into the database. But why do all that work? 
+
+
+
+
+
+## Do some math
+
+
+~~~sql
+SELECT 
+  females.name, females.count,
+  males.name, males.count,
+  (females.count + males.count) AS total_count 
+FROM babynames AS females
+INNER JOIN 
+  (SELECT name, count FROM babynames WHERE sex='M') 
+  AS males ON
+    males.name = females.name
+WHERE females.sex = 'F';
+~~~
+
+|---------------+---------------+-------------+-------------+--------------|
+|  females.name | females.count | males.name  | males.count | total_count  |
+|---------------+---------------+-------------+-------------+--------------|
+|  Jessica      | 46466         | Jessica     | 140         | 46606        |
+|  Ashley       | 45549         | Ashley      | 239         | 45788        |
+|  Brittany     | 36535         | Brittany    | 112         | 36647        |
+|  Amanda       | 34406         | Amanda      | 96          | 34502        |
+|  Samantha     | 25864         | Samantha    | 58          | 25922        |
+{:.table-sql}
+
+
+Get the ratio of females to males:
+
+~~~sql
+SELECT 
+  females.name as the_name, 
+  females.count, males.count,
+  (females.count + males.count) AS total_count,
+  100 * 
+    (females.count - males.count) / 
+    (females.count + males.count) AS gender_diff   
+FROM babynames AS females
+INNER JOIN 
+  (SELECT name, count FROM babynames WHERE sex='M') 
+  AS males ON
+    males.name = females.name
+WHERE females.sex = 'F';
+~~~
+
+|--------------+---------------+-------------+-------------+--------------|
+|  the_name    | females.count | males.count | total_count | gender_diff  |
+|--------------+---------------+-------------+-------------+--------------|
+|  Jessica     | 46466         | 140         | 46606       | 99           |
+|  Ashley      | 45549         | 239         | 45788       | 98           |
+|  Brittany    | 36535         | 112         | 36647       | 99           |
+|  Amanda      | 34406         | 96          | 34502       | 99           |
+|  Samantha    | 25864         | 58          | 25922       | 99           |
+{:.table-sql}
+
+
+By default, popular female names are listed at the top because of the way the original text file was structured. Let's add a `WHERE` clause to filter the query for which `gender_diff` is _negative_, and also `ORDER` it. This will show only names in which there are more boys than girls.
+
+~~~sql
+SELECT 
+  females.name AS the_name, 
+   females.count,
+   males.count,
+  (females.count + males.count) AS total_count, 
+  100 * 
+    (females.count - males.count) / 
+    (females.count + males.count) AS gender_diff    
+FROM babynames AS females
+INNER JOIN 
+  (SELECT name, count FROM babynames WHERE sex='M') 
+  AS males ON
+    males.name = females.name
+WHERE females.sex = 'F'
+  AND gender_diff < 0
+ORDER BY gender_diff ASC;
+~~~
+
+|--------------+---------------+-------------+-------------+--------------|
+|  the_name    | females.count | males.count | total_count | gender_diff  |
+|--------------+---------------+-------------+-------------+--------------|
+|  Abraham     | 5             | 1131        | 1136        | -99          |
+|  Adam        | 35            | 14708       | 14743       | -99          |
+|  Albert      | 8             | 1826        | 1834        | -99          |
+|  Andrew      | 105           | 33653       | 33758       | -99          |
+|  Anthony     | 100           | 25073       | 25173       | -99          |
+{:.table-sql}
+
+One important detail: only 1,029 rows are returned, meaning that only 1,029 of the 
+
+
+
+
+

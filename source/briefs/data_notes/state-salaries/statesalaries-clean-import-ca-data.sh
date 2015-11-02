@@ -51,18 +51,17 @@ EOF
 
 
 # insert the data
-for yr in 2012 2013 2014; do
+for yr in 2011 2012 2013 2014; do
   fname=${yr}_StateDepartment.csv
   echo $fname
   # all together now
   sed '1,4d' < $fname |
     d_ca_cleanser |
-    csvformat -U 1
-  #  |
-  #  head -n 10000 |
-  #  csvsql --no-constraints --no-inference  --no-create \
-#           --insert --tables ca --db sqlite:///$SALDBPATH
-done | wc -l
+    csvformat -U 1 |
+    head -n 10000 |
+    csvsql --no-constraints --no-inference  --no-create \
+          --insert --tables ca --db sqlite:///$SALDBPATH
+done
 
 
 sqlite3 $SALDBPATH <<EOF

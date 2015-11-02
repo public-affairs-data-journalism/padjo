@@ -1,0 +1,62 @@
+---
+title: State Prisons Data Diary
+---
+
+
+# About the state prisons database
+
+
+
+
+[http://stash.padjo.org/dumps/2015/state-prisons.sqlite.zip]{:.url}
+
+
+
+
+
+# Source of the data
+
+
+### Florida Department of Corrections
+
+
+#### Homepage for Florida's data
+
+The [landing page for the Florida data](http://www.dc.state.fl.us/pub/obis_request.html) contains a link to a Microsoft Access database (~1.2GB) stored on Google Drive -- you'll have to click through a couple warning screens to actually download the file. The landing page also contains helpful descriptions of the 20 tables located in the Access database.
+
+
+Here's a mirror: [florida-inmates--2015-10-26.mdb.zip](http://stash.padjo.org/dumps/2015/florida-inmates--2015-10-26.mdb.zip){:.url}
+
+#### Public-facing databases for Florida's data
+
+The FDOC has a [Web Applications](http://www.dc.state.fl.us/InmateInfo/InmateInfoMenu.asp) page that lists all of their searchable databases.
+
+You only need to select the first option -- [Search All Corrections Offender Databases](http://www.dc.state.fl.us/AppCommon/) -- as it will search all the other databases simultaneously. However, it is worth _reading the descriptions_ of the other databases. In the dataset provided for analysis, I've included only the [Inmate Population Information Search](http://www.dc.state.fl.us/ActiveInmates/).
+
+Queries to the Florida database can be deep-linked; here's [a list of murderers via the Florida database.](http://www.dc.state.fl.us/ActiveInmates/list.asp?DataAction=Filter&SexOffOnly=0&dcnumber=&LastName=a&FirstName=s&SearchAliases=on&Sex=ALL&Race=ALL&OffenseCategory=MU&ClassificationStatus=ALL&CurrentCustody=ALL&IdentifierType=ALL&Identifier=&EyeColor=ALL&HairColor=ALL&FromAge=&ToAge=&FromWeight=&ToWeight=&FromHeightFeet=&FromHeightInches=&ToHeight=&ToHeightFeet=&ToHeightInches=&ZipCode=&ScarType=ALL&ScarLocation=ALL&ScarDescription=&photosonly=&nophotos=on&items=20&CommitmentCounty=ALL&subjecttype=ALL&facility=ALL&workskill=ALL)
+
+
+------------
+
+
+
+### Texas Department of Criminal Justice
+
+
+
+#### Homepage for Texas's prison data
+
+The dataset is listed on the [TDCJ's Public Resources](http://www.tdcj.state.tx.us/tab1_public.html) page as [High Value Data Sets](http://www.tdcj.state.tx.us/documents/High_Value_Data_Sets.xlsx).
+
+Here's a mirror: [texas-inmates--2015-10-29.xlsx.zip](http://stash.padjo.org/dumps/2015/texas-inmates--2015-10-29.xlsx.zip){:.url}
+
+#### Public-facing databases for Texas prison data
+
+The [official searchable version of the database](http://offender.tdcj.state.tx.us/OffenderSearch/) is not quite as flexible as Florida's.
+
+Here's [a news application the Texas Tribune built with the prison data](https://www.texastribune.org/library/data/texas-prisons/), though they use a more detailed version of the dataset, i.e. not just a flat Excel spreadsheet, the limitations of which we'll see very quickly. The more detailed data is not yet published as a directly downloadable file.
+
+
+
+
+

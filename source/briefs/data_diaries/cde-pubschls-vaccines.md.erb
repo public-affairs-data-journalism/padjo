@@ -1,0 +1,96 @@
+
+
+## Add indexable column
+
+~~~sql
+ALTER TABLE pubschls
+ADD COLUMN countyschoolcode;
+
+update pubschls
+set countyschoolcode = UPPER(county) || SUBSTR(CDSCODE, -7);
+
+CREATE INDEX pubschls_countyschoolcode ON pubschls(countyschoolcode);
+~~~
+
+
+~~~sql
+ALTER TABLE kinder_vaccines
+ADD COLUMN countyschoolcode;
+
+update kinder_vaccines
+set countyschoolcode = UPPER(county) || school_code;
+
+CREATE INDEX kinder_vaccines_countyschoolcode ON kinder_vaccines(countyschoolcode);
+~~~
+
+
+~~~sql
+ALTER TABLE frpm
+ADD COLUMN countyschoolcode;
+
+UPDATE frpm
+  SET countyschoolcode = UPPER(county_name) || school_code;
+
+CREATE INDEX frpm_countyschoolcode 
+  ON frpm(countyschoolcode);
+~~~
+
+
+
+
+~~~sql
+ALTER TABLE sat_scores
+  ADD COLUMN countyschoolcode;
+
+UPDATE sat_scores
+  SET countyschoolcode = UPPER(county_name) || SUBSTR(cds, -7);
+
+CREATE INDEX sat_scores_countyschoolcode 
+  ON sat_scores(countyschoolcode);
+~~~
+
+
+
+
+
+
+
+## Joining vaccinations
+
+~~~sql
+SELECT 
+  kinder_vaccines.school_name, kinder_vaccines.pbe_pct,
+  latitude, longitude
+  FROM kinder_vaccines
+INNER JOIN pubschls
+ON 
+  pubschls.countyschoolcode = kinder_vaccines.countyschoolcode
+WHERE kinder_vaccines.year = '2014-2015' 
+  AND kinder_vaccines.pbe_pct > 20.0
+  AND kinder_vaccines.enrollment > 30
+  and latitude IS NOT NULL 
+~~~
+
+
+## Joining free lunch and vaccinations
+
+
+
+
+~~~sql
+SELECT 
+  kinder_vaccines.school_name, 
+  kinder_vaccines.pbe_pct,
+  frpm.frpm_pct_eligible_ages_5_17 * 100
+FROM kinder_vaccines
+
+INNER JOIN frpm
+  ON
+    kinder_vaccines.countyschoolcode = frpm.countyschoolcode
+
+WHERE kinder_vaccines.year = '2014-2015'
+  AND frpm.year = '2014-2015' 
+  AND kinder_vaccines.enrollment > 30
+~~~
+
+

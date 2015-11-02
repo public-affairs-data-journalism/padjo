@@ -30,7 +30,7 @@ CREATE TABLE fl (
   "OPS Hourly Rate" FLOAT
 );
 EOF
-
+# don't know if `Position Number` is meant to be individual or job identifier
 
 # insert the data
 
@@ -41,7 +41,8 @@ cat florida-salaries.csv |
 
 
 sqlite3 $SALDBPATH <<EOF
-  CREATE INDEX "_on_ia" ON ia()
-  CREATE INDEX "_on_ia" ON ia()
-  CREATE INDEX "_on_ia" ON ia()
+  CREATE INDEX "Agency_Name_on_fl" ON fl("Agency Name");
+  CREATE INDEX "Budget_Entity_on_fl" ON fl("Budget Entity");
+  CREATE INDEX "Class_Title_on_fl" ON fl("Class Title");
+  CREATE INDEX "fullName_on_fl" ON fl("Last Name", "First Name", "M.I.");
 EOF

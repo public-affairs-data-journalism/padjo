@@ -1,0 +1,50 @@
+
+
+~~~sh
+curl -L -o ca-university-2014.csv \
+  http://transparentcalifornia.com/export/2014-university-system.csv
+
+curl -L -o ca-community-colleges-2014.csv \
+  http://transparentcalifornia.com/export/2014-community-colleges.csv
+
+
+cat ca-university-2014.csv <(tail -n +2 ca-community-colleges-2014.csv) > \
+  ca-combined-higher-ed-2014.csv
+
+~~~
+
+
+
+~~~py
+import csv
+import re
+f = open("ca-combined-higher-ed-2014.csv")
+o = open("ca-combined-higher-ed-2014--cleaned.csv", "w")
+headers = ['first_name_guess'] + f.readline().strip().split(',')
+reader = csv.reader(f)
+writer = csv.writer(o)
+writer.writerow(headers)
+for row in reader:
+  name = re.split('\W+', row[0])
+  try:
+    g_name = next(n for n in name if len(n) > 1)
+  except StopIteration as err:
+    g_name = name[0]
+  # convert 'Not Provided' to empty values
+  for val, i in enumerate(row):
+    if val == 'Not Provided':
+      row[i] = None
+  writer.writerow([g_name] + row)
+f.close()
+o.close()
+~~~
+
+
+
+~~~sh
+zname=ca-combined-higher-ed-salaries-2014.zip
+zip $zname ca-combined-higher-ed-2014.csv ca-combined-higher-ed-2014--cleaned.csv
+s3path="stash.padjo.org/dumps/2015/$(basename $zname)"
+echo http://$s3path 
+aws s3 cp $zname s3://$s3path --acl=public-read  
+~~~

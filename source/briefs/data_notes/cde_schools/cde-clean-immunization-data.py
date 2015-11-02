@@ -91,17 +91,27 @@ for xlsname in glob(os.path.join('.', '*.xls*')):
             d = dict.fromkeys(common_headers, None)
             d.update(dict(zip(headers, row)))
             d['year'] = "%s-%s" % (yr_1, yr_2)
-            # make sure these aren't floats
-            for col in ['school_code', 'district_code', 'enrollment']:
-                try:
-                    if not d[col] or d[col] == ' ':
-                        d[col] = None
-                    else:
-                        d[col] = int(d[col])
-                except Exception as err:
-                    print(str(err))
-                    print(col, ':', d[col])
-                    raise err
+
+            # cleaning time
+            for k in d.keys():
+                # some files have erroneous quotation marks in school name
+                # or elsewhere, so we remove all quotation marks from values to be safe
+                # ugly hack:
+                if type(d[k]) is str and '"' in d[k]:
+                    d[k] = d[k].replace('"', '')
+
+                if k in ['school_code', 'district_code', 'enrollment']:
+                    # make sure these aren't floats
+                    try:
+                        if not d[k] or d[k] == ' ':
+                            d[k] = None
+                        else:
+                            d[k] = int(d[k])
+                    except Exception as err:
+                        print(str(err))
+                        print(k, ':', d[k])
+                        raise err
+
             data.append(d)
     # write to file
     csvname = "k-immune-%s-%s--cleaned.csv" % (yr_1, yr_2)

@@ -41,4 +41,5 @@ sqlite3 $SALDBPATH <<EOF
   CREATE INDEX "Department_on_ia" ON ia(Department);
   CREATE INDEX "Agency_Institution_on_ia" ON ia("Agency/Institution");
   CREATE INDEX "Position_on_ia" ON ia(Position) ;
+  CREATE INDEX "name_on_ia" ON ia(Name) ;
 EOF

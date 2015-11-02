@@ -1,0 +1,25 @@
+
+
+~~~sh
+ORG_NAME=florida-salaries-2015-11.csv
+CSV_NAME=florida-salaries-2015-11--cleaned.csv
+
+wget  "https://prod.flbog.net:4445/pls/apex/f?p=140:30:0" \
+  --output-document $ORG_NAME
+
+# strip and clean white space headers
+head -n2 $ORG_NAME | csvformat -S $ORG_NAME |
+  head -n1 | tr -d ' ' > $CSV_NAME
+
+csvformat -S $ORG_NAME | tail -n +2 >> $CSV_NAME
+~~~
+
+
+
+Upload a copy of the cleaned version
+
+~~~sh
+s3path="stash.padjo.org/dumps/2015/$(basename $CSV_NAME)"
+echo http://$s3path 
+aws s3 cp $CSV_NAME s3://$s3path --acl=public-read  
+~~~
