@@ -174,3 +174,48 @@ function tos3(){
   
   
 ~~~
+
+
+
+
+paste and cat
+
+~~~sh
+# $1 is the filename
+function verty(){
+  fname="$1"
+#  if [ -z "$2" ]; then
+#    rowno=1
+#  else
+#    rowno=$2
+#  fi
+#  rowhed=$(($rowno + 1))
+  paste -d '|' <(head -n1 $fname | csvformat -T | tr '\t' '\n') \
+        <(head -n $(($2+1)) $fname | csvformat -T | tail -n 1 | tr '\t' '\n') \
+        <(head -n $(($3+1)) $fname | csvformat -T | tail -n 1 | tr '\t' '\n') \
+        <(head -n $(($4+1)) $fname | csvformat -T | tail -n 1 | tr '\t' '\n') |
+        sed -e "1i\\
+Column name|Row $2|Row $3|Row $4
+" | csvlook -d '|'
+}
+
+
+~~~
+
+
+
+~~~
+dontuse
+function verty(){
+  headers="Column name|$(echo "${@:2}" | tr ' ' '|')"
+  fname="$1"
+  paste -d '|' <(head -n1 $1 | csvformat -T | tr '\t' '\n') \
+  <(for i in ${@:2}; do
+      rowno=$i
+      rowhed=$(($rowno + 1))
+      head -n $rowhed $fname | csvformat -T | tail -n 1 | tr '\t' '\n'
+    done) | sed -e "1i\\
+$headers
+" | csvlook -d '|'        
+}
+~~~

@@ -1,8 +1,375 @@
 ---
 title: Creating Tables for Baby Names and University Employees
 description: |
-  How to create SQL tables and import raw data using the SQLite Browser interface.
+  How to create SQL tables and import raw data using the DB Browser for SQLite client.
 rank: 31   
+
+references:
+  - url: https://www.sqlite.org/lang_createtable.html
+  - url: https://www.sqlite.org/datatype3.html
+  - url: https://www.sqlite.org/lang_droptable.html
 ---
+
+
+TK creating a database from scratch
+
+
+
+# Importing the baby names data
+
+
+## Download the data
+
+From [the Social Security Administration homepage](https://www.ssa.gov/oact/babynames/limits.html), click on the __National data__ file: [https://www.ssa.gov/oact/babynames/names.zip](https://www.ssa.gov/oact/babynames/names.zip)
+
+Unzip the file, it should contain text files for every year, prefixed with `yob` (i.e. "year of birth"):
+
+![image](/files/images/tutorials/sql-walk/babynames-and-college-salaries/babynames-finder-files-unzipped.png)
+
+Open any one of the text files to see what they contain. For example, this is what the first five lines of __yob1990.txt__ looks like:
+
+    Jessica,F,46466
+    Ashley,F,45549
+    Brittany,F,36535
+    Amanda,F,34406
+    Samantha,F,25864
+
+The main takeaway is that there _are no column headers_. But we can imagine what they might be: `name`, `sex`, and `babies`.
+
+## Creating a table with the `CREATE TABLE` statement
+
+Creating a new database table requires a whole different syntax. For starters, we are no longer `SELECT`-ing data. Instead, we use the [`CREATE TABLE` statement](https://www.sqlite.org/lang_createtable.html):
+
+~~~sql
+CREATE TABLE "the_table_name"(
+  "column_1" DATATYPE,
+  "column_2" ANOTHER_DATATYPE
+);
+~~~
+
+
+The [SQLite documentation on creating tables is here,](https://www.sqlite.org/lang_createtable.html) but it may be a bit dense. Basically, the `CREATE TABLE` statement consists of the __name__ of the table and its _schema_, i.e. its columns -- including the name and the type of data contained in each column.
+
+A typical `CREATE TABLE` statement consists of these elements:
+
+- The words, `CREATE TABLE`
+- The name of the new table; it's best to enclose it in __quotation marks__
+- A pair of parentheses, which encloses a comma-separated list of columns:
+  - the column name; again, best to enclose it in quotation marks
+  - the _type_ of the data. For example, if it is an integer (i.e. a whole number), use `INTEGER`. Data types, such as `INTEGER`, `TEXT`, `VARCHAR`, and so forth, are semi-special SQL keywords, so you don't _have_ to capitalize them, but you should for easier readability.
+
+So to create 
+
+
+~~~sql
+CREATE TABLE babynames(
+  "name" VARCHAR,
+  "sex" CHAR,
+  "count" INTEGER
+);
+~~~
+
+What's `VARCHAR` and `CHAR`? In other flavors of SQL, they are the keywords for columns that contain text strings of varied or mostly-constant length, which is an important detail for massive databases but doesn't matter for what we're doing. But I do it out of habit in the above snippet: you can see that I've made the `sex` column `CHAR` datatype because it's either `'M'` or `'F'`, i.e. a single character. Whereas the text strings `name` column can vary with length.
+
+Technically, SQLite doesn't care. [According to the SQLite documentation](https://www.sqlite.org/datatype3.html), there are only three It only have a few  It doesn't really matter, you could even do this:
+
+~~~sql
+CREATE TABLE babynames(
+  "name" TEXT,
+  "sex" TEXT,
+  "count" INT
+);
+~~~
+
+
+
+After executing the `CREATE TABLE` statement and then going to the tab to browse the database structure, you'll see something like this:
+
+
+![screenshot](/files/images/tutorials/sql-walk/babynames-and-college-salaries/babynames-created-table-browse-structure.png)
+
+
+
+## How to DROP and re-create a table
+
+Before we actually import data into the table, let's pretend we messed up the `CREATE TABLE` statement and we have a table with misnamed or ill-defined columns. As it turns out in SQLite, there's a limited subset of commands we can do to alter/fix an existing table: [rename the table or add columns](https://www.sqlite.org/lang_altertable.html). We cover adding columns in the next chapter -- and apparently we can't _rename_ columns.
+
+It's frequently easier just to delete the table and start over. So that's what [we'll do with the `DROP TABLE` statement](https://www.sqlite.org/lang_droptable.html).
+
+The syntax to _drop_ a table is much simpler than creating one:
+
+~~~sql
+DROP TABLE babynames;
+~~~
+
+Note that in a SQLite GUI client, such as SQLite Browser, you can usually delete a table by right-clicking its name and selecting from a pop-up menu. But if you want to drop a table because you want to immediately re-create it, it's almost always faster to execute the `DROP TABLE` and `CREATE TABLE` commands via copy-and-paste:
+
+~~~sql
+DROP TABLE babynames;
+CREATE TABLE babynames(
+  "name" VARCHAR,
+  "sex" CHAR,
+  "count" INTEGER
+);
+~~~
+
+
+Note: If you run a `CREATE TABLE` query when the table already exists, you'll get an error message. Same thing if you try to drop a non-existent table. 
+
+
+# Importing the data via GUI
+
+For the remainder of these tutorials, the only time we'll be dependent on a GUI client is for the importing of data. This is because of how complicated it is for programs to parse comma-delimited (or any kind of delimited) text files. So SQLite, the language and database, do not have built-in, robust parsers that we can easily invoke with just SQL code as we can when creating, dropping, and querying tables.
+
+Luckily, [DB Browser for SQLite](http://sqlitebrowser.org/) has point-and-click importing -- as do other free SQLite clients, such as the [Firefox SQLite Manager plugin](https://addons.mozilla.org/en-US/firefox/addon/sqlite-manager/)
+
+The following instructions are for [DB Browser for SQLite](http://sqlitebrowser.org/) on Mac, though DB Browser is cross-platform so the steps should hopefully be the same.
+
+In the __menubar__, click __File > Import > Table from CSV...__  
+
+![screenshot](/files/images/tutorials/sql-walk/babynames-and-college-salaries/babynames-sqlite-browser-file-import-menu.png)
+
+Select the file to import. For the remainder of this tutorial, I'll be using the `yob1990.txt` file, i.e. names for babies in 1990. If for some reason you can't get this from the official Social Security Administration site, you can download it from my mirror:
+
+[stash.padjo.org/dumps/2015/yob1990.txt](http://stash.padjo.org/dumps/2015/yob1990.txt){:.url}
+
+After selecting the file to import, we then have to type in the table name to import into:
+
+![screenshot](/files/images/tutorials/sql-walk/babynames-and-college-salaries/babynames-import-file-into-table.png)
+
+
+__Make sure it is the exact name as the table that you had just created__ i.e. `babynames`
+
+The DB Browser client will ask you if you want to really insert into an existing table. Click __Yes__.
+
+If you __Browse Data__, you'll see the names:
+
+![screenshot](/files/images/tutorials/sql-walk/babynames-and-college-salaries/babynames-browse-data-after-import.png)
+
+
+Note: There's no year column for this `babynames` table. I've left it out for now because we don't need it for this exercise. But generally, that kind of context _should_ be kept. I guarantee you if you re-open this database next week, you'll have no idea what year that set of baby names data came from.
+
+
+### Saving the data in DB Browser
+
+The DB Browser client, in an attempt to share some familiar user-facing features with Excel, has a feature in which changes we make to the data are not automatically "saved" to file. We have to manually do this by going to the menubar and selecting __File > Write Changes__.
+
+Or just use the __Cmd-S__ keyboard shortcut.
+
+### Testing out some queries on the baby names
+
+
+
+
+
+
+
+
+# Importing the Florida state university data
+
+OK, now on to the Florida state salaries data. We'll go through the exact same steps as described above: create a table, then import into it.
+
+
+The state of Florida has set up a landing page for its [state payroll data]http://floridahasarighttoknow.myflorida.com/search_state_payroll). For now, we are going to focus on the __State University System__ -- as of November 2015, this consists of ["Payroll Information provided by Florida's 12 State Universities"](http://floridahasarighttoknow.myflorida.com/search_state_payroll)
+
+Here's a screenshot of [the public-facing database](http://floridahasarighttoknow.myflorida.com/search_state_payroll):
+
+![image](/files/images/tutorials/sql-walk/babynames-and-college-salaries/fl-salaries-public-snapshot.png)
+
+
+
+## Download the data
+
+If you look at the right-side of the [state university payroll webpage](http://floridahasarighttoknow.myflorida.com/search_state_payroll), you'll see a link to __Export All__. 
+
+But _don't_ click that. Instead, download my snapshot of the data:
+
+[florida-salaries-2015-11--cleaned.csv](http://stash.padjo.org/dumps/2015/florida-salaries-2015-11--cleaned.csv){:.url}
+
+It's roughly the same thing, except you don't have to deal with some funky formatting (line endings/file encoding) of the original file. Plus, I've renamed the headers so that multiple-word column headers, such as `'Last Name'`, are now single words, e.g. `'LastName`. This makes it slightly easier to reference them in SQL commands.
+
+Here's what the data looks like, with the columns transposed to show all of the titles and a couple of sample rows.
+
+In particular, the `ClassTitle`, `FirstName`, and `AnnualSalary` columns are most interesting to us.
+
+|-----------------+-----------------------+-----------------------+-------------------|
+|  Column name    | Row 9                 | Row 100               | Row 25000         |
+|-----------------+-----------------------+-----------------------+-------------------|
+|  University     | FAMU                  | FAMU                  | FSU               |
+|  BudgetEntity   | Educational & General | Educational & General | Auxiliaries       |
+|  PositionNumber | 19257000              | 0                     | 60518             |
+|  LastName       | ABRAMS                | BARE                  | HILL              |
+|  FirstName      | ROBERT                | CEIL                  | WILLIAM           |
+|  MI             | H                     | P                     | .                 |
+|  EmployeeType   | SALARIED              | OPS                   | SALARIED          |
+|  FTE            | .77                   | 0                     | 1                 |
+|  ClassCode      | 9001                  | 9001                  | 6526              |
+|  ClassTitle     | PROFESSOR             | PROFESSOR             | CUSTODIAL WORKER  |
+|  AnnualSalary   | 158980                |                       | 21279             |
+|  OPSTermAmount  |                       | 4500                  |                   |
+|-----------------+-----------------------+-----------------------+-------------------|
+{:.table-sql}
+
+
+Other columns of interest:
+
+- `University` - the abbreviation for the university, e.g. `'FSU'` for Florida State University.
+- `BudgetEntity`
+- `FTE` - presumably this stands for __full-time-equivalent__ -- a value of `1.0` represents a full-time employee. Less than `1.0` might indicate a part-time employee.
+- `OPSTermAmount` - Payment for [Other Personal Services Employment](http://www.dms.myflorida.com/workforce_operations/human_resource_management/for_other_personal_services_employment_ops), i.e. temporary/short-term positions. That's why the professor in row 100 above has no annual salary, but is shown receiving $4,500 for the `OPSTermAmount`.
+
+
+
+Can you write the SQL command to create the empty table? Here's a hint to start it off:
+
+~~~sql
+CREATE TABLE "florida_positions" (
+  "University" VARCHAR,
+  "some other column" SOMETYPE
+);
+~~~
+
+
+
+Note that the `FTE` column can contain a __decimal__ number (i.e. to indicate a part-time position); we can use the `FLOAT` data type to describe it (i.e. [floating-point number](https://en.wikipedia.org/wiki/Floating_point)).
+
+Here's what I ended up with:
+
+~~~sql
+CREATE TABLE "florida_positions" (
+  "University" VARCHAR,
+  "BudgetEntity" VARCHAR,
+  "PositionNumber" VARCHAR,
+  "LastName" VARCHAR,
+  "FirstName" VARCHAR,
+  "MI" VARCHAR,
+  "EmployeeType" VARCHAR,
+  "FTE" FLOAT,
+  "ClassCode" VARCHAR,
+  "ClassTitle" VARCHAR,
+  "AnnualSalary" INTEGER,
+  "OPSTermAmount" INTEGER
+);
+~~~
+
+
+
+### Importing the salaries data
+
+Again, make sure you spell the name of the table correctly. 
+
+Unlike the baby names data, this file _does_ come with file headers. So also make sure the __Column names in first line__ checkbox is __checked__:
+
+![image](/files/images/tutorials/sql-walk/babynames-and-college-salaries/fl-salaries-import-into-sqlite-browser.png)
+
+After the import is finished, remember to select __File > Write Changes__, i.e. save the database, i.e. keyboard shortcut __Cmd-S__.
+
+
+
+### Testing the salaries data
+
+
+Let's run some queries to see if it works. When dealing with salaries, you can't go wrong by just seeing who is paid the most:
+
+~~~sql
+SELECT *
+FROM florida_positions
+ORDER BY AnnualSalary DESC 
+LIMIT 5;
+~~~
+
+Oops, this doesn't look right: all rows in which `AnnualSalary` was blank show up at top, due to the way SQLite orders things:
+
+
+|-------------+-----------------------+----------------+----------+-----------+----+--------------+-----+-----------+---------------------+--------------+----------------|
+|  University | BudgetEntity          | PositionNumber | LastName | FirstName | MI | EmployeeType | FTE | ClassCode | ClassTitle          | AnnualSalary | OPSTermAmount  |
+|-------------+-----------------------+----------------+----------+-----------+----+--------------+-----+-----------+---------------------+--------------+----------------|
+|  FAMU       | Educational & General | 0              | ADAMS    | ANGELA    | D  | OPS          | 0.0 | 9003      | ASSISTANT PROFESSOR |              | 2550           |
+|  FAMU       | Educational & General | 0              | ADAMS    | JAMES     | A  | OPS          | 0.0 | 9001      | PROFESSOR           |              | 6000           |
+|  FAMU       | Educational & General | 0              | ADAMS    | SHAWANNA  | D  | OPS          | 0.0 | 9004      | INSTRUCTOR          |              | 2400           |
+|  FAMU       | Educational & General | 0              | ADETU    | COLLINS   | .  | OPS          | 0.0 | 9004      | INSTRUCTOR          |              | 4001           |
+|  FAMU       | Educational & General | 0              | AKINS    | MONICA    | Q  | OPS          | 0.0 | 9004      | INSTRUCTOR          |              | 600            |
+|-------------+-----------------------+----------------+----------+-----------+----+--------------+-----+-----------+---------------------+--------------+----------------|
+{:.table-sql}
+
+
+For now, we can use a `WHERE` clause to filter the records to include only valid `AnnualSalary` values:
+
+
+~~~sql
+SELECT *
+FROM florida_positions
+WHERE AnnualSalary != ''
+ORDER BY AnnualSalary DESC 
+LIMIT 5;
+~~~
+
+
+|-------------+--------------------+----------------+------------+-----------+----+--------------+------+-----------+---------------------+--------------+----------------|
+|  University | BudgetEntity       | PositionNumber | LastName   | FirstName | MI | EmployeeType | FTE  | ClassCode | ClassTitle          | AnnualSalary | OPSTermAmount  |
+|-------------+--------------------+----------------+------------+-----------+----+--------------+------+-----------+---------------------+--------------+----------------|
+|  UF         | Contracts & Grants | 00000000       | FRIEDMAN   | WILLIAM   | A  | SALARIED     | 0.97 | 9001      | PROFESSOR           | 961281       |                |
+|  UF         | Contracts & Grants | 00000805       | GUZICK     | DAVID     | S  | SALARIED     | 1.0  | 9001      | PROFESSOR           | 905000       |                |
+|  UF         | Contracts & Grants | 00000000       | KESHAVARZI | SASSAN    | .  | SALARIED     | 0.97 | 9003      | ASSISTANT PROFESSOR | 730685       |                |
+|  UF         | Contracts & Grants | 00000000       | CHALAM     | KAKARLA   | V  | SALARIED     | 0.96 | 9001      | PROFESSOR           | 680685       |                |
+|  UF         | Contracts & Grants | 00005361       | FUCHS      | WESLEY    | K  | SALARIED     | 0.77 | 9001      | PROFESSOR           | 661340       |                |
+|-------------+--------------------+----------------+------------+-----------+----+--------------+------+-----------+---------------------+--------------+----------------|
+{:.table-sql}
+
+
+Well, *I* was surprised. My assumption was that head football coaches would dominate the top-paid employees, especially in a football-loving state such as Florida.
+
+Let's do a search for `WILLIAM FRIEDMAN` using the [state of Florida's official university salaries database](https://prod.flbog.net:4445/pls/apex/f?p=140) to confirm our results:
+
+![image](/files/images/tutorials/sql-walk/babynames-and-college-salaries/fl-salaries-confirm-top-5-salaries-in-database.png)
+
+
+Doing a Google search for professor salaries in Florida brings up this 2011 article, [""](http://articles.orlandosentinel.com/2011-10-18/news/os-scott-college-professor-salaries-20111018_1_florida-professors-university-professors-salaries) from the Orlando Sentinel; Friedman is mentioned as the second-highest-paid employee at the time. But this comes with some caveats about the data:
+
+> But faculty leaders such as Tom Auxter, president of United Faculty of Florida, pointed out that the database is misleading in that it doesn't attempt to explain why about 20 professors make more than $500,000 a year...Some are paid large salaries because they bring in significant amounts of money through grants and other revenue sources for research. These other sources often provide at least part of their income, a fact that can easily be overlooked when reading the governor's online database.
+
+> ...UF professor William Friedman is the second-highest-paid university employee. He earns about $808,000 as UF's director of the Preston Wells Center for Brain Tumor Therapy.
+
+So the posted salary amount isn't necessarily state money, though there's no breakdown. I don't think that'll affect our gender gap analysis, though.
+
+
+Here's a summary view that groups all the records by `University` and counts/totals various interesting columns:
+
+~~~sql
+SELECT 
+  University, 
+  COUNT(*) AS num_positions, 
+  SUM(FTE) AS total_ftes,
+  SUM(AnnualSalary) AS total_salary,
+  SUM(OpsTermAmount) AS total_ops_money
+FROM florida_positions
+GROUP BY University
+ORDER BY total_salary DESC;
+~~~
+
+
+Looks like University of Florida is the biggest, followed by University of South Florida and Florida State:
+
+|-------------+---------------+------------------+--------------+------------------|
+|  University | num_positions | total_ftes       | total_salary | total_ops_money  |
+|-------------+---------------+------------------+--------------+------------------|
+|  UF         | 28230         | 13029.1000000002 | 1107624366.0 | 59872807.0       |
+|  USF        | 14051         | 6507.12000000004 | 455211836.0  | 33948786.0       |
+|  FSU        | 11872         | 5977.07          | 390502925.0  | 22904955.0       |
+|  FIU        | 8292          | 4694.62999999999 | 335808488.0  | 11897985.0       |
+|  UCF        | 7059          | 5489.98999999996 | 322528069.0  | 10654698.0       |
+|  FAU        | 5453          | 2508.53          | 178094535.0  | 8632644.0        |
+|  FAMU       | 2403          | 1659.93          | 105909139.0  | 3221786.0        |
+|  UNF        | 2283          | 1730.29          | 98778082.0   | 1711024.0        |
+|  FGCU       | 1916          | 1177.94          | 77051199.0   | 1784315.0        |
+|  UWF        | 1707          | 1228.77          | 70879208.0   | 1222309.0        |
+|  NCF        | 345           | 251.64           | 14697859.0   | 105542.0         |
+|  FPU        | 173           | 130.0            | 9470242.0    | 164200.0         |
+|-------------+---------------+------------------+--------------+------------------|
+{:.table-sql}
+
+
+
+
 
 
