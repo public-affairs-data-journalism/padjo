@@ -1,0 +1,35 @@
+---
+title: Adding Indexes to SQL Tables for Faster Searches
+description: |
+  A brief detour into learning what makes for fast data searching in SQL databases.
+references:
+  - url: https://www.sqlite.org/lang_createindex.html
+  - url: https://www.sqlite.org/queryplanner.html
+---
+
+
+The SQLite documentation actually has a great, [readable explanation of how indexes are used to make searches faster](https://www.sqlite.org/queryplanner.html). I'll give my own bastardized version here.
+
+Let's say I want to look up how many babies were named `'Daniel'` according to the `babynames` table. This is the query:
+
+~~~sql
+SELECT * FROM babynames
+WHERE name = 'Daniel';
+~~~
+
+On my laptop, it takes just 35 milliseconds to return the 2 result rows.
+
+|---------+-----+---------|
+|  name   | sex | babies  |
+|---------+-----+---------|
+|  Daniel | F   | 148     |
+|  Daniel | M   | 33809   |
+|---------+-----+---------|
+{:.table-sql}
+
+
+
+
+
+
+

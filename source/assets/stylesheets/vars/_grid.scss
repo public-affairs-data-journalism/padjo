@@ -4,6 +4,8 @@
 // Define the minimum and maximum dimensions at which your layout will change,
 // adapting to different screen sizes, for use in media queries.
 
+$container-max-width: 52rem;
+
 $grid-breakpoints: (
   // Extra small screen / phone
   xs: 0,
@@ -25,7 +27,7 @@ $grid-breakpoints: (
 $container-max-widths: (
   sm: 34rem,    // 480
   md: 45rem,    // 720
-  lg: 52rem,    // 960
-  xl: 52rem     // 960
+  lg: $container-max-width,    // 960
+  xl: $container-max-width    // 960
 ) !default;
 

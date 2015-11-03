@@ -3,6 +3,19 @@
   max-width: 100%;
 }
 
+.page-content{
+  table{
+    max-width: 100%;
+    @extend .table-responsive;
+  }
+}
+
+a.url{
+  font-family: $font-family-monospace;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
 h2#table-of-contents{
 
 }

@@ -5,7 +5,10 @@
   }
   .header{
     @extend .card-header;
+    background: black;
     font-size: $font-size-h5;
     font-weight: bold;
+    color: white;
+    border: thin solid #777;
   }
 }

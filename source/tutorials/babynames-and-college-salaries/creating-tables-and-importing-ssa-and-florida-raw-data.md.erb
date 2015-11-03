@@ -1,14 +1,19 @@
 ---
-title: Creating Tables for Baby Names and University Employees
+title: Creating Tables and Importing Data for Baby Names and University Employees
 description: |
   How to create SQL tables and import raw data using the DB Browser for SQLite client.
 rank: 31   
-
+listed: true
 references:
   - url: https://www.sqlite.org/lang_createtable.html
   - url: https://www.sqlite.org/datatype3.html
   - url: https://www.sqlite.org/lang_droptable.html
+next: 
+  - /tutorials/babynames-and-college-salaries/adding-and-updating-columns-babynames-colleges/
+
 ---
+
+<%= render_toc %>
 
 
 TK creating a database from scratch
@@ -17,10 +22,14 @@ TK creating a database from scratch
 
 # Importing the baby names data
 
+This is the [Social Security Administration baby names](https://www.ssa.gov/oact/babynames/limits.html) data that we've used in [previous tutorials](/tutorials/sql-basics/select-and-from), except now you'll see how to create a database from scratch, including the process of downloading the file and importing the relevant text file.
+
+Unlike the [previous tutorials](/tutorials/sql-basics/select-and-from), we will only create a single table consisting of a single year's worth of data. You can assume that getting all of the data is just repeatedly following the import process as described below. 
+
 
 ## Download the data
 
-From [the Social Security Administration homepage](https://www.ssa.gov/oact/babynames/limits.html), click on the __National data__ file: [https://www.ssa.gov/oact/babynames/names.zip](https://www.ssa.gov/oact/babynames/names.zip)
+From [the Social Security Administration homepage](https://www.ssa.gov/oact/babynames/limits.html), click on the __National data__ file: [https://www.ssa.gov/oact/babynames/names.zip](https://www.ssa.gov/oact/babynames/names.zip){:.url}
 
 Unzip the file, it should contain text files for every year, prefixed with `yob` (i.e. "year of birth"):
 
@@ -65,7 +74,7 @@ So to create
 CREATE TABLE babynames(
   "name" VARCHAR,
   "sex" CHAR,
-  "count" INTEGER
+  "babies" INTEGER
 );
 ~~~
 
@@ -77,7 +86,7 @@ Technically, SQLite doesn't care. [According to the SQLite documentation](https:
 CREATE TABLE babynames(
   "name" TEXT,
   "sex" TEXT,
-  "count" INT
+  "babies" INT
 );
 ~~~
 
@@ -88,6 +97,7 @@ After executing the `CREATE TABLE` statement and then going to the tab to browse
 
 ![screenshot](/files/images/tutorials/sql-walk/babynames-and-college-salaries/babynames-created-table-browse-structure.png)
 
+Note: In a previous example, I named the `'babies'` column as `'count'`, but have not bothered to fix the screenshot. You get the idea.
 
 
 ## How to DROP and re-create a table
@@ -109,7 +119,7 @@ DROP TABLE babynames;
 CREATE TABLE babynames(
   "name" VARCHAR,
   "sex" CHAR,
-  "count" INTEGER
+  "babies" INTEGER
 );
 ~~~
 
@@ -133,35 +143,87 @@ Select the file to import. For the remainder of this tutorial, I'll be using the
 
 [stash.padjo.org/dumps/2015/yob1990.txt](http://stash.padjo.org/dumps/2015/yob1990.txt){:.url}
 
-After selecting the file to import, we then have to type in the table name to import into:
+After selecting the text file to import, the GUI client brings up a new dialog box with a couple of important settings to mind: 
 
 ![screenshot](/files/images/tutorials/sql-walk/babynames-and-college-salaries/babynames-import-file-into-table.png)
 
 
-__Make sure it is the exact name as the table that you had just created__ i.e. `babynames`
+<% content_card "Important import settings" do %>
+
+- Make sure the __Table name__ field has the __exact name__ as the name of the table that you had just created, i.e. `babynames`
+- As we saw when previewing the raw text files, __there are no column headers__. So __uncheck__ the checkbox titled, __Column names in first line__, because, the column names _aren't_ in the first line.
+<% end %>
+
+
+
 
 The DB Browser client will ask you if you want to really insert into an existing table. Click __Yes__.
 
-If you __Browse Data__, you'll see the names:
+
+
+
+After the import is finished, you can select the __Browse Data__ view to see the data inside the table:
 
 ![screenshot](/files/images/tutorials/sql-walk/babynames-and-college-salaries/babynames-browse-data-after-import.png)
+
+
 
 
 Note: There's no year column for this `babynames` table. I've left it out for now because we don't need it for this exercise. But generally, that kind of context _should_ be kept. I guarantee you if you re-open this database next week, you'll have no idea what year that set of baby names data came from.
 
 
-### Saving the data in DB Browser
+#### Saving the data in DB Browser
 
 The DB Browser client, in an attempt to share some familiar user-facing features with Excel, has a feature in which changes we make to the data are not automatically "saved" to file. We have to manually do this by going to the menubar and selecting __File > Write Changes__.
 
 Or just use the __Cmd-S__ keyboard shortcut.
 
-### Testing out some queries on the baby names
+### Testing queries on the baby names
+
+We'll do review of basic SQL in [another lesson](#TK). For now, let's just make sure the `babynames` table contains what we think it does:
 
 
+#### Top 5 girl names
+
+~~~sql
+SELECT *
+FROM babynames
+WHERE sex = 'F'
+ORDER BY babies DESC
+LIMIT 5;
+~~~
 
 
+|-----------+-----+---------|
+|  name     | sex | babies  |
+|-----------+-----+---------|
+|  Jessica  | F   | 46466   |
+|  Ashley   | F   | 45549   |
+|  Brittany | F   | 36535   |
+|  Amanda   | F   | 34406   |
+|  Samantha | F   | 25864   |
+{:.table-sql}
 
+
+#### Top 5 names that begin with the letter Z
+
+~~~sql
+SELECT *
+FROM babynames
+WHERE name LIKE 'Z%'
+ORDER BY babies DESC
+LIMIT 5;
+~~~
+
+|------------+-----+---------|
+|  name      | sex | babies  |
+|------------+-----+---------|
+|  Zachary   | M   | 20424   |
+|  Zachery   | M   | 1228    |
+|  Zachariah | M   | 757     |
+|  Zackary   | M   | 743     |
+|  Zackery   | M   | 543     |
+{:.table-sql}
 
 
 
@@ -265,6 +327,7 @@ Unlike the baby names data, this file _does_ come with file headers. So also mak
 After the import is finished, remember to select __File > Write Changes__, i.e. save the database, i.e. keyboard shortcut __Cmd-S__.
 
 
+<a id="mark-salaries-data-blankspaces"></a>
 
 ### Testing the salaries data
 
