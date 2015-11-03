@@ -12,8 +12,7 @@ next: /tutorials/babynames-and-college-salaries/creating-gendered-names-table-wi
 
 # A small example
 
-
-Pretend that there were only 6 rows in the entire database:
+Rather than use the entire `babynames` table of tens of thousands of rows, let's pretend that `babynames` consists of only 8 rows:
 
 
 |---------|-----|--------|
@@ -29,7 +28,7 @@ Pretend that there were only 6 rows in the entire database:
 | Robert  | M   |     22 |
 {:.table-sql}
 
-It's pretty easy to eyeball the 3 different categories of names:
+With such a fake hypothetical, but small example set, we can eyeball the 3 different categories of names:
 
 
 
@@ -770,6 +769,32 @@ And as expected, the result will contain a list of boy-exclusive names:
 })%>
 
 
+### Using LEFT JOIN to do a quickie aggregation
+
+I hate to end with such a complicated example of a LEFT JOIN. If we wanted to simply `COUNT` the number of `boy_names` and `SUM` the `boy_babies`, for boy-only names, we could ignore showing any of the `girlnames` columns (we know they're going to be `NULL`):
+
+
+
+~~~sql
+SELECT COUNT(*),
+        SUM(boynames.babies)
+FROM boynames
+LEFT JOIN girlnames
+  ON boynames.name = girlnames.name
+WHERE girlnames.name IS NULL;       
+~~~
+
+|----------|----------------------|
+| COUNT(*) | SUM(boynames.babies) |
+|----------|----------------------|
+|        2 |                  297 |
+|----------|----------------------|
+
+
+See if you can re-write it on your own to do the equivalent calculation for girl-only names.
+
+
+
 
 
 # Two joins, for two kinds of problems
@@ -783,7 +808,6 @@ With __inner joins__, we can quickly see which names on one list show up on anot
 I don't frequently hear of __left joins__ being used in a journalistic query. But I think the opportunity is there. If you have a list of important people from ten years ago. And that same list, updated for today, wouldn't it be interesting to find out who is on one list and not the other? If the decade-old list is on the "left" side, a left-join query gets you people who _were_ VIPs but apparently aren't so today. And if the new list is on the left side, then a left-join finds the VIPs who, 10 years ago, were nobodies.
 
 Either way, think of how difficult it is to compare a list of even 20 names. With SQL, it won't matter if the lists have 2,000,000 names.
-
 
 
 In the [next lesson](/tutorials/creating-gendered-names-table-with-joins/), we go back to the original `babynames` table -- with all the actual names and numbers -- and go through the steps to create the `boynames` and `girlnames` tables.

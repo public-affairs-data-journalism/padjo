@@ -1,0 +1,469 @@
+---
+title: Using SQL Joins to Analyze a Year's Worth of Baby Names and Gender Trends 
+description: |
+  A walkthrough on how to create and fill new tables, and then a review of INNER and LEFT joins.
+ranking: 1442
+listed: true
+previous: /tutorials/babynames-and-college-salaries/inner-left-joins-few-babynames/
+next: /tutorials/babynames-and-college-salaries/creating-gendered-names-table-with-joins
+---
+
+This [lesson is effectively a review of the last lesson](/tutorials/babynames-and-college-salaries/inner-left-joins-few-babynames/), in which we practiced `INNER JOINS` and `LEFT JOINS` on a very, very small version of the `babynames` table.
+
+Now, let's go through the motions, but on the real data:
+
+
+
+<%= render_toc %>
+
+# Creating the `boynames` and `girlnames` tables
+
+Did you create the `boynames` and `girlnames` tables [as shown in the previous lesson](/tutorials/babynames-and-college-salaries/inner-left-joins-few-babynames/)? If not, no matter, just run the following code to DROP the tables (if they exist) and then recreate them:
+
+
+~~~sql
+DROP TABLE IF EXISTS boynames;
+DROP TABLE IF EXISTS girlnames;
+CREATE TABLE boynames(
+  "name" VARCHAR,
+  "babies" INTEGER
+);
+CREATE TABLE girlnames(
+  "name" VARCHAR,
+  "babies" INTEGER
+);
+~~~
+
+Now let's populate those tables, starting with `boynames`. The query to SELECT all names given to boys from the `babynames` table is simply this (remember, we don't need to keep/display the `sex` column, as it's redundant):
+
+~~~sql
+SELECT name, babies 
+FROM babynames
+WHERE sex = 'M';
+~~~
+
+How do we get that into the `boynames` table? We could rely on the GUI: DB Browser for SQLite has an __Export__ button to save results as a CSV, which we could then re-import (again via the GUI) into `boynames`. 
+
+But that's cumbersome compared to executing this in SQL -- basically, you're inserting into a table the results of the given query:
+
+~~~sql
+INSERT INTO boynames
+  SELECT name, babies 
+  FROM babynames
+  WHERE sex = 'M';
+~~~
+
+
+In fact, it's easy enough to do everything in a series of queries, including re-creating the tables and inserting the `SELECT` query as data.
+
+~~~sql
+DROP TABLE IF EXISTS boynames;
+DROP TABLE IF EXISTS girlnames;
+CREATE TABLE boynames(
+  "name" VARCHAR,
+  "babies" INTEGER
+);
+CREATE TABLE girlnames(
+  "name" VARCHAR,
+  "babies" INTEGER
+);
+INSERT INTO boynames
+  SELECT name, babies 
+  FROM babynames
+  WHERE sex = 'M';
+INSERT INTO girlnames
+  SELECT name, babies 
+  FROM babynames
+  WHERE sex = 'F';
+~~~
+
+
+Now we can re-do the queries from the [last lesson](/tutorials/babynames-and-college-salaries/inner-left-joins-few-babynames/), but with all of the baby names.
+
+
+
+
+# Finding gender-exclusive names with LEFT JOINS
+
+Let's start with `LEFT JOINS`, which we learned can be used to find when values in one table are not in another. This will be useful in finding all boy-only and girl-only names.
+
+
+## Finding boy-only names
+
+### Start with just a SELECT
+
+If you've already forgotten the `JOIN` syntax, just start with a simple `SELECT`. This query works without having to know about `girlnames`, but it simply returns the data from `boynames`.
+
+~~~sql
+SELECT *
+FROM boynames; 
+~~~
+
+
+### Do a LEFT JOIN
+
+Now we add the `LEFT JOIN` clause. Remember that it comes _after_ the `FROM` clause, i.e. you've already specified which table will be on the "left" side:
+
+~~~sql
+SELECT *
+FROM boynames
+LEFT JOIN girlnames
+  ON boynames.name = girlnames.name;
+~~~
+
+The result will look _very_ similar to an `INNER JOIN`; this is because the most popular boy names (the `boynames` table happens to contain names in order of popularity) were also given to girl babies. 
+
+Scroll down the results of the previous query to see where the gaps exist -- since we didn't bother to specify column names, just remember that the two columns on the __right__ side belong to `girlnames`:
+
+|--------|--------|--------|--------|
+|  name  | babies |  name  | babies |
+|--------|--------|--------|--------|
+| Jack   |   1831 | NULL   | NULL   |
+| Albert |   1826 | Albert | 8      |
+| Louis  |   1818 | Louis  | 15     |
+| Bryce  |   1816 | Bryce  | 31     |
+| Edwin  |   1814 | Edwin  | 15     |
+| Max    |   1791 | NULL   | NULL   |
+| Jimmy  |   1786 | Jimmy  | 17     |
+{:.table-sql}
+
+Apparently, there were a few girls named "Edwin" and "Jimmy", but no girls named "Max" or "Jack".
+
+### WHERE are the NULLs?
+
+OK, now let's use the `WHERE` clause to show only rows in which `girlnames.name` -- or `girlnames.babies` -- have a value of `NULL`:
+
+~~~sql
+SELECT *
+FROM boynames
+LEFT JOIN girlnames
+  ON boynames.name = girlnames.name
+WHERE girlnames.name IS NULL;
+~~~
+
+|---------|--------|------|--------|
+|   name  | babies | name | babies |
+|---------|--------|------|--------|
+| Russell |   2213 | NULL | NULL   |
+| Jack    |   1831 | NULL | NULL   |
+| Max     |   1791 | NULL | NULL   |
+| Clinton |   1499 | NULL | NULL   |
+| Gerald  |   1451 | NULL | NULL   |
+{:.table-sql}
+
+And that's basically how we find the list of boy-only names.
+
+### COUNT the boy-only names
+
+Let's rewrite the query slightly so that we get just a count of boy-only names:
+
+
+~~~sql
+SELECT COUNT(*)
+FROM boynames
+LEFT JOIN girlnames
+  ON boynames.name = girlnames.name
+WHERE girlnames.name IS NULL;
+~~~
+
+The answer:
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  7443      |
+|------------|
+{:.table-sql}
+
+
+
+
+
+
+### COUNT the girl-only names and SUM the babies with those names
+
+See if you can re-write the above query to filter for girl-only names -- remember that the order of tables in `LEFT JOIN` is _absolutely important_.
+
+And when you've figured out how to alter that query, add a `SUM` function on the `girlnames.babies` column -- this effectively counts how many baby girls have girl-only names.
+
+Here are the queries for boy-only and girl-only names, respectively:
+
+<%= content_row_side_by_side(%Q{
+
+##### Boy-only names
+
+~~~sql
+SELECT COUNT(*), SUM(boynames.babies)
+FROM boynames
+LEFT JOIN girlnames
+  ON boynames.name = girlnames.name
+WHERE girlnames.name IS NULL;       
+~~~
+
+|-----------+-----------------------|
+|  COUNT(*) | SUM(boynames.babies)  |
+|-----------+-----------------------|
+|  7443     | 257039                |
+|-----------+-----------------------|
+{:.table-sql}
+
+
+  
+},%Q{
+
+##### Girl-only names
+
+~~~sql
+SELECT COUNT(*), SUM(girlnames.babies)
+FROM girlnames
+LEFT JOIN boynames
+  ON boynames.name = girlnames.name
+WHERE boynames.name IS NULL;       
+~~~
+
+
+|-----------+------------------------|
+|  COUNT(*) | SUM(girlnames.babies)  |
+|-----------+------------------------|
+|  13192    | 494921                 |
+|-----------+------------------------|
+{:.table-sql}
+
+  
+}) %>
+
+
+
+
+That was a quick review of `LEFT JOINS`. There's not much more to it than that. Let's move on to `INNER JOINS` to find the names that were given to both boys _and_ girls. The syntax is the exact same, but we do a little more work to determine how boy- and girl-oriented each name is.
+
+
+# Using INNER JOINS to find names given to both boys and girls
+
+Before we forget about the `babynames` dataset, let's count how many unique names are in `babynames`:
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT COUNT(DISTINCT name)
+FROM babynames;
+~~~
+},%Q{
+
+|----------------------|
+| COUNT(DISTINCT name) |
+|----------------------|
+|                22674 |
+|----------------------|
+{:.table-sql}
+
+}) %>
+
+So how many of those 22,674 names were given to both boys and girls?
+
+We can use the `COUNT` function in combination with an `INNER JOIN`" (we don't need `DISTINCT` because the matched names will be unique -- it's just how it works out in this situation, with a single year of SSA data...)
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT COUNT(*)
+FROM girlnames
+INNER JOIN boynames
+  ON girlnames.name = boynames.name;
+~~~
+}, %Q{
+|------------|
+|  COUNT(*)  |
+|------------|
+|  2039      |
+|------------|
+{:.table-sql}
+
+}) %>
+
+A little less than 10% of the names are given to babies of both sex. Let's see which ones are the most popular among boys and girls, respectively:
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT girlnames.name,
+  girlnames.babies AS girl_babies,
+  boynames.babies AS boy_babies
+FROM girlnames
+INNER JOIN boynames ON
+  girlnames.name = boynames.name
+ORDER BY girl_babies DESC
+LIMIT 5;
+~~~
+  
+},%Q{
+
+|-----------+-------------+-------------|
+|  name     | girl_babies | boy_babies  |
+|-----------+-------------+-------------|
+|  Jessica  | 46466       | 140         |
+|  Ashley   | 45549       | 239         |
+|  Brittany | 36535       | 112         |
+|  Amanda   | 34406       | 96          |
+|  Samantha | 25864       | 58          |
+|-----------+-------------+-------------|
+{:.table-sql}
+
+}) %>
+
+To do the same for boys, we can use the same query, but change the `ORDER BY` clause to sort by `boy_babies`:
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT girlnames.name,
+  girlnames.babies AS girl_babies,
+  boynames.babies AS boy_babies
+FROM girlnames
+INNER JOIN boynames ON
+  girlnames.name = boynames.name
+ORDER BY boy_babies DESC
+LIMIT 5;
+~~~
+},%Q{
+
+|--------------+-------------+-------------|
+|  name        | girl_babies | boy_babies  |
+|--------------+-------------+-------------|
+|  Michael     | 277         | 65274       |
+|  Christopher | 188         | 52323       |
+|  Matthew     | 125         | 44794       |
+|  Joshua      | 166         | 43214       |
+|  Daniel      | 148         | 33809       |
+|--------------+-------------+-------------|
+{:.table-sql}
+  
+}) %>
+
+
+A quick sidenote: it seems a bit strange that, according to this 1990 data from the Social Security Administration, there are nearly 500 boys who were given the names of either Jessica, Ashley, or Brittany. I mean, according to the following query:
+
+~~~sql
+SELECT *
+FROM babynames
+WHERE name = 'Sue';
+~~~
+
+There are only __11__ boys named '__Sue__', despite there being a popular Shel Silverstein and famous Johnny Cash song about a boy named Sue. I know exploring data often challenges one's assumptions, but I kind of _feel_ that we would be hearing a lot more [This American Life](http://www.thisamericanlife.org/) episodes on the childhoods of boys named "Jessica" and girls named "Joshua"...But let's move on for now.
+
+
+## Calculating the most androgynous names
+
+In the previous queries, we found the most popular names that happened to also be given to babies of both sexes. But what about names that have the most purported gender ambivalence, i.e. names given to roughly the same number of boys as girls.
+
+There's a few approaches to this:
+
+### Calculating the absolute difference between number of boys and girls
+
+If 100 boys and 100 girls were given a particular name, then the _difference_ between `boy_babies` and `girl_babies` would be small, i.e. 0. So one way to find most gender-flexible name is to subtract one from the other, and sort by the smallest _absolute number_ of the difference:
+
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT girlnames.name,
+  ABS(girlnames.babies - boynames.babies) AS diff_count,
+  girlnames.babies + boynames.babies AS total_count
+FROM girlnames
+INNER JOIN boynames ON
+  girlnames.name = boynames.name
+ORDER BY diff_count ASC
+LIMIT 5;
+~~~
+},%Q{
+
+|----------+------------+--------------|
+|  name    | diff_count | total_count  |
+|----------+------------+--------------|
+|  Michal  | 0          | 138          |
+|  Layne   | 0          | 136          |
+|  Charley | 0          | 112          |
+|  Adrean  | 0          | 32           |
+|  Yee     | 0          | 32           |
+|----------+------------+--------------|
+{:.table-sql}
+  
+}) %>
+
+
+This is only mildly interesting, as all of those names are pretty rare. Let's use a `WHERE` clause to only include names in which `total_count` is at least __1,000__:
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT girlnames.name,
+  ABS(girlnames.babies - boynames.babies) AS diff_count,
+  girlnames.babies + boynames.babies AS total_count
+FROM girlnames
+INNER JOIN boynames ON
+  girlnames.name = boynames.name
+WHERE total_count >= 1000
+ORDER BY diff_count ASC
+LIMIT 5;
+~~~
+},%Q{
+
+|------------+------------+--------------|
+|  name      | diff_count | total_count  |
+|------------+------------+--------------|
+|  Infant    | 16         | 1176         |
+|  Jessie    | 139        | 2371         |
+|  Ashton    | 195        | 1469         |
+|  Kendall   | 224        | 1508         |
+|  Dominique | 460        | 3430         |
+|------------+------------+--------------|
+{:.table-sql}
+  
+}) %>
+
+Mmmkay...nearly 1,200 mothers named their baby, "Infant"? Either American parents are even stranger than we thought or we have more reason to think that the SSA data isn't 100% what we expect it to be...
+
+<a id="mark-boygirls-total-babies"></a>
+
+### Calculating the ratio of boys/girls versus total babies
+
+Another way to do the calculation is to divide either `boy_babies` or `girl_babies` by `total_babies`, multiply by 100 (to get a round number), then sort by the absolute difference between the ratio and 50, as 50% is what the ratio would be if a name was split evenly between boys and girls.
+
+This is not particularly different in strategy than the previous strategy using `ABS`. But note how the `ABS` function is used in the `ORDER BY` clause -- that's always an option.
+
+Again, we use `WHERE` to limit it to names that have been given to more than 1,000 babies:
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT girlnames.name,
+  girlnames.babies + boynames.babies AS total_count,
+  girlnames.babies * 100.0 / 
+        (girlnames.babies + boynames.babies) AS girl_ratio
+FROM girlnames
+INNER JOIN boynames ON
+  girlnames.name = boynames.name
+WHERE total_count >= 1000
+ORDER BY ABS(50 - girl_ratio) ASC
+LIMIT 5;
+~~~
+},%Q{
+
+|---------+-------------+-------------------|
+|  name   | total_count | girl_ratio        |
+|---------+-------------+-------------------|
+|  Infant | 1176        | 49.3197278911565  |
+|  Taylor | 13830       | 52.4656543745481  |
+|  Jessie | 2371        | 47.0687473639814  |
+|  Casey  | 7391        | 44.1212285211744  |
+|  Ashton | 1469        | 56.6371681415929  |
+|---------+-------------+-------------------|
+{:.table-sql}
+  
+}) %>
+
+Slightly different results because of the way the math works out. 
+
+I bring up this convoluted approach because it's more helpful to calculate the boy/girl ratio of a name for our bigger purpose: creating a lookup table that makes it easy to determine a given name's gender-makeup. In other words, querying this table for `name = 'Daniel'` should return the most likely `gender` for a person of that name, based on the ratio of boy versus girl babies named `'Daniel'`
+
+Let's call this table (for lack of better name): `gendered_names`. 
+
+[We'll create it in the next chapter](/tutorials/babynames-and-college-salaries/creating-gendered-names-table-with-joins).
+
+
+
