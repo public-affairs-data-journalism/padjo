@@ -1,17 +1,22 @@
 <% if tutorial.next_tutorials? %>
-  <div class="next tutorials">
-    <strong>Next tutorials:</strong>
+  <div class="next tutorials card card-block">
+    <h6 class="card-title">Next tutorials</h6>
+
+    <div class="card-text">
      <% tutorial.next_tutorials.each do |t| %>
        <%= described_link_to_resource(t) %>
-    <% end %>
+     <% end %>
+     </div>
   </div>
 <% end %>
 
 <% if tutorial.previous_tutorials? %>
-  <div class="previous tutorials">
-        <strong>Previous tutorials:</strong>
-       <% tutorial.previous_tutorials.each do |t| %>
-        <%= described_link_to_resource(t) %>
-      <% end %>
+  <div class="previous tutorials card card-block">
+      <h6 class="card-title">Previous tutorials</h6>
+       <div class="card-text">
+         <% tutorial.previous_tutorials.each do |t| %>
+          <%= described_link_to_resource(t) %>
+        <% end %>
+      </div>
   </div>
 <% end %>

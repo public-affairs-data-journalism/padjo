@@ -10,6 +10,15 @@ def render_toc(opts = {})
 }
 end
 
+
+def content_row_side_by_side(mk1, mk2)
+
+  col_1 = content_tag(:div, markdownify(mk1), :class => 'col-sm-6')
+  col_2 = content_tag(:div, markdownify(mk2), :class => 'col-sm-6')
+
+  content_tag(:div, col_1 + col_2, :class => 'row')
+end
+
 # def content_tag_markdownify(tag_name, opts = {}, &blk)
 #   txt = markdownify(capture(&blk))
 #   concat content_tag(tag_name, txt, opts)

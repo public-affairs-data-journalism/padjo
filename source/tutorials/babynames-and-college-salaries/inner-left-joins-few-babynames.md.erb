@@ -1,0 +1,801 @@
+---
+title: Learning SQL Inner and Left Joins With a Few Baby Names
+description: |
+  An overview of our strategy for filtering by gender and the concept of splitting and also, joining tables together.
+ranking: 1438
+listed: true
+previous: /tutorials/babynames-and-college-salaries/sql-review-using-babynames-and-college-salaries/
+next: /tutorials/babynames-and-college-salaries/creating-gendered-names-table-with-joins/
+---
+
+
+
+# A small example
+
+
+Pretend that there were only 6 rows in the entire database:
+
+
+|---------|-----|--------|
+|   name  | sex | babies |
+|---------|-----|--------|
+| Maryann | F   |    300 |
+| Taylor  | F   |    220 |
+| Leslie  | F   |    110 |
+| Alyssa  | F   |     30 |
+| Chuck   | M   |    275 |
+| Leslie  | M   |    242 |
+| Taylor  | M   |     95 |
+| Robert  | M   |     22 |
+{:.table-sql}
+
+It's pretty easy to eyeball the 3 different categories of names:
+
+
+
+#### 1. Names given exclusively to girls
+
+<%= content_row_side_by_side(%Q{
+These are all names in which there's a row with `sex = 'F'` but no corresponding row where `sex = 'M'`. In the example given, these exclusively female names are __Maryann__ and __Alyssa__:  
+}, 
+%Q{
+|---------------------------------|-----|--------|
+|               name              | sex | babies |
+|---------------------------------|-----|--------|
+| <span class='hi'>Maryann</span> | F   |    300 |
+| Taylor                          | F   |    220 |
+| Leslie                          | F   |    110 |
+| <span class='hi'>Alyssa</span>  | F   |     30 |
+| Chuck                           | M   |    275 |
+| Leslie                          | M   |    242 |
+| Taylor                          | M   |     95 |
+| Robert                          | M   |     22 |
+{:.table-sql}
+}) %>
+
+
+#### 2. Names given exclusively to boys
+
+<%= content_row_side_by_side(%Q{
+
+Same as above, but for names with `sex = 'M'` but no corresponding record for `sex = 'F'`
+
+In the example given, the exclusively male names are __Chuck__ and __Robert__:  
+
+}, 
+%Q{
+|--------------------------------|-----|--------|
+|              name              | sex | babies |
+|--------------------------------|-----|--------|
+| Maryann                        | F   |    300 |
+| Taylor                         | F   |    220 |
+| Leslie                         | F   |    110 |
+| Alyssa                         | F   |     30 |
+| <span class='hi'>Chuck</span>  | M   |    275 |
+| Leslie                         | M   |    242 |
+| Taylor                         | M   |     95 |
+| <span class='hi'>Robert</span> | M   |     22 |
+{:.table-sql}
+}) %>
+
+
+#### 3. Names given to both boys and girls
+
+
+<%= content_row_side_by_side(%Q{
+
+Finally, we have names that have both records for both possible `sex` values, because the name was given to both baby boys and girls. In the sample set, the overlapping names are __Leslie__ and __Taylor__.
+
+
+}, 
+%Q{
+
+|--------------------------------|-----|--------|
+|              name              | sex | babies |
+|--------------------------------|-----|--------|
+| Maryann                        | F   |    300 |
+| <span class="hi">Taylor</span> | F   |    220 |
+| <span class="hi">Leslie</span> | F   |    110 |
+| Alyssa                         | F   |     30 |
+| Chuck                          | M   |    275 |
+| <span class="hi">Leslie</span> | M   |    242 |
+| <span class="hi">Taylor</span> | M   |     95 |
+| Robert                         | M   |     22 |
+{:.table-sql}
+
+
+}) %>
+
+
+
+
+# Splitting and creating new tables
+
+So how would we write a query to identify those 3 types of names?
+
+To make things simple, let's just create two new tables, named `boynames` and `girlnames` for boy and girl names, respectively. I'll show you how to do it via SQL code, but for now, just read along and pretend you've created your own `boynames` and `girlnames` tables that are similar to the ones described below.
+
+If we're going to have two new tables, named `boynames` and `girlnames`, then there's no need for either table to keep the `sex` column, as the `sex` of each row is implicit in the table's very name. 
+
+<%= content_row_side_by_side(%Q{
+
+Thus, the `boynames` table would be the result of this query against the `babynames` table:
+
+~~~sql
+SELECT name, babies
+FROM babynames
+WHERE sex = 'M';
+~~~
+},%Q{
+
+|--------|--------|
+|  name  | babies |
+|--------|--------|
+| Chuck  |    275 |
+| Leslie |    242 |
+| Taylor |     95 |
+| Robert |     22 |
+{:.table-sql}
+})%>
+
+
+
+<%= content_row_side_by_side(%Q{
+
+And the `girlnames` table would be the result of this query:
+
+~~~sql
+SELECT name, babies
+FROM babynames
+WHERE sex = 'F';
+~~~
+},%Q{
+
+|---------|--------|
+|   name  | babies |
+|---------|--------|
+| Maryann |    300 |
+| Taylor  |    220 |
+| Leslie  |    110 |
+| Alyssa  |     30 |
+{:.table-sql}
+})%>
+
+### Creating fake tables and data, quickly
+
+[In the next lesson](/tutorials/creating-gendered-names-table-with-joins/), we'll learn of a way to send the output of a `SELECT` statement right into a new table, i.e. we'll create and fill the `boynames` and `girlnames` table based off of the real data. 
+
+But for now, you can run the following set of queries to manually insert each row into the `boynames` and `girlnames` tables. It's not pretty, but it works. Don't worry, memorizing this syntax is not worth the trouble:
+
+~~~sql
+CREATE TABLE boynames(
+  "name" VARCHAR,
+  "babies" INTEGER
+);
+
+INSERT INTO 
+  boynames ("name", "babies")
+  VALUES
+    ('Chuck', 275),
+    ('Leslie', 242),
+    ('Taylor', 95),
+    ('Robert', 22);
+
+CREATE TABLE girlnames(
+  "name" VARCHAR,
+  "babies" INTEGER
+);
+INSERT INTO 
+  girlnames ("name", "babies")
+  VALUES
+    ('Maryann', 300),
+    ('Taylor', 220),
+    ('Leslie', 110),
+    ('Alyssa', 30);
+~~~
+
+If you want to try the examples in this lesson, including the queries on the fake sample data, now you can follow along!
+
+
+
+# How to JOIN two tables
+
+The purpose of a `JOIN` query is to bring together two tables. The easiest way to imagine this is taking two separate tables and smashing them together, so that they're side-by-side. If Table A has 10 columns and Table B has 20 columns, the resulting table will be a 30 column monster.
+
+But how does the database know how to sensibly join/smash the tables together? That's what we're about to find out (Hint: the stupid database doesn't do anything until we tell it exactly what to do, as always).
+
+I'll walk through the syntax, one step at a time.
+
+
+## SELECTing the first table
+
+<%= content_row_side_by_side(%Q{
+
+Let's start off with a simple SELECT query that targets the `boynames` table:
+
+
+~~~sql
+SELECT *
+FROM boynames;
+~~~
+
+},%Q{
+
+|--------|--------|
+|  name  | babies |
+|--------|--------|
+| Chuck  |    275 |
+| Leslie |    242 |
+| Taylor |     95 |
+| Robert |     22 |
+{:.table-sql}
+})%>
+
+
+## Adding the INNER JOIN clause
+
+The `JOIN` clause comes after the `FROM` clause (but before the `WHERE`). By default, a `JOIN` is an `INNER`-type of join. I like to be explicit about it so in all my examples, I use `INNER JOIN` even though just `JOIN` will do fine. 
+
+<%= content_row_side_by_side(%Q{
+
+Adding the `INNER JOIN` clause can be as simple as this:
+
+~~~sql
+SELECT *
+FROM boynames
+INNER JOIN girlnames;
+~~~
+
+},%Q{
+
+However, a simple query makes for a simple, nonsensical result:
+
+|---------+--------+---------+---------|
+|  name   | babies | name    | babies  |
+|---------+--------+---------+---------|
+|  Chuck  | 275    | Maryann | 300     |
+|  Chuck  | 275    | Taylor  | 220     |
+|  Chuck  | 275    | Leslie  | 110     |
+|  Chuck  | 275    | Alyssa  | 30      |
+|  Leslie | 242    | Maryann | 300     |
+|  Leslie | 242    | Taylor  | 220     |
+|  Leslie | 242    | Leslie  | 110     |
+|  Leslie | 242    | Alyssa  | 30      |
+|  Taylor | 95     | Maryann | 300     |
+|  Taylor | 95     | Taylor  | 220     |
+|  Taylor | 95     | Leslie  | 110     |
+|  Taylor | 95     | Alyssa  | 30      |
+|  Robert | 22     | Maryann | 300     |
+|  Robert | 22     | Taylor  | 220     |
+|  Robert | 22     | Leslie  | 110     |
+|  Robert | 22     | Alyssa  | 30      |
+|---------+--------+---------+---------|
+{:.table-sql}
+
+})%>
+
+...What happened?
+
+By default, an __INNER JOIN__ will match every row from the first table against every row from the second table. 
+
+- Both the `boysnames` and `girlsnames` tables have __4__ rows each.
+- 4 multiplied by 4 is __16__
+- Hence, the 16 result rows.
+
+We obviously don't want 16 rows. We know from the beginning of this lesson that there are only two shared names: __Leslie__ and __Taylor__.
+
+
+## Doing an inner join based ON a condition
+
+With the `ON` clause, we get to set up a kind of `WHERE`-like filter which specifies the condition for which the rows between two tables should be joined.
+
+But just to make sure it works as promised, if we pass in an _always false_ condition, such as `100 = 42`, then the `JOIN` should not match _any_ rows. Try it out for yourself and see that the result is 0 rows:
+
+~~~sql
+SELECT *
+FROM boynames
+INNER JOIN girlnames
+  ON 100 = 42;
+~~~
+
+And if you give it an _always true_ condition, then all the possible rows will be returned, i.e. 16:
+
+~~~sql
+SELECT *
+FROM boynames
+INNER JOIN girlnames
+  ON 1 = 1;
+~~~
+
+
+Now let's pick a condition that _makes sense_. We want to join `boynames` and `girlnames` __ON__ the _condition_ that their respective `name` columns _are equal_ to each other.
+
+Try to think for yourself what that query looks like. Then look at the result below:
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT *
+FROM boynames
+INNER JOIN girlnames
+  ON boynames.name = girlnames.name;
+~~~
+
+},
+%Q{
+  
+|---------+--------+--------+---------|
+|  name   | babies | name   | babies  |
+|---------+--------+--------+---------|
+|  Leslie | 242    | Leslie | 110     |
+|  Taylor | 95     | Taylor | 220     |
+|---------+--------+--------+---------|
+{:.table-sql}
+
+})%>
+
+
+And that's it! That's an inner join. It doesn't look like much -- and in fact, the result above is downright confusing, but congrats on performing one of the fundamental -- yet, at the same time, painfully-hard-to-figure-out -- power features of SQL.
+
+In the successful query above, we were able to match rows in `boynames` with rows in `girlnames` based on their respective `name` columns. The result is a list of names that exist in each of the separate tables.
+
+That doesn't seem particularly revelatory since the example dataset is two tables of 4 rows each. But the ability to join tables to find commonalities is the same -- and scalable -- across 2 tables of 4,000 rows, or even 40 tables of 1,000,000 rows.
+
+Let's continue with our simple example for now.
+
+## Refining the joined table
+
+Let's examine the previous result:
+
+|---------+--------+--------+---------|
+|  name   | babies | name   | babies  |
+|---------+--------+--------+---------|
+|  Leslie | 242    | Leslie | 110     |
+|  Taylor | 95     | Taylor | 220     |
+|---------+--------+--------+---------|
+{:.table-sql}
+
+As we already knew, __Leslie__ and __Taylor__ were the two names common across both tables. So it makes sense that there are 2 rows.
+
+But why are there __4__ columns? Well, because both tables are 2 columns each. And without further refinement of the `SELECT` statement, the database is happy to respond by just slapping all the columns together, even if they are redundant.
+
+### Removing redundant columns
+
+Since we joined on the condition of the two `name` columns being equivalent, we don't need to see both of them in the result. So let's remove the `*` in the previous query and manually specify the columns:
+
+~~~sql
+SELECT name, babies
+FROM boynames
+INNER JOIN girlnames
+  ON boynames.name = girlnames.name;
+~~~
+
+However, running the above query will result in this error:
+
+    ambiguous column name: name: SELECT name, babies
+
+### Removing ambiguity
+
+Both tables have `name` and `babies` columns, so the database doesn't know what to return. We can fix this by prefixing the column names with a specific table. 
+
+Again, to hammer home the point, it doesn't matter whether we choose the `name` column from `boynames` or `girlnames` -- by definition of the `JOIN` condition, they are the same. 
+
+Let's keep things simple by choosing the `boynames` versions of the columns:
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT boynames.name, 
+       boynames.babies
+FROM boynames
+INNER JOIN girlnames
+  ON boynames.name = girlnames.name;
+~~~
+
+},
+%Q{
+
+|---------+---------|
+|  name   | babies  |
+|---------+---------|
+|  Leslie | 242     |
+|  Taylor | 95      |
+|---------+---------|
+{:.table-sql}
+
+})%>
+
+OK, no errors here. But the result table...looks exactly as if it came only from the `boynames` table. I mean, it's not _nothing_ -- again, these two rows are the result of that JOIN. Even if we didn't copy any columns from the `girlnames` table, we still have a list of names in `boynames` that exist in `girlnames`.
+
+But we can do better. Let's include the `girlnames.babies` column:
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT boynames.name, 
+       boynames.babies,
+       girlnames.babies
+FROM boynames
+INNER JOIN girlnames
+  ON boynames.name = girlnames.name;
+~~~
+
+},
+%Q{
+
+|---------+--------+---------|
+|  name   | babies | babies  |
+|---------+--------+---------|
+|  Leslie | 242    | 110     |
+|  Taylor | 95     | 220     |
+|---------+--------+---------|
+{:.table-sql}
+
+})%>
+
+That's better. The right-most column is from `girlnames`. But [let's use column aliases](/tutorials/sql-basics/aliasing-values-in-sql/) to make things even clearer:
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT boynames.name, 
+       boynames.babies AS boy_babies,
+       girlnames.babies AS girl_babies
+FROM boynames
+INNER JOIN girlnames
+  ON boynames.name = girlnames.name;
+~~~
+
+},
+%Q{
+
+|---------+------------+--------------|
+|  name   | boy_babies | girl_babies  |
+|---------+------------+--------------|
+|  Leslie | 242        | 110          |
+|  Taylor | 95         | 220          |
+|---------+------------+--------------|
+{:.table-sql}
+
+})%>
+
+
+Much better!
+
+## Joined tables are like regular tables
+
+Does the result of all this JOINing action look like any other regular data table result? That's because it basically is. Which means we can stack it with all the other clauses that make SQL queries so terrifying to outsiders.
+
+### Calculate the total babies per name
+
+The total babies for each name is simply the sum of `boyname.babies` and `girlname.babies`:
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT boynames.name, 
+       boynames.babies AS boy_babies,
+       girlnames.babies AS girl_babies,
+       (boynames.babies + girlnames.babies) AS total_babies
+FROM boynames
+INNER JOIN girlnames
+  ON boynames.name = girlnames.name;
+~~~
+
+},
+%Q{
+
+|---------+------------+-------------+---------------|
+|  name   | boy_babies | girl_babies | total_babies  |
+|---------+------------+-------------+---------------|
+|  Leslie | 242        | 110         | 352           |
+|  Taylor | 95         | 220         | 315           |
+|---------+------------+-------------+---------------|
+{:.table-sql}
+
+}) %>
+
+### Calculate the boy ratio of each name
+
+The "boy ratio" is simply the number of boys given a name divided by the `total_babies`. A number over `50%` means the name appears to be more male-oriented:
+
+(unfortunately we can't refer to aliases within the `SELECT` statement; hence the repetition)
+
+~~~sql
+SELECT boynames.name, 
+       boynames.babies AS boy_babies,
+       girlnames.babies AS girl_babies,
+       (boynames.babies + girlnames.babies) AS total_babies,
+       (boynames.babies * 100) / 
+              (boynames.babies + girlnames.babies) AS boy_ratio
+FROM boynames
+INNER JOIN girlnames
+  ON boynames.name = girlnames.name;
+~~~
+
+
+|---------+------------+-------------+--------------+------------|
+|  name   | boy_babies | girl_babies | total_babies | boy_ratio  |
+|---------+------------+-------------+--------------+------------|
+|  Leslie | 242        | 110         | 352          | 68         |
+|  Taylor | 95         | 220         | 315          | 30         |
+|---------+------------+-------------+--------------+------------|
+{:.table-sql}
+
+
+
+
+And of course, we can add `WHERE`, `LIMIT`, `GROUP BY`, and `ORDER BY` clauses. But let's not get carried away. For now, it's worth looking at how the `WHERE` clause can be used to filter the results even further:
+
+~~~sql
+SELECT boynames.name, 
+       boynames.babies AS boy_babies,
+       girlnames.babies AS girl_babies,
+       (boynames.babies + girlnames.babies) AS total_babies,
+       (boynames.babies * 100) / 
+              (boynames.babies + girlnames.babies) AS boy_ratio
+FROM boynames
+INNER JOIN girlnames
+  ON boynames.name = girlnames.name
+WHERE boy_ratio < 50;
+~~~
+
+
+|---------+------------+-------------+--------------+------------|
+|  name   | boy_babies | girl_babies | total_babies | boy_ratio  |
+|---------+------------+-------------+--------------+------------|
+|  Taylor | 95         | 220         | 315          | 30         |
+|---------+------------+-------------+--------------+------------|
+{:.table-sql}
+
+
+### The commutative property of INNER JOINS
+
+One more thing. Did it matter that we started from the `boynames` table and joined it to the `girlnames` table? What if we switched the order?
+
+Below I show the original `INNER JOIN` query in which we started _from_ `boynames`, then joined `girlnames`. Then I show the query modified so that we start _from_ `girlnames`, then joined `boynames`. Notice how little I changed in the rest of the query. And notice how the results aren't affected at all.
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT boynames.name, 
+       boynames.babies AS boy_babies,
+       girlnames.babies AS girl_babies
+FROM boynames
+INNER JOIN girlnames
+  ON boynames.name = girlnames.name;
+~~~
+
+},
+%Q{
+
+~~~sql
+SELECT boynames.name,
+    boynames.babies AS boy_babies,
+        girlnames.babies AS girl_babies
+FROM girlnames
+INNER JOIN boynames
+  ON boynames.name = girlnames.name;       
+~~~
+
+})%>
+
+Inner joins are kind of like multiplication, in that `2 * 10` is equivalent to `10 * 2`. Also, if your join condition is missing, you end up with a result with the number of rows equal to the number when multiplying the number of rows the two tables you attempted to join.
+
+In other words, don't forget your join condition!
+
+
+# The LEFT Join
+
+But what about all the other names that _weren't_ common to both tables?
+
+The `INNER JOIN` isn't designed to select those records. Instead, we need to do what's called a __LEFT JOIN__. The `LEFT` keyword refers to thinking of things left-to-right, i.e. the table that you start _from_ is on the __left__ side of the equation. The table you then attempt to _join_ is on the __right__ side of the equation.
+
+The upshot is that a __left join__ will create a result that _prioritizes_ the "left"-side table; this is easier to see via demonstration than to read about. The other upshot is that, unlike __inner joins__, the order of operations _absolutely matters_.
+
+
+## The LEFT JOIN syntax
+
+While the `LEFT JOIN` is even less intuitive than the plain ol' `INNER JOIN`, at least the syntax is the same. We still have to supply a relevant `ON` condition. Just replace `INNER` with `LEFT`.
+
+Let's use the query we finished up with in the previous section, except that we will start _from_ the `girlnames` and then join the `boynames` table. Everything about the query will be the same except that, again, we'll do a `LEFT JOIN` instead of an `INNER JOIN`:
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT  girlnames.name,
+        boynames.babies AS boy_babies,
+        girlnames.babies AS girl_babies
+FROM girlnames
+LEFT JOIN boynames
+  ON boynames.name = girlnames.name;       
+~~~
+
+},
+%Q{
+
+|---------|------------|-------------|
+|   name  | boy_babies | girl_babies |
+|---------|------------|-------------|
+| Maryann | NULL       |         300 |
+| Taylor  | 95         |         220 |
+| Leslie  | 242        |         110 |
+| Alyssa  | NULL       |          30 |
+|---------|------------|-------------|
+{:.table-sql}
+
+})%>
+
+
+So what happened? Notice that all the names (and baby counts) that exist in `girlnames` are in the result table. This of course includes the rows for the names `'Taylor'` and `'Leslie'`, which are exactly as they were when executing the `INNER JOIN`.
+
+But take notice of the girl-only names, `'Maryann'` and `'Alyssa'`. Their respective values for the `boy_babies` column is `NULL`. Why? Because neither of these names existed in the `boy_babies` table -- thus, there is no _sensical_ value for `boy_babies` given the names Maryann and Alyssa.
+
+
+## Looking for NULL in all the right places
+
+_Whoop-tee-doo_, you might think, _the difference between the result of this LEFT JOIN and the INNER JOIN is just one WHERE clause away_:
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT  girlnames.name,
+        boynames.babies AS boy_babies,
+        girlnames.babies AS girl_babies
+FROM girlnames
+LEFT JOIN boynames
+  ON boynames.name = girlnames.name
+WHERE boy_babies IS NOT NULL;       
+~~~
+
+},
+%Q{
+
+|---------+------------+--------------|
+|  name   | boy_babies | girl_babies  |
+|---------+------------+--------------|
+|  Taylor | 95         | 220          |
+|  Leslie | 242        | 110          |
+|---------+------------+--------------|
+{:.table-sql}
+
+})%>
+
+
+So if we end up pretty much in the same place as the `INNER JOIN` (actually, there are a few differences, though none worth noting right now), then why go through the mental hurdle of learning a new type of JOIN?
+
+Let's redo that last query, except _reverse_ the sentiment of the `WHERE` condition. In other words, let's filter to _include_ rows in which `boy_babies IS NULL`:
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT  girlnames.name,
+        boynames.babies AS boy_babies,
+        girlnames.babies AS girl_babies
+FROM girlnames
+LEFT JOIN boynames
+  ON boynames.name = girlnames.name
+WHERE boy_babies IS NULL;       
+~~~
+
+},
+%Q{
+
+|---------|------------|-------------|
+|   name  | boy_babies | girl_babies |
+|---------|------------|-------------|
+| Maryann | NULL       |         300 |
+| Alyssa  | NULL       |          30 |
+|---------|------------|-------------|
+{:.table-sql}
+
+})%>
+
+
+By actually _seeking_ for `NULL` values, we were able to filter the results to show the girl-exclusive names.
+
+So what happens if we do a `LEFT JOIN`, but going from `boynames` to `girlnames`? 
+
+
+
+  
+
+<%= content_row_side_by_side(%Q{
+
+Besides changing the order of the tables, change the `WHERE` clause to look at `girl_babies`:
+
+~~~sql
+SELECT  girlnames.name,
+        boynames.babies AS boy_babies,
+        girlnames.babies AS girl_babies
+FROM boynames
+LEFT JOIN girlnames
+  ON boynames.name = girlnames.name
+WHERE girl_babies IS NULL;       
+~~~
+
+},
+%Q{
+
+
+|-------+------------+--------------|
+|  name | boy_babies | girl_babies  |
+|-------+------------+--------------|
+|       | 275        |              |
+|       | 22         |              |
+|-------+------------+--------------|
+{:.table-sql}
+
+})%>
+
+Oops. Since `name` is derived from `girlnames`, this value is `NULL` where `girl_babies` is `NULL`. 
+
+
+
+<%= content_row_side_by_side(%Q{
+
+We can fix it by switching out `girlnames.name`. 
+
+~~~sql
+SELECT  boynames.name,
+        boynames.babies AS boy_babies,
+        girlnames.babies AS girl_babies
+FROM boynames
+LEFT JOIN girlnames
+  ON boynames.name = girlnames.name
+WHERE girl_babies IS NULL;       
+~~~
+
+},
+
+
+%Q{
+
+And as expected, the result will contain a list of boy-exclusive names:
+
+|---------+------------+--------------|
+|  name   | boy_babies | girl_babies  |
+|---------+------------+--------------|
+|  Chuck  | 275        |              |
+|  Robert | 22         |              |
+|---------+------------+--------------|
+{:.table-sql}
+
+})%>
+
+
+
+
+# Two joins, for two kinds of problems
+
+There are other kinds of joins -- [Jeff Atwood at Coding Horror has a popular diagram illustrating them](http://blog.codinghorror.com/a-visual-explanation-of-sql-joins/). But in my book, INNER JOIN and LEFT JOIN cover virtually all of the kinds of interesting journalistic fact-finding and investigative situations that I can think of.
+
+To reiterate:
+
+With __inner joins__, we can quickly see which names on one list show up on another. This is probably the most everyday kind of journalistic inquiry: think of having a list of politicians in one hand, and in the other, a guest list for an industry-sponsored party extravaganza. Or any other kind of less-fun lists.
+
+I don't frequently hear of __left joins__ being used in a journalistic query. But I think the opportunity is there. If you have a list of important people from ten years ago. And that same list, updated for today, wouldn't it be interesting to find out who is on one list and not the other? If the decade-old list is on the "left" side, a left-join query gets you people who _were_ VIPs but apparently aren't so today. And if the new list is on the left side, then a left-join finds the VIPs who, 10 years ago, were nobodies.
+
+Either way, think of how difficult it is to compare a list of even 20 names. With SQL, it won't matter if the lists have 2,000,000 names.
+
+
+
+In the [next lesson](/tutorials/creating-gendered-names-table-with-joins/), we go back to the original `babynames` table -- with all the actual names and numbers -- and go through the steps to create the `boynames` and `girlnames` tables.
+
+Then we'll practice INNER and LEFT joins on real data, and find some interesting facts about androgynous baby names.
+
+
+
+
+
+
+
+
+
+
