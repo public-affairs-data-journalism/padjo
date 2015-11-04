@@ -21,7 +21,7 @@ FROM babynames
 WHERE name = 'Dakota'
 ORDER BY babies DESC;
 ~~~
-}), %Q{
+}, %Q{
 
 |---------+-----+---------|
 |  name   | sex | babies  |
@@ -439,12 +439,6 @@ As before, in the `INNER JOIN` example, see if you can rewrite the above query t
 
 
 
-# All together
-
-This has been a long walkthrough, so let's review what we need to do:
-
-- Create a new table named `gendered_names` with columns for `name`, `gender`, `ratio`, and `total_babies`
-
 
 
 
@@ -528,7 +522,7 @@ SELECT
 FROM boynames
 INNER JOIN girlnames
   ON boynames.name = girlnames.name
-WHERE girlnames.babies >= boynames.babies ;  
+WHERE girlnames.babies >= boynames.babies;  
 
 
 UPDATE gendered_names
