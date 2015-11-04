@@ -396,7 +396,7 @@ This query returns __7,443__ boy names that were not given to girl babies.
 ## Create a table
 
 ~~~sql
-CREATE TABLE gendered_names(
+CREATE TABLE genderizer(
   "name" VARCHAR,
   "gender" CHAR,
   "ratio" INTEGER,
@@ -422,7 +422,7 @@ WHERE boys.name IS NULL;
 Then prepend the `INSERT` statement:
 
 ~~~sql
-INSERT INTO gendered_names
+INSERT INTO genderizer
   SELECT girls.name, 
     'F' AS gender,
     100 AS ratio,
@@ -436,7 +436,7 @@ INSERT INTO gendered_names
 Let's do exclusive boy names. Make `boys` the "left" table, i.e. in the `FROM` clause. And change the `WHERE` clause accordingly:
 
 ~~~sql
-INSERT INTO gendered_names
+INSERT INTO genderizer
   SELECT boys.name, 
     'M' AS gender,
     100 AS ratio,
@@ -502,7 +502,7 @@ Do the inserts:
 
 
 ~~~sql
-INSERT INTO gendered_names
+INSERT INTO genderizer
   SELECT 
     girls.name AS name, 
     'F' AS gender,
@@ -515,7 +515,7 @@ INSERT INTO gendered_names
 ~~~
 
 ~~~sql
-INSERT INTO gendered_names
+INSERT INTO genderizer
   SELECT 
     boys.name AS name, 
     'M' AS gender,
@@ -528,24 +528,24 @@ INSERT INTO gendered_names
 ~~~
 
 
-The total rows in `gendered_names` should be:
+The total rows in `genderizer` should be:
 
 ~~~sql
 SELECT
   (SELECT COUNT(*) FROM babynames) AS all_names_count,
-  (SELECT COUNT(*) FROM gendered_names) as gendered_names_count,
+  (SELECT COUNT(*) FROM genderizer) as genderizer_count,
   (SELECT COUNT(*) FROM boys) AS boys_count,
   (SELECT COUNT(*) FROM girls) AS girls_count;
 ~~~
 
 |------------------+----------------------+------------+--------------|
-|  all_names_count | gendered_names_count | boys_count | girls_count  |
+|  all_names_count | genderizer_count | boys_count | girls_count  |
 |------------------+----------------------+------------+--------------|
 |  24713           | 22674                | 9482       | 15231        |
 |------------------+----------------------+------------+--------------|
 {:.table-sql}
 
-Note that `boys_count` + `girls_count` is equal to `all_names_count` but is _less than_ the `gendered_names_count` because overlapping names are only counted once.
+Note that `boys_count` + `girls_count` is equal to `all_names_count` but is _less than_ the `genderizer_count` because overlapping names are only counted once.
 
 
 How many names are mostly male or female?
@@ -553,7 +553,7 @@ How many names are mostly male or female?
 
 ~~~sql
 SELECT COUNT(*) 
-FROM gendered_names
+FROM genderizer
 WHERE ratio >= 90;
 ~~~
 
@@ -574,7 +574,7 @@ Let's do a quick histogram:
 SELECT ratio,
   COUNT(*) AS names_count,
   SUM(total) AS babies_count
-FROM gendered_names
+FROM genderizer
 GROUP BY ratio
 ORDER BY ratio;
 ~~~
@@ -598,7 +598,7 @@ SELECT
   ((ratio / 10) * 10) as ratio_group,
   COUNT(*) AS names_count,
   SUM(total) AS babies_count
-FROM gendered_names
+FROM genderizer
 GROUP BY ratio_group
 ORDER BY ratio_group;
 ~~~
@@ -622,7 +622,7 @@ Mostly female names:
 
 ~~~sql
 SELECT * 
-FROM gendered_names
+FROM genderizer
 WHERE 
    ratio BETWEEN 60 AND 80 
    AND gender = 'F'
@@ -646,7 +646,7 @@ Mostly male names:
 
 ~~~sql
 SELECT * 
-FROM gendered_names
+FROM genderizer
 WHERE 
    ratio BETWEEN 60 AND 80 
    AND gender = 'M'
@@ -680,8 +680,8 @@ SELECT gender,  ClassTitle,
 COUNT(*), AVG(AnnualSalary)
 FROM florida_u_salaries
 INNER JOIN
-  gendered_names
-WHERE FirstName = UPPER(gendered_names.name) 
+  genderizer
+WHERE FirstName = UPPER(genderizer.name) 
 AND ClassTitle LIKE '%PROFESSOR%'
 
 GROUP BY gender, ClassTitle
@@ -694,8 +694,8 @@ SELECT gender,
 florida_u_salaries.*
 FROM florida_u_salaries
 INNER JOIN
-  gendered_names
-WHERE FirstName = UPPER(gendered_names.name) 
+  genderizer
+WHERE FirstName = UPPER(genderizer.name) 
 ORDER BY CAST(AnnualSalary AS INTEGER) DESC
 LIMIT 10;
 ~~~
@@ -710,8 +710,8 @@ FROM
 florida_u_salaries.*
 FROM florida_u_salaries
 INNER JOIN
-  gendered_names
-WHERE FirstName = UPPER(gendered_names.name) 
+  genderizer
+WHERE FirstName = UPPER(genderizer.name) 
 ORDER BY CAST(AnnualSalary AS INTEGER) DESC
 LIMIT 100) AS x
 GROUP BY x.gender

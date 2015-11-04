@@ -1,11 +1,11 @@
 ---
-title: Using SQL Joins to Analyze a Year's Worth of Baby Names and Gender Trends 
+title: Using SQL Joins to Analyze a Year of Baby Names and Gender Trends 
 description: |
   A walkthrough on how to create and fill new tables, and then a review of INNER and LEFT joins.
 ranking: 1442
 listed: true
 previous: /tutorials/babynames-and-college-salaries/inner-left-joins-few-babynames/
-next: /tutorials/babynames-and-college-salaries/creating-gendered-names-table-with-joins
+next: /tutorials/babynames-and-college-salaries/creating-genderizer-table-with-joins
 ---
 
 This [lesson is effectively a review of the last lesson](/tutorials/babynames-and-college-salaries/inner-left-joins-few-babynames/), in which we practiced `INNER JOINS` and `LEFT JOINS` on a very, very small version of the `babynames` table.
@@ -501,13 +501,22 @@ LIMIT 5;
   
 }) %>
 
-Slightly different results because of the way the math works out. 
+The resulting names are slightly different because of how this _ratio_ is perhaps a more fine-grained tool for measuring gender-neutrality of a name.
 
-I bring up this convoluted approach because it's more helpful to calculate the boy/girl ratio of a name for our bigger purpose: creating a lookup table that makes it easy to determine a given name's gender-makeup. In other words, querying this table for `name = 'Daniel'` should return the most likely `gender` for a person of that name, based on the ratio of boy versus girl babies named `'Daniel'`
+I bring up this convoluted approach because calculating this `ratio` -- i.e the ratio of male/female babies that have a given name -- might lead into creating a simplified way to predict gender based on name.
 
-Let's call this table (for lack of better name): `gendered_names`. 
+Imagine a table in which this query returned a single, simple answer:
 
-[We'll create it in the next chapter](/tutorials/babynames-and-college-salaries/creating-gendered-names-table-with-joins).
+~~~sql
+SELECT gender
+FROM imagined_table
+WHERE name = 'Dakota';
+~~~
+
+For lack of better name, I'll name this table, `genderizer`. 
+
+Let's try to [build it in the next tutorial]((/tutorials/babynames-and-college-salaries/creating-genderizer-table-with-joins).
+
 
 
 
