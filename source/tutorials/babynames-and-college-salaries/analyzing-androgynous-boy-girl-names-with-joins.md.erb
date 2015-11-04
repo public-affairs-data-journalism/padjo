@@ -245,6 +245,24 @@ Before we forget about the `babynames` dataset, let's count how many unique name
 <%= content_row_side_by_side(%Q{
 
 ~~~sql
+SELECT SUM(babies)
+FROM babynames;
+~~~
+},%Q{
+
+|---------------|
+|  SUM(babies)  |
+|---------------|
+|  3950252      |
+{:.table-sql}
+
+}) %>
+
+And let's count how many babies total are in the `babynames` data:
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
 SELECT COUNT(DISTINCT name)
 FROM babynames;
 ~~~
@@ -256,8 +274,9 @@ FROM babynames;
 |                22674 |
 |----------------------|
 {:.table-sql}
-
 }) %>
+
+
 
 So how many of those 22,674 names were given to both boys and girls?
 
@@ -281,7 +300,33 @@ INNER JOIN boynames
 
 }) %>
 
-A little less than 10% of the names are given to babies of both sex. Let's see which ones are the most popular among boys and girls, respectively:
+A little less than 10% of the total number of unique names are given to babies of both sex.
+
+But how many _total_ babies (i.e. boys + girls) have these names?
+
+~~~sql
+SELECT 
+  SUM(girlnames.babies + boynames.babies) AS total_babies
+FROM girlnames
+INNER JOIN boynames
+  ON girlnames.name = boynames.name;
+~~~
+}, %Q{
+|----------------|
+|  total_babies  |
+|----------------|
+|  3198292       |
+{:.table-sql}
+}) %>
+
+Divide `3,198,292` by the total number of babies, `3,950,252`, and we see that __81%__ of all babies were given these boy/girl names.
+
+Another way to phrase this is that it's relatively rare for a baby to have a boy- or girl-only name.
+
+
+## Listing the most popular of boy/girl names
+
+Of these 2,000+ boy/girl names, let's see which ones are the most popular among boys and girls, respectively:
 
 <%= content_row_side_by_side(%Q{
 ~~~sql
@@ -307,7 +352,6 @@ LIMIT 5;
 |  Samantha | 25864       | 58          |
 |-----------+-------------+-------------|
 {:.table-sql}
-
 }) %>
 
 To do the same for boys, we can use the same query, but change the `ORDER BY` clause to sort by `boy_babies`:
