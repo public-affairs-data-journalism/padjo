@@ -1,0 +1,123 @@
+
+
+In Florida's public university system:
+
+
+
+And then a few meta questions:
+
+- How many employees are not included in our attempted gender classification?
+- How much of an impact do these excluded records have when calculating number of employed men and women and aggregate salaries?
+- Of the employees for whom gender is predicted, how many have names in which the majority gender has a `ratio` of _less than_ 90%?
+- Same query as above, except count the number of employees who have names that, in 1990, were recorded as being given to fewer than 50 babies.
+- How many names are excluded from our attempted gender classification because of possibly-easy-to-fix technical differences in the data?
+
+
+
+ all full-time professors
+
+
+
+What is the breakdown of men versus women in the highest
+
+
+Which University in the 
+
+
+
+
+
+
+selecting records based on some common names that are likely to exist in the `florida_positions` database. 
+
+
+~~~sql
+SELECT FirstName, gender
+FROM florida_positions
+INNER JOIN genderizer
+  ON genderizer.name = FirstName;
+~~~
+
+How many names did we ignore?
+
+~~~sql
+SELECT FirstName, COUNT(*) AS ct
+FROM florida_positions
+LEFT JOIN genderizer
+  ON genderizer.name = FirstName
+WHERE gender IS NULL
+GROUP BY FirstName
+ORDER BY ct DESC;
+~~~
+
+How many names make a lot of money?
+
+~~~sql
+SELECT FirstName, money_amount
+FROM florida_positions
+LEFT JOIN genderizer
+  ON genderizer.name = FirstName
+WHERE gender IS NULL
+ORDER BY money_amount DESC;
+~~~
+
+What percentage of the total revenue?
+
+~~~sql
+SELECT SUM(money_amount)
+FROM florida_positions
+LEFT JOIN genderizer
+  ON genderizer.name = FirstName
+WHERE gender IS NOT NULL
+ORDER BY money_amount DESC;
+~~~
+
+Names with hyphens or spaces:
+
+~~~sql
+SELECT * 
+FROM florida_positions
+WHERE FirstName LIKE '% %'
+  OR FirstName LIKE '%-%';
+~~~
+
+Number of top positions, regardless of missing names
+
+~~~sql
+SELECT gender, total_babies,
+  FirstName, MI,
+  LastName, ClassTitle, money_amount
+FROM florida_positions
+LEFT JOIN genderizer
+  ON genderizer.name = FirstName 
+ORDER BY money_amount DESC
+LIMIT 100;
+~~~
+
+
+This is complicated...
+
+~~~sql
+SELECT gender, COUNT(*)
+FROM 
+  (SELECT gender
+    FROM florida_positions
+    LEFT JOIN genderizer
+      ON genderizer.name = FirstName 
+    ORDER BY money_amount DESC
+    LIMIT 100)
+GROUP BY gender;
+~~~
+
+
+~~~sql
+SELECT gender, COUNT(*)
+FROM 
+  (SELECT gender
+    FROM florida_positions
+    LEFT JOIN genderizer
+      ON genderizer.name = FirstName 
+    ORDER BY money_amount DESC
+    LIMIT 1000)
+GROUP BY gender;
+~~~

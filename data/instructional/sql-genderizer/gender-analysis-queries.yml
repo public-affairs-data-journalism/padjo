@@ -1,0 +1,183 @@
+- title: "How many men versus women are employed by the Florida public university system?"
+  query: |
+    SELECT gender, COUNT(*)
+    FROM florida_positions
+    INNER JOIN genderizer
+      ON
+        florida_positions.FirstName = genderizer.name
+    GROUP BY gender;
+  result: |
+    |---------+-----------|
+    |  gender | COUNT(*)  |
+    |---------+-----------|
+    |  F      | 31800     |
+    |  M      | 29592     |
+    |---------+-----------|
+
+
+
+
+
+
+
+
+
+- title: "How many men versus women earn more than $250,000 in annual salary?"
+  query: |
+    SELECT gender, COUNT(*)
+    FROM florida_positions
+    INNER JOIN genderizer
+      ON
+        florida_positions.FirstName = genderizer.name
+    WHERE AnnualSalary > 250000
+    GROUP BY gender;
+  result: |
+    |---------+-----------|
+    |  gender | COUNT(*)  |
+    |---------+-----------|
+    |  F      | 3868      |
+    |  M      | 4647      |
+    |---------+-----------|
+
+
+- title: "Of the 1,000 highest-paid employees, what is the breakdown between men and women?"
+  query: |
+    SELECT gender, COUNT(*)
+    FROM genderizer
+    INNER JOIN (SELECT FirstName
+                FROM florida_positions
+                WHERE EmployeeType = 'SALARIED'
+                ORDER BY AnnualSalary DESC
+                LIMIT 1000)
+      AS top_salaries
+      ON top_salaries.FirstName = genderizer.name
+    GROUP BY gender;
+  result: |
+    |---------+-----------|
+    |  gender | COUNT(*)  |
+    |---------+-----------|
+    |  F      | 198       |
+    |  M      | 693       |
+    |---------+-----------|
+
+
+
+
+
+
+
+- title: "How many men versus women are employed as salaried professors in Florida's public universities?"
+
+  query: |
+    SELECT gender, COUNT(*)
+    FROM florida_positions
+    INNER JOIN genderizer
+      ON
+        florida_positions.FirstName = genderizer.name
+    WHERE ClassCode IN (9001, 9002, 9003, 9006, 9007)
+      AND EmployeeType = 'SALARIED'
+    GROUP BY gender;
+
+  result: |
+    |---------+-----------|
+    |  gender | COUNT(*)  |
+    |---------+-----------|
+    |  F      | 5899      |
+    |  M      | 9615      |
+    |---------+-----------|
+
+
+  description: |
+    Let's examine the different variations of 'PROFESSOR':
+
+          SELECT ClassTitle,
+            ClassCode,
+            COUNT(*) AS ct
+          FROM florida_positions
+          WHERE ClassTitle LIKE '%PROFESSOR%'
+            AND EmployeeType = 'SALARIED'
+          GROUP BY ClassTitle, ClassCode
+          ORDER BY ClassCode ASC, ct DESC;
+
+    This query results in:
+
+    |----------------------------------------+-----------+-------|
+    |  ClassTitle                            | ClassCode | ct    |
+    |----------------------------------------+-----------+-------|
+    |  PROFESSOR                             | 9001      | 6289  |
+    |  ASSOCIATE PROFESSOR                   | 9002      | 5546  |
+    |  ASSOC PROFESSOR                       | 9002      | 2     |
+    |  VISITING ASSOCIATE PROFESSOR          | 9002      | 1     |
+    |  ASSISTANT PROFESSOR                   | 9003      | 6231  |
+    |  VISITING ASSISTANT PROFESSOR          | 9003      | 1     |
+    |  GRADUATE RESEARCH PROFESSOR           | 9006      | 19    |
+    |  DISTINGUISHED PROFESSOR               | 9007      | 284   |
+    |  UNIVERSITY SCHOOL PROFESSOR           | 9016      | 2     |
+    |  UNIVERSITY SCHOOL ASSOCIATE PROFESSOR | 9017      | 10    |
+    |  UNIVERSITY SCHOOL ASSISTANT PROFESSOR | 9018      | 63    |
+    |  DEAN/ASSOCIATE PROFESSOR              | D102      | 1     |
+    |  PROVOST/ASSOC. PROFESSOR              | P102      | 1     |
+    |----------------------------------------+-----------+-------|
+    {:.table-sql}
+
+    Some of these titles may not fit what we intend to count. What is a `'UNIVERSITY SCHOOL ASSISTANT PROFESSOR'`, for instance? Is it worth including people who are professors but have a different primary role at the university, such as `'DEAN/ASSOCIATE PROFESSOR'`. The "correct" answer, if there is one, isn't unambiguous, so you may choose a different filter than I do. However, I think it's safe to say that we want to include, at the very least, jobs with a `ClassCode` from 9001 to 9003.
+
+
+
+
+- title: "List the universities with the number of professors, the average, minimum, and maximum salary for professors, sorted in descending order of the average salary?"
+  query: |
+    SELECT University,
+        COUNT(*) AS prof_count,
+        ROUND(AVG(total_salary)) AS avg_salary,
+        MIN(total_salary) AS min_salary,
+        MAX(total_salary) AS max_salary
+    FROM (
+            SELECT University,
+              PositionNumber,
+              LastName,
+              SUM(AnnualSalary) AS total_salary
+            FROM florida_positions
+            WHERE ClassCode IN (9001, 9002, 9003, 9006, 9007)
+              AND EmployeeType = 'SALARIED'
+            GROUP BY
+              University, PositionNumber, LastName
+          ) AS professor_salaries
+    GROUP BY University
+    ORDER BY avg_salary;
+
+  result: |
+    |-------------+------------+------------+------------+-------------|
+    |  University | prof_count | avg_salary | min_salary | max_salary  |
+    |-------------+------------+------------+------------+-------------|
+    |  UF         | 4693       | 124237.0   | 100        | 1590181     |
+    |  FIU        | 1033       | 112160.0   | 15989      | 539537      |
+    |  UCF        | 970        | 111041.0   | 2742       | 541402      |
+    |  USF        | 1785       | 103984.0   | 1072       | 482371      |
+    |  FAU        | 697        | 96907.0    | 16880      | 463726      |
+    |  FSU        | 1420       | 90757.0    | 601        | 450000      |
+    |  FAMU       | 493        | 89791.0    | 6444       | 425000      |
+    |  FPU        | 26         | 88231.0    | 20000      | 385000      |
+    |  UWF        | 258        | 85027.0    | 45000      | 310750      |
+    |  UNF        | 460        | 80669.0    | 10000      | 293607      |
+    |  FGCU       | 351        | 78696.0    | 1000       | 270000      |
+    |  NCF        | 76         | 72287.0    | 25500      | 195866      |
+    |-------------+------------+------------+------------+-------------|
+
+
+
+- title: "How many men versus women are in positions of leadership?"
+
+  description: |
+    This is another question that can have multiple answers depending on what you consider a "leadership" position to be. As we've seen already, there are plenty of variations on `'PROFESSOR'` alone.
+
+    Here's some sample approaches to discovering how the state of Florida describes a leadership position for its universities:
+
+    ##### The job titles of the people who make the most
+
+    ##### The job titles of the people with `DEAN` or `PROVOST` or `VP` or `PRESIDENT`
+
+    ##### Job titles
+
+
+

@@ -1,0 +1,778 @@
+---
+title: Joining Florida University Employee Data with Baby Names to Find Gender
+ranking: 1450
+listed: true
+---
+
+
+Many chapters and sidetracks later, we can now, finally, think about our original goal: using a data-driven algorithm to analyze the gender gap using publicly-available salary data. 
+
+And now, you know what I actually mean by "data-driven algorithm": __SQL Joins!__
+
+In the previous lesson, we built __The Genderizer__, i.e. created a table with the name of `genderizer` in our SQLite database. You can [download my copy of the database](#TK) if you've skipped all those steps, which btw I explicitly warned you not to.
+
+
+
+# Warmup queries
+
+Before we join things let's start off with querying the `florida_positions` table. 
+
+###### How many people work for Florida's public universities?
+
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT COUNT(*)
+FROM florida_positions;
+~~~
+}, %Q{
+|------------|
+|  COUNT(*)  |
+|------------|
+|  83784     |
+|------------|
+{:.table-sql}
+}) %>
+
+
+###### How many of them are salaried?
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT COUNT(*)
+FROM florida_positions
+WHERE EmployeeType = 'SALARIED';
+~~~
+}, %Q{
+|------------|
+|  COUNT(*)  |
+|------------|
+|  59865     |
+|------------|
+{:.table-sql}
+}) %>
+
+###### How many of these salaried employees have first names from a list of common names that I've just thought of while writing this question?
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT COUNT(*)
+FROM florida_positions
+WHERE EmployeeType = 'SALARIED'
+  AND FirstName IN ('JOHN', 'DANIEL', 'MARY', 'RACHEL');
+~~~
+}, %Q{
+|------------|
+|  COUNT(*)  |
+|------------|
+|  1696      |
+|------------|
+{:.table-sql}
+}) %>
+
+<a id="mark-select-top-10-most-common-names"></a>
+
+
+###### What are the 10 most common names given to U.S. babies according to our baby names data?
+
+We can get this from querying the original `babynames` table:
+
+~~~sql
+SELECT name
+FROM babynames
+GROUP BY name
+ORDER BY SUM(babies) DESC
+LIMIT 10;
+~~~
+
+Or we could just use the `genderizer`, which is slightly easier since `total_babies` -- i.e. `SUM(babies)` -- is pre-calculated. Also, the `name` field is already all uppercased.
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT name
+FROM genderizer
+ORDER BY total_babies DESC
+LIMIT 10;
+~~~
+}, %Q{
+|---------------|
+|  name         |
+|---------------|
+|  MICHAEL      |
+|  CHRISTOPHER  |
+|  JESSICA      |
+|  ASHLEY       |
+|  MATTHEW      |
+|  JOSHUA       |
+|  BRITTANY     |
+|  AMANDA       |
+|  DANIEL       |
+|  DAVID        |
+|---------------|
+{:.table-sql}
+}) %>
+
+
+<a id="mark-select-top-10-salary"></a>
+
+###### List the first name, university, job title, and annual salary for each of the 10 highest-paid salaried employees in the Florida university system
+
+_Show us the money, SQLite_:
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT FirstName, University AS Uni, 
+       ClassTitle AS title, 
+       AnnualSalary AS salary
+FROM florida_positions
+WHERE EmployeeType = 'SALARIED'
+ORDER BY AnnualSalary DESC
+LIMIT 10;
+~~~
+}, %Q{
+|------------+-----+---------------------+---------|
+|  FirstName | Uni | title               | salary  |
+|------------+-----+---------------------+---------|
+|  WILLIAM   | UF  | PROFESSOR           | 961281  |
+|  DAVID     | UF  | PROFESSOR           | 905000  |
+|  SASSAN    | UF  | ASSISTANT PROFESSOR | 730685  |
+|  KAKARLA   | UF  | PROFESSOR           | 680685  |
+|  WESLEY    | UF  | PROFESSOR           | 661340  |
+|  PHILIPP   | UF  | ASSOCIATE PROFESSOR | 635212  |
+|  THEODORE  | UF  | PROFESSOR           | 633368  |
+|  JOHN      | UF  | ASSISTANT PROFESSOR | 625000  |
+|  DARYOUSH  | UF  | ASSISTANT PROFESSOR | 619000  |
+|  BRIAN     | UF  | PROFESSOR           | 612295  |
+|------------+-----+---------------------+---------|
+{:.table-sql}
+}) %>
+
+
+
+
+# Warmup inner and left joins
+
+OK, let's get to joining. 
+
+
+## INNER JOIN to predict the genders of the top 10 earners
+
+Let's take the previous query and `INNER JOIN` it with `genderizer`. This will then let us select the `gender` column, which will contain the predicted gender of every name in the previous query's result:
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT gender,
+       FirstName, University AS Uni, 
+       ClassTitle AS title, 
+       AnnualSalary AS salary
+FROM florida_positions
+INNER JOIN genderizer
+  ON genderizer.name = FirstName
+WHERE EmployeeType = 'SALARIED'
+ORDER BY AnnualSalary DESC
+LIMIT 10;
+~~~
+}, %Q{
+|---------+-----------+-----+---------------------+---------|
+|  gender | FirstName | Uni | title               | salary  |
+|---------+-----------+-----+---------------------+---------|
+|  M      | WILLIAM   | UF  | PROFESSOR           | 961281  |
+|  M      | DAVID     | UF  | PROFESSOR           | 905000  |
+|  M      | WESLEY    | UF  | PROFESSOR           | 661340  |
+|  M      | PHILIPP   | UF  | ASSOCIATE PROFESSOR | 635212  |
+|  M      | THEODORE  | UF  | PROFESSOR           | 633368  |
+|  M      | JOHN      | UF  | ASSISTANT PROFESSOR | 625000  |
+|  M      | BRIAN     | UF  | PROFESSOR           | 612295  |
+|  M      | BARRY     | UF  | ASSOCIATE PROFESSOR | 575035  |
+|  M      | ANTHONY   | UF  | PROFESSOR           | 563588  |
+|  M      | KEVIN     | UF  | PROFESSOR           | 546400  |
+|---------+-----------+-----+---------------------+---------|
+{:.table-sql}
+}) %>
+
+And that's how easy it to predict genders of people by first name. Looks like the top Florida public university earners is 
+
+...Or _is it_? Scroll back up to the previous, non-joined salaries query. Look at the names, then look at the names on _this_ chart again.
+
+Notice any differences?
+
+
+## LEFT JOIN to see where `genderizer` has failed us
+
+In the previous query, change `INNER` to `LEFT`, and run the query. By default, a `LEFT JOIN` returns rows from the _left_ side the join (i.e. `florida_positions`) whether or not it had a matching row in the _right_ side of the join (i.e. `genderizer`).
+
+In other words, we can see the top Florida university earners whose first names _do not_ appear in our baby names data:
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT gender,
+       FirstName, University AS Uni, 
+       ClassTitle AS title, 
+       AnnualSalary AS salary
+FROM florida_positions
+LEFT JOIN genderizer
+  ON genderizer.name = FirstName
+WHERE EmployeeType = 'SALARIED'
+ORDER BY AnnualSalary DESC
+LIMIT 10;
+~~~
+}, %Q{
+
+Without trying to filter on `NULL`, we get the same number of records as before, but there are 3 names there that were not there previously:
+
+|--------|----------------------------------|-----|---------------------|--------|
+| gender |            FirstName             | Uni |        title        | salary |
+|--------|----------------------------------|-----|---------------------|--------|
+| M      | WILLIAM                          | UF  | PROFESSOR           | 961281 |
+| M      | DAVID                            | UF  | PROFESSOR           | 905000 |
+| NULL   | <span class="hi">SASSAN</span>   | UF  | ASSISTANT PROFESSOR | 730685 |
+| NULL   | <span class="hi">KAKARLA</span>  | UF  | PROFESSOR           | 680685 |
+| M      | WESLEY                           | UF  | PROFESSOR           | 661340 |
+| M      | PHILIPP                          | UF  | ASSOCIATE PROFESSOR | 635212 |
+| M      | THEODORE                         | UF  | PROFESSOR           | 633368 |
+| M      | JOHN                             | UF  | ASSISTANT PROFESSOR | 625000 |
+| NULL   | <span class="hi">DARYOUSH</span> | UF  | ASSISTANT PROFESSOR | 619000 |
+| M      | BRIAN                            | UF  | PROFESSOR           | 612295 |
+|--------|----------------------------------|-----|---------------------|--------|
+{:.table-sql}
+}) %>
+
+What if we just want the results to consist of _only_ those 3 persons for whom `gender` is classified as `NULL`? We should be able to add a `WHERE` clause to select for `gender IS NULL`...
+
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT gender,
+       FirstName, University AS Uni, 
+       ClassTitle AS title, 
+       AnnualSalary AS salary
+FROM florida_positions
+LEFT JOIN genderizer
+  ON genderizer.name = FirstName
+WHERE EmployeeType = 'SALARIED'
+  AND gender IS NULL
+ORDER BY AnnualSalary DESC
+LIMIT 10;
+~~~
+}, %Q{
+|--------|---------------|-----|---------------------|--------|
+| gender |   FirstName   | Uni |        title        | salary |
+|--------|---------------|-----|---------------------|--------|
+| NULL   | SASSAN        | UF  | ASSISTANT PROFESSOR | 730685 |
+| NULL   | KAKARLA       | UF  | PROFESSOR           | 680685 |
+| NULL   | DARYOUSH      | UF  | ASSISTANT PROFESSOR | 619000 |
+| NULL   | JAMES PATRICK | FIU | PROFESSOR           | 512610 |
+| NULL   | MUBARAK       | UCF | PROFESSOR           | 442951 |
+| NULL   | ARSHAG        | UF  | PROFESSOR           | 442512 |
+| NULL   | TIRBOD        | UF  | ASSOCIATE PROFESSOR | 441685 |
+| NULL   | LI-MING       | UF  | PROFESSOR           | 428975 |
+| NULL   | SAURIN        | UF  | ASSISTANT PROFESSOR | 392570 |
+| NULL   | R             | UF  | PROFESSOR           | 387624 |
+|--------|---------------|-----|---------------------|--------|
+{:.table-sql}
+}) %>
+
+So, depending on what you had _wanted_, there might be a "problem" with these results. They show the 10 highest-paid employees among the set of __just the employees of unclassified gender__.
+
+But if you had wanted to see _only_ the `NULL`-gender employees from within the top 10 highest-paid employees among _all_ possible employees, gendered or not, you would have expected to see just 3 results:
+
+| gender | FirstName | Uni |        title        | salary |
+|--------|-----------|-----|---------------------|--------|
+| NULL   | SASSAN    | UF  | ASSISTANT PROFESSOR | 730685 |
+| NULL   | KAKARLA   | UF  | PROFESSOR           | 680685 |
+| NULL   | DARYOUSH  | UF  | ASSISTANT PROFESSOR | 619000 |
+{:.table-sql}
+
+That may seem like a subtle difference, but an important one for certain analyses. Thankfully, changing the query to get just the filtered results is not difficult, and it's instructive for understanding the bigger picture of SQL.
+
+So read on for a _brief_ sidetracking:
+
+
+### Sidetrack: Joining against the result of another query 
+
+Let's revisit the (pre-joining) query that returned the list of the 10 top-paid employees.
+
+~~~sql
+SELECT FirstName, University AS Uni, 
+       ClassTitle AS title, 
+       AnnualSalary AS salary
+FROM florida_positions
+WHERE EmployeeType = 'SALARIED'
+ORDER BY AnnualSalary DESC
+LIMIT 10;
+~~~
+
+The [results](#mark-select-top-10-salary), as always, are returned as rows and columns, i.e. just like a table. In fact, we can export the results as a delimited text file. Then reimport them into a new table named `top_10_salaries`.
+
+If that sounds painless to you, go for it. If instead, you think that sounds not just tedious, but somewhat pointless because it involves converting something that is *already* a table, into text, and back into an "actual" table, and that there must be a better way -- then your instinct is right.
+
+Querying the _result of another query_ works the same as querying a table: we just have to wrap that __query result in parentheses__ and give it an __alias__:
+
+Here's an example of `SELECT`ing against a query result, which is aliased as `just_a_table`:
+
+~~~sql
+SELECT * 
+FROM
+  (SELECT * 
+    FROM some_table
+    WHERE some_column = 'WHATEVER'
+    ORDER BY whatever) 
+   AS just_a_table; 
+~~~
+
+It *looks* more complicated, but you'll eventually get used to doing the mental gymnastics to condense and reduce that parentheses-enclosed query to its logical equivalent:
+
+~~~sql
+SELECT * 
+FROM just_a_table;
+~~~
+
+Doing a JOIN query is the same:
+
+~~~sql
+SELECT * 
+FROM
+  (SELECT * 
+    FROM some_table
+    WHERE some_column = 'WHATEVER'
+    ORDER BY whatever) 
+  AS just_a_table; 
+INNER JOIN another_table
+  ON another_table.key = just_a_table.key;
+~~~
+
+In the case of a `INNER JOIN`, the order of tables to be joined can be switched around -- i.e. SELECT FROM `another_table`, INNER JOIN against `just_a_table` -- so this would also work: 
+
+~~~sql
+SELECT * 
+FROM another_table
+INNER JOIN (SELECT * 
+    FROM some_table
+    WHERE some_column = 'WHATEVER'
+    ORDER BY whatever) 
+  AS just_a_table
+ON another_table.key = just_a_table.key;
+~~~
+
+
+
+
+
+For our current scenario -- with our intent to filter the list of top 10 salaries -- imagine that we've actually done the work to export the top 10 list to a CSV file, then imported it into our database into a new table named `top_10_salaries`.
+
+Or if you want to learn a new variation on `CREATE TABLE` -- yep, just another way to do something we've done before -- here it is; the important part is just reminding yourself of the query needed to get the "top 10 salaries", which starts at __line 3__ below:
+
+~~~sql
+CREATE TABLE top_10_salaries
+  AS 
+  SELECT 
+        FirstName, University AS Uni, 
+        ClassTitle AS title, 
+        AnnualSalary AS salary
+  FROM florida_positions
+  WHERE EmployeeType = 'SALARIED'
+  ORDER BY AnnualSalary DESC
+  LIMIT 10;
+~~~
+
+
+<%= content_row_side_by_side(%Q{
+And here's the query to `LEFT JOIN` that newly-created `top_10_salaries` with `genderizer` and filtering for `NULL`:
+
+~~~sql
+SELECT FirstName, University AS Uni, 
+           ClassTitle AS title, 
+           AnnualSalary AS salary
+FROM top_10_salaries
+LEFT JOIN genderizer
+  ON top_10_salaries.FirstName = genderizer.name
+WHERE gender IS NULL;
+~~~
+}, %Q{
+Now, here's a query that does the same thing _without_ having to actually create the table `top_10_salaries` -- in this example, I use the alias `top10sals` to make it more obvious I'm referring to a __not-actually-created__ table:
+
+~~~sql
+SELECT 
+  gender, top10sals.*
+FROM
+  (SELECT FirstName, University AS Uni, 
+           ClassTitle AS title, 
+           AnnualSalary AS salary
+    FROM florida_positions
+    WHERE EmployeeType = 'SALARIED'
+    ORDER BY AnnualSalary DESC
+    LIMIT 10) AS top10sals
+LEFT JOIN genderizer
+  ON top10sals.FirstName = genderizer.name
+WHERE gender IS NULL;
+~~~
+}) %>
+
+
+Both of those queries -- the first with an actual table named `top_10_salaries`, the second with the ad-hoc `top10sals` -- return the same results:
+
+|--------|-----------|-----|---------------------|--------|
+| gender | FirstName | Uni |        title        | salary |
+|--------|-----------|-----|---------------------|--------|
+| NULL   | SASSAN    | UF  | ASSISTANT PROFESSOR | 730685 |
+| NULL   | KAKARLA   | UF  | PROFESSOR           | 680685 |
+| NULL   | DARYOUSH  | UF  | ASSISTANT PROFESSOR | 619000 |
+|--------|-----------|-----|---------------------|--------|
+{:.table-sql}
+
+
+
+### Another subquery example: Employees who have a common first name
+
+Let's try one more subquery example. Earlier in this tutorial, one of our [warmup queries found the 10 most popular baby names](mark-select-top-10-most-common-names), according to `genderizer`:
+
+|---------------|
+|  name         |
+|---------------|
+|  MICHAEL      |
+|  CHRISTOPHER  |
+|  JESSICA      |
+|  ASHLEY       |
+|  MATTHEW      |
+|  JOSHUA       |
+|  BRITTANY     |
+|  AMANDA       |
+|  DANIEL       |
+|  DAVID        |
+|---------------|
+{:.table-sql}
+
+
+We can `INNER JOIN` this query result with `florida_positions` to get all the employees who have a `FirstName` in the 10 most popular baby names:
+
+~~~sql
+SELECT * 
+FROM florida_positions
+INNER JOIN (
+    SELECT name
+    FROM genderizer
+    ORDER BY total_babies DESC
+    LIMIT 10)
+  AS popnames
+    ON popnames.name = florida_positions.FirstName;    
+~~~
+
+###### Number of Florida public university employees whose first name is among the 10 most popular baby names
+
+Same query as above, but modified to return just a headcount:
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT COUNT(*) 
+FROM florida_positions
+INNER JOIN (
+    SELECT name
+    FROM genderizer
+    ORDER BY total_babies DESC
+    LIMIT 10)
+  AS popnames
+    ON popnames.name = florida_positions.FirstName;    
+~~~
+}, %Q{
+|------------|
+|  COUNT(*)  |
+|------------|
+|  4265      |
+|------------|
+{:.table-sql}
+}) %>
+
+
+###### Number of Florida public university employees whose first name is among the 10 most popular baby GIRL names
+
+Virtually the same as the previous query, except that the subquery on `genderizer` -- the results of which are aliased as `popnames` -- now has a `WHERE` clause. It's just one more line:
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT COUNT(*) 
+FROM florida_positions
+INNER JOIN (
+    SELECT name
+    FROM genderizer
+    WHERE gender = 'F'
+    ORDER BY total_babies DESC
+    LIMIT 10)
+  AS popnames
+    ON popnames.name = florida_positions.FirstName;
+~~~
+}, %Q{
+|------------|
+|  COUNT(*)  |
+|------------|
+|  2474      |
+|------------|
+{:.table-sql}
+}) %>
+
+
+TKNote: it's worth reiterating that this is a count of _employees whose names are popular female names_. This is __not the same__ as a count of _employees who are women_. 
+
+Or, to put it more bluntly: no matter what we name our tables and column names, we are querying databases, not reality. It can be easy to forget this when we're deep in writing code...
+
+
+###### Number of Florida public university SALARIED employees whose first name is among the 10 most popular baby GIRL names
+
+Virtually the same as above, except a `WHERE` clause is added to the main query to filter by `EmployeeType`:
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT COUNT(*) 
+FROM florida_positions
+INNER JOIN (
+    SELECT name
+    FROM genderizer
+    WHERE gender = 'F'
+    ORDER BY total_babies DESC
+    LIMIT 10)
+  AS popnames
+    ON popnames.name = florida_positions.FirstName   
+WHERE 
+  florida_positions.EmployeeType = 'SALARIED';
+~~~
+}, %Q{
+|------------|
+|  COUNT(*)  |
+|------------|
+|  2138      |
+|------------|
+{:.table-sql}
+}) %>
+
+
+###### The first names, universities, job titles, and salaries of the persons who are among the 100 highest-paid salaried Florida public university employees and who also have a first name among the top 100 most popular girl baby names
+
+Is the above factoid as trivial as it is convoluted? Probably. But if you realize that it's essentially just a `LEFT JOIN` in which _both_ tables are subqueries -- and are able swallow feelings of panic at the sight of a seeming forest of code -- you already know all you need to write the query.
+
+Here's the result of that query:
+
+|------------+------------+---------------------+---------------|
+|  FirstName | University | ClassTitle          | AnnualSalary  |
+|------------+------------+---------------------+---------------|
+|  ELIZABETH | UF         | ASSISTANT PROFESSOR | 481000        |
+|  KELLY     | UF         | PROFESSOR           | 444382        |
+|  ALEXANDRA | UF         | ASSISTANT PROFESSOR | 384000        |
+|------------+------------+---------------------+---------------|
+{:.table-sql}
+
+
+Try drafting as much of the query as possible before reading my proposed answer:
+
+~~~sql
+SELECT xtable.*
+FROM (SELECT FirstName, 
+        University, ClassTitle, AnnualSalary
+      FROM florida_positions
+      WHERE EmployeeType = 'SALARIED'
+      ORDER BY AnnualSalary DESC
+      LIMIT 100) 
+  AS xtable
+INNER JOIN (SELECT name
+    FROM genderizer
+    WHERE gender = 'F'
+    ORDER BY total_babies DESC
+    LIMIT 100)
+  AS ytable
+    ON xtable.FirstName = ytable.name;
+~~~
+
+
+OK, if you were able to tackle that query -- or, even if you weren't -- let's try moving closer to reality, where the queries are more relevant to attempting a real-world gender gap analysis. And, as it turns out, a bit simpler.
+
+
+### Who are the women among the 100 highest-paid salaried employees in Florida's public universities? 
+
+__First, a friendly reminder:__ No matter how adroit our SQL skills, our queries can only return answers as good as the data in our data tables. And if our queries are based on assumptions -- such as that someone's gender can be predicted on the basis of how U.S. parents (in 1990) associated their name with boys and girls, respectively -- then the answers may diverge even further from reality.
+
+OK, so this query is easy compared to the previous exercises. Here's what we need to do, in relatively plain English:
+
+1. Get a list of salaried employees, sorted in descending order of salary.
+2. Match the first names of that list against a list of baby names associated with the female gender.
+
+Here are the results of my query; see if you can write a query with equivalent results before looking at what I tried:
+
+
+|------------+------------+---------------------+---------------|
+|  FirstName | University | ClassTitle          | AnnualSalary  |
+|------------+------------+---------------------+---------------|
+|  FRANCESCA | UF         | PROFESSOR           | 413041        |
+|  JUDY      | USF        | PROFESSOR           | 470000        |
+|  KALIA     | UF         | PROFESSOR           | 458950        |
+|  SONAL     | UF         | PROFESSOR           | 449185        |
+|  SHAHLA    | UF         | PROFESSOR           | 436100        |
+|  ELIZABETH | UF         | ASSISTANT PROFESSOR | 481000        |
+|  ALEXANDRA | UF         | ASSISTANT PROFESSOR | 384000        |
+|  KELLY     | UF         | PROFESSOR           | 444382        |
+|  NANCY     | UF         | PROFESSOR           | 522491        |
+|  CAROLYN   | FIU        | PROFESSOR           | 452511        |
+|  DEBORAH   | UCF        | PROFESSOR           | 541402        |
+|------------+------------+---------------------+---------------|
+{:.table-sql}
+
+
+And before you look at my query, consider that there are several ways to get the above result. For example, instead of an `INNER JOIN`, you _could_ do a `LEFT JOIN` and change a few other things around to get the same results. Technically, the query is different, but the logic ends up being the same, as does the answer.
+
+Note: be mindful of the possibility that your logic is _different_ than mine, but you end up with the same answer, anyway, _out of coincidence_. That's not a good thing, but one that is beyond the scope of this tutorial to satisfactorily and comprehensively explore...
+
+~~~sql
+SELECT top_salaries.*
+FROM (SELECT FirstName, 
+        University, ClassTitle, AnnualSalary
+      FROM florida_positions
+      WHERE EmployeeType = 'SALARIED'
+      ORDER BY AnnualSalary DESC
+      LIMIT 100) 
+  AS top_salaries
+INNER JOIN genderizer
+  ON top_salaries.FirstName = genderizer.name
+WHERE gender = 'F';
+~~~
+
+
+### What is the gender breakdown of the 100 highest-paid salaried employees in Florida's public universities? 
+
+One more query before we finish this chapter. It's similar to the previous one, but we're doing an aggregate count instead of a listing of individuals. 
+
+Here's my answer; see if you can think out for yourself the query:
+
+|---------+-----------|
+|  gender | COUNT(*)  |
+|---------+-----------|
+|         | 11        |
+|  F      | 11        |
+|  M      | 78        |
+|---------+-----------|
+{:.table-sql}
+
+
+
+And here's my query:
+
+~~~sql
+SELECT 
+  gender, COUNT(*)
+FROM (SELECT FirstName
+      FROM florida_positions
+      WHERE EmployeeType = 'SALARIED'
+      ORDER BY AnnualSalary DESC
+      LIMIT 100) 
+  AS top_salaries
+LEFT JOIN genderizer
+  ON top_salaries.FirstName = genderizer.name
+GROUP BY gender;
+~~~
+
+
+<%= content_row_side_by_side(%Q{
+}, %Q{
+}) %>
+
+
+The number of persons who are among the 100 highest-paid salaried Florida public university employees and who also have a first name 
+
+
+
+
+
+
+
+
+
+
+selecting records based on some common names that are likely to exist in the `florida_positions` database. 
+
+
+~~~sql
+SELECT FirstName, gender
+FROM florida_positions
+INNER JOIN genderizer
+  ON genderizer.name = FirstName;
+~~~
+
+How many names did we ignore?
+
+~~~sql
+SELECT FirstName, COUNT(*) AS ct
+FROM florida_positions
+LEFT JOIN genderizer
+  ON genderizer.name = FirstName
+WHERE gender IS NULL
+GROUP BY FirstName
+ORDER BY ct DESC;
+~~~
+
+How many names make a lot of money?
+
+~~~sql
+SELECT FirstName, money_amount
+FROM florida_positions
+LEFT JOIN genderizer
+  ON genderizer.name = FirstName
+WHERE gender IS NULL
+ORDER BY money_amount DESC;
+~~~
+
+What percentage of the total revenue?
+
+~~~sql
+SELECT SUM(money_amount)
+FROM florida_positions
+LEFT JOIN genderizer
+  ON genderizer.name = FirstName
+WHERE gender IS NOT NULL
+ORDER BY money_amount DESC;
+~~~
+
+Names with hyphens or spaces:
+
+~~~sql
+SELECT * 
+FROM florida_positions
+WHERE FirstName LIKE '% %'
+  OR FirstName LIKE '%-%';
+~~~
+
+Number of top positions, regardless of missing names
+
+~~~sql
+SELECT gender, total_babies,
+  FirstName, MI,
+  LastName, ClassTitle, money_amount
+FROM florida_positions
+LEFT JOIN genderizer
+  ON genderizer.name = FirstName 
+ORDER BY money_amount DESC
+LIMIT 100;
+~~~
+
+
+This is complicated...
+
+~~~sql
+SELECT gender, COUNT(*)
+FROM 
+  (SELECT gender
+    FROM florida_positions
+    LEFT JOIN genderizer
+      ON genderizer.name = FirstName 
+    ORDER BY money_amount DESC
+    LIMIT 100)
+GROUP BY gender;
+~~~
+
+
+~~~sql
+SELECT gender, COUNT(*)
+FROM 
+  (SELECT gender
+    FROM florida_positions
+    LEFT JOIN genderizer
+      ON genderizer.name = FirstName 
+    ORDER BY money_amount DESC
+    LIMIT 1000)
+GROUP BY gender;
+~~~
