@@ -639,13 +639,13 @@ One more query before we finish this chapter. It's similar to the previous one, 
 
 Here's my answer; see if you can think out for yourself the query:
 
-|---------+-----------|
-|  gender | COUNT(*)  |
-|---------+-----------|
-|         | 11        |
-|  F      | 11        |
-|  M      | 78        |
-|---------+-----------|
+|--------|----------|
+| gender | COUNT(*) |
+|--------|----------|
+| NULL   |       11 |
+| F      |       11 |
+| M      |       78 |
+|--------|----------|
 {:.table-sql}
 
 
@@ -667,112 +667,7 @@ GROUP BY gender;
 ~~~
 
 
-<%= content_row_side_by_side(%Q{
-}, %Q{
-}) %>
-
-
-The number of persons who are among the 100 highest-paid salaried Florida public university employees and who also have a first name 
 
 
 
 
-
-
-
-
-
-
-selecting records based on some common names that are likely to exist in the `florida_positions` database. 
-
-
-~~~sql
-SELECT FirstName, gender
-FROM florida_positions
-INNER JOIN genderizer
-  ON genderizer.name = FirstName;
-~~~
-
-How many names did we ignore?
-
-~~~sql
-SELECT FirstName, COUNT(*) AS ct
-FROM florida_positions
-LEFT JOIN genderizer
-  ON genderizer.name = FirstName
-WHERE gender IS NULL
-GROUP BY FirstName
-ORDER BY ct DESC;
-~~~
-
-How many names make a lot of money?
-
-~~~sql
-SELECT FirstName, money_amount
-FROM florida_positions
-LEFT JOIN genderizer
-  ON genderizer.name = FirstName
-WHERE gender IS NULL
-ORDER BY money_amount DESC;
-~~~
-
-What percentage of the total revenue?
-
-~~~sql
-SELECT SUM(money_amount)
-FROM florida_positions
-LEFT JOIN genderizer
-  ON genderizer.name = FirstName
-WHERE gender IS NOT NULL
-ORDER BY money_amount DESC;
-~~~
-
-Names with hyphens or spaces:
-
-~~~sql
-SELECT * 
-FROM florida_positions
-WHERE FirstName LIKE '% %'
-  OR FirstName LIKE '%-%';
-~~~
-
-Number of top positions, regardless of missing names
-
-~~~sql
-SELECT gender, total_babies,
-  FirstName, MI,
-  LastName, ClassTitle, money_amount
-FROM florida_positions
-LEFT JOIN genderizer
-  ON genderizer.name = FirstName 
-ORDER BY money_amount DESC
-LIMIT 100;
-~~~
-
-
-This is complicated...
-
-~~~sql
-SELECT gender, COUNT(*)
-FROM 
-  (SELECT gender
-    FROM florida_positions
-    LEFT JOIN genderizer
-      ON genderizer.name = FirstName 
-    ORDER BY money_amount DESC
-    LIMIT 100)
-GROUP BY gender;
-~~~
-
-
-~~~sql
-SELECT gender, COUNT(*)
-FROM 
-  (SELECT gender
-    FROM florida_positions
-    LEFT JOIN genderizer
-      ON genderizer.name = FirstName 
-    ORDER BY money_amount DESC
-    LIMIT 1000)
-GROUP BY gender;
-~~~

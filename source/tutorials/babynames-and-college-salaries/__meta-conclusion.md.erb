@@ -38,7 +38,7 @@ INNER JOIN genderizer
   ON genderizer.name = FirstName;
 ~~~
 
-How many names did we ignore?
+## How many names did we ignore?
 
 ~~~sql
 SELECT FirstName, COUNT(*) AS ct
@@ -50,7 +50,7 @@ GROUP BY FirstName
 ORDER BY ct DESC;
 ~~~
 
-How many names make a lot of money?
+## How many names make a lot of money?
 
 ~~~sql
 SELECT FirstName, money_amount
@@ -61,7 +61,7 @@ WHERE gender IS NULL
 ORDER BY money_amount DESC;
 ~~~
 
-What percentage of the total revenue?
+## What percentage of the total revenue?
 
 ~~~sql
 SELECT SUM(money_amount)
@@ -72,7 +72,7 @@ WHERE gender IS NOT NULL
 ORDER BY money_amount DESC;
 ~~~
 
-Names with hyphens or spaces:
+## Names with hyphens or spaces:
 
 ~~~sql
 SELECT * 
@@ -81,7 +81,7 @@ WHERE FirstName LIKE '% %'
   OR FirstName LIKE '%-%';
 ~~~
 
-Number of top positions, regardless of missing names
+## Number of top positions, regardless of missing names
 
 ~~~sql
 SELECT gender, total_babies,
@@ -95,7 +95,7 @@ LIMIT 100;
 ~~~
 
 
-This is complicated...
+## This is complicated...
 
 ~~~sql
 SELECT gender, COUNT(*)

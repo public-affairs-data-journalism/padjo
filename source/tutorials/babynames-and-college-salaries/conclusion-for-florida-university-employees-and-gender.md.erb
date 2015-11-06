@@ -4,7 +4,20 @@ listed: true
 ranking: 20000
 ---
 
+<%- arr = data.instructional['sql-genderizer']['gender-analysis-queries'] %>
+<% arr.each do |d| %>
+<h3 class="title"><%= d.title %></h3>
+<div class="content">
+  <div class="description">
+    <%= markdownify d.description %>  
+  </div>
 
-<% data.instructional['sql-genderizer']['gender-analysis-queries'] %>
-
-    ``
+  <div class="answer">
+  <div class="query"><%=markdownify(%Q{
+~~~sql
+#{d.query}
+~~~
+})%></div>
+  </div>
+</div>
+<% end %>    
