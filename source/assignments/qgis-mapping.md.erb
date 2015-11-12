@@ -1,0 +1,170 @@
+---
+title: Creating a multi-layered QGIS map
+description: |
+  Combine several kinds of spatial and boundary data in QGIS to make a map that shows both points and gradients
+date: 2015-11-12
+points: 10
+assigned: true
+
+deliverables: |
+
+  A map made in QGIS with at least 3 data layers:
+
+    - Geographical boundaries
+    - 2 kinds of point (latitude/longitude) data.
+    - One of those point-by-point datasets should be turned into a _shape layer_, like a [hexbin](https://www.mapbox.com/blog/binning-alternative-point-maps/).
+
+  An example map could be: California school locations (as points), on top of a hexbin layer, which itself sits atop a layer showing the California state boundary.
+  
+
+  Create a Folder in your PADJO2015 folder named: __PADJO2015-QGIS-MULTILAYERS__, and put all relevant project files into that folder. Though you only need the GeoJSON file at the end of it.
+
+  Have an exported GeoJSON version of the map you created in QGIS. The [end of Michael Corey's tutorial has an example](http://mikejcorey.github.io/qgis_advanced_2015/).
+
+requirements:
+  - "Use QGIS to create a map with at least 3 data layers:"
+  - "One layer should be a boundary shapefile, such as county or city or state boundaries. The [Census has a few files](https://www.census.gov/geo/maps-data/data/cbf/cbf_cds.html)."
+  - "A second layer should consist of __points__ -- i.e. a CSV file with latitude and longitude columns."
+  - "A third layer can also be another CSV file. I guess you could use a shapefile and try to intersect it with the other layers, but you're on your own."
+---
+
+<%= render_toc %>
+
+
+# Tutorial
+
+- [Download QGIS](http://www.kyngchaos.com/software/qgis)
+- [Michael Corey's Advanced GIS tutorial for NICAR](http://mikejcorey.github.io/qgis_advanced_2015/)
+  + Be sure to download his [example project as a zipped datafile](https://github.com/mikejcorey/qgis_advanced_2015/zipball/gh-pages)
+
+
+# Data
+
+## Boundary data
+
+- [Boundary data from the U.S. Census](https://www.census.gov/geo/maps-data/data/cbf/cbf_cds.html)
+
+## Point data
+
+- [USGS Earthquakes](http://earthquake.usgs.gov/earthquakes/search/)
+  - [Sample selection of earthquake data for continental United States](http://earthquake.usgs.gov/fdsnws/event/1/query.csv?starttime=2015-01-03%2000:00:00&maxlatitude=49.382&minlatitude=14.605&maxlongitude=-59.063&minlongitude=-132.188&minmagnitude=3&endtime=2015-11-10%2023:59:59&orderby=time
+)
+- [California school data](http://www.cde.ca.gov/ds/si/ds/pubschls.asp)
+- [Fatal encounters data](http://www.fatalencounters.org/spreadsheets/) (oops, this data doesn't have latitude and longitude. You can ignore it for now...)
+- [San Francisco city data portal](https://data.sfgov.org/data) - 311, crime, and many other things.
+
+
+## Useful background reading
+
+- [More than you might ever want to know about map projections, also from Mike Corey](https://source.opennews.org/en-US/learning/choosing-right-map-projection/)
+- [This is a long dissertation about many other concepts](http://bost.ocks.org/mike/example/) - but it contains a nice interactive map.
+
+
+# My Sample QGIS Triple-Data-Layer Map
+
+The following is an example triple-layer-data map, including a description of what it purports to show, where the data came from, and a brief explanation of the steps, with frequent references to the relevant sections in [Mike Corey's QGIS tutorial on earthquakes](http://mikejcorey.github.io/qgis_advanced_2015/).
+
+## The subject and finished map
+
+For the city of San Francisco, I want to _highlight_ the [food carts](https://data.sfgov.org/Economy-and-Community/Mobile-Food-Facility-Permit/rqzj-sfat) that are (or aren't) in places where relatively high amounts of [drug activity is known to happen](https://data.sfgov.org/Public-Safety/SFPD-Incidents-from-1-January-2003/tmnf-yvry). I'll overlay these data points on top of the [streets of San Francisco](https://data.sfgov.org/Geographic-Locations-and-Boundaries/Streets-of-San-Francisco-Zipped-Shapefile-Format-/wbm8-ratb).
+
+Here's what the finished map looks like (as a static image for now, we'll worry about interactivity later):
+
+![image](/files/images/assignments/qgisfun/finished-foodtruck-and-drugs-map.png)
+
+## Where the data came from
+
+I literally conceived the topic of my map by looking at the first page of [data.sfgov.org's listing of popular datasets](https://data.sfgov.org/data):
+
+
+- [Mobile Food Facility Permits](https://data.sfgov.org/Economy-and-Community/Mobile-Food-Facility-Permit/rqzj-sfat) - not all of these of latitude/longitude data, but most of them do.
+- [SFPD crime incidents](https://data.sfgov.org/Public-Safety/SFPD-Incidents-from-1-January-2003/tmnf-yvry) - Looking for incident reports of _criminal_ drug activity is obviously not the most accurate lens to gauge _all_ drug activity. But good enough fo rnow. I used the data.sf.gov website's __filtering__ option -- to filter for the past few months of data -- before exporting the data to CSV. _However_, I did __not__ filter by category (i.e. for crimes categorized as being drug crimes). I can do this in QGIS, and it's easier to adjust filters from within QGIS.
+- [Streets of San Francisco (centerlines)](https://data.sfgov.org/Geographic-Locations-and-Boundaries/Streets-of-San-Francisco-Zipped-Shapefile-Format-/wbm8-ratb) - why street data? Because it's more interesting than the usual boundary data you see for cities. At the very least, seeing the streets makes it more obvious which food carts are the most accessible by vehicle.
+
+
+
+## How I made the map with QGIS
+
+I'm assuming you've gone through [Mike Corey's QGIS tutorial a couple of times](http://mikejcorey.github.io/qgis_advanced_2015/) (and tried tweaking/breaking it) so I won't explain the basic steps. My workflow was quite a bit simpler than Corey's, mostly because I avoid the topic of __map projections__ altogether...though I'm not sure I was justified in doing so with the __street line data__...
+
+### Importing the point data
+
+Both the mobile food permit and crime incident datasets have latitude and longitude columns (in the crime dataset, the columns are `X` and `Y`). After downloading them, I imported them as __Delimited Text Layers__. Unlike the example data in [Corey's tutorial](http://mikejcorey.github.io/qgis_advanced_2015/), both of my CSVs have a __Geometry definition__ with __Point Coordinates__ (i.e. latitude and longitude columns).
+
+After importing both layers, my project space looked like this; the yellow dots are _all_ reported crime incidents in the past few months, and the green dots are the locations for the mobile vendor food permits:
+
+![image](/files/images/assignments/qgisfun/foodtrucks-and-crimes-just-dots.png)
+
+At this point, we can _hide_ the food-truck layer just to make things easier to see. Remember that these yellow dots are _all_ crimes. If I want to show just drug-related crimes, I need to __filter__ based on the SFPD's __Category__ column (skim the [data page](https://data.sfgov.org/Public-Safety/SFPD-Incidents-from-1-January-2003/tmnf-yvry) to see the various columns and values) and remove all non-drug-related incidents.
+
+As shown in Corey's tutorial, to __filter__ a layer, __right-click__ the layer and select the __Filter__ command. And then just type in the _conditions_ on which to filter, i.e. not much different than a SQL `WHERE` clause:
+
+
+
+This is how I've described my filter condition:
+
+      "Category"='DRUG/NARCOTIC'
+
+![image](/files/images/assignments/qgisfun/filter-drug-incidents.png)
+
+And this is the result:
+
+![image](/files/images/assignments/qgisfun/filtered-for-drug-incidents.png)
+
+There's far fewer crime-dots, but enough to make the map too cluttered when we add the food-truck-layer. So the next strategy is to __bin__ the crime dots, i.e. create a kind of heat map that shows areas with a high density of crime incidents, so that there's no need to show the individual incidents as dots.
+
+
+### Making my own boundaries and grid
+
+While there is [San Francisco neighborhood boundary data](https://data.sfgov.org/Geographic-Locations-and-Boundaries/Neighborhood-Groups-Map/qc6m-r4ih), my editorial judgment is that _physical distance_ -- not arbitrary man-made boundaries -- is the more compelling way to geographically cluster crime incidents.
+
+Corey covers this in the __Create hexagonal bins__ section of his [tutorial](http://mikejcorey.github.io/qgis_advanced_2015/). I like hexagons too, but you can use diamonds, rectangles, etc. The first step is just to create a layer of hexagons. Warning: the most time-consuming part of this map-making process, for me, was just deleting/recreating the grid until I got it to have the right-sized hexagons...
+
+Here's what that layer looks like: a bunch of hexagons.
+
+![image](/files/images/assignments/qgisfun/just-gray-hexbins.png)
+
+### Adding a data-filtered hexagon layer
+
+In Corey's tutorial -- under the section __Count the earthquakes in each bin__ -- review how he uses the __Vector > Analysis > Points in polygon...__ command to combine his hexagon-grid-layer with the `ok_quakes_only` as the __input point vector layer__. For my scenario, the __input point vector layer__ is whatever I named my drug-crime-incident-point layer.
+
+I tell QGIS to count the number of drug-crime-dots per hexagon and save that as a field/column named `pointcount`
+
+After doing that, I follow the instructions in the section titled __Color bins by count__. I used the __Style__ panel to be dependent on a __Graduated__ basis (i.e. lighter/darker colors based on `pointcount` value). I tweaked the settings to my liking but not out of any scientific/mathematical principle. It just looks nice to me:
+
+![image](/files/images/assignments/qgisfun/color-hexbins-config-drug-food.png)
+
+### All together
+
+Here's all the layers shown together -- the hexagons-colored-by-drug-crime-density, the drug-crime-incidents as dots, and the mobile food vendor locations, which I've changed to be green __stars__ for fun.
+
+And then I've added the __street map__ shape data beneath it all. Why purple? Because that's what QGIS randomly selected and I liked it:
+
+![image](/files/images/assignments/qgisfun/all-together-food-drugs.png)
+
+### Declutter
+
+Not bad. But remember our main objective is not just to throw a bunch of data together, but make a meaningful visualization from it. Or, at least make it _easy to interpret_ by showing only the important parts. I already did that by filtering out all non-drug crimes (someone else who wants to try my idea might look at another kind of crime). But those yellow dots are kind of _redundant_, aren't they? After all, we went through the trouble of creating the hexbin-density-layer to _simplify_ the crime dot layer. What's the point in showing the crime dots _individually_?
+
+Below is the final version of my map, but all I've done is remove a few layers (including the boring, not-terribly-dense hexagons). The screenshot includes my layers subpanel so you can see what I've left out:
+
+![image](/files/images/assignments/qgisfun/all-together-food-drugs-minimalist.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

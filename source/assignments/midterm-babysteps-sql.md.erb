@@ -1,0 +1,306 @@
+---
+title: Midterm Babysteps
+description: |
+  A warm-up, self-contained exercise on all the SQL Joins you'll need to know for the more real-world exercise.
+date: 2015-11-17
+points: 10
+assigned: true
+
+deliverables: |
+
+
+  Create a Document in your PADJO2015 folder named: __PADJO2015-MIDTERM-BABYSTEPS__.
+
+  Every problem should have its own page devoted to it. So if there 16 problems, your document should have 16 pages.
+
+  If you work with a partner, both of you must turn in a separate document, but indicate (on the first page) the name of your partner.
+
+requirements:
+  - Download the [__National data__ zip file](https://www.ssa.gov/oact/babynames/names.zip) of baby names from the [Social Security Administration](https://www.ssa.gov/oact/babynames/limits.html).
+  - Extract the 1990 and 2010 files and create a SQLite database with 2 tables, `babynames_1990` and `babynames_2010`, respectively
+  - For each problem, write the SQLite query that will return the given result.
+  - Your query must return the same results -- including the same column headers and format.
+  - You may work with one other person. Be sure that both of you actually know how to solve all of the problems.
+---
+
+<%= render_toc %>
+
+
+# Exercises
+
+The query result is shown for each exercise. __So provide the query that will return these results.__
+
+Give each exercise its own page in your document.
+
+
+### 1. How many babies are there in 1990?
+
+
+|---------------|
+|  SUM(babies)  |
+|---------------|
+|  3950252      |
+|---------------|
+{:.table-sql}
+
+
+### 2. How many boy and girl babies are there in 2010?
+
+(partial answer)
+
+~~~sql
+SELECT /* fill out this part on your own*/ 
+FROM babynames_1990 /* this needs to be changed to fit the question */
+GROUP BY sex;
+~~~
+
+
+|------+--------------|
+|  sex | SUM(babies)  |
+|------+--------------|
+|  F   | 1772738      |
+|  M   | 1913851      |
+|------+--------------|
+{:.table-sql}
+
+
+
+
+### 3. How many unique names are there in 2010?
+
+(A hint)
+
+~~~sql
+SELECT COUNT(DISTINCT name) FROM babynames_1990;
+~~~
+
+|------------------------|
+|  COUNT(DISTINCT name)  |
+|------------------------|
+|  31603                 |
+|------------------------|
+{:.table-sql}
+
+
+
+### 4. How many unique names are there in 1990 that start with the letter 'A'?
+
+
+|------------------------|
+|  COUNT(DISTINCT name)  |
+|------------------------|
+|  2041                  |
+|------------------------|
+{:.table-sql}
+
+
+### 5. Show the 5 most popular girl names in 1990
+
+
+|-----------+-----+---------|
+|  name     | sex | babies  |
+|-----------+-----+---------|
+|  Jessica  | F   | 46466   |
+|  Ashley   | F   | 45549   |
+|  Brittany | F   | 36535   |
+|  Amanda   | F   | 34406   |
+|  Samantha | F   | 25864   |
+{:.table-sql}
+
+
+
+### 6. For the year 2010, show the first 5 most popular boy names that begin with a vowel
+
+|------------+-----+---------|
+|  name      | sex | babies  |
+|------------+-----+---------|
+|  Ethan     | M   | 17985   |
+|  Alexander | M   | 16742   |
+|  Aiden     | M   | 15516   |
+|  Anthony   | M   | 15470   |
+|  Andrew    | M   | 14221   |
+{:.table-sql}
+
+### 7. For the year 2010, show the first 5 most popular letters for a boy's name to end with
+
+
+|--------------+---------------|
+|  last_letter | total_babies  |
+|--------------+---------------|
+|  n           | 693690        |
+|  r           | 167287        |
+|  l           | 134811        |
+|  e           | 130073        |
+|  s           | 124710        |
+{:.table-sql}
+
+
+### 8. The 5 most popular girl names in 1990, with number of babies in 1990 and 2010
+
+(partial answer)
+
+~~~sql
+SELECT b1990.name, 
+  b1990.babies AS babies_1990, 
+  b2010.babies AS babies_2010
+FROM babynames_1990 AS b1990
+INNER JOIN
+babynames_2010 AS b2010 
+  ON 
+  /* fill this part out on your own */
+
+WHERE b1990.sex = 'F'
+ORDER BY b1990.babies DESC
+LIMIT 5;
+~~~
+
+|-----------+-------------+--------------|
+|  name     | babies_1990 | babies_2010  |
+|-----------+-------------+--------------|
+|  Jessica  | 46466       | 3192         |
+|  Ashley   | 45549       | 6305         |
+|  Brittany | 36535       | 727          |
+|  Amanda   | 34406       | 1655         |
+|  Samantha | 25864       | 8396         |
+{:.table-sql}
+
+
+### 9. The top 5 boy names with fewer than 10,000 babies in 1990, sorted by biggest drop in popularity in 2010
+
+
+|----------+-------------+-------------+-------------|
+|  name    | babies_1990 | babies_2010 | diffbabies  |
+|----------+-------------+-------------+-------------|
+|  Dustin  | 8453        | 865         | -7588       |
+|  Scott   | 8082        | 871         | -7211       |
+|  Gregory | 8377        | 1286        | -7091       |
+|  Corey   | 7690        | 1006        | -6684       |
+|  Paul    | 8578        | 2120        | -6458       |
+{:.table-sql}
+
+
+### 10. The top 5 girl names that have been given to least 500 babies in both 1990 and 2010, sorted by popularity in 2010
+
+
+|----------+-------------+--------------|
+|  name    | babies_1990 | babies_2010  |
+|----------+-------------+--------------|
+|  Sophia  | 1125        | 20612        |
+|  Emma    | 2415        | 17322        |
+|  Olivia  | 4622        | 17012        |
+|  Emily   | 19358       | 14260        |
+|  Abigail | 3719        | 14228        |
+{:.table-sql}
+
+
+### 11. The 5 most popular names in 2010 that don't show up at all in 1990
+
+
+~~~sql
+SELECT b2010.name, 
+  b2010.sex,
+  b2010.babies AS babies_2010
+FROM babynames_2010 AS b2010 
+LEFT JOIN babynames_1990 AS b1990
+  ON 
+  b1990.name = b2010.name AND
+  b1990.sex = b2010.sex
+WHERE b1990.name IS NULL
+ORDER BY babies_2010 DESC
+LIMIT 5;
+~~~
+
+|---------+-----+--------------|
+|  name   | sex | babies_2010  |
+|---------+-----+--------------|
+|  Nevaeh | F   | 6402         |
+|  Kaiden | M   | 2346         |
+|  Reese  | F   | 2263         |
+|  Jaxson | M   | 2212         |
+|  Jaiden | M   | 2203         |
+{:.table-sql}
+
+
+### 12. How many boy names in 1990 don't appear in the list of boy names for 2010?
+
+
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  2454      |
+|------------|
+{:.table-sql}
+
+
+
+
+
+### 13. Show the 5 most popular names in 1990 that were given to at least 1,000 boys and 1,000 girls in 1990
+
+|---------+------------+-------------+---------------|
+|  name   | boy_babies | girl_babies | total_babies  |
+|---------+------------+-------------+---------------|
+|  Jordan | 16128      | 5954        | 22082         |
+|  Taylor | 6574       | 7256        | 13830         |
+|  Jamie  | 1318       | 6510        | 7828          |
+|  Casey  | 4130       | 3261        | 7391          |
+|  Angel  | 2404       | 1663        | 4067          |
+|---------+------------+-------------+---------------|
+{:.table-sql}
+
+
+
+
+
+### 14. How many of the top 500 boy names in 1990 are also among the 500 most popular boy names in 2010?
+
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  324       |
+|------------|
+{:.table-sql}
+
+
+
+
+### 15. How many of the top 100 most popular girl names in 2010, how many start and end with a vowel?
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  15        |
+|------------|
+{:.table-sql}
+
+
+
+
+
+### 16. Show the 5 most gender neutral names among 2010 names that were given to at least 500 boys and 500 girls
+
+Partial hint:
+
+~~~sql
+SELECT m.name, 
+  m.babies AS boy_babies,
+  f.babies AS girl_babies,
+  ABS(m.babies - f.babies) AS gender_diff
+  FROM (SELECT * FROM babynames_2010 
+      AS m WHERE babies >= 500 AND sex = 'M')
+  AS m
+  /* you do the rest... */
+~~~
+
+
+|----------+------------+-------------+--------------|
+|  m.name  | boy_babies | girl_babies | gender_diff  |
+|----------+------------+-------------+--------------|
+|  Dakota  | 1130       | 1141        | 11           |
+|  Justice | 585        | 546         | 39           |
+|  Quinn   | 1236       | 1276        | 40           |
+|  Amari   | 1004       | 661         | 343          |
+|  Rowan   | 954        | 608         | 346          |
+{:.table-sql}

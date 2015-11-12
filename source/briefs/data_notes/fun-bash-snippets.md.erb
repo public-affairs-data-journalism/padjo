@@ -1,5 +1,37 @@
 
 
+# ALL TOGETHER
+
+~~~sh
+function qtq(){
+  if [ -z "$1" ]; then
+    limitfoo="head -n 8" # limit by 5 rows plus headers
+  else
+    if [ $1 -eq 0 ]; then 
+      limitfoo="tail -n +1"
+    else
+      limitfoo="head -n $(($1 + 3))"
+    fi
+  fi
+
+  pbpaste |
+  sed -e '1i\
+.headers on' | 
+  sqlite3 $MYSQLITEDB |
+  csvformat -d \| |
+  csvlook |
+  perl -p -e "s/(?<=\|) +(?= \|)/ NULL /g" |
+  eval $limitfoo |
+  sed -e '$a\
+{:.table-sql}' |
+  
+  tee /dev/tty | pbcopy
+}
+~~~
+
+
+
+
 ## Make a SQL table
 
 ~~~sh
@@ -92,38 +124,11 @@ $ pbpaste | qtq | tee /dev/tty | pbcopy
 ~~~
 
 
-# ALL TOGETHER
-
-~~~sh
-function qtq(){
-  if [ -z "$1" ]; then
-    limitfoo="head -n 8" # limit by 5 rows plus headers
-  else
-    if [ $1 -eq 0 ]; then 
-      limitfoo="tail -n +1"
-    else
-      limitfoo="head -n $(($1 + 3))"
-    fi
-  fi
-
-  pbpaste |
-  sed -e '1i\
-.headers on' | 
-  sqlite3 $MYSQLITEDB |
-  csvformat -d \| |
-  csvlook |
-  eval $limitfoo |
-  sed -e '$a\
-{:.table-sql}' |
-  
-  tee /dev/tty | pbcopy
-}
-~~~
 
 
 (todo)
 
-~~~sh
+~~~
 function sqtq(){
   pbpaste |
   sed -e '1i\
