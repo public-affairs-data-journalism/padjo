@@ -25,15 +25,31 @@ requirements:
 
 <%= render_toc %>
 
+# Getting started
+
+Read through these tutorials to make sure you understand joins:
+
+- <%=described_inline_link_to_resource "/tutorials/babynames-and-college-salaries/011-querying-2014-baby-names"%>
+- <%=described_inline_link_to_resource "/tutorials/babynames-and-college-salaries/024-creating-tables-importing-data"%>
+- <%=described_inline_link_to_resource "/tutorials/babynames-and-college-salaries/030-all-about-inner-joins"%>
+- <%=described_inline_link_to_resource "/tutorials/babynames-and-college-salaries/035-left-joins-and-join-practice"%>
+- <%=described_inline_link_to_resource "/tutorials/babynames-and-college-salaries/045-self-joins-and-nested-joins"%>
+
+Then follow the [instructions on how to create and import data](/tutorials/babynames-and-college-salaries/024-creating-tables-importing-data), except create tables for `babynames_1990` and `babynames_2010`.
+
+
 
 # Exercises
 
 The query result is shown for each exercise. __So provide the query that will return these results.__
 
-Give each exercise its own page in your document.
+__Give each exercise its own page in your document.__
+
 
 
 ### 1. How many babies are there in 1990?
+
+- <%= described_inline_link_to_resource "/tutorials/sql-aggregates/aggregate-functions-in-sql/" %>
 
 
 |---------------|
@@ -45,6 +61,9 @@ Give each exercise its own page in your document.
 
 
 ### 2. How many boy and girl babies are there in 2010?
+
+- <%= described_inline_link_to_resource "/tutorials/sql-aggregates/aggregate-functions-in-sql/" %>
+
 
 (partial answer)
 
@@ -67,6 +86,10 @@ GROUP BY sex;
 
 
 ### 3. How many unique names are there in 2010?
+
+- <%= described_inline_link_to_resource "/tutorials/sql-aggregates/group-by-in-sql/" %>
+- <%= described_inline_link_to_resource "/tutorials/sql-aggregates/aggregate-functions-in-sql/" %>
+
 
 (A hint)
 

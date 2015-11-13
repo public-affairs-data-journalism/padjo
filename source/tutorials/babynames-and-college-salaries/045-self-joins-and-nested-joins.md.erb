@@ -1,0 +1,879 @@
+---
+title: Joining to virtual tables with self-joins and nested joins
+description: |
+  By using table aliases, we can join a table to a subset of itself, or to the results of another query.
+previous: /tutorials/babynames-and-college-salaries/035-left-joins-and-join-practice
+listed: true
+ranking: 2045
+---
+
+This chapter doesn't introduce a new type of `JOIN`, _per se_. Rather, it shows how we can join tables against the results of another query. The concept of joining remains the same, but the amount of code we write will seem to expand significantly. But there's no new syntax, other than more frequent use of __aliasing tables__: 
+
+~~~sql
+SELECT 
+  aliased_table.id, alias_table.things,
+FROM some_table 
+    AS aliased_table;
+~~~
+
+
+Don't get intimidated, just get into the habit of writing parts of the query, one step at a time. While the code looks convoluted, it's just because we're trying to effectively bypass the steps of manually creating new tables -- which we could always go back to doing (but what's the fun in that).
+
+
+# Self-joins
+
+Sometimes you want to join a table to _itself_. 
+
+For example, let's say we're interested in the number of names that were given to boys in 1980 but were also given to girls in 2014. We would use an `INNER JOIN` like this:
+
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT COUNT(*)
+FROM babynames_1980 AS b1980
+INNER JOIN babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+WHERE b1980.sex = 'M'
+  AND b2014.sex = 'F';
+~~~
+
+},%Q{
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  1521      |
+|------------|
+{:.table-sql}
+
+
+})%>
+
+
+But what if we're interested in the number of 1980 boy names that were also girl names in __1980__? It's still an `INNER JOIN`, but with the data from 1980 instead of 2014. We could of course just make a duplicate of the `babynames_1980` table, but that seems wasteful.
+
+In fact, there's an easy way to refer to `babynames_1980` twice in the same query: just use a different __alias__ for each table reference:
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT COUNT(*)
+FROM babynames_1980 AS b1980_x
+INNER JOIN babynames_1980 AS b1980_y
+  ON b1980_x.name = b1980_y.name
+WHERE b1980_x.sex = 'M'
+  AND b1980_y.sex = 'F';
+~~~
+
+},%Q{
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  1727      |
+|------------|
+{:.table-sql}
+
+})%>
+
+Let's modify that query slightly to get count the number of boy names that were also girl names in 1980, for names that were given to at least 500 babies of both sex:
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT COUNT(*)
+FROM babynames_1980 AS b1980_x
+INNER JOIN babynames_1980 AS b1980_y
+  ON b1980_x.name = b1980_y.name
+WHERE b1980_x.sex = 'M'
+  AND b1980_y.sex = 'F'
+  AND b1980_x.babies >= 500 
+  AND b1980_y.babies >- 500;
+~~~
+
+},%Q{
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  334       |
+|------------|
+{:.table-sql}
+
+})%>
+
+And let's change up the query to show the actual names, i.e. the 10 most popular _boy_ name that were given to at least 1000 boys and 1000 girls in 1980
+
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT b1980_x.name, 
+  b1980_x.babies AS boy_babies,
+  b1980_y.babies AS girl_babies
+FROM babynames_1980 AS b1980_x
+INNER JOIN babynames_1980 AS b1980_y
+  ON b1980_x.name = b1980_y.name
+WHERE b1980_x.sex = 'M'
+  AND b1980_y.sex = 'F'
+  AND boy_babies >= 1000 
+  AND girl_babies >= 1000
+ORDER BY boy_babies DESC
+LIMIT 10;
+~~~
+
+},%Q{
+
+Only 6 results show up because apparently there are only 6 names that fit this category.
+
+|----------+------------+--------------|
+|  name    | boy_babies | girl_babies  |
+|----------+------------+--------------|
+|  Casey   | 3220       | 2172         |
+|  Jamie   | 2846       | 11523        |
+|  Jaime   | 1464       | 2645         |
+|  Angel   | 1418       | 1691         |
+|  Shannon | 1330       | 9668         |
+|  Kelly   | 1184       | 13715        |
+|----------+------------+--------------|
+{:.table-sql}
+
+})%>
+
+
+Let's try a similar query as above, except for the year 2014, and sorted by popularity of the name among _girl_ babies. In the example below, I shorten the aliases even more, just because I don't want to type as much and because that's how aliases work.
+
+(__Warning:__ we typically spend far more time re-reading code than writing it...so there's a point where brevity can cause many more problems than the amount of work it takes to type things out.)
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT x.name, 
+  x.babies AS boy_babies,
+  y.babies AS girl_babies
+FROM babynames_2014 AS x
+INNER JOIN babynames_2014 AS y
+  ON x.name = y.name
+WHERE x.sex = 'M'
+  AND y.sex = 'F'
+  AND boy_babies >= 1000 
+  AND girl_babies >= 1000
+ORDER BY girl_babies DESC
+LIMIT 10;
+~~~
+
+},%Q{
+
+|----------+------------+--------------|
+|  name    | boy_babies | girl_babies  |
+|----------+------------+--------------|
+|  Avery   | 2269       | 9517         |
+|  Riley   | 2429       | 4761         |
+|  Peyton  | 1828       | 4426         |
+|  Alexis  | 1172       | 4188         |
+|  Emerson | 1048       | 1670         |
+|  Hayden  | 2851       | 1656         |
+|  Charlie | 1670       | 1432         |
+|  Parker  | 5677       | 1386         |
+|  Jordan  | 6810       | 1300         |
+|  Angel   | 6255       | 1179         |
+|----------+------------+--------------|
+{:.table-sql}
+
+})%>
+
+
+And that's basically all there is to self-joins: give a table an alias and it can be treated essentially as an entirely different table. This is much easier than creating duplicate tables just to be able to compare one table against itself.
+
+
+
+
+# Nested queries
+
+A "nested" query is a query inside of another query. 
+
+As you've probably noticed by now, the result of any given query _looks_ like it could be just another table. And so, why not query _the result of a query_? This is possible by wrapping up that nested query in parentheses and giving it an __alias__:
+
+Here's a trivial example:
+
+~~~sql
+SELECT * 
+FROM (SELECT * FROM babynames_1980) 
+  AS whatever
+ORDER BY babies DESC
+LIMIT 5;
+~~~
+
+How is that different than this:
+
+~~~sql
+SELECT * 
+FROM babynames_1980 
+  AS whatever
+ORDER BY babies DESC
+LIMIT 5;
+~~~
+
+There is no difference (except more computational work on the part of the database). I just wanted to show off the syntax.
+
+Here's a slightly more realistic example. First, let me try to describe the query in English:
+
+> Of the 20 most popular baby names in 1980 that begin with the letter __"D"__, sort those top 20 names in alphabetical order:
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT * 
+FROM (
+    SELECT * FROM babynames_1980 
+    WHERE name LIKE 'D%'
+    ORDER BY babies DESC
+    LIMIT 20
+  ) 
+  AS top_d_names
+ORDER BY name
+LIMIT 5;
+~~~
+
+},%Q{
+
+|-----------+-----+---------|
+|  name     | sex | babies  |
+|-----------+-----+---------|
+|  Dana     | F   | 4438    |
+|  Daniel   | M   | 29889   |
+|  Danielle | F   | 8844    |
+|  Danny    | M   | 2266    |
+|  Darren   | M   | 1530    |
+|-----------+-----+---------|
+{:.table-sql}
+
+})%>
+
+_There must be an easier way_, you're thinking. Go ahead and try these simpler non-nested variations and see how their results differ.
+
+The following gets names that begin with `'D'` in order of baby count:
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT * FROM babynames_1980 
+WHERE name LIKE 'D%'
+ORDER BY babies DESC
+LIMIT 5;
+~~~
+
+},%Q{
+
+|-----------+-----+---------|
+|  name     | sex | babies  |
+|-----------+-----+---------|
+|  David    | M   | 41913   |
+|  Daniel   | M   | 29889   |
+|  Danielle | F   | 8844    |
+|  Dustin   | M   | 8419    |
+|  Derek    | M   | 7245    |
+|-----------+-----+---------|
+{:.table-sql}
+
+})%>
+
+But that's not quite what we want...we want the top 5 names in alphabetical order of the 20 most popular `'D'` names.
+
+This simpler variation is just wrong:
+
+~~~sql
+SELECT * FROM babynames_1980 
+WHERE name LIKE 'D%'
+ORDER BY name ASC, babies DESC
+LIMIT 5;
+~~~
+
+},%Q{
+
+|----------+-----+---------|
+|  name    | sex | babies  |
+|----------+-----+---------|
+|  Daaimah | F   | 5       |
+|  Daaiyah | F   | 13      |
+|  Daarina | F   | 11      |
+|  Dabney  | F   | 5       |
+|  Dace    | M   | 6       |
+|----------+-----+---------|
+{:.table-sql}
+
+
+})%>
+
+OK, while the type of query I've proposed isn't super practical or interesting, I hope it illustrates the primary problem: we want to _subset_ the original table (i.e. find top 20 `'D'`-letter names from 1980), and then _sort that subset_. But we can't do that as a simple, single query, because all of the sorting and limiting happens at the very end.
+
+What we want to do fundamentally requires at least 2 different queries. 
+
+
+## Another practical example of a nested query
+
+OK, now that we're at least _acquainted_ with the syntax of a nested query, and the fact that it is possible, let's go on to a more useful use case, albeit one that appears to be much more complicated and convoluted: 
+
+I want to see how the top 5 baby names in one year did in another year, e.g. __how did the 5 most popular names in 1980 do in 2014?__
+
+Start out by thinking of the query to get the most popular names in 1980:
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT * 
+FROM babynames_1980
+ORDER BY babies DESC
+LIMIT 5;
+~~~
+
+},%Q{
+|--------------+-----+---------|
+|  name        | sex | babies  |
+|--------------+-----+---------|
+|  Michael     | M   | 68666   |
+|  Jennifer    | F   | 58385   |
+|  Christopher | M   | 49086   |
+|  Jason       | M   | 48176   |
+|  David       | M   | 41913   |
+|--------------+-----+---------|
+{:.table-sql}
+
+})%>
+
+That result looks just like a table, right? In fact, we could just create a whole new table and insert the query results into that new table. Here's the series of statements to do that:
+
+~~~sql
+DROP TABLE IF EXISTS top1980babies;
+CREATE TABLE "top1980babies"(
+  name TEXT,
+  sex TEXT,
+  babies INTEGER
+);
+
+INSERT INTO top1980babies
+SELECT * 
+FROM babynames_1980
+ORDER BY babies DESC
+LIMIT 5;
+~~~
+
+Now, if we want to see how much the __top 5 baby names__ in 1980 changed in popularity in 2014, we just do an `INNER JOIN` from this new table, `top1980babies` to `babynames_2014`:
+
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT b1980.name, b1980.sex,
+  b1980.babies AS babies_1980,
+  b2014.babies AS babies_2014
+  FROM top1980babies AS b1980
+INNER JOIN babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex;
+~~~
+
+},%Q{
+
+|--------------+-----+-------------+--------------|
+|  name        | sex | babies_1980 | babies_2014  |
+|--------------+-----+-------------+--------------|
+|  Michael     | M   | 68666       | 15323        |
+|  Jennifer    | F   | 58385       | 1514         |
+|  Christopher | M   | 49086       | 10278        |
+|  Jason       | M   | 48176       | 5510         |
+|  David       | M   | 41913       | 12078        |
+|--------------+-----+-------------+--------------|
+{:.table-sql}
+
+})%>
+
+
+But creating a table -- i.e. `top1980babies` -- that is a subset of `babynames_1980` just to compare it to `babynames_2014` seems like an extra step too many.
+
+In fact, we can `SELECT...FROM` directly from the results of a query, without having to create a new table. The strategy and concept is similar to a self-join: just give the query results an __alias__.
+
+The query below will look convoluted, but just focus on the `FROM` clause, which is where the only change is made between this query and the previous query that refers to `top1980babies`:
+
+~~~sql
+SELECT b1980.name, b1980.sex,
+  b1980.babies AS babies_1980,
+  b2014.babies AS babies_2014
+
+  FROM 
+    (SELECT * FROM babynames_1980 
+          ORDER BY babies DESC
+          LIMIT 5) 
+     AS b1980
+
+INNER JOIN babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex;
+~~~
+
+Yes, it looks much more complicated than the previous query, but the previous query relied on several queries to create a new table and inserting data into that table. The __nested query__ example does all of that _and_ the actual analytical query, i.e. "How popular in 2014 are the most 5 popular 1980 names?"
+
+## Joining against a nested query
+
+We can move that nested query into the `JOIN` clause for the same effect -- well, the same effect for an `INNER JOIN`, in which the order of tables being joined doesn't matter:
+
+
+~~~sql
+SELECT b1980.name, b1980.sex,
+  b1980.babies AS babies_1980,
+  b2014.babies AS babies_2014
+FROM babynames_2014 AS b2014
+    
+INNER JOIN (SELECT * FROM babynames_1980 
+    ORDER BY babies DESC
+    LIMIT 5) 
+  AS b1980
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex;
+~~~
+
+
+## Why nested queries?
+
+It's worth asking why we need such a convoluted structure.
+
+In other words, what's the difference between using a nested query with an `INNER JOIN` to look at the top 5 names, versus the following simpler query:
+
+
+
+~~~sql
+SELECT b1980.name, b1980.sex,
+  b1980.babies AS babies_1980,
+  b2014.babies AS babies_2014
+FROM babynames_2014 AS b2014
+    
+INNER JOIN babynames_1980 AS b1980
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+
+ORDER BY babies_1980 DESC
+LIMIT 5;
+~~~
+
+If we do a regular `INNER JOIN` and order the result by the baby count of the 1980 table, and limit it to 5 results...isn't that the same as what we asked for with the nested query? T
+
+Try it out for yourself and see the results:
+
+
+|--------------+-----+-------------+--------------|
+|  name        | sex | babies_1980 | babies_2014  |
+|--------------+-----+-------------+--------------|
+|  Michael     | M   | 68666       | 15323        |
+|  Jennifer    | F   | 58385       | 1514         |
+|  Christopher | M   | 49086       | 10278        |
+|  Jason       | M   | 48176       | 5510         |
+|  David       | M   | 41913       | 12078        |
+|--------------+-----+-------------+--------------|
+{:.table-sql}
+
+
+Hey! Those queries get us the exact same result. 
+
+Fair enough. Let's try the same query, except sort by `babies_2014`: That is, display the most 5 popular 1980 baby names, ordered by how popular they are in __2014__. 
+
+Seems like a simple fix, just change the `ORDER BY` clause, right?
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT b1980.name, b1980.sex,
+  b1980.babies AS babies_1980,
+  b2014.babies AS babies_2014
+FROM babynames_2014 AS b2014
+    
+INNER JOIN babynames_1980 AS b1980
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+
+ORDER BY babies_2014 DESC
+LIMIT 5;
+~~~
+
+},%Q{
+
+|---------+-----+-------------+--------------|
+|  name   | sex | babies_1980 | babies_2014  |
+|---------+-----+-------------+--------------|
+|  Emma   | F   | 534         | 20799        |
+|  Olivia | F   | 1117        | 19674        |
+|  Noah   | M   | 929         | 19144        |
+|  Sophia | F   | 642         | 18490        |
+|  Liam   | M   | 112         | 18342        |
+|---------+-----+-------------+--------------|
+{:.table-sql}
+
+})%>
+
+The answer above doesn't work because it's showing the most popular baby names in 2014, and how they did in 1980.
+
+The key to understanding this nuance is how the `ORDER BY` and `LIMIT` clauses come at the _end of the query_. The `SELECT...FROM` and `INNER JOIN` clauses have done their work: selecting data from one table, joining it to the other. And so the `ORDER BY` and `LIMIT` clauses do their work on the _result of the join_.
+
+However, when we want to compare the top 5 names in 1980 against all the names in 2014 -- we want to apply the `ORDER BY` and `LIMIT` to the `babynames_1980` table -- __before__ it is joined to `babynames_2014`. And __after__ the joining is done, _then_ we sort the result by `babies_2014` in descending order.
+
+
+
+
+Below is the proper way to get the result for the previous goal, i.e. "the most 5 popular 1980 baby names, ordered by how popular they are in __2014__". I'm putting it side-by-side with the previous, incorrect query, so that the differences are easier to see:
+
+<%= content_row_side_by_side(%Q{
+
+The previous, incorrect query:
+
+~~~sql
+SELECT b1980.name, b1980.sex,
+  b1980.babies AS babies_1980,
+  b2014.babies AS babies_2014
+FROM babynames_2014 AS b2014
+    
+INNER JOIN babynames_1980 AS b1980
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+
+ORDER BY babies_2014 DESC
+LIMIT 5;
+~~~
+
+
+},%Q{ 
+
+The correct query, using a nested query in the `INNER JOIN`:
+
+~~~sql
+SELECT b1980.name, b1980.sex,
+  b1980.babies AS babies_1980,
+  b2014.babies AS babies_2014
+FROM babynames_2014 AS b2014
+    
+INNER JOIN (
+    SELECT * FROM babynames_1980
+    ORDER BY babies DESC
+    LIMIT 5
+  ) 
+  AS b1980
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+ORDER BY babies_2014 DESC;
+~~~
+
+})%>
+
+The result of the correct query:
+
+|--------------+-----+-------------+--------------|
+|  name        | sex | babies_1980 | babies_2014  |
+|--------------+-----+-------------+--------------|
+|  Michael     | M   | 68666       | 15323        |
+|  David       | M   | 41913       | 12078        |
+|  Christopher | M   | 49086       | 10278        |
+|  Jason       | M   | 48176       | 5510         |
+|  Jennifer    | F   | 58385       | 1514         |
+|--------------+-----+-------------+--------------|
+{:.table-sql}
+
+
+
+# More nested query fun
+
+
+### From the top 100 names in 1980, show the 5 names that dropped the most in popularity in 2014
+
+Think of this as selecting _not_ the entirety of `babynames_1980` -- but just its top 100 names -- and then joining that against `babynames_2014`:
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT b1980.name, b1980.sex, 
+  b2014.babies - b1980.babies AS diffbabies
+  FROM (SELECT * 
+  FROM babynames_1980
+  ORDER BY babies DESC
+  LIMIT 100) 
+  AS b1980
+INNER JOIN
+  babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+ORDER BY diffbabies
+LIMIT 5;
+~~~
+
+},%Q{ 
+
+|--------------+-----+-------------|
+|  name        | sex | diffbabies  |
+|--------------+-----+-------------|
+|  Jennifer    | F   | -56871      |
+|  Michael     | M   | -53343      |
+|  Jason       | M   | -42666      |
+|  Christopher | M   | -38808      |
+|  Amanda      | F   | -34778      |
+|--------------+-----+-------------|
+{:.table-sql}
+
+
+})%>
+
+### From the top 100 names in 1980, show the 5 names that increased the most in popularity
+
+Same query as above, just a change in the second `ORDER BY` statement
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT b1980.name, b1980.sex, 
+  b2014.babies - b1980.babies AS diffbabies
+  FROM (SELECT * 
+  FROM babynames_1980
+  ORDER BY babies DESC
+  LIMIT 100) 
+  AS b1980
+INNER JOIN
+  babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+ORDER BY diffbabies DESC
+LIMIT 5;
+~~~
+
+},%Q{ 
+
+|-----------+-----+-------------|
+|  name     | sex | diffbabies  |
+|-----------+-----+-------------|
+|  Jacob    | M   | 8190        |
+|  Samuel   | M   | 4850        |
+|  Emily    | F   | 3557        |
+|  Benjamin | M   | 57          |
+|  Nathan   | M   | -2237       |
+|-----------+-----+-------------|
+{:.table-sql}
+
+})%>
+
+The fact that "Nathan", with a drop in 2,237 babies, is in this result probably means that virtually all of the most popular 1980 names did not maintain their popularity in 2014 -- unless there were far more babies total in 1980 versus 2014 (there weren't, you can query the database for yourself).
+
+
+### Of the 500 most popular names in 2014 that don't appear in 1980, show the top 5 in order of baby count in 2014
+
+Nothing different here, just a `LEFT JOIN`:
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT b2014.name, b2014.sex, 
+  b2014.babies
+  FROM (SELECT * 
+  FROM babynames_2014
+  ORDER BY babies DESC
+  LIMIT 500) 
+  AS b2014
+LEFT JOIN
+  babynames_1980 AS b1980
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+WHERE b1980.name IS NULL
+ORDER BY b2014.babies DESC
+LIMIT 5;
+~~~
+
+},%Q{ 
+
+|----------+-----+---------|
+|  name    | sex | babies  |
+|----------+-----+---------|
+|  Aiden   | M   | 13296   |
+|  Jayden  | M   | 12878   |
+|  Madison | F   | 10247   |
+|  Zoey    | F   | 7358    |
+|  Ayden   | M   | 5586    |
+|----------+-----+---------|
+{:.table-sql}
+
+})%>
+
+
+
+### How many of the 100 most popular names in 1980 are also among the 100 most popular names in 2014?
+
+Don't panic here; this looks complicated but all we are doing is doing __2__ nested queries: a query for the top 100 in 1980, and a query for the top 100 in 2014.
+
+It looks ugly but should seem logically consistent:
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT COUNT(*)
+FROM (
+    SELECT * FROM babynames_1980
+    ORDER BY babies DESC
+    LIMIT 100
+  ) 
+  AS b1980
+INNER JOIN (
+    SELECT * FROM babynames_2014
+    ORDER BY babies DESC
+    LIMIT 100
+  ) 
+  AS b2014
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex;
+~~~
+
+},%Q{
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  25        |
+|------------|
+{:.table-sql}
+
+})%>
+
+### How many of the 100 most popular names in 1980 are also among the 100 most popular names in 2014, and how many are boys and how many are girls?
+
+The same query as above, except with a `GROUP BY` to aggregate by `sex`:
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT b1980.sex, COUNT(*)
+FROM (
+    SELECT * FROM babynames_1980
+    ORDER BY babies DESC
+    LIMIT 100
+  ) 
+  AS b1980
+INNER JOIN (
+    SELECT * FROM babynames_2014
+    ORDER BY babies DESC
+    LIMIT 100
+  ) 
+  AS b2014
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+GROUP BY b1980.sex;
+~~~
+
+},%Q{
+
+|------+-----------|
+|  sex | COUNT(*)  |
+|------+-----------|
+|  F   | 2         |
+|  M   | 23        |
+|------+-----------|
+{:.table-sql}
+
+
+})%>
+
+
+
+### Of the 100 most popular names in 1980 that are also in the most 100 popular names in 2014, show the top 10 order of their popularity in 2014
+
+This is similar to the previous queries, but structured to show the actual names, not just an aggregate count.
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT b1980.name,
+  b1980.sex, 
+  b1980.babies AS babies_1980,
+  b2014.babies AS babies_2014
+FROM (
+    SELECT * FROM babynames_1980
+    ORDER BY babies DESC
+    LIMIT 100
+  ) 
+  AS b1980
+INNER JOIN (
+    SELECT * FROM babynames_2014
+    ORDER BY babies DESC
+    LIMIT 100
+  ) 
+  AS b2014
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+
+ORDER BY babies_2014 DESC
+LIMIT 10;
+
+~~~
+
+
+},%Q{
+
+|-----------+-----+-------------+--------------|
+|  name     | sex | babies_1980 | babies_2014  |
+|-----------+-----+-------------+--------------|
+|  Jacob    | M   | 8522        | 16712        |
+|  William  | M   | 25659       | 16687        |
+|  Michael  | M   | 68666       | 15323        |
+|  James    | M   | 39312       | 14301        |
+|  Daniel   | M   | 29889       | 13829        |
+|  Benjamin | M   | 13630       | 13687        |
+|  Matthew  | M   | 37857       | 12809        |
+|  Emily    | F   | 9005        | 12562        |
+|  David    | M   | 41913       | 12078        |
+|  Joseph   | M   | 30189       | 11995        |
+|-----------+-----+-------------+--------------|
+{:.table-sql}
+
+})%>
+
+Let's perform a similar query but limit the result to girl names.
+
+
+### Of the 100 most popular names in 1980 that are also in the most 100 popular names in 2014, show only the top 10 girl names, in order of their popularity in 2014
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT b1980.name,
+  b1980.sex, 
+  b1980.babies AS babies_1980,
+  b2014.babies AS babies_2014
+FROM (
+    SELECT * FROM babynames_1980
+    ORDER BY babies DESC
+    LIMIT 100
+  ) 
+  AS b1980
+INNER JOIN (
+    SELECT * FROM babynames_2014
+    ORDER BY babies DESC
+    LIMIT 100
+  ) 
+  AS b2014
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+
+WHERE b1980.sex = 'F'
+ORDER BY babies_2014 DESC
+LIMIT 10;
+~~~
+
+
+},%Q{
+
+|------------+-----+-------------+--------------|
+|  name      | sex | babies_1980 | babies_2014  |
+|------------+-----+-------------+--------------|
+|  Emily     | F   | 9005        | 12562        |
+|  Elizabeth | F   | 19528       | 9492         |
+|------------+-----+-------------+--------------|
+{:.table-sql}
+
+})%>
+
+As we saw earlier, only 2 of the 25 names that were in the top 100 for both years were female names, so this result makes sense.
+
+
+
+ 

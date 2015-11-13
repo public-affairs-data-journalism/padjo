@@ -1,0 +1,751 @@
+---
+title: An introduction to joins and INNER JOINs
+previous: /tutorials/babynames-and-college-salaries/024-creating-tables-importing-data
+next: /tutorials/babynames-and-college-salaries/035-left-joins-and-join-practice
+description: An overview of the importance and syntax of JOIN queries and how to use them to find commonalities between different tables.
+ranking: 2030
+listed: true
+---
+
+For the data journalist, joins are the feature that completely justify the jump from spreadsheets to databases.
+
+A `JOIN` is done through yet another clause of a `SELECT` statement -- and so expect things to get even more cluttered.  This lesson focuses on the overall syntax of joins and the most common type of join: `INNER JOIN`. [The next lesson looks at `LEFT JOIN`s](/tutorials/babynames-and-college-salaries/035-left-joins-and-join-practice) -- which share the same syntax but give us the ability to find when things are _missing_ from tables. 
+
+
+
+
+# Why Joins?
+
+The purpose of a `JOIN` query is to bring together two tables. The easiest way to imagine this is taking two separate tables and smashing them together, so that they're side-by-side. 
+
+Below are two baby name tables, one from 1980 and the other from 2014. We want to compare them. Putting them side-by-side is much easier than flipping through different tabs/windows:
+
+|-----------|-----|--------|---|-----------|-----|--------|
+|    name   | sex | babies |   |    name   | sex | babies |
+|-----------|-----|--------|---|-----------|-----|--------|
+| Jennifer  | F   |  58385 |   | Emma      | F   |  20799 |
+| Amanda    | F   |  35818 |   | Olivia    | F   |  19674 |
+| Elizabeth | F   |  19526 |   | Emily     | F   |  12562 |
+| Emily     | F   |   9004 |   | Elizabeth | F   |   9492 |
+|-----------|-----|--------|---|-----------|-----|--------|
+{:.table-sql}
+
+
+Looking from the left-to-right to make comparisons -- this is the old-fashioned, non-computational -- but _perfectly common sense_ -- way of making comparisons. This is how we would compare two lists on paper, for example. And there's nothing wrong with doing this when we don't have access to a computer.
+
+But while it's easy to pick out the common and different names, it _won't_ be when the lists are thousands or millions of rows each. But even when dealing with lists of just a few dozen rows each, making comparisons can be so difficult as to not just be done.
+
+Learning to use `JOIN` statements is learning how to describe a way to compare two different lists of things. But on a massive scale. 
+
+# Setting up a small example
+
+For the sake of demonstration, let's pretend that `babynames_1980` and `babynames_2014` are much smaller and contain only 4 names each:
+
+<%= content_row_side_by_side(%Q{
+
+##### `babynames_1980`
+
+|------------+-----+---------|
+|  name      | sex | babies  |
+|------------+-----+---------|
+|  Jennifer  | F   | 58385   |
+|  Amanda    | F   | 35818   |
+|  Elizabeth | F   | 19526   |
+|  Emily     | F   | 9004    |
+|------------+-----+---------|
+{:.table-sql}
+},%Q{
+##### `babynames_2014`
+
+|------------+-----+---------|
+|  name      | sex | babies  |
+|------------+-----+---------|
+|  Emma      | F   | 20799   |
+|  Olivia    | F   | 19674   |
+|  Emily     | F   | 12562   |
+|  Elizabeth | F   | 9492    |
+|------------+-----+---------|
+{:.table-sql}
+})%>
+
+
+From this small sample, we can see more clearly that there are __3 interesting categories of names__.
+
+The entire purpose of this chapter: __how do we write a query to identify these 3 categories of names__?
+
+
+### 1. Names that exist only in 1980
+
+These are names that have apparently fallen out of favor in 2014:
+
+
+<%= content_row_side_by_side(%Q{
+
+##### `babynames_1980`
+
+|----------------------------------|-----|--------|
+|               name               | sex | babies |
+|----------------------------------|-----|--------|
+| <span class="hi">Jennifer</span> | F   |  58385 |
+| <span class="hi">Amanda</span>   | F   |  35818 |
+| Elizabeth                        | F   |  19526 |
+| Emily                            | F   |   9004 |
+|----------------------------------|-----|--------|
+{:.table-sql}
+},%Q{
+##### `babynames_2014`
+
+|--------------------------------|-----|--------|
+|              name              | sex | babies |
+|--------------------------------|-----|--------|
+| <span class="hi">Emma</span>   | F   |  20799 |
+| <span class="hi">Olivia</span> | F   |  19674 |
+| Emily                          | F   |  12562 |
+| Elizabeth                      | F   |   9492 |
+|--------------------------------|-----|--------|
+{:.table-sql}
+})%>
+
+
+
+
+
+### 2. Names that exist only in 2014
+
+These are names that apparently gained popularity in the several decades:
+
+
+<%= content_row_side_by_side(%Q{
+
+##### `babynames_1980`
+
+|-----------|-----|--------|
+|    name   | sex | babies |
+|-----------|-----|--------|
+| Jennifer  | F   |  58385 |
+| Amanda    | F   |  35818 |
+| Elizabeth | F   |  19526 |
+| Emily     | F   |   9004 |
+|-----------|-----|--------|
+{:.table-sql}
+},%Q{
+##### `babynames_2014`
+
+|------------+-----+---------|
+|  name      | sex | babies  |
+|------------+-----+---------|
+|  Emma      | F   | 20799   |
+|  Olivia    | F   | 19674   |
+|  Emily     | F   | 12562   |
+|  Elizabeth | F   | 9492    |
+|------------+-----+---------|
+{:.table-sql}
+})%>
+
+
+<a id="mark-inner-join-both-names"></a>
+
+### 3. Names that exist both in 1980 and 2014.
+
+These are names that exist in both years, apparently having staying power despite cultural changes and trends over the 3 decades:
+
+<%= content_row_side_by_side(%Q{
+
+##### `babynames_1980`
+
+|-----------------------------------|-----|--------|
+|                name               | sex | babies |
+|-----------------------------------|-----|--------|
+| Jennifer                          | F   |  58385 |
+| Amanda                            | F   |  35818 |
+| <span class="hi">Elizabeth</span> | F   |  19526 |
+| <span class="hi">Emily</span>     | F   |   9004 |
+|-----------------------------------|-----|--------|
+{:.table-sql}
+},%Q{
+##### `babynames_2014`
+
+|-----------------------------------|-----|--------|
+|                name               | sex | babies |
+|-----------------------------------|-----|--------|
+| Emma                              | F   |  20799 |
+| Olivia                            | F   |  19674 |
+| <span class="hi">Emily</span>     | F   |  12562 |
+| <span class="hi">Elizabeth</span> | F   |   9492 |
+|-----------------------------------|-----|--------|
+{:.table-sql}
+})%>
+
+
+In this chapter, we will learn how to use `INNER JOIN` to derive the __third__ category of names -- Names that exist both in 1980 and 2014. In the next chapter, we'll learn how to use [`LEFT JOIN` to filter for names that exist in only one or the other table](/tutorials/babynames-and-college-salaries/035-left-joins-and-join-practice).
+
+
+
+## Creating sample data for yourself
+
+If you want to follow the explanatory examples that use this example data, just run these queries to create 2 tables -- `t1980` and `t2014`, which you can delete later -- with the data:
+
+~~~sql
+DROP TABLE IF EXISTS t1980;
+CREATE TABLE t1980(
+  "name" TEXT,
+  "sex" TEXT,
+  "babies" INTEGER
+);
+INSERT INTO 
+  t1980 ("name", "sex", "babies")
+  VALUES
+  ("Jennifer", "F", 58385),
+  ("Amanda", "F", 35818),
+  ("Elizabeth", "F", 19526),
+  ("Emily", "F", 9004);
+
+DROP TABLE IF EXISTS t2014;
+CREATE TABLE t2014(
+  "name" TEXT,
+  "sex" TEXT,
+  "babies" INTEGER
+);
+INSERT INTO 
+  t2014 ("name", "sex", "babies")
+  VALUES
+  ("Emma", "F", 20799),
+  ("Olivia", "F", 19674),
+  ("Emily", "F", 12562),
+  ("Elizabeth", "F", 9492);
+~~~
+
+
+
+# Use `INNER JOIN` to find matching entries between two tables
+
+An `INNER JOIN` is used to find entries that match between two tables. This corresponds to the aforementioned scenario, in which we're [interested in names that appear in both 1980 and 2014](#mark-inner-join-both-names). 
+
+In the sequence of a `SELECT` statement, the `JOIN` clause occurs _after_ the `FROM` clause:
+
+~~~sql
+SELECT * 
+FROM table_a
+INNER JOIN table_b
+ON table_a.column = table_b.column;
+~~~
+
+It's easier to walk through the syntax, step-by-step, starting from scratch:
+
+## SELECTing the first table
+
+
+<%= content_row_side_by_side(%Q{
+
+Let's begin by using `SELECT` to select the entirety of the `t1980` table. This is simple enough:
+
+~~~sql
+SELECT *
+FROM t1980;
+~~~
+
+},%Q{
+
+|-----------|-----|--------|
+|    name   | sex | babies |
+|-----------|-----|--------|
+| Jennifer  | F   |  58385 |
+| Amanda    | F   |  35818 |
+| Elizabeth | F   |  19526 |
+| Emily     | F   |   9004 |
+|-----------|-----|--------|
+{:.table-sql}
+})%>
+
+In the context of `JOIN` statements, think of this as telling the SQL interpreter that `t1980` is the table that we want to _start from_.
+
+
+## Adding the INNER JOIN clause
+
+The `JOIN` clause comes after the `FROM` clause. By default, a `JOIN` is an `INNER`-type of join. I like to be explicit about it so in all my examples, I use `INNER JOIN` even though just `JOIN` will do fine. 
+
+### Trying to `JOIN` without a constraint
+
+<%= content_row_side_by_side(%Q{
+
+Adding the `INNER JOIN` clause can be as simple as this:
+
+~~~sql
+SELECT *
+FROM t1980
+INNER JOIN t2014;
+~~~
+
+},%Q{
+
+However, this simple query makes for an equally simple but nonsensical result:
+
+|------------+-----+--------+-----------+-----+---------|
+|  name      | sex | babies | name      | sex | babies  |
+|------------+-----+--------+-----------+-----+---------|
+|  Jennifer  | F   | 58385  | Emma      | F   | 20799   |
+|  Jennifer  | F   | 58385  | Olivia    | F   | 19674   |
+|  Jennifer  | F   | 58385  | Emily     | F   | 12562   |
+|  Jennifer  | F   | 58385  | Elizabeth | F   | 9492    |
+|  Amanda    | F   | 35818  | Emma      | F   | 20799   |
+|  Amanda    | F   | 35818  | Olivia    | F   | 19674   |
+|  Amanda    | F   | 35818  | Emily     | F   | 12562   |
+|  Amanda    | F   | 35818  | Elizabeth | F   | 9492    |
+|  Elizabeth | F   | 19526  | Emma      | F   | 20799   |
+|  Elizabeth | F   | 19526  | Olivia    | F   | 19674   |
+|  Elizabeth | F   | 19526  | Emily     | F   | 12562   |
+|  Elizabeth | F   | 19526  | Elizabeth | F   | 9492    |
+|  Emily     | F   | 9004   | Emma      | F   | 20799   |
+|  Emily     | F   | 9004   | Olivia    | F   | 19674   |
+|  Emily     | F   | 9004   | Emily     | F   | 12562   |
+|  Emily     | F   | 9004   | Elizabeth | F   | 9492    |
+|------------+-----+--------+-----------+-----+---------|
+{:.table-sql}
+}) %>
+
+...What happened? Well, we didn't tell the interpreter _how_ the two tables should be joined -- i.e. which column or columns have the similarities that we want to find -- so, in typical computer-programming fashion, it just gave us __every possible combination__. 
+
+There are 16 rows because both tables have 4 rows each, i.e. the 16 rows are the maximum number of combinations between the two tables, i.e. `4 * 4 = 16`.
+
+We obviously don't want 16 rows. We know from the beginning of this lesson that there are only two shared names, "Emily" and "Elizabeth".
+
+## Adding a constraint to a JOIN clause
+
+With the `ON` clause, we are able to _constrain_ how the tables are joined. It's pretty much like a `WHERE` clause, in which we specify a true/false condition that, _if true for a given combination of rows_, the query will return those rows in the result.
+
+### Logical screwups
+
+Before we get to the ostensibly _desired_ answer -- let's intentionally screw things up. If we pass in a condition that is _always false_, such as `1 = 2`, then the `JOIN` clause will always be __false__ for every combination of rows.
+
+Try it out for yourself:
+
+~~~sql
+SELECT *
+FROM t1980
+INNER JOIN t2014
+  ON 1 = 2;
+~~~
+
+Conversely, if we use an _always true_ condition for the `ON` constraint, then it will be __true__ for every possible combination of rows. Therefore, all possible combination of rows will be returned, i.e. the 16 we saw previously:
+
+~~~sql
+SELECT *
+FROM t1980
+INNER JOIN t2014
+  ON 1 = 1;
+~~~
+
+
+### Choosing a column for a constraint
+
+Let's pick a condition that makes sense: we want the query to return the rows in which `t1980` and `t2014` have _matching names_. Think to yourself what the query will look like, and then look at the answer below:
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT *
+FROM t1980
+INNER JOIN t2014
+  ON t1980.name = t2014.name;
+~~~
+
+},%Q{
+  
+|------------+-----+--------+-----------+-----+---------|
+|  name      | sex | babies | name      | sex | babies  |
+|------------+-----+--------+-----------+-----+---------|
+|  Elizabeth | F   | 19526  | Elizabeth | F   | 9492    |
+|  Emily     | F   | 9004   | Emily     | F   | 12562   |
+|------------+-----+--------+-----------+-----+---------|
+{:.table-sql}
+
+})%>
+
+And that's it, that's an `INNER JOIN`. It may not look like much because, after all, we're dealing with a very small dataset, but imagine reducing two lists of 100 names each -- with a maximum of 10,000 possible comparisons; a `INNER JOIN` query will find the matches just as quickly. 
+
+So congrats on performing one of the most fundamentally powerful -- though, at the same time, somewhat hard to figure out -- features of SQL.
+
+
+### Joining on multiple columns
+
+I simplified the examples to include only female names. But pretend both genders were represented in `t1980` and `t2014` and we wanted to find same-gender rows for gender neutral names -- think "Taylor", and pretend "Taylor" exists as an entry in `t1980` and `t2014`, though if you want to do the query below, just substitute `babynames_1980` and `babynames_2014`, respectively:
+
+(also, ignore the use of the `WHERE` clause for now -- we'll get to that later)
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT * FROM t1980 
+INNER JOIN t2014
+  ON t1980.name = t2014.name
+WHERE t1980.name = 'Taylor';
+~~~
+
+},
+%Q{
+  
+|---------+-----+--------+--------+-----+---------|
+|  name   | sex | babies | name   | sex | babies  |
+|---------+-----+--------+--------+-----+---------|
+|  Taylor | F   | 237    | Taylor | F   | 3782    |
+|  Taylor | F   | 237    | Taylor | M   | 691     |
+|  Taylor | M   | 617    | Taylor | F   | 3782    |
+|  Taylor | M   | 617    | Taylor | M   | 691     |
+|---------+-----+--------+--------+-----+---------|
+{:.table-sql}
+
+
+})%>
+
+There are 4 rows because both 1980 and 2014 have 2 rows each -- one for each gender -- corresponding to the name of "Taylor".
+
+What if we want to compare "Taylor" between the years but just for same genders? In other words, we don't care that "Taylor"'s popularity among girls _versus_ boys, we just care how it changed in popularity as a name for boys and girls, respectively, between 1980 and 2014. 
+
+Then we simply add another _constraint_: the two `sex` columns must be equal:
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT * FROM t1980 
+INNER JOIN t2014
+  ON t1980.name = t2014.name
+    AND t1980.sex = t2014.sex
+WHERE t1980.name = 'Taylor';
+~~~
+
+},%Q{
+|---------+-----+--------+--------+-----+---------|
+|  name   | sex | babies | name   | sex | babies  |
+|---------+-----+--------+--------+-----+---------|
+|  Taylor | F   | 237    | Taylor | F   | 3782    |
+|  Taylor | M   | 617    | Taylor | M   | 691     |
+|---------+-----+--------+--------+-----+---------|
+{:.table-sql}
+
+})%>
+
+
+#### Making irrelevant, unnecessary, or illogical comparisons
+
+As always, we can tell the interpreter to look for things that don't make much real-world sense. The following query would, for our small example dataset, return 16 rows because, again, all of the example rows happen to have the same `sex`:
+
+~~~sql
+SELECT * FROM t1980 
+INNER JOIN t2014
+  ON t1980.sex = t2014.sex;
+~~~
+
+The following query would return 0 rows because it's asking for rows in which the `babies` number in `t1980` matches the `name` in `t2014` (if that confuses you, it's because it's not supposed to make any sense):
+
+~~~sql
+SELECT * FROM t1980 
+INNER JOIN t2014
+  ON t1980.name = t2014.count;
+~~~
+
+And all of the following queries don't make much logical sense, though they each either return all possible results, or none at all. See if you can derive their bizarre logic from their code:
+
+~~~sql
+SELECT * FROM t1980 
+INNER JOIN t2014
+  ON t1980.name = t1980.name;
+~~~
+
+~~~sql
+SELECT * FROM t1980 
+INNER JOIN t2014
+  ON t1980.name != t2014.name;
+~~~
+
+~~~sql
+SELECT * FROM t1980 
+INNER JOIN t2014
+  ON t1980.name = t2014.name
+  OR t1980.name != t2014.name;
+~~~
+
+
+
+#### Making specific JOINs that may return nothing
+
+As a quick sidenote, remember that an empty result does _not_ mean the query was wrong. In our `t1980` and `t2014` datasets, the following query would return 0 results:
+
+~~~sql
+SELECT * FROM t1980 
+INNER JOIN t2014
+  ON t1980.name = t2014.name 
+    AND t1980.count = t2014.count;
+~~~
+
+This is a reasonable query: which names between 1980 and 2014 have _exactly_ the same number of babies between the two years? In our data, it is 0. But it may have results when looking at the greater dataset...
+
+
+# Working with joined table results
+
+It's key to remember that a `JOIN` basically makes a new table. So what worked with a single table -- including `WHERE`, sorts, and limits -- will basically work with the joined result.
+
+But before we get to `LEFT JOIN`s, I'll review a few things particular to the results of JOINing tables.
+
+
+## Keeping track of tables and columns in a JOIN
+
+Let's examine the result of our previous, successful `INNER JOIN`:
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT *
+FROM t1980
+INNER JOIN t2014
+  ON t1980.name = t2014.name;
+~~~
+
+},
+%Q{
+  
+|------------+-----+--------+-----------+-----+---------|
+|  name      | sex | babies | name      | sex | babies  |
+|------------+-----+--------+-----------+-----+---------|
+|  Elizabeth | F   | 19526  | Elizabeth | F   | 9492    |
+|  Emily     | F   | 9004   | Emily     | F   | 12562   |
+|------------+-----+--------+-----------+-----+---------|
+{:.table-sql}
+
+})%>
+
+It makes sense that there are __2 rows__ - one for each matching name between the two tables.
+
+But why are there __6 columns__? Once again, because we didn't give the interpreter any specific directions, it just gave us all the columns when we used `SELECT *` in our statement. Both tables have 3 columns each, `3 + 3 = 6`, and so forth.
+
+How do we show just the 4 columns we need? Specifically: `name`, `sex`, and the 2 different `babies` counts?
+
+### Being specific about column names
+
+Let's try something simpler: just show the matching `name` values.
+
+The following query will return an error:
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT name
+FROM t1980
+INNER JOIN t2014
+  ON t1980.name = t2014.name;
+~~~
+
+},%Q{
+  
+      Error: near line 2: ambiguous column name: name
+
+})%>
+
+Remember that we're joining two different tables. Conceptually, to us, there's only _one_ `name` column. But to the database, there are 2 such columns, because both tables have a `name` column.
+
+The way to resolve ambiguity is to _prefix_ the table name to each column:
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT t1980.name
+FROM t1980
+INNER JOIN t2014
+  ON t1980.name = t2014.name;
+~~~
+
+},%Q{
+  
+|-------------|
+|  name       |
+|-------------|
+|  Elizabeth  |
+|  Emily      |
+|-------------|
+{:.table-sql}
+
+})%>
+
+
+And this is how we get the 4 columns we need:
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT t1980.name, 
+t1980.sex, t1980.babies, t2014.babies
+FROM t1980
+INNER JOIN t2014
+  ON t1980.name = t2014.name;
+~~~
+
+},%Q{
+
+|------------+-----+--------+---------|
+|  name      | sex | babies | babies  |
+|------------+-----+--------+---------|
+|  Elizabeth | F   | 19526  | 9492    |
+|  Emily     | F   | 9004   | 12562   |
+|------------+-----+--------+---------|
+{:.table-sql}
+  
+})%>
+
+Note that it doesn't matter which of the `name` columns we used -- by definition of `INNER JOIN`, `t2014.name` and `t1980.name` will _always_ be the same thing.
+
+But take special note that `t2014.sex` and `t1980.sex` are _not_ the same. They just happen to be the same in our female-only example.
+
+### Using aliases
+
+In the above result, we see that SQLite insists on labeling both columns as `babies`, which makes it hard to read for anyone else who didn't actually write the query.
+
+This is where __aliases__ -- using the `AS` keyword -- can be handy.
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT t1980.name, 
+  t1980.sex, 
+  t1980.babies AS num1980, 
+  t2014.babies AS num2014
+FROM t1980
+INNER JOIN t2014
+  ON t1980.name = t2014.name;
+~~~
+
+},%Q{
+
+|------------+-----+---------+----------|
+|  name      | sex | num1980 | num2014  |
+|------------+-----+---------+----------|
+|  Elizabeth | F   | 19526   | 9492     |
+|  Emily     | F   | 9004    | 12562    |
+|------------+-----+---------+----------|
+{:.table-sql}
+
+})%>
+
+The aliases can be used in subsequent clauses -- for example, if we want to `ORDER BY` the `2014` baby count in reverse order:
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT t1980.name, 
+  t1980.sex, 
+  t1980.babies AS num1980, 
+  t2014.babies AS num2014
+FROM t1980
+INNER JOIN t2014
+  ON t1980.name = t2014.name
+ORDER BY num2014 DESC;
+~~~
+
+},%Q{
+
+|------------+-----+---------+----------|
+|  name      | sex | num1980 | num2014  |
+|------------+-----+---------+----------|
+|  Emily     | F   | 9004    | 12562    |
+|  Elizabeth | F   | 19526   | 9492     |
+|------------+-----+---------+----------|
+{:.table-sql}
+
+})%>
+
+While we're here, we might as well see where things fit with the `WHERE` clause. Here's an example of using `WHERE` to filter the _joined table results_ by a condition on the `num2014` and `num1980` columns, which, again, are actually just aliases for `t1980.babies` and `t2014.babies`, respectively.
+
+The following query returns only the joined results in which the 2014 count is higher than 1980:
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT t1980.name, 
+  t1980.sex, 
+  t1980.babies AS num1980, 
+  t2014.babies AS num2014
+FROM t1980
+INNER JOIN t2014
+  ON t1980.name = t2014.name
+WHERE num2014 > num1980;
+~~~
+
+},%Q{
+
+|--------+-----+---------+----------|
+|  name  | sex | num1980 | num2014  |
+|--------+-----+---------+----------|
+|  Emily | F   | 9004    | 12562    |
+|--------+-----+---------+----------|
+{:.table-sql}
+
+})%>
+
+
+## Creating derived columns from joined columns
+
+Just like with a single table, we can perform calculations on a joined results table. The following calculates the change of `babies` between `2014` and `1980`. Note that I can't refer to the aliases within the `SELECT` statement, i.e. to do `num2014 - num1980`, because they haven't really been assigned yet at that point:
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT t1980.name, 
+  t1980.sex, 
+  t1980.babies AS num1980, 
+  t2014.babies AS num2014,
+  t2014.babies - t1980.babies AS diffbabies
+FROM t1980
+INNER JOIN t2014
+  ON t1980.name = t2014.name;
+~~~
+
+
+},%Q{
+|------------+-----+---------+---------+-------------|
+|  name      | sex | num1980 | num2014 | diffbabies  |
+|------------+-----+---------+---------+-------------|
+|  Elizabeth | F   | 19526   | 9492    | -10034      |
+|  Emily     | F   | 9004    | 12562   | 3558        |
+|------------+-----+---------+---------+-------------|
+{:.table-sql}
+
+})%>
+
+
+Here's a variation of that query, except I don't even bother showing the two `babies` columns. Instead, I show `diffbabies`, and I calculate a new value: the _percent_ difference between the years. And I also sort by that derived value in descending order.
+
+
+
+~~~sql
+SELECT t1980.name, 
+  t1980.sex, 
+  t2014.babies - t1980.babies AS diffbabies,
+  ROUND(100 * (t2014.babies - t1980.babies) / t1980.babies) AS diffpct
+FROM t1980
+INNER JOIN t2014
+  ON t1980.name = t2014.name
+ORDER BY diffpct DESC;
+~~~
+
+Again, just an example and not really a concept, other than slowly realizing that we can pretty much do things exactly we want, depending on the calculations we need:
+
+|------------+-----+------------+----------|
+|  name      | sex | diffbabies | diffpct  |
+|------------+-----+------------+----------|
+|  Emily     | F   | 3558       | 39.0     |
+|  Elizabeth | F   | -10034     | -51.0    |
+|------------+-----+------------+----------|
+{:.table-sql}
+
+
+
+That's enough about `INNER JOINs`. In the [next lesson, we look at `LEFT JOIN`s](/tutorials/babynames-and-college-salaries/035-left-joins-and-join-practice), which allow us to find the things that are _not shared_ between two tables.
+
+
+
+
+
+
+
+
+
+
+
+

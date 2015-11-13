@@ -1,0 +1,925 @@
+---
+title: Using LEFT JOINs to find what's missing from one table to another
+listed: true
+ranking: 2035
+description: |
+  Sometimes when we compare two tables, we care more about their differences.
+previous: /tutorials/babynames-and-college-salaries/030-all-about-inner-joins
+next: /tutorials/babynames-and-college-salaries/045-self-joins-and-nested-joins
+---
+
+This is a continuation of the [previous chapter on INNER JOINs](/tutorials/babynames-and-college-salaries/030-all-about-inner-joins). But I'll repeat the beginning of the previous chapter, on what kind of things we want to find between tables `t1980` and `t2014`:
+
+  
+
+### 1. Names that exist only in 1980
+
+These are names that have apparently fallen out of favor in 2014:
+
+
+<%= content_row_side_by_side(%Q{
+
+##### `babynames_1980`
+
+|----------------------------------|-----|--------|
+|               name               | sex | babies |
+|----------------------------------|-----|--------|
+| <span class="hi">Jennifer</span> | F   |  58385 |
+| <span class="hi">Amanda</span>   | F   |  35818 |
+| Elizabeth                        | F   |  19526 |
+| Emily                            | F   |   9004 |
+|----------------------------------|-----|--------|
+{:.table-sql}
+},%Q{
+##### `babynames_2014`
+
+|--------------------------------|-----|--------|
+|              name              | sex | babies |
+|--------------------------------|-----|--------|
+| <span class="hi">Emma</span>   | F   |  20799 |
+| <span class="hi">Olivia</span> | F   |  19674 |
+| Emily                          | F   |  12562 |
+| Elizabeth                      | F   |   9492 |
+|--------------------------------|-----|--------|
+{:.table-sql}
+})%>
+
+
+
+
+
+### 2. Names that exist only in 2014
+
+These are names that apparently gained popularity in the several decades:
+
+
+<%= content_row_side_by_side(%Q{
+
+##### `babynames_1980`
+
+|-----------|-----|--------|
+|    name   | sex | babies |
+|-----------|-----|--------|
+| Jennifer  | F   |  58385 |
+| Amanda    | F   |  35818 |
+| Elizabeth | F   |  19526 |
+| Emily     | F   |   9004 |
+|-----------|-----|--------|
+{:.table-sql}
+},%Q{
+##### `babynames_2014`
+
+|------------+-----+---------|
+|  name      | sex | babies  |
+|------------+-----+---------|
+|  Emma      | F   | 20799   |
+|  Olivia    | F   | 19674   |
+|  Emily     | F   | 12562   |
+|  Elizabeth | F   | 9492    |
+|------------+-----+---------|
+{:.table-sql}
+})%>
+
+
+
+
+# The LEFT JOIN
+
+Everything I've explained in the `INNER JOIN` chapter applies the same to `LEFT JOIN` type queries, including the structure and syntax. The major change, of course, is that in order to do a `LEFT JOIN` query, we write `LEFT JOIN` instead of `INNER JOIN`.
+
+Take the basic `INNER JOIN` that we've done, make it a `LEFT JOIN`, and see what happens:
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT * 
+FROM t1980 
+LEFT JOIN t2014
+  ON t1980.name = t2014.name;
+~~~
+
+},%Q{
+
+|-----------|-----|--------|-----------|------|--------|
+|    name   | sex | babies |    name   | sex  | babies |
+|-----------|-----|--------|-----------|------|--------|
+| Jennifer  | F   |  58385 | NULL      | NULL | NULL   |
+| Amanda    | F   |  35818 | NULL      | NULL | NULL   |
+| Elizabeth | F   |  19526 | Elizabeth | F    | 9492   |
+| Emily     | F   |   9004 | Emily     | F    | 12562  |
+|-----------|-----|--------|-----------|------|--------|
+{:.table-sql}
+})%>
+
+Not only did we get all 4 rows of `t1980`, we got the corresponding matches for `t2014` _when there were matches_. And then rows full of `NULL`.
+
+
+## What is NULL?
+
+What do those `NULL` values represent? Remembering that we've joined 2 tables and thus, the result is the `t1980` and `t2014` tables, side-by-side. The names "Jennifer" and "Amanda" do not exist in `t2014`. The corresponding `NULL` values is how SQL denotes their nonexistence.
+
+So `NULL` is [a term for specifying an existentially unknown or nonsensical state](http://www.padjo.org/tutorials/databases/sql-null/). It is not the same as a value being _empty_, in the same way that turning in an empty text file or blank sheet of paper is different than not turning anything at all.
+
+So don't confuse `NULL` with these kinds of "nothingness", 
+
+
+- `0`
+- `""` i.e. an empty or blank string
+- `FALSE` - SQLite doesn't really have a `FALSE` value, but other databases and languages do. Either way, `NULL` is _not_ `FALSE`.
+
+For the purposes of our typical query work, take note that looking for `NULL` -- such as in a `WHERE` or `ON` condition -- requires a different comparison syntax:
+
+        WHERE some_column IS NULL
+
+But _not_:
+
+        WHERE some_column = NULL
+
+
+
+## Filtering for NULL
+
+When the result rows are as few as in the previous example, it might be enough to eyeball the rows and conclude, "Jennifer" and "Amanda" do not exist in `t2014`. But again, that's not possible with a massive dataset. So let's add a `WHERE` clause to our `LEFT JOIN` query and look _for_ `NULL`:
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT * 
+FROM t1980 
+LEFT JOIN t2014
+  ON t1980.name = t2014.name
+WHERE t2014.name IS NULL;
+~~~
+
+},%Q{
+
+|----------|-----|--------|------|------|--------|
+|   name   | sex | babies | name | sex  | babies |
+|----------|-----|--------|------|------|--------|
+| Jennifer | F   |  58385 | NULL | NULL | NULL   |
+| Amanda   | F   |  35818 | NULL | NULL | NULL   |
+|----------|-----|--------|------|------|--------|
+{:.table-sql}
+
+})%>
+
+In the above situation, there's generally not a reason to include the right-side of the table since, by definition of the `LEFT JOIN`, the values will all be `NULL` anyway. 
+
+So, to keep things aesthetically simple and to the point:
+
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT t1980.* 
+FROM t1980 
+LEFT JOIN t2014
+  ON t1980.name = t2014.name
+WHERE t2014.name IS NULL;
+~~~
+
+},%Q{
+
+|-----------+-----+---------|
+|  name     | sex | babies  |
+|-----------+-----+---------|
+|  Jennifer | F   | 58385   |
+|  Amanda   | F   | 35818   |
+|-----------+-----+---------|
+{:.table-sql}
+
+})%>
+
+### The order of joins and LEFT JOINs
+
+Unlike with `INNER JOIN` queries, it _does_ matter which table you start `FROM` and then `LEFT JOIN` to. The previous example queried for names _from_ `t1980` that do not appear in `t2014`.
+
+To find the inverse, i.e. names in `t2014` that don't appear in `t1980`, we just switch the order in which the tables appear in the query:
+
+
+<%= content_row_side_by_side(%Q{
+~~~sql
+SELECT * 
+FROM t2014 
+LEFT JOIN t1980
+  ON t1980.name = t2014.name;
+~~~
+
+},%Q{
+
+|-----------|-----|--------|-----------|------|--------|
+|    name   | sex | babies |    name   | sex  | babies |
+|-----------|-----|--------|-----------|------|--------|
+| Emma      | F   |  20799 | NULL      | NULL | NULL   |
+| Olivia    | F   |  19674 | NULL      | NULL | NULL   |
+| Emily     | F   |  12562 | Emily     | F    | 9004   |
+| Elizabeth | F   |   9492 | Elizabeth | F    | 19526  |
+|-----------|-----|--------|-----------|------|--------|
+{:.table-sql}
+
+})%>
+
+The rest of the syntax for `LEFT JOIN` is the same as with `INNER JOIN`-type queries. So there's not much more to say specifically about `LEFT JOIN` except that when we need to find _differences_ between two tables, `LEFT JOIN` is our go-to tool.
+
+# Joins in action
+
+The rest of this tutorial is just going to be examples of `INNER JOIN` and `LEFT JOIN` in action, using the full `babynames_1980` and `babynames_2014` tables.
+
+## INNER JOIN examples with baby names from 1980 and 2014
+
+
+### How many unique names show up in both 1980 and 2014?
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT COUNT(DISTINCT babynames_1980.name)
+FROM babynames_1980
+INNER JOIN babynames_2014
+  ON babynames_1980.name = babynames_2014.name;
+~~~
+
+},%Q{
+
+|---------------------------------------|
+|  COUNT(DISTINCT babynames_1980.name)  |
+|---------------------------------------|
+|  9712                                 |
+|---------------------------------------|
+{:.table-sql}
+
+})%>
+
+### What is the gender breakdown between names common to both 1980 and 2014?
+
+This just requires adding a `GROUP BY` clause. Note that we doesn't matter whether we `GROUP BY` the `sex` column of `babynames_1980` or `babynames_2014`. We also don't need to use `DISTINCT` because each name only shows up once per `sex` value:
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT babynames_1980.sex, COUNT(*)
+FROM babynames_1980
+INNER JOIN babynames_2014
+  ON babynames_1980.name = babynames_2014.name
+    AND babynames_1980.sex = babynames_2014.sex
+GROUP BY babynames_1980.sex;
+~~~
+
+},%Q{
+
+|------+-----------|
+|  sex | COUNT(*)  |
+|------+-----------|
+|  F   | 5589      |
+|  M   | 4720      |
+|------+-----------|
+{:.table-sql}
+
+})%>
+
+
+### How has the popularity for the name "Jordan" changed between 1980 and 2014, for boys and girls?
+
+We can add a `WHERE` clause to filter the joined results to a single name. Note that it doesn't matter whether the condition is `babynames_1980.name = 'Jordan'` or `babynames_2014.name = 'Jordan'` 
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT babynames_1980.sex,
+  babynames_1980.babies, babynames_2014.babies
+FROM babynames_1980
+INNER JOIN babynames_2014
+  ON babynames_1980.name = babynames_2014.name
+    AND babynames_1980.sex = babynames_2014.sex
+WHERE babynames_1980.name = 'Jordan';
+~~~
+
+},%Q{
+
+|------+--------+---------|
+|  sex | babies | babies  |
+|------+--------+---------|
+|  F   | 372    | 1300    |
+|  M   | 1616   | 6810    |
+|------+--------+---------|
+{:.table-sql}
+
+})%>
+
+
+
+
+<a id="mark-inner-join-madisons"></a>
+
+### How has the popularity for the name "Madison" changed between 1980 and 2014, for boys and girls?
+
+Same as above, except I introduce a new aesthetic technique: __aliasing__ the __table names__, e.g. `babynames_1980 AS b1980`. It just makes up for a lot less clutter when the table names are long. I've also aliased the respective `babies` __column names__ to make the result clearer:
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT b1980.sex,
+  b1980.babies AS babies_in_1980, 
+  b2014.babies AS babies_in_2014
+FROM babynames_1980 AS b1980
+INNER JOIN babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+WHERE b1980.name = 'Madison';
+~~~
+
+},%Q{
+
+|------+----------------+-----------------|
+|  sex | babies_in_1980 | babies_in_2014  |
+|------+----------------+-----------------|
+|  M   | 32             | 40              |
+|------+----------------+-----------------|
+{:.table-sql}
+
+})%>
+
+Hmmm...this result seems suspicious. Are there really no girls named "Madison" in 1980 or 2014? If either situation is the case, the `INNER JOIN` won't show the combination. We'll have to see the answer when doing a [LEFT JOIN later...](#mark-left-join-madison)
+
+
+
+
+### Show the top 5 names in common, sorted by popularity in 2014
+
+Keeping in mind that the Social Security Administration tracks names by sex of the baby, we match on both `name` and `sex` fields:
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT babynames_1980.name,
+  babynames_1980.sex,
+  babynames_1980.babies,
+  babynames_2014.babies
+FROM babynames_1980 
+INNER JOIN babynames_2014
+  ON babynames_1980.name = babynames_2014.name
+    AND babynames_1980.sex = babynames_2014.sex
+ORDER BY babynames_2014.babies DESC
+LIMIT 5;
+~~~
+
+
+},%Q{
+
+|---------+-----+--------+---------|
+|  name   | sex | babies | babies  |
+|---------+-----+--------+---------|
+|  Emma   | F   | 534    | 20799   |
+|  Olivia | F   | 1117   | 19674   |
+|  Noah   | M   | 929    | 19144   |
+|  Sophia | F   | 642    | 18490   |
+|  Liam   | M   | 112    | 18342   |
+{:.table-sql}
+
+})%>
+
+One conclusion we can make: names that are trendy in 2014 were not particularly trendy in 1980.
+
+
+### Show the top 5 names in common, sorted by popularity in 1980
+
+Let's look at the opposite: how popular are 1980 names, 15 years later?
+
+The query is almost exactly the same except the column by which we `ORDER BY`.
+
+However, I introduce a new aesthetic technique: __aliasing__ the __table names__, i.e. `babynames_1980 AS b1980`. It just makes up for a lot less clutter when the table names are long. I've also aliased the respective `babies` __column names__ to make the result clearer:
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT b1980.name,
+  b1980.sex,
+  b1980.babies AS babies_1980,
+  b2014.babies AS babies_2014
+FROM babynames_1980 AS b1980
+INNER JOIN babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+ORDER BY babies_1980 DESC
+LIMIT 5;
+~~~
+
+
+},%Q{
+
+|--------------+-----+-------------+--------------|
+|  name        | sex | babies_1980 | babies_2014  |
+|--------------+-----+-------------+--------------|
+|  Michael     | M   | 68666       | 15323        |
+|  Jennifer    | F   | 58385       | 1514         |
+|  Christopher | M   | 49086       | 10278        |
+|  Jason       | M   | 48176       | 5510         |
+|  David       | M   | 41913       | 12078        |
+{:.table-sql}
+
+
+})%>
+
+We can't conclude much from these results, except that it appears boy names (which happened to have the most babies per name in 1980) didn't not suffer as much of a drop in popularity as girl names.
+
+
+### Show the top 5 girl names in common, sorted by popularity in 1980
+
+Same as above, except a `WHERE` clause to filter for `sex = 'F'`. Note that we still have to use `sex` as a constraint in the `JOIN` clause.
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT b1980.name,
+  b1980.sex,
+  b1980.babies AS babies_1980,
+  b2014.babies AS babies_2014
+FROM babynames_1980 AS b1980
+INNER JOIN babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+WHERE b1980.sex = 'F'
+ORDER BY babies_1980 DESC
+LIMIT 5;
+~~~
+
+
+},%Q{
+
+|-----------+-----+-------------+--------------|
+|  name     | sex | babies_1980 | babies_2014  |
+|-----------+-----+-------------+--------------|
+|  Jennifer | F   | 58385       | 1514         |
+|  Amanda   | F   | 35820       | 1042         |
+|  Jessica  | F   | 33920       | 1779         |
+|  Melissa  | F   | 31631       | 1496         |
+|  Sarah    | F   | 25741       | 4647         |
+{:.table-sql}
+
+})%>
+
+### How many names have more than 10,000 babies in both 1980 and 2014?
+
+
+<%= content_row_side_by_side(%Q{ 
+
+~~~sql
+SELECT b1980.sex, COUNT(*)
+FROM babynames_1980 AS b1980
+INNER JOIN babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+WHERE b2014.babies >= 10000 
+  AND b1980.babies >= 10000
+GROUP BY b1980.sex;
+~~~
+
+},%Q{
+
+|------+-----------|
+|  sex | COUNT(*)  |
+|------+-----------|
+|  M   | 13        |
+|------+-----------|
+{:.table-sql}
+
+
+})%>
+
+We can surmise that only boy names met the condition of having 10,000 babies in both years.
+
+
+
+### The 5 most popular names in 2014, among names that were given to at least 1,000 girl babies in both 1980 and 2014
+
+<%= content_row_side_by_side(%Q{ 
+
+~~~sql
+SELECT b1980.name,
+  b1980.babies AS babies_1980,
+  b2014.babies AS babies_2014
+FROM babynames_1980 AS b1980
+INNER JOIN babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+WHERE babies_1980 >= 1000 
+  AND babies_2014 >= 1000
+  AND b1980.sex = 'F'
+ORDER BY babies_2014 DESC
+LIMIT 5;
+~~~
+
+},%Q{
+
+|------------+-------------+--------------|
+|  name      | babies_1980 | babies_2014  |
+|------------+-------------+--------------|
+|  Olivia    | 1117        | 19674        |
+|  Emily     | 9005        | 12562        |
+|  Abigail   | 1576        | 11985        |
+|  Elizabeth | 19528       | 9492         |
+|  Victoria  | 2923        | 7955         |
+{:.table-sql}
+
+
+})%>
+
+
+### The top 5 names in terms of increased popularity from 1980 to 2014
+
+
+<%= content_row_side_by_side(%Q{ 
+
+~~~sql
+SELECT b1980.name, b1980.sex,
+  b1980.babies AS babies_1980,
+  b2014.babies AS babies_2014,
+  b2014.babies - b1980.babies AS diffbabies
+FROM babynames_1980 AS b1980
+INNER JOIN babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+ORDER BY diffbabies DESC
+LIMIT 5;
+~~~
+
+},%Q{
+
+|---------+-----+-------------+-------------+-------------|
+|  name   | sex | babies_1980 | babies_2014 | diffbabies  |
+|---------+-----+-------------+-------------+-------------|
+|  Emma   | F   | 534         | 20799       | 20265       |
+|  Olivia | F   | 1117        | 19674       | 18557       |
+|  Liam   | M   | 112         | 18342       | 18230       |
+|  Noah   | M   | 929         | 19144       | 18215       |
+|  Sophia | F   | 642         | 18490       | 17848       |
+{:.table-sql}
+
+
+})%>
+
+
+### The top 5 names in terms of decreased popularity from 1980 to 2014
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT b1980.name, b1980.sex,
+  b1980.babies AS babies_1980,
+  b2014.babies AS babies_2014,
+  b2014.babies - b1980.babies AS diffbabies
+FROM babynames_1980 AS b1980
+INNER JOIN babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+ORDER BY diffbabies ASC
+LIMIT 5;
+~~~
+
+},%Q{
+
+|--------------+-----+-------------+-------------+-------------|
+|  name        | sex | babies_1980 | babies_2014 | diffbabies  |
+|--------------+-----+-------------+-------------+-------------|
+|  Jennifer    | F   | 58385       | 1514        | -56871      |
+|  Michael     | M   | 68666       | 15323       | -53343      |
+|  Jason       | M   | 48176       | 5510        | -42666      |
+|  Christopher | M   | 49086       | 10278       | -38808      |
+|  Amanda      | F   | 35820       | 1042        | -34778      |
+{:.table-sql}
+
+
+})%>
+
+
+
+
+### The 5 most popular names with no change in number of babies in 1980 and 2014
+
+Note that it doesn't matter whether we order by `babies_2014` or by `babies_1980`:
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT b1980.name, b1980.sex,
+  b1980.babies AS babies_1980,
+  b2014.babies AS babies_2014
+FROM babynames_1980 AS b1980
+INNER JOIN babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+    AND b1980.babies = b2014.babies
+ORDER BY babies_2014 DESC
+LIMIT 5;
+~~~
+
+},%Q{
+
+|---------+-----+-------------+--------------|
+|  name   | sex | babies_1980 | babies_2014  |
+|---------+-----+-------------+--------------|
+|  Sunny  | F   | 201         | 201          |
+|  Sirena | F   | 53          | 53           |
+|  Zena   | F   | 51          | 51           |
+|  Kendal | M   | 50          | 50           |
+|  Jewell | F   | 49          | 49           |
+{:.table-sql}
+
+})%>
+
+
+
+
+### The top 5 names with the least amount of change between 1980 and 2014, with at least 1,000 names in both 1980 and 2014
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT b1980.name,
+  b1980.sex,
+  b1980.babies AS babies_1980,
+  b2014.babies AS babies_2014,
+  ABS(b2014.babies - b1980.babies) AS diffbabies
+FROM babynames_1980 AS b1980
+INNER JOIN babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+WHERE 
+  babies_1980 >= 1000
+  AND babies_2014 >= 1000
+ORDER BY diffbabies ASC
+LIMIT 5; 
+~~~
+
+},%Q{
+
+|-----------+-----+-------------+-------------+-------------|
+|  name     | sex | babies_1980 | babies_2014 | diffbabies  |
+|-----------+-----+-------------+-------------+-------------|
+|  Summer   | F   | 1754        | 1759        | 5           |
+|  Rafael   | M   | 1185        | 1195        | 10          |
+|  Annie    | F   | 1002        | 1046        | 44          |
+|  Wesley   | M   | 3164        | 3112        | 52          |
+|  Benjamin | M   | 13630       | 13687       | 57          |
+{:.table-sql}
+
+})%>
+
+
+
+
+### The 5 most popular boy names in 1980 that were given to at least 500 girl babies in 2014
+
+TK: Make sure your table is indexed
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT b1980.name,
+  b1980.babies AS babies_1980,
+  b2014.babies AS babies_2014
+FROM babynames_1980 AS b1980
+INNER JOIN babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+WHERE babies_2014 >= 500
+  AND b1980.sex = 'M' 
+  AND b2014.sex = 'F'
+ORDER BY babies_1980 DESC
+LIMIT 5; 
+~~~
+
+},%Q{
+
+|---------+-------------+--------------|
+|  name   | babies_1980 | babies_2014  |
+|---------+-------------+--------------|
+|  Ryan   | 24801       | 603          |
+|  Jamie  | 2846        | 633          |
+|  Jordan | 1616        | 1300         |
+|  Angel  | 1418        | 1179         |
+|  Kelly  | 1184        | 734          |
+{:.table-sql}
+
+})%>
+
+
+
+
+## LEFT JOIN examples with baby names from 1980 and 2014
+
+
+### How many unique names in 1980 don't exist in 2014?
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT COUNT(DISTINCT b1980.name)
+FROM babynames_1980 AS b1980
+LEFT JOIN babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+WHERE b2014.name IS NULL;
+~~~
+
+},%Q{ 
+
+|------------------------------|
+|  COUNT(DISTINCT b1980.name)  |
+|------------------------------|
+|  8000                        |
+|------------------------------|
+{:.table-sql}
+
+})%>
+
+
+### How many boys versus girls names in 1980 don't exist in 2014?
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT b1980.sex, 
+  COUNT(DISTINCT b1980.name)
+FROM babynames_1980 AS b1980
+LEFT JOIN babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+  AND b1980.sex = b2014.sex
+WHERE b2014.name IS NULL
+GROUP BY b1980.sex;
+~~~
+
+},%Q{ 
+
+|------+-----------------------------|
+|  sex | COUNT(DISTINCT b1980.name)  |
+|------+-----------------------------|
+|  F   | 6568                        |
+|  M   | 2562                        |
+|------+-----------------------------|
+{:.table-sql}
+
+
+})%>
+
+### What are the most 5 popular girl names in 2014 that didn't exist in 1980?
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT b2014.name, b2014.sex, b2014.babies
+FROM babynames_2014 AS b2014
+LEFT JOIN babynames_1980 AS b1980
+  ON b1980.name = b2014.name
+  AND b1980.sex = b2014.sex
+WHERE b1980.name IS NULL
+  AND b2014.sex = 'F'
+ORDER BY b2014.babies DESC
+LIMIT 5;
+~~~
+
+},%Q{ 
+
+|----------+-----+---------|
+|  name    | sex | babies  |
+|----------+-----+---------|
+|  Madison | F   | 10247   |
+|  Zoey    | F   | 7358    |
+|  Nevaeh  | F   | 4188    |
+|  Khloe   | F   | 3518    |
+|  Adalynn | F   | 2512    |
+{:.table-sql}
+
+})%>
+
+### What are the most 5 popular girl names in 1980 that don't exist in 2014?
+
+~~~sql
+SELECT b1980.name, b1980.sex, b1980.babies
+FROM babynames_1980 AS b1980
+LEFT JOIN babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+  AND b1980.sex = b2014.sex
+WHERE b2014.name IS NULL
+  AND b1980.sex = 'F'
+ORDER BY b1980.babies DESC
+LIMIT 5;
+~~~
+
+},%Q{ 
+
+|-----------+-----+---------|
+|  name     | sex | babies  |
+|-----------+-----+---------|
+|  Lakisha  | F   | 912     |
+|  Tameka   | F   | 843     |
+|  Lakesha  | F   | 585     |
+|  Lashonda | F   | 474     |
+|  Shameka  | F   | 452     |
+{:.table-sql}
+
+})%>
+
+
+
+
+### What are the most 5 popular boy names in 1980 that don't exist in 2014?
+
+~~~sql
+SELECT b1980.name, b1980.sex, b1980.babies
+FROM babynames_1980 AS b1980
+LEFT JOIN babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+  AND b1980.sex = b2014.sex
+WHERE b2014.name IS NULL
+  AND b1980.sex = 'M'
+ORDER BY b1980.babies DESC
+LIMIT 5;
+~~~
+
+},%Q{ 
+
+|-----------+-----+---------|
+|  name     | sex | babies  |
+|-----------+-----+---------|
+|  Brain    | M   | 177     |
+|  Melissa  | M   | 138     |
+|  Jessica  | M   | 125     |
+|  Michelle | M   | 100     |
+|  Jarad    | M   | 90      |
+{:.table-sql}
+
+})%>
+
+I'm not sure about the veracity of those numbers, i.e. that naming boys "Jessica" or "Melissa" was a thing in the 1980s and not so much in 2014. It could be that some records were just misclassified. As for 177 boys named "Brain"...are those typos for "Brian"?
+
+
+
+
+
+<a id="mark-left-join-madison"></a>
+
+### How has the popularity for the name "Madison" changed between 1980 and 2014, for boys and girls (LEFT JOIN version)?
+
+Earlier, we tried comparing the popularity of "Madison" as both [a boy and girl name using an `INNER JOIN`](#mark-inner-join-madison). But no result showed up for girl babies, which means that "Madison" wasn't a popular name in either 1980 or 2014.
+
+That's where a `LEFT JOIN` can help; all entries on the "left"-side of the `LEFT JOIN` will be in the result, regardless if they have a proper match in the other table:
+
+
+<%= content_row_side_by_side(%Q{
+
+~~~sql
+SELECT b1980.sex,
+  b1980.babies AS babies_in_1980, 
+  b2014.babies AS babies_in_2014
+FROM babynames_1980 AS b1980
+LEFT JOIN babynames_2014 AS b2014
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+WHERE b1980.name = 'Madison';
+~~~
+
+},%Q{
+
+|------+----------------+-----------------|
+|  sex | babies_in_1980 | babies_in_2014  |
+|------+----------------+-----------------|
+|  M   | 32             | 40              |
+|------+----------------+-----------------|
+{:.table-sql}
+
+})%>
+
+
+Hmm...that got us the [same answer as with the `INNER JOIN`](#mark-inner-join-madison)...that must mean that either "Madison" is not a popular girl name in 2014 either _or_ it wasn't a popular girl name in 1980. To find out, we repeat the previous query except switch the order of the _tables_.
+
+We also have to modify the `WHERE` condition and selected column names to get the proper result -- basically, choose from the 2014 table instead of the 1980 table:
+
+
+~~~sql
+SELECT b2014.sex,
+  b1980.babies AS babies_in_1980, 
+  b2014.babies AS babies_in_2014
+FROM babynames_2014 AS b2014
+LEFT JOIN babynames_1980 AS b1980
+  ON b1980.name = b2014.name
+    AND b1980.sex = b2014.sex
+WHERE b2014.name = 'Madison';
+~~~
+
+},%Q{
+
+|-----|----------------|----------------|
+| sex | babies_in_1980 | babies_in_2014 |
+|-----|----------------|----------------|
+| F   | NULL           |          10247 |
+| M   | 32             |             40 |
+|-----|----------------|----------------|
+{:.table-sql}
+
+
+})%> 
+
+Basically, "Madison" was non-existent as a girl name in 1980, but became quite popular by 2014.
+

@@ -1,0 +1,492 @@
+---
+title: Some warmup baby queries
+ranking: 2011
+listed: true
+description: Getting started with baby names.
+next: /tutorials/babynames-and-college-salaries/024-creating-tables-importing-data
+---
+
+This is a review of past tutorials and basic SQL, before we get into creating tables and doing table joins.
+
+__Go ahead and download this [starter database](http://stash.padjo.org.s3.amazonaws.com/dumps/2015/babynames-salaries-001.sqlite)__
+
+<%= render_toc %>
+
+
+# Tutorial review
+
+The queries in this tutorial are the same that we've done for the following:
+
+- <%=described_inline_link_to_resource "/tutorials/sql-basics/select-and-from" %>
+- <%=described_inline_link_to_resource "/tutorials/sql-basics/limit-and-order" %>
+- <%=described_inline_link_to_resource "/tutorials/sql-basics/where-clause-as-filter" %>
+- <%=described_inline_link_to_resource "/tutorials/sql-basics/booleans-expressions-for-sql" %>
+- <%=described_inline_link_to_resource "/tutorials/sql-basics/fuzzy-matching-like-in-where" %>
+- <%=described_inline_link_to_resource "/tutorials/sql-basics/functions-in-sqlite" %>
+- <%=described_inline_link_to_resource "/tutorials/sql-basics/aliasing-values-in-sql" %>
+- <%=described_inline_link_to_resource "/tutorials/sql-aggregates/group-by-in-sql" %>
+- <%=described_inline_link_to_resource "/tutorials/sql-aggregates/aggregate-functions-in-sql" %>
+
+
+# Exercises
+
+Did you download the database?  Here it is, [with the `babynames_2014` table loaded in](http://stash.padjo.org.s3.amazonaws.com/dumps/2015/babynames-salaries-001.sqlite).
+
+
+### How many records in the database
+
+~~~sql
+SELECT COUNT(*)
+FROM babynames_2014;
+~~~
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  33044     |
+|------------|
+{:.table-sql}
+
+### How many babies in the database
+
+~~~sql
+SELECT SUM(babies)
+FROM babynames_2014;
+~~~
+
+|---------------|
+|  SUM(babies)  |
+|---------------|
+|  3670151      |
+|---------------|
+{:.table-sql}
+
+
+
+### How many unique names
+
+This number counts each unique name only once, i.e. doesn't double count names that are given to both boys and girls:
+
+
+
+~~~sql
+SELECT COUNT(DISTINCT name)
+FROM babynames_2014;
+~~~
+
+|------------------------|
+|  COUNT(DISTINCT name)  |
+|------------------------|
+|  30579                 |
+|------------------------|
+{:.table-sql}
+
+
+
+### How many boy names
+
+~~~sql
+SELECT COUNT(*)
+FROM babynames_2014
+WHERE sex = 'M';
+~~~
+
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  13977     |
+|------------|
+{:.table-sql}
+
+
+
+
+### How many names and babies, broken down by sex
+
+~~~sql
+SELECT sex, COUNT(*), SUM(babies)
+FROM babynames_2014
+GROUP BY sex;
+~~~
+
+|------+----------+--------------|
+|  sex | COUNT(*) | SUM(babies)  |
+|------+----------+--------------|
+|  F   | 19067    | 1768775      |
+|  M   | 13977    | 1901376      |
+|------+----------+--------------|
+{:.table-sql}
+
+
+
+
+### 5 popular names (i.e. most babies named)
+
+~~~sql
+SELECT name, sex, babies
+FROM babynames_2014
+ORDER BY babies DESC 
+LIMIT 5;
+~~~
+
+|---------+-----+---------|
+|  name   | sex | babies  |
+|---------+-----+---------|
+|  Emma   | F   | 20799   |
+|  Olivia | F   | 19674   |
+|  Noah   | M   | 19144   |
+|  Sophia | F   | 18490   |
+|  Liam   | M   | 18342   |
+{:.table-sql}
+
+
+### 5 most popular boy names
+
+~~~sql
+SELECT name, sex, babies
+FROM babynames_2014
+WHERE sex = 'M'
+ORDER BY babies DESC 
+LIMIT 5;
+~~~
+
+|----------+-----+---------|
+|  name    | sex | babies  |
+|----------+-----+---------|
+|  Noah    | M   | 19144   |
+|  Liam    | M   | 18342   |
+|  Mason   | M   | 17092   |
+|  Jacob   | M   | 16712   |
+|  William | M   | 16687   |
+{:.table-sql}
+
+
+### 5 most popular names between the letters 'U' and 'Z'
+
+~~~sql
+SELECT name, sex, babies
+FROM babynames_2014
+WHERE name BETWEEN 'U' AND 'Z'
+ORDER BY babies DESC 
+LIMIT 5;
+~~~
+
+|-----------+-----+---------|
+|  name     | sex | babies  |
+|-----------+-----+---------|
+|  William  | M   | 16687   |
+|  Wyatt    | M   | 8812    |
+|  Victoria | F   | 7955    |
+|  Xavier   | M   | 4726    |
+|  Violet   | F   | 4156    |
+{:.table-sql}
+
+
+
+### 5 most popular boy names that begin with a vowel
+
+~~~sql
+SELECT *
+FROM babynames_2014
+WHERE 
+  sex = 'M'
+  AND SUBSTR(name, 1, 1) IN ('A', 'E', 'I', 'O', 'U')
+ORDER BY babies DESC
+LIMIT 5;
+~~~
+
+|------------+-----+---------|
+|  name      | sex | babies  |
+|------------+-----+---------|
+|  Ethan     | M   | 15619   |
+|  Alexander | M   | 15293   |
+|  Elijah    | M   | 13694   |
+|  Aiden     | M   | 13296   |
+|  Anthony   | M   | 11490   |
+{:.table-sql}
+
+
+
+
+### 5 most popular girl names that don't end in a vowel
+
+Note that we have to match against lower-case letters:
+
+~~~sql
+SELECT *
+FROM babynames_2014
+WHERE 
+  sex = 'F'
+  AND SUBSTR(name, -1) NOT IN ('a', 'e', 'i', 'o', 'u')
+ORDER BY babies DESC
+LIMIT 5;
+~~~
+
+|----------+-----+---------|
+|  name    | sex | babies  |
+|----------+-----+---------|
+|  Emily   | F   | 12562   |
+|  Abigail | F   | 11985   |
+|  Madison | F   | 10247   |
+|  Harper  | F   | 9564    |
+|  Avery   | F   | 9517    |
+{:.table-sql}
+
+
+### Number of unique names with more than 7 letters
+
+~~~sql
+SELECT COUNT(DISTINCT name)
+FROM babynames_2014
+WHERE LENGTH(name) > 7;
+~~~
+
+|------------------------|
+|  COUNT(DISTINCT name)  |
+|------------------------|
+|  5027                  |
+|------------------------|
+{:.table-sql}
+
+
+
+### Number of unique names shorter than 5 letters, and number of babies with those names
+
+~~~sql
+SELECT COUNT(DISTINCT name), SUM(babies)
+FROM babynames_2014
+WHERE LENGTH(name) < 5;
+~~~
+
+|-----------------------+--------------|
+|  COUNT(DISTINCT name) | SUM(babies)  |
+|-----------------------+--------------|
+|  2988                 | 584082       |
+|-----------------------+--------------|
+{:.table-sql}
+
+
+### 5 longest names
+
+~~~sql
+SELECT name, LENGTH(name) AS namelength,
+  sex, babies
+FROM babynames_2014
+ORDER BY namelength DESC
+LIMIT 5;
+~~~
+
+|------------------+------------+-----+---------|
+|  name            | namelength | sex | babies  |
+|------------------+------------+-----+---------|
+|  Christopherjohn | 15         | M   | 5       |
+|  Mariaguadalupe  | 14         | F   | 16      |
+|  Mariadelcarmen  | 14         | F   | 8       |
+|  Oluwafunmilayo  | 14         | F   | 6       |
+|  Oluwaseyifunmi  | 14         | F   | 6       |
+{:.table-sql}
+
+
+### 5 longest names with at least 1,000 babies
+
+~~~sql
+SELECT name, LENGTH(name) AS namelength,
+  sex, babies
+FROM babynames_2014
+WHERE babies >= 1000
+ORDER BY namelength DESC
+LIMIT 5;
+~~~
+
+|--------------+------------+-----+---------|
+|  name        | namelength | sex | babies  |
+|--------------+------------+-----+---------|
+|  Christopher | 11         | M   | 10278   |
+|  Alexandria  | 10         | F   | 1589    |
+|  Jacqueline  | 10         | F   | 1301    |
+|  Evangeline  | 10         | F   | 1177    |
+|  Alessandra  | 10         | F   | 1078    |
+{:.table-sql}
+
+
+
+
+
+
+
+### 5 most popular starting letters, based on number of names
+
+~~~sql
+SELECT 
+  SUBSTR(name, 1, 1) AS first_letter,
+  COUNT(*) AS name_count
+FROM babynames_2014
+GROUP BY first_letter
+ORDER BY name_count DESC;
+~~~
+
+|---------------+-------------|
+|  first_letter | name_count  |
+|---------------+-------------|
+|  A            | 4537        |
+|  K            | 2970        |
+|  J            | 2810        |
+|  M            | 2650        |
+|  S            | 2163        |
+{:.table-sql}
+
+
+### 5 most popular starting letters, based on number of babies named
+
+~~~sql
+SELECT 
+  SUBSTR(name, 1, 1) AS first_letter,
+  SUM(babies) AS total_babies
+FROM babynames_2014
+GROUP BY first_letter
+ORDER BY total_babies DESC;
+~~~
+
+|---------------+---------------|
+|  first_letter | total_babies  |
+|---------------+---------------|
+|  A            | 517815        |
+|  J            | 368628        |
+|  M            | 298113        |
+|  C            | 259840        |
+|  E            | 248933        |
+{:.table-sql}
+
+
+
+### 5 most popular names with exactly 6 characters that begin with the letters "Ja"
+
+~~~sql
+SELECT * 
+FROM babynames_2014
+WHERE name LIKE 'Ja____'
+ORDER BY babies DESC
+LIMIT 5;
+~~~
+
+Alternatively, this would also work:
+
+~~~sql
+SELECT * 
+FROM babynames_2014
+WHERE name LIKE 'Ja%' 
+  AND LENGTH(name) = 6
+ORDER BY babies DESC
+LIMIT 5;
+~~~
+
+|---------+-----+---------|
+|  name   | sex | babies  |
+|---------+-----+---------|
+|  Jayden | M   | 12878   |
+|  Jaxson | M   | 4900    |
+|  Javier | M   | 1761    |
+|  Jasper | M   | 1731    |
+|  Jaiden | M   | 1552    |
+{:.table-sql}
+
+
+### 3 most popular names with at least 2 consecutive "r" letters
+
+~~~sql
+SELECT *
+FROM babynames_2014
+WHERE name LIKE '%rr%'
+ORDER BY babies DESC
+LIMIT 3;
+~~~
+
+|-----------+-----+---------|
+|  name     | sex | babies  |
+|-----------+-----+---------|
+|  Harrison | M   | 3184    |
+|  Garrett  | M   | 1552    |
+|  Barrett  | M   | 950     |
+|-----------+-----+---------|
+{:.table-sql}
+
+
+
+### Average length (unweighted) of names, boys versus girls, rounded to 2 decimal places
+
+~~~sql
+SELECT sex,
+  ROUND(AVG(LENGTH(name)), 2)
+FROM babynames_2014
+GROUP BY sex;
+~~~
+
+|------+------------------------------|
+|  sex | ROUND(AVG(LENGTH(name)), 2)  |
+|------+------------------------------|
+|  F   | 6.32                         |
+|  M   | 5.98                         |
+|------+------------------------------|
+{:.table-sql}
+
+
+### Top 10 starting letter of names, sorted by longest (unweighted) average length of name
+
+"Unweighted" here means that each name has equal weight, regardless of how many babies were given that name. It just makes the calculation easier.
+
+~~~sql
+SELECT 
+  SUBSTR(name, 1, 1) AS first_letter,
+  AVG(LENGTH(name)) AS avg_namelength
+FROM babynames_2014
+GROUP BY first_letter
+ORDER BY avg_namelength DESC
+LIMIT 5;
+~~~
+
+
+|---------------+-------------------|
+|  first_letter | avg_namelength    |
+|---------------+-------------------|
+|  Q            | 6.78723404255319  |
+|  G            | 6.68703427719821  |
+|  C            | 6.56065959952886  |
+|  M            | 6.49320754716981  |
+|  P            | 6.42452830188679  |
+|---------------+-------------------|
+{:.table-sql}
+
+
+
+### For each vowel, total number of names (and babies named) that begin with a vowel, broken down by boys versus girls
+
+~~~sql
+SELECT 
+  SUBSTR(name, 1, 1) AS first_letter,
+  sex,
+  COUNT(*) AS total_names,
+  SUM(babies) AS total_babies
+FROM babynames_2014
+WHERE 
+  first_letter IN ('A', 'E', 'I', 'O', 'U')
+GROUP BY first_letter, sex
+ORDER BY first_letter, sex;
+~~~
+
+|---------------+-----+-------------+---------------|
+|  first_letter | sex | total_names | total_babies  |
+|---------------+-----+-------------+---------------|
+|  A            | F   | 3091        | 325658        |
+|  A            | M   | 1446        | 192157        |
+|  E            | F   | 926         | 142064        |
+|  E            | M   | 547         | 106869        |
+|  I            | F   | 371         | 43366         |
+|  I            | M   | 233         | 38363         |
+|  O            | F   | 141         | 24140         |
+|  O            | M   | 206         | 30212         |
+|  U            | F   | 28          | 570           |
+|  U            | M   | 43          | 2648          |
+|---------------+-----+-------------+---------------|
+{:.table-sql}
+
