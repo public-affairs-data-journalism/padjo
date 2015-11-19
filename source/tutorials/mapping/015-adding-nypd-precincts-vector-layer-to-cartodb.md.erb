@@ -1,0 +1,104 @@
+---
+title: Mapping NYPD precincts with CartoDB 
+next: /tutorials/mapping/022-joining-crime-data-to-nypd-precinct-map
+listed: true
+---
+
+
+![image finished-map-with-precincts.jpg](/files/images/tutorials/cartodb/finished-map-with-precincts.jpg)
+
+
+https://daannguyen.cartodb.com/viz/53fecb14-8e9e-11e5-95c0-0ea31932ec1d/public_map
+
+
+
+  - Source: [NYC Planning Department: Political and Administrative Districts](http://www.nyc.gov/html/dcp/html/bytes/districts_download_metadata.shtml#shfp) 
+  - Download: [Police Precincts (Clipped to Shoreline)](http://www.nyc.gov/html/dcp/download/bytes/nypp_15c.zip) 
+
+# Download the shapefiles
+
+# Upload to CartoDB as a dataset
+
+![image](/files/images/tutorials/cartodb/menu-your-datasets.png)
+
+## Make a new dataset
+
+![image new-dataset-button.png](/files/images/tutorials/cartodb/new-dataset-button.png)
+
+You can even paste the URL of the [zip file](http://www.nyc.gov/html/dcp/download/bytes/nypp_15c.zip):
+
+![image upload-dataset-screen.png](/files/images/tutorials/cartodb/upload-dataset-screen.png)
+
+## The Data View
+
+![image data-view-of-nypd-precincts.png](/files/images/tutorials/cartodb/data-view-of-nypd-precincts.png)
+
+## The Map View
+
+![image map-view-of-nypd-precincts.png](/files/images/tutorials/cartodb/map-view-of-nypd-precincts.png)
+
+
+Checking out the auto-creatingTK feature:
+
+![image map-view-auto-wizard-creating.png](/files/images/tutorials/cartodb/map-view-auto-wizard-creating.png)
+
+
+# Style the colors and the lines
+
+![GIF: cartodb-open-wizard.gif](/files/images/tutorials/cartodb/cartodb-open-wizard.gif)
+
+## Changing polygon color and fill
+
+![image wizard-editing-polygon-fill-stroke.png](/files/images/tutorials/cartodb/wizard-editing-polygon-fill-stroke.png)
+
+
+### Adding labels
+
+![image wizard-editing-label-font-halo.png](/files/images/tutorials/cartodb/wizard-editing-label-font-halo.png)
+
+
+
+
+# Add a hover/popup effect
+
+![image wizard-showing-infowindow-panel.png](/files/images/tutorials/cartodb/wizard-showing-infowindow-panel.png)
+
+
+Here I've added a precinct label and chosen the "dark" theme:
+
+![image wizard-infowindow-adding-hover.png](/files/images/tutorials/cartodb/wizard-infowindow-adding-hover.png)
+
+
+### Customizing HTML
+
+![GIF: cartodb-open-custom-html-tooltip.gif](/files/images/tutorials/cartodb/cartodb-open-custom-html-tooltip.gif)
+
+
+~~~html
+<div class="cartodb-tooltip-content-wrapper dark">
+  <div class="cartodb-tooltip-content">
+    <p>THIS IS PRECINCT 
+      <strong>{{precinct}}</strong>
+    </p>
+    <img style="width: 180px;" alt="cage" src="http://www.placecage.com/c/460/300">
+  </div>
+</div>
+~~~
+
+![image wizard-adding-custom-html-for-tooltip.png](/files/images/tutorials/cartodb/wizard-adding-custom-html-for-tooltip.png)
+
+
+## Changing the base map
+
+![GIF: cartodb-changing-basemap-to-stamen-toner.gif](/files/images/tutorials/cartodb/cartodb-changing-basemap-to-stamen-toner.gif)
+
+
+
+# Publishing a map
+
+
+![GIF: cartodb-creating-map-from-viz-button.gif](/files/images/tutorials/cartodb/cartodb-creating-map-from-viz-button.gif)
+
+
+
+

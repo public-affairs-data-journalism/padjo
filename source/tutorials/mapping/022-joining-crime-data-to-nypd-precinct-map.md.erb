@@ -1,0 +1,280 @@
+---
+title: Joining crime data to NYPD precincts to create a choropleth map in CartoDB
+previous: /tutorials/mapping/015-adding-nypd-precincts-vector-layer-to-cartodb
+next: /tutorials/mapping/033-cartodb-adding-multiple-layers-to-show-diffs-by-precinct
+image:
+  url: /files/images/tutorials/cartodb/choropleth-precinct-misd-drugs-2014-finish.png
+  lede: true
+  click_thru_url: https://daannguyen.cartodb.com/viz/aea6b4de-8ef6-11e5-8b95-0ecd1babdde5/public_map
+
+previous: 
+  - /tutorials/mapping/022-joining-crime-data-to-nypd-precinct-map
+references:
+  - title: "CartoDB Map Academy: Your First Choropleth Map"
+    url: http://academy.cartodb.com/courses/beginners-course/your-first-choropleth-map/
+  - title: "Sane data updates are harder than you think: Part 2"
+    url: "https://source.opennews.org/en-US/learning/sane-data-updates-are-harder-you-think-part-2/#primary-keys"
+  - title: "CartoDB Tips and Tricks: Geospatial Analysis"
+    url: http://docs.cartodb.com/tips-and-tricks/geospatial-analysis/
+  - title: "CartoDB Tutorial: Projections, the_geom and the_geom_webmercatorPermalink"
+    url: http://docs.cartodb.com/tutorials/projections/
+---
+
+![image choropleth-precinct-misd-drugs-2014-finish.png](/files/images/tutorials/cartodb/choropleth-precinct-misd-drugs-2014-finish.png)
+
+
+
+# Upload dataset
+
+https://github.com/datahoarder/nypd-historical-crime-stats/raw/master/data/compiled/nypd-precinct-historical-crime-data.csv
+
+I'm calling this table __[nypd_crime_data](https://daannguyen.cartodb.com/tables/nypd_crime_data/table)__.
+
+By default, when we upload a dataset to CartoDB, the fields `cartodb_id` and `the_geom` are added, even if the data is not inherently geospatial:
+
+![image uploaded-crime-data.png](/files/images/tutorials/cartodb/uploaded-crime-data.png)
+
+We'll worry about the details of those concepts later. But right now, we can immediately experience the _implications_. Try clicking the __MAP VIEW__ button to get the map view of the newly-uploaded crime data. You should get a screen like this:
+
+![image cant-map-crimedata-without-geodata.png](/files/images/tutorials/cartodb/cant-map-crimedata-without-geodata.png)
+
+There's nothing in our nypd_crime_data table to tell _how CartoDB should make a map_ -- it's just numbers and descriptions of crime, after all. 
+
+So this is where knowing SQL is key: we will be joining [nypd_crime_data](https://daannguyen.cartodb.com/tables/nypd_crime_data/table) to our [nypd_precincts](https://daannguyen.cartodb.com/tables/nypd_precincts/table) table.
+
+
+
+# Perform SQL query
+
+To tie this crime data to map elements, we use SQL to join the data with the NYPD precinct shapefile based on the `precinct` column (i.e. the precinct number).
+
+One of the great features of CartoDB is the ability to run raw SQL on your datasets. Let's test it out by running a routine `COUNT`-type query to get a frequency count of the crime categories.
+
+First, click the __SQL__ button in the side-panel to pop open the __SQL Panel__
+
+![GIF](/files/images/tutorials/cartodb/cartodb-sql-panel-open.gif)
+
+
+~~~sql
+SELECT
+  category,
+  SUM(incident_count) AS total_incidents
+FROM nypd_crime_data
+GROUP BY category
+ORDER BY total_incidents DESC;
+~~~
+
+
+Then, just type in the query and hit the __Apply query__ button. The results of that query will show up in the main window:
+
+![image applying-sql-query.png](/files/images/tutorials/cartodb/applying-sql-query.png)
+
+Take special note of the <span style="color: #33aa33;">light-green</span> bar that provides 2 clickable options: "__create dataset from query__ or __clear view__":
+
+![image applying-sql-query-green-bar.png](/files/images/tutorials/cartodb/applying-sql-query-green-bar.png)
+
+
+By executing a SQL query, we've effectively created a new _view_ of the underlying dataset -- i.e. whatever comes back as the result rows. CartoDB gives us the option of _physically_ creating a new dataset from the result rows
+
+We don't want to do that with this `COUNT` query, so go ahead and click __clear view__ to see the original data.
+
+
+
+## Joining precinct to a single row of crime data
+
+So the `nypd_crime_data` contains a "tidy", vertically-oriented version of the NYPD historical crime data spreadsheets. For every precinct, there is a row for every combination of `year` (15 years worth) and `category` -- 39,780 rows in all.
+
+While it's trivial to _logically_ relate the crime data to each precinct, it is challenging to _visually_ relate many rows of data to a geographic shape. In fact, this is the fundamental challenge of any data visualization -- to reduce complex data to a 2-dimensional plane.
+
+So let's start with the most straightforward strategy: who cares that we have 15 years of historical data? Let's just look at the most _recent year_'s numbers (2014). And let's just look at one `category` of crime: `'MISDEMEANOR DANGEROUS DRUGS'`.
+
+Here's the query to just `SELECT` that data:
+
+~~~sql
+SELECT
+  precinct,
+  incident_count AS misd_drugs_2014
+FROM nypd_crime_data
+WHERE
+    year = 2014 AND
+    category = 'MISDEMEANOR DANGEROUS DRUGS';
+~~~
+
+And then to join it to the __nypd_precincts__ table:
+
+~~~sql
+SELECT
+  nypd_precincts.precinct,
+  nypd_crime_data.incident_count AS misd_drugs_2014
+FROM nypd_crime_data
+INNER JOIN nypd_precincts
+  ON nypd_precincts.precinct = nypd_crime_data.precinct
+WHERE
+    year = 2014 AND
+    category = 'MISDEMEANOR DANGEROUS DRUGS';
+~~~
+
+An important thing to note: the only thing that's actually changed is that I've added the `INNER JOIN` clause (which also requires being specific about tables in the `SELECT` clause). 
+
+Otherwise...the result rows are _exactly the same_ as without the `INNER JOIN`. This is intentional, because the [nypd_precincts](https://daannguyen.cartodb.com/tables/nypd_precincts/table) dataset _does not_ itself have any columns of crime data or context that is necessary to include along with what [nypd_crime_data](https://daannguyen.cartodb.com/tables/nypd_crime_data/table) gives us.
+
+So what's the point? So that we can display [nypd_crime_data's](https://daannguyen.cartodb.com/tables/nypd_crime_data/table) insights on a map. Remember that [nypd_precincts](https://daannguyen.cartodb.com/tables/nypd_precincts/table), being a dataset derived from a shapefile, has the geospatial data needed for CartoDB (and any other mapping application) to put things on an actual map.
+
+
+
+### Mind your datatypes
+
+__A quick technical note:__ If you run the previous query, you might run into an error.
+
+If you've been using exclusively SQLite so far, you've probably not run into the issue in which trying to compare text strings to numbers throws an error. SQLite is pretty laid-back about that and so won't complain about this:
+
+~~~sql
+SELECT 'a hundred' = 100;
+~~~
+
+But the flavor of SQL used by CartoDB -- [PostgreSQL](http://www.postgresql.org/) -- will throw an error:
+
+![image error-comparing-datatypes.png](/files/images/tutorials/cartodb/error-comparing-datatypes.png)
+
+Or, in our actual situation, if the `precinct` column for `nypd_precincts` is a __number__ (i.e. an _integer_), but the `nypd_crime_data` has a data type of a __string__, our CartoDB query will fail with an error of:
+  
+    operator does not exist: integer = text
+
+So you can do one of 2 things:
+ 
+__1:__ Change the __data type__ of the column `nypd_precincts.precinct` to a _string_:
+  
+![GIF: cartodb-changing-data-type.gif](/files/images/tutorials/cartodb/cartodb-changing-data-type.gif)
+
+
+__2:__ Alter the SQL query to specify that when comparing the `nypd_precincts.precinct` column, its value should be _coerced_ to a data type of `text`:
+
+~~~sql
+SELECT
+  nypd_precincts.precinct,
+  nypd_crime_data.incident_count AS misd_drugs_2014
+FROM nypd_crime_data
+INNER JOIN nypd_precincts
+  ON nypd_precincts.precinct = nypd_crime_data.precinct::text
+WHERE
+    year = 2014 AND
+    category = 'MISDEMEANOR DANGEROUS DRUGS';
+~~~
+
+
+
+## CartoDB's conventions for geospatial data
+
+As we noticed earlier when uploading nypd_crime_data as a dataset, CartoDB took the liberty of prepending 2 columns of its own: `cartodb_id` and `the_geom`:
+
+![image the-geospatial-null-columns-of-crimedata.png](/files/images/tutorials/cartodb/the-geospatial-null-columns-of-crimedata.png)
+
+We might assume that `cartodb_id` is some kind of [primary key](https://source.opennews.org/en-US/learning/sane-data-updates-are-harder-you-think-part-2/#primary-keys) convention used by CartoDB. 
+
+
+As for `the_geom`? Perhaps that's where CartoDB keeps shape data. 
+
+For example, if we want to represent the following data on a _map_: 
+
+|           category          | incident_count | precinct | year |
+|-----------------------------|----------------|----------|------|
+| MISDEMEANOR DANGEROUS DRUGS |            465 |       13 | 2000 |
+
+How is CartoDB supposed to know _what_ the geospatial representation of that statistic should be? The `precinct` column itself is just the value `13` -- which may have meaning in the real-world but not to a mapping program.
+
+In other words, CartoDB can't magically make shape data appear in our __nypd_crime_data__ table when no such data existed in the original table. But it _does_ know what to do with __nypd_precincts__.
+
+So the data for the geospatial shapes of the NYPD precincts? That's in [nypd_precincts](https://daannguyen.cartodb.com/tables/nypd_precincts/table) -- CartoDB added `cartodb_id` and `the_geom` to that dataset, too, though we might not have noticed because we were not familiar with the plaintext representation of the NYPD shapefile:
+
+![image the-geospatial-columns-of-nypd-precincts.png](/files/images/tutorials/cartodb/the-geospatial-columns-of-nypd-precincts.png)
+
+
+Of course, __this is why we learned SQL in the first place__: to be able to tell the computer: _"I want this number to be attached to this other thing"_ -- the latter _"thing"_ being the geospatial shape of NYPD Precinct 13.
+
+
+Note: I'm deliberately skipping over a deeper explanation of `cartodb_id` and `the_geom` -- it's not necessary for what we're trying to do, _yet_. But of course [you can look up the documentation yourself](http://docs.cartodb.com/tips-and-tricks/geospatial-analysis/).
+
+### How to tell CartoDB where exactly to put your data on a map
+
+Note that `the_geom` in [nypd_precincts](https://daannguyen.cartodb.com/tables/nypd_precincts/table) is simply the value, `Polygon`. But if you double-click that column, you'll see a data structure that appears to represent the boundaries of the corresponding precinct with a series of latitude and longitude coordinates:
+
+~~~json
+{
+  "type": "MultiPolygon",
+  "coordinates": [
+    [
+      [
+        [
+          -74.04387762,
+          40.69018768
+        ],
+        [
+          -74.04350596,
+          40.68968736
+        ]
+      ]
+    ]
+  ]
+}
+~~~
+
+It's obviously not important to _see_ it in the spreadsheet-like view of the dataset, hence, CartoDB's use of the value `Polygon` to simplify the view.
+
+So let's add the `cartodb_id` and `the_geom` from the __nypd_precincts__ table to our previous SQL join query -- actually, instead of specifying `the_geom` column, I use `the_geom_webmercator` instead, which is [a _hidden_ column that  CartoDB wants us to use when doing conventional mapping](http://docs.cartodb.com/tutorials/projections/): 
+
+~~~sql
+SELECT
+  nypd_precincts.precinct,
+  nypd_crime_data.incident_count AS misd_drugs_2014,
+  nypd_precincts.cartodb_id,
+  nypd_precincts.the_geom_webmercator
+FROM nypd_crime_data
+INNER JOIN nypd_precincts
+  ON nypd_precincts.precinct = nypd_crime_data.precinct
+WHERE
+    year = 2014 AND
+    category = 'MISDEMEANOR DANGEROUS DRUGS';
+~~~
+
+
+The resulting _data view_ of the dataset shouldn't seem particularly interesting:
+
+![image cant-map-crimedata-with-precincts-join.png](/files/images/tutorials/cartodb/cant-map-crimedata-with-precincts-join.png)
+
+But the __map view__ of the dataset is where we see the fruit of our SQL labor:
+
+![image basic-map-view-crimedata-with-precincts-join.png](/files/images/tutorials/cartodb/basic-map-view-crimedata-with-precincts-join.png)
+
+OK, so it's not that immediately interesting. But at least we have map shapes. Before moving on, I recommend clicking the __create dataset from query__ option -- our join of __nypd_precincts__ and __nypd_crime_data__ can be its own standalone thing. Which is fine, because we'll be making other joins and subsets from `nypd_crime_data`, independent of our current one.
+
+(I also think that making a new, separate dataset helps with performance issues, though I don't know if I'm just imagining that...)
+
+This new dataset I've created from the join, I dub thee: [nypd_precincts_misd_drugs_2014](https://daannguyen.cartodb.com/tables/nypd_precincts_misd_drugs_2014)
+
+
+# How to tell CartoDB to present the map based on our data
+
+So now we jump into [the __Wizards__ subpanel, which we learned in the previous tutorial](/tutorials/mapping/022-joining-crime-data-to-nypd-precinct-map), to tell CartoDB how the colors and other visual elements should be guided by the data in the __nypd_crime_data__ table, i.e. the `misd_drugs_2014` field.
+
+
+## Creating a choropleth map
+
+In the [previous tutorial with just the precinct shapefiles](/tutorials/mapping/022-joining-crime-data-to-nypd-precinct-map), we used the __Map layer wizard__ to create a __"Simple"__ map. With our newly-joined data, we can create a __"Choropleth"__ map:
+
+![image choropleth-configuration-for-precinct-misd-drugs-2014.png](/files/images/tutorials/cartodb/choropleth-configuration-for-precinct-misd-drugs-2014.png)
+
+You can read [CartoDB's tutorial on making "Your First Choropleth Map" for more details](http://academy.cartodb.com/courses/beginners-course/your-first-choropleth-map/). But basically, the concept behind a choropleth map is: _color each map shape based on where one of its data values compares to a range of data values_. 
+
+In other words, for our situation, we want to make each precinct a darker color based on how high its corresponding `misd_drugs_2014` value is.
+
+There's not much to it other than clicking the __Choropleth__ button in the __Map layer wizard__, and then in the __Column__ drop-down menu, picking the proper field: `misd_drugs_2014`. 
+
+![image choropleth-configuration-for-precinct-misd-drugs-2014-dropdown.png](/files/images/tutorials/cartodb/choropleth-configuration-for-precinct-misd-drugs-2014-dropdown.png)
+
+Every other visual element, such as the info window popups, can be configured as we learned in the [previous tutorial](/tutorials/mapping/022-joining-crime-data-to-nypd-precinct-map). 
+
+
+Here's [my final result as an embed](https://daannguyen.cartodb.com/viz/aea6b4de-8ef6-11e5-8b95-0ecd1babdde5/public_map):
+
+
+<iframe width="100%" height="520" frameborder="0" src="https://daannguyen.cartodb.com/viz/aea6b4de-8ef6-11e5-8b95-0ecd1babdde5/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>

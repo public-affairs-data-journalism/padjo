@@ -6,92 +6,32 @@ layout: home
 
 <% content_card "Today's lesson" do %>
 
-### Homework
+## Read this map tutorial
 
+<%=render_content_resource_element '/tutorials/mapping/015-adding-nypd-precincts-vector-layer-to-cartodb' %>
+
+<p>Here's <a href="https://github.com/datahoarder/nypd-historical-crime-stats">some crime data</a></p>
+
+<p>Here's <a href="http://www.nyc.gov/html/nypd/downloads/pdf/analysis_and_planning/2013_year_end_enforcement_report.pdf">a crime data report from the NYPD</a>.</p>
+
+
+(from Tuesday)
+
+### Read
+
+<%=render_content_resource_element '/tutorials/sql-walks/exploring-wsj-medicare-investigation-with-sql' %>
+
+
+### Homework (for after Thanksgiving)
+
+<%= render_content_resource_element '/assignments/midterm-wsj-medicare-walkthrough' %>
+
+
+### Past homework
 
 <%= render_content_resource_element '/assignments/midterm-babysteps-sql' %>
 
 <%= render_content_resource_element '/assignments/qgis-mapping' %>
-
-
-<%= markdownify(
-"""
-
-
-
-__Leaving this here from last week:__
-
-In class, read these:
-
-- [Understanding what makes a visualization memorable](http://www.storybench.org/understanding-what-makes-a-visualization-memorable/)
-- [(Supplemental material for the actual paper)](http://vcg.seas.harvard.edu/files/pfister/files/infovis_submission251-supplementalmaterial-camera.pdf?m=1441898221)
-- [(the actual paper) Beyond Memorability: Visualization Recognition and Recall](http://vcg.seas.harvard.edu/files/pfister/files/infovis_submission251-camera.pdf)
-- What do you think of [this award-winning photo](http://i.imgur.com/Tke6sos.jpg) (if you don't recognize it)?
-
-
-Other interesting points of discussion:
-
-- [Racism? By whom? This video of Texas cops stopping a black professor is a racial ‘Rorschach test’](https://www.washingtonpost.com/news/morning-mix/wp/2015/11/04/racism-by-whom-this-video-of-tex-cops-stopping-a-black-professor-is-a-racial-rorschach-test/)
-- [Mike Corey's NICAR tutorial: Manipulating and editing geographic data with QGIS](http://mikejcorey.github.io/qgis_advanced_2015/)
-- [Remember to go to the Stanford CJ Lab/Google BigQuery/Brown Institute pizza lunch on Monday](https://www.eventbrite.com/e/computational-journalism-exploring-big-civic-data-tickets-19303437100)
-
-## MIDTERM CONTINUES TO BE DELAYED
-
-- Check the [Tutorials section to see the mess of tutorials/quasi-homework](/tutorials).
-- Update: I've created a table that I tentatively call, [The Genderizer](/tutorials/babynames-and-college-salaries/creating-genderizer-table-with-joins).
-
-
-Things we discuss in class: Maps. 
-
-- The [gun permits map](http://fall2014.padjo.org/2014-10-07/). Also, Gerald Rich's [HH talk on maps](https://public.etherpad-mozilla.org/p/hhstanford-maps).
-- Looking for FOIA ideas: via [MuckRock](https://www.muckrock.com/foi/list/) and here's a [taxi example featuring me](https://github.com/ajschumacher/foilfoil). 
-- Campaign finance related to today's election: in particular, [AirBnB and Prop 8](http://www.breitbart.com/big-government/2015/11/02/airbnbs-8m-political-campaign-vs-proposition-f/)
-  + [SFist has a list of expenditures](http://sfist.com/2015/09/28/airbnbs_8_million_and_more_sf_campa.php)
-  + [San Francisco Ethics Commission](http://nf4.netfile.com/pub2/?aid=sfo&AspxAutoDetectCookieSupport=1)
-
-
-These past announcements are relevant:
-
-__Free pizza and SQL:__ [Nov. 9, data event with Google and us (and SQL!)](https://www.eventbrite.com/e/computational-journalism-exploring-big-civic-data-tickets-19303437100) (I'm pretty much requiring you to go to this)
-
-
-## SQL Warmup
-
-This is similar to what the midterm will look like, except with less context. Look over the questions. Open the database. Tinker around. Try to answer some of these questions.
-
-[Download the prisons database](http://stash.padjo.org/dumps/2015/state-prisons.sqlite.zip). It contains the inmate databases from the states of [Texas](http://offender.tdcj.texas.gov/OffenderSearch/index.jsp) and [Florida](http://www.dc.state.fl.us/AppCommon/).
-
-For both states, write the queries that generate:
-
-- Total number of inmates
-- Total number of inmates, by sex and race
-- The 5 oldest inmates in prison.
-- The 5 youngest inmates in prison.
-- The 5 inmates who were oldest at the time of the crime that they were convicted of.
-- A list of the inmates who are serving time on murder convictions.
-- Same as above, except for inmates who are not serving life sentences.
-- Find the inmate serving the shortest sentence for a murder conviction.
-
-Some help:
-
-- The [landing page for the Florida data](http://www.dc.state.fl.us/pub/obis_request.html) contains information about its schema -- it's quite complicated, though I've only included 4 of the nearly 20 tables.
-- Here's [a list of murderers via the Florida database.](http://www.dc.state.fl.us/ActiveInmates/list.asp?DataAction=Filter&SexOffOnly=0&dcnumber=&LastName=a&FirstName=s&SearchAliases=on&Sex=ALL&Race=ALL&OffenseCategory=MU&ClassificationStatus=ALL&CurrentCustody=ALL&IdentifierType=ALL&Identifier=&EyeColor=ALL&HairColor=ALL&FromAge=&ToAge=&FromWeight=&ToWeight=&FromHeightFeet=&FromHeightInches=&ToHeight=&ToHeightFeet=&ToHeightInches=&ZipCode=&ScarType=ALL&ScarLocation=ALL&ScarDescription=&photosonly=&nophotos=on&items=20&CommitmentCounty=ALL&subjecttype=ALL&facility=ALL&workskill=ALL)
-- Here's [how the Texas Tribune uses the prison data](https://www.texastribune.org/library/data/texas-prisons/), though they work off a different version with different fields.
-
-
-""")
-
-
-
-%>
-
-<%= render_content_resource_element "/briefs/data_notes/cde_schools/immunization-sql-readme" %>
-
-<%= render_content_resource_element "/briefs/data_notes/medicare_providers/wsj-pulitzer-walkthrough" %>
-
-
-
-
 
 <% end %>
 

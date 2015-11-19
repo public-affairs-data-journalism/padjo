@@ -1,0 +1,726 @@
+---
+title: Exploring the Wall Street Journal's Pulitzer-Winning Medicare Investigation with SQL
+description: |
+  How to use SQL to learn about Medicare, contemporary issues in Medicare billing practices, the math and evidence behind the WSJ's "Medicare Unmasked" project, and the general problems with real-world datasets.
+---
+
+This is a SQL-based introduction to the data and analysis behind the [Wall Street Journal's Pulitzer-winning "Medicare Unmasked" investigative project](http://graphics.wsj.com/medicare-billing/). It also doubles as a helpful guide if you're attempting [the midterm based on the WSJ Medicare's investigation](/assignments/midterm-wsj-medicare-walkthrough/).
+
+Below is a screenshot of the PDF version of the WSJ story, [Taxpayers face big tab for unusual doctor billings](http://www.pulitzer.org/works/2015-Investigative-Reporting-Group2). 
+
+![image](/files/images/tutorials/sql-walk/wsj-medicare/taxpayer-billings-pdf-sql-highlighted.jpg)
+
+The sections highlighted in <strong style="color:purple;">purple</strong> contain the facts, numbers, and assertions that can be directly derived from the 2012 Medicare billing database using SQL. 
+
+To follow along to the walkthrough (which is somewhere midway in this gigantic page of text), you can download my version of the 2012 dataset as a SQLite database, which is 700MB zipped and 2GB+ unzipped:
+
+- [medicare_providers_2012.sqlite.zip (700MB zipped)](http://stash.padjo.org/dumps/2015/medicare_providers_2012.sqlite.zip)
+
+
+Read on for more background about the WSJ investigation and the Medicare data.
+
+Or if you want, [just jump right to the SQL](#mark-about-dr-donald-weaver).
+
+
+<%= render_toc %>
+
+# About the Wall Street Journal's "Medicare Unmasked"
+
+Even if the The Wall Street Journal didn't win a [2015 Pulitzer for Investigative Reporting](http://www.pulitzer.org/citation/2015-Investigative-Reporting), its [Medicare Unmasked project](http://graphics.wsj.com/medicare-billing/) is a pinnacle in investigative, computer-assisted reporting. Not only does it illuminate a previously opaque yet vital and costly part of our bureaucracy, it [decisively and empirically rooted out bad players and abusive practices](http://www.pulitzer.org/files/2015/investigative-reporting/wsjmedicare/wsjmedicareletter2015.pdf).
+
+The project's impact will be felt for years. The WSJ's parent company, Dow Jones & Co., successfully sued the government to make public Medicare billing data for the first time since 1979. The [Centers for Medicare and Medicaid Services announced that billing data will now be released on an annual basis](http://www.wsj.com/articles/medicare-to-publish-physician-payment-data-yearly-1422842176).
+
+Dr. Bob Kocher, who advised the Obama administration and served on the National Economic Council, [told the New York Times](http://www.nytimes.com/2014/04/09/business/sliver-of-medicare-doctors-get-big-share-of-payouts.html) that “This is actually the most useful data set that Medicare has ever released.” Like any important public dataset, there has been concerned pushback. The American Medical Association has opposed releasing the data because of ["it does not provide a complete picture"](http://www.ama-assn.org/ama/pub/advocacy/topics/release-of-physicians-medicare-claims-data.page) and individual doctors have complained about being unfairly targeted. The New Yorker's (albeit poorly-titled) piece, [What Big Data Can’t Tell Us About Health Care](http://www.newyorker.com/business/currency/what-big-data-cant-tell-us-about-health-care) is important reading.
+
+
+
+- [Here's an interactive database](http://graphics.wsj.com/medicare-billing/) they built so that readers could look up doctors and what Medicare payments they received:
+
+<a href="http://graphics.wsj.com/medicare-billing/"><img src="/files/briefs/wsj-medicare/database-front-page-screenshot.png" alt="medicare database"></a>
+
+- And here's [the list of stories (in PDF form) submitted to the Pulitzer committee](http://www.pulitzer.org/works/2015-Investigative-Reporting-Group2).
+
+## About the level of SQL in this tutorial
+
+This walkthrough of the 2012 Medicare dataset and is a guided learning tour through a fantastic investigation. And it is a primer on how anyone -- not just an investigative newsroom -- can effectively interpret and analyze the data and further the effectiveness of transparency in the civic sphere.
+
+
+This tutorial assumes you've been able to finish the [Baby Steps Midterm](/assignments/midterm-babysteps-sql/), which included far more complicated and convoluted SQL joins. In comparison, the SQL needed to derive many of the convincing assertions used by the WSJ is straightforward. 
+
+In a _technical_ sense.
+
+However, the complicated and messy content of the Medicare data more than makes up for the simpler SQL queries. You'll generally find that it takes queries followed by more queries to even figure out if whatever query you wanted to do is not stymied by incomplete or inaccurate data.
+
+This kind of uncertainty and frustration is common with important, real-world datasets. And it's not something that can be easily overcome with technical skill. However, the WSJ investigation provides a wealth of demonstrative examples that not only show the limitations and pitfalls of the data, but how to effectively refine your journalistic inquiry to find important insights in the Medicare dataset.
+
+The main intent of this tutorial is to push you into reading and fully appreciating the scope and complexity of the WSJ's investigation. By no means is the theme, "10 SQL Queries That Will Win You a Pulitzer!" -- but that said, a significant amount of the investigative insights can be found in the data and by closely reading the WSJ articles.
+
+However, a substantial amount of the WSJ investigation comes from external reporting and research. In understanding data-driven investigations, it is important to know your way around a database. But it is perhaps even more vital to notice the things that _can't_ be found in a database.=
+
+
+
+
+
+# About the Medicare database
+
+To follow along in this walkthrough, you can download my SQLite database here:
+
+- [medicare_providers_2012.sqlite.zip](http://stash.padjo.org/dumps/2015/medicare_providers_2012.sqlite.zip){:.url} Be warned: it is nearly 700MB zipped and expands to more than 2 gigabytes.
+
+It contains both conveniences and contrivances from what you can find on the [CMS site](https://www.cms.gov/research-statistics-data-and-systems/statistics-trends-and-reports/medicare-provider-charge-data/physician-and-other-supplier.html). For starters, it's only the 2012 data. CMS has recently posted the 2013 file, [as well as updates to the 2012 data](https://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/Medicare-Provider-Charge-Data/Physician-and-Other-Supplier2012.html) that weren't available at the time of the WSJ Medicare Unmasked project. I haven't actually downloaded it but the new fields seem quite promising for new avenues of inquiry:
+
+> 10/05/15 UPDATE: Original CY 2012 Medicare Physician and Other Supplier Aggregate table has been updated to include demographic and health information associated with the provider’s beneficiary panel. This provider-level summary now includes aggregated information on beneficiary age, sex, race, Medicare and Medicaid entitlement, sixteen (16) chronic conditions and risk scores.
+
+In June 2015, there was an update that added more granular detail to the database. [As reported by the WSJ](http://graphics.wsj.com/medicare-billing/):
+
+> In a June 2015 data release, Medicare revised its methodology to include additional payments made to providers in 2012 and 2013. An earlier version of the 2012 data, released in April 2014, suppressed payments for services rendered to small numbers of patients. For this reason, the total payment figures for 2012 shown here may differ from total payments shown in the original release of this interactive.
+
+## The "walkthrough" database
+
+Again, you can download it here:
+
+- [medicare_providers_2012.sqlite.zip (700MB zipped)](http://stash.padjo.org/dumps/2015/medicare_providers_2012.sqlite.zip){:.url}
+
+
+What I provide for this walkthrough is the data shortly after it was made available to the public. Is it _exactly the same data_ as the WSJ used in its investigation? I have no way of knowing (short of giving them a phone call, I guess). But virtually all of the relevant numbers and assertions made in the WSJ investigation can be reproduced to the exact value...so...it's exact enough for our purposes.
+
+However, I've made some important changes, partly out of convenience for non-data-wrangling experts, and partly to make the queries deliberately more complicated than if you work with the raw data straight from CMS -- for the educational value, of course.
+
+Before I talk about the changes I've made to the source data, it's easiest to start with the actual schema and sample rows of the downloadable database:
+
+## The `providers` table
+
+This table is derived from the spreadsheet titled [Medicare Physician and Other Supplier Aggregate table, CY2012, Microsoft Excel (.xlsx)](http://download.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/Medicare-Provider-Charge-Data/Downloads/Medicare_Physician_and_Other_Supplier_NPI_Aggregate_CY2012_update.zip), which can be found in the __Summary Tables__ heading of the CMS site.
+
+The spreadsheet contains one row for every provider (i.e. unique `npi`) with boilerplate information (name, address, etc.) and a grand tally of number of patients, services rendered, and Medicare payments received: 
+
+|-----------------------------------+-------------------|
+|  Column name                      | Row 1000          |
+|-----------------------------------+-------------------|
+|  npi                              | 1003074006        |
+|  nppes_provider_last_org_name     | DALY              |
+|  nppes_provider_first_name        | TIMOTHY           |
+|  nppes_provider_mi                | M                 |
+|  nppes_credentials                |                   |
+|  nppes_provider_gender            | M                 |
+|  nppes_entity_code                | I                 |
+|  nppes_provider_street1           | 1730 CHEW ST      |
+|  nppes_provider_street2           |                   |
+|  nppes_provider_city              | ALLENTOWN         |
+|  nppes_provider_zip               | 181045549         |
+|  nppes_provider_state             | PA                |
+|  nppes_provider_country           | US                |
+|  provider_type                    | Family Practice   |
+|  medicare_participation_indicator | Y                 |
+|  provider_number_of_hcpcs         | 8.0               |
+|  total_unique_benes               | 117.0             |
+|  total_provider_services          | 295.0             |
+|  total_submitted_chrg_amt         | 39755.0           |
+|  total_medicare_allowed_amt       | 19294.6999999999  |
+|  total_medicare_payment_amt       | 13890.5299999999  |
+|-----------------------------------+-------------------|
+{:.table-sql}
+
+
+## The `payments` table
+
+This comes from the massive tab-delimited text file titled, [Medicare Physician and Other Supplier PUF, CY2012, Tab Delimited format](http://www.cms.gov/apps/ama/license.asp?file=http://download.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/Medicare-Provider-Charge-Data/Downloads/Medicare_Provider_Util_Payment_PUF_CY2012_update.zip). Here's CMS's description of it, which can be summed up as: "Too big for Excel"
+
+> [Note: This Compressed ZIP package contains the tab delimited data file (Medicare_Provider_Util_Payment_PUF_CY2012.txt) which is 1.7GB uncompressed and contains more than 9 million records, thus importing this file into Microsoft Excel will result in an incomplete loading of data.  Use of database or statistical software is required; a SAS® read-in statement is supplied.  Additionally, this ZIP package contains the following supporting documents: CMS_AMA_CPT_license_agreement.pdf, and [Medicare-Provider-Util-Payment-PUF-SAS-Infile.sas](https://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/Medicare-Provider-Charge-Data/Downloads/Medicare-Physician-and-Other-Supplier-PUF-SAS-Infile.zip)]
+
+
+Whereas the `providers` table consists of one row per provider, `payments` contains as many rows per individual provider as needed to list each individual service billed for.
+
+In other words, looking at the massive `payments` file is the only way to know specifically the kind of treatments doctors billed Medicare for. 
+
+
+|----------------------------------|---------------------|
+|           Column name            |       Row 100       |
+|----------------------------------|---------------------|
+| npi                              | 1003000936          |
+| nppes_provider_last_org_name     | STELLINGWORTH       |
+| nppes_provider_first_name        | MARK                |
+| nppes_provider_mi                | A                   |
+| nppes_credentials                | MD                  |
+| nppes_provider_gender            | M                   |
+| nppes_entity_code                | I                   |
+| nppes_provider_street1           | 2390 W CONGRESS ST  |
+| nppes_provider_street2           |                     |
+| nppes_provider_city              | LAFAYETTE           |
+| nppes_provider_zip               | 705064205           |
+| nppes_provider_state             | LA                  |
+| nppes_provider_country           | US                  |
+| provider_type                    | Cardiology          |
+| medicare_participation_indicator | Y                   |
+| place_of_service                 | F                   |
+| hcpcs_code                       | 93351               |
+| hcpcs_description                | Stress tte complete |
+| line_srvc_cnt                    | 38                  |
+| bene_unique_cnt                  | 38                  |
+| bene_day_srvc_cnt                | 38                  |
+| average_Medicare_allowed_amt     | 82.98               |
+| stdev_Medicare_allowed_amt       | 0                   |
+| average_submitted_chrg_amt       | 230                 |
+| stdev_submitted_chrg_amt         | 0                   |
+| average_Medicare_payment_amt     | 65.702631579        |
+| stdev_Medicare_payment_amt"      | 2.9417750497        |
+|----------------------------------|---------------------|
+{:.table-sql}
+
+
+
+## Differences from the raw data
+
+The main change is, well, instead of trying to import these massive data files into SQL yourself, my downloadable database is a SQLite database. I've also done the work of indexing the most relevant fields, because even the act of indexing the data can be computationally-intensive.
+
+The main __content__ change I've made is that `payments` includes significantly less data than what you can get from the raw [Medicare Physician and Other Supplier PUF, CY2012, Tab Delimited format](http://www.cms.gov/apps/ama/license.asp?file=http://download.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/Medicare-Provider-Charge-Data/Downloads/Medicare_Provider_Util_Payment_PUF_CY2012_update.zip). 
+
+However, what's been left out are redundant fields that can be derived from joining against `providers` via `npi`. In my opinion, the CMS data file is a bit wasteful for repeating a provider's name, address, etc. for each row in `payments`, since, as far as I can tell, these values always remain constant.
+
+On the other hand, having this denormalized structure makes it easy for people who don't know how to do SQL joins to do aggregations on the `payments` data alone. But this being a SQL walkthrough, I wanted to make it have more SQL join action.
+
+
+
+
+# A SQL tour of the WSJ's "Medicare Ummasked" investigation
+
+OK, back to the journalism side of things. If you looked at the data schema above and had no clue what any of those fields meant -- welcome to the world of just about _anybody_ who is not involved professionally in the healthcare industry or is already an experienced healthcare reporter.
+
+One obvious course of action is to read the [copious documentation on the CMS website](https://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/Medicare-Provider-Charge-Data/Physician-and-Other-Supplier2012.html). However, the Wall Street Journal's investigation is itself a kind of documentation.
+
+So the following walkthrough is an attempt to have our cake (i.e. domain knowledge) and eat it too:
+
+- The Wall Street Journal "Medicare Unmasked" investigation is simply required reading for all investigative journalists. 
+- To better appreciate the varied angles and nuance of the data reporting, we have to go beyond just reading the text. Such as: actively challenging the reporters' claims.
+- The Medicare data that the WSJ reporters successfully sued for is the source of many of their claims.
+- That Medicare database is freely available and can be queried with SQL.
+- Coincidentally, we are interested in practicing SQL.
+
+
+So let's examine the data behind the facts of the first story in the WSJ series: [Taxpayers Face Big Tab For Unusual Doctor Billings](http://www.pulitzer.org/files/2015/investigative-reporting/wsjmedicare/01wsjmedicare2015.pdf).
+
+The walkthrough consists of excerpts of the stories that I believe to rely directly on the Medicare 2012 database. Those excerpts are broken up into smaller assertions that can be fact-checked individually.
+
+<a id="mark-about-dr-donald-weaver"></a>
+
+
+## 1. Who is Dr. Ronald Weaver?
+
+The very first and third paragraphs can be verified via SQL:
+
+> Ronald S. Weaver isn’t a cardiologist. Yet 98% of the $2.3 million that the Los Angeles doctor’s practice received from Medicare in 2012 was for a cardiac procedure, according to recently released government data 
+
+> ...The government data show that out of the thousands of cardiology providers who treated Medicare patients in 2012, just 239 billed for the procedure, and they used it on fewer than 5% of their patients on average. The 141 cardiologists at the Cleveland Clinic, renowned for heart care, performed it on just six patients last year. Dr. Weaver’s clinic administered it to 99.5% of his Medicare patients — 615 in all — billing the federal health-insurance program for the elderly and disabled 16,619 times, according to the data.
+
+
+<a id="mark-1A"></a>
+
+### 1A. "Ronald S. Weaver isn’t a cardiologist."
+
+The `providers` table has information about a doctor's name and specialty, the latter represented in the `provider_type` field. We want to do a query for a "Ronald Weaver" who practices in the state of California:
+
+(I'm using aliases so that the incredibly long column names don't mess up my web page layout)
+
+~~~sql
+SELECT 
+  nppes_provider_first_name AS first_name,
+  nppes_provider_mi AS mid_name,
+  nppes_provider_last_org_name AS last_name,
+  nppes_provider_gender AS gender,
+  nppes_provider_state AS state,
+  provider_type
+FROM providers
+WHERE 
+  last_name = 'WEAVER' 
+  AND first_name = 'RONALD' 
+  AND state = 'CA';
+~~~
+
+Lucky for us, it looks like there's only one doctor named Ronald Weaver in California and he is indeed _not_ a cardiologist:
+
+|-------------+----------+-----------+--------+-------+--------------------|
+|  first_name | mid_name | last_name | gender | state | provider_type      |
+|-------------+----------+-----------+--------+-------+--------------------|
+|  RONALD     | S        | WEAVER    | M      | CA    | Internal Medicine  |
+|-------------+----------+-----------+--------+-------+--------------------|
+{:.table-sql}
+
+But is there really only one Dr. "Ronald Weaver" in California? It seems like a common name, so it's prudent to be skeptical. 
+
+Just to be safe, let's make sure there are no other Ronald Weaver, or even a _Ron_ Weaver that the WSJ article could be referring to. It's a seemingly common name, and for all we know, the WSJ is referring to a Ronald Weaver who, in a newer/older version of the database, is _not_ listed in California.
+
+#### Are there any other Dr. Ron Weavers in America?
+
+It doesn't take too long with SQL to check for variations on the name and expanding the search nationwide. We can just use a simple `COUNT` to confirm Dr. Ronald Weaver's unique name (among doctors participating in Medicare):
+
+~~~sql
+SELECT COUNT(*) AS number_of_ron_weavers
+FROM providers
+WHERE 
+  nppes_provider_last_org_name LIKE 'WEAVER' 
+  AND nppes_provider_first_name LIKE 'RON%';
+~~~
+
+|-----------------------|
+| number_of_ron_weavers |
+|-----------------------|
+|                     1 |
+|-----------------------|
+{:.table-sql}
+
+Works for me. Moving on.
+
+
+
+### 1B. "...$2.3 million that the Los Angeles doctor's practice received from Medicare in 2012"
+
+I've re-arranged the order of assertions in the original sentence, because it's easier to establish the "$2.3 million" part and "Los Angeles" part first.
+
+The total received by any individual provider can be found in the `providers` table's `total_medicare_payment_amt` field? Or is it the `total_medicare_allowed_amt` field? What's the difference?
+
+Let's just write a query that includes both amount fields and see which comes closest to "$2.3 million". We'll also include the `nppes_provider_city` field just to make sure Dr. Weaver is based out of Los Angeles. And we omit all the other identifying fields for now:
+
+~~~sql
+SELECT 
+  nppes_provider_city AS city,
+  total_medicare_allowed_amt,
+  total_medicare_payment_amt
+FROM providers
+WHERE 
+  nppes_provider_last_org_name = 'WEAVER' 
+  AND nppes_provider_first_name = 'RONALD' 
+  AND nppes_provider_state = 'CA';
+~~~
+
+The result:
+
+|------------+----------------------------+-----------------------------|
+|  city      | total_medicare_allowed_amt | total_medicare_payment_amt  |
+|------------+----------------------------+-----------------------------|
+|  INGLEWOOD | 2916171.30999897           | 2311513.10999804            |
+|------------+----------------------------+-----------------------------|
+{:.table-sql}
+
+Inglewood is indeed part of the Los Angeles County area. And it looks like `total_medicare_payment_amt`, with a value of `2311513`, is what the WSJ thinks it's important. Is the WSJ right on that, or does that particular metric fit better with their agenda? We don't know, but at least we have a better understanding of the possible nuance and differences.
+
+
+### 1C. "Yet 98% of the $2.3 million...was for a cardiac procedure"
+
+OK, back to that 98% assertion. So now we see where the granularity of the `payments` table is relevant. The WSJ isn't featuring Dr. Weaver because of the total Medicare payments he received -- it's the _procedure he billed for_ that matters.
+
+The first question in writing our query is: is there a column that specifies that a procedure is a "cardiac"-type procedure, in the same way that `provider_type` specifies a doctor's specialty? 
+
+(note: `provider_type` exists in `payments` but only because I forgot to cut it out of the source raw data -- it contains the same value as what's found in the `providers` table)
+
+#### A quick segue into the reality of dirty medical data
+
+Here's something to think about: the assumption that a given medical procedure or treatment can be categorized as _just_ a "cardiac"-type of procedure evinces a somewhat simplified view of how medicine actually works. If, hypothetically, a procedure or treatment could be relevant for "cardiac"-categorical reasons _and_ for "oncology"-categorical reasons, how would that hypothetical procedure-category column? Probably not very well, or cleanly.
+
+And here's a spoiler alert: The `provider_type` for each doctor isn't consistent. Want to look up all gynecologists? Those doctors could be listed as having a `provider_type` of `'Obstetrics/Gynecology'` _or_ `'Gynecology/Obstetrics'`. And unlike other fields, such as `'Urology'`, there are no doctors for which `provider_type` is just `'Obstetrics'` or `'Gynecology'`.
+
+In fact, there's several different ways that the term `'MD'` is spelled, just incase you were hoping to filter a list just to include providers who are certified doctors (because physician assistants and nurses are also in the database).
+
+__In fact__, if you browse some of the address fields, you'll see that words like `'SUITE'` are _misspelled_ on occasion.
+
+All of this doesn't even scratch the surface of what kind of errors could quite easily lead to inadvertently but seriously flawed investigations...but let's get back on track with our query.
+
+
+#### How to find Dr. Weaver's favorite procedure
+
+We don't have to know the descriptive name of this procedure -- which would be found in the `hcpcs_description` column -- nor its special HCPCS code, i.e. the column named `hcpcs_code`. We already know that it makes up for 98% of Dr. Weaver's Medicare billing, so it seems reasonable that listing all of Dr. Weaver's procedures _in the order of Medicare payment amount_ will get us the answer.
+
+OK, but do any of the "payment-type" fields in the `payments` table correspond to a __total__-amount-per-procedure? Because `average_Medicare_payment_amt` would seem at a first glance to describe, well, the __average payment__ per _individual_ procedure.
+
+Let's not think too hard about it anymore...Let's just find all of the types of procedures that Dr. Weaver is listed as doing and figure it out by eye-balling the results.
+
+#### Sometimes we have to query to make queries
+
+But remember that in creating the dataset for this exercise, I removed all human-readable identifying information from `payments`, i.e. there's no way to look for "RONALD WEAVER" with `payments` alone. 
+
+OK, so we just have to join `payments` and `providers` together. And it seems that `npi`, whatever that stands for, is not only common to both tables, but looks like some kind of identifier number.
+
+In fact, it is an acronym for the [__National Provider Identifier__, "a 10-position, intelligence-free numeric identifier (10-digit number)"](https://www.cms.gov/Regulations-and-Guidance/HIPAA-Administrative-Simplification/NationalProvIdentStand/index.html). Good enough for me.
+
+To save time, I'm going to re-use our initial ["Is Ronald Weaver not a cardiologist" query](#mark-1A), alter it to include only the `npi` field from the `payments` table. 
+
+Then I use that as my key to `INNER JOIN` with the `payments` table. And I'm going to pick a few promising fields from `payments`: 
+
+- `hcpcs_code` - I guess this is like a NPI number, except for medical procedures
+- `hcpcs_description` - a human-readable name for the corresponding `hcpcs_code`
+- `line_srvc_cnt` - No idea...but I'm assuming `cnt` is short for `count`
+- `bene_unique_cnt` - OK, another count-type field...but what is a `'bene'`?
+- `average_Medicare_payment_amt` - Seems to be the payment-type field to go with, as `Medicare_payment_amt` is the same kind of payment field that the WSJ used in the `providers` table. But it really is just a guess...
+
+
+
+(This is all old hat if you survived the [Midterm Baby Steps exercises](/assignments/midterm-babysteps-sql)...I mean, it's not even a nested query or a `LEFT JOIN`...)
+
+(For the sake of printability, I alias some of the columns and I also `ROUND` the payment-column, which is inexplicably includes minuscule fractions of a cent. I'm assuming whole dollars is good enough for our analysis)
+
+~~~sql
+SELECT 
+  providers.npi AS npi,
+  hcpcs_code,
+  hcpcs_description,
+  line_srvc_cnt,
+  bene_unique_cnt,
+  ROUND(average_Medicare_payment_amt) AS payment_amt
+FROM providers
+INNER JOIN payments ON
+  providers.npi = payments.npi
+WHERE 
+  nppes_provider_last_org_name = 'WEAVER' 
+  AND nppes_provider_first_name = 'RONALD' 
+  AND nppes_provider_state = 'CA';
+~~~
+
+The results return 4 procedures associated with Dr. Weaver's `npi` number:
+
+|-------------+------------+-----------------------------+---------------+-----------------+--------------|
+|  npi        | hcpcs_code | hcpcs_description           | line_srvc_cnt | bene_unique_cnt | payment_amt  |
+|-------------+------------+-----------------------------+---------------+-----------------+--------------|
+|  1669465928 | 82947      | Assay glucose blood quant   | 8613.0        | 265             | 4.0          |
+|  1669465928 | 85610      | Prothrombin time            | 78.0          | 25              | 6.0          |
+|  1669465928 | 93000      | Electrocardiogram complete  | 12.0          | 12              | 17.0         |
+|  1669465928 | 99214      | Office/outpatient visit est | 16.0          | 16              | 90.0         |
+|  1669465928 | G0166      | Extrnl counterpulse, per tx | 16619.0       | 615             | 137.0        |
+{:.table-sql}
+
+
+It's been so long since we looked at the actual WSJ assertion that it's worth reviewing:
+
+> ...Yet 98% of the $2.3 million...was for a cardiac procedure
+
+Do any of those descriptions seem _obviously_ a cardiac procedure? Not to me. But OK, remember that our plan was to focus on the "98% of $2.3 million" number. One of those procedures, when you multiply the `payment_amt` by either `line_srvc_cnt` or `bene_unique_cnt`, gets us close to $2.3 million.
+
+Riffing off our previous query and hardcoding Dr. Weaver's `npi` number -- i.e. `1669465928` -- so that we don't have to join against `providers`, here's a useful query:
+
+~~~sql
+SELECT 
+  hcpcs_code,
+  hcpcs_description,
+  ROUND(line_srvc_cnt * average_Medicare_payment_amt) 
+    AS total_srvc_payment_amt,
+  ROUND(bene_unique_cnt * average_Medicare_payment_amt)
+    AS total_bene_payment_amt
+FROM payments
+WHERE npi = 1669465928
+ORDER BY total_srvc_payment_amt DESC;
+~~~
+
+Looks like we have a clear winner:
+
+|-------------+-----------------------------+------------------------+-------------------------|
+|  hcpcs_code | hcpcs_description           | total_srvc_payment_amt | total_bene_payment_amt  |
+|-------------+-----------------------------+------------------------+-------------------------|
+|  G0166      | Extrnl counterpulse, per tx | 2274250.0              | 84161.0                 |
+|  82947      | Assay glucose blood quant   | 35189.0                | 1083.0                  |
+|  99214      | Office/outpatient visit est | 1439.0                 | 1439.0                  |
+|  85610      | Prothrombin time            | 434.0                  | 139.0                   |
+|  93000      | Electrocardiogram complete  | 201.0                  | 201.0                   |
+{:.table-sql}
+
+- The procedure's name is `"Extrnl counterpulse, per tx"`
+- Its HCPCS code is `"G0166"`
+- Multiplying `line_srvc_cnt` by `average_Medicare_payment_amt` seems to get us the kind of payment metric that the WSJ is using as evidence against Dr. Weaver. 
+
+
+Congrats to us...we just wrote all the SQL needed to verify the facts stated in the first paragraph of the WSJ's story. That might make you feel proud, or cause your inner self to scream in despair. Or both.
+
+Let's move on to the next paragraph of assertions.
+
+
+> ...The government data show that out of the thousands of cardiology providers who treated Medicare patients in 2012, just 239 billed for the procedure, and they used it on fewer than 5% of their patients on average. The 141 cardiologists at the Cleveland Clinic, renowned for heart care, performed it on just six patients last year. Dr. Weaver’s clinic administered it to 99.5% of his Medicare patients — 615 in all — billing the federal health-insurance program for the elderly and disabled 16,619 times, according to the data.
+
+
+### 1D. "...Out of the thousands of cardiology providers who treated Medicare patients in 2012"
+
+This isn't really an exact number. But let's make sure there are "thousands" of cardiology providers in the `providers` table:
+
+~~~sql
+SELECT COUNT(*)
+FROM providers
+WHERE provider_type = 'Cardiology';
+~~~
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  22243     |
+|------------|
+{:.table-sql}
+
+
+Uh...OK...22,000 is most definitely "thousands of cardiology providers." But why didn't the WSJ writer/editor say "tens of thousands", which would boost by an order of magnitude how rare Dr. Weaver is in his work? Maybe the person who made the decision is unusually anal-retentive about the number of words used to describe numerical quantities (unlike me, for example). Or maybe our query is just too simple?
+
+There's no reason why we have to stick to SQL. This seems like a question Google could solve if we ask, `"how many cardiologists in the us"`:
+
+![image](/files/images/tutorials/sql-walk/wsj-medicare/google-for-cardiologists.png)
+
+Who could argue against a site named __CardioSolution__ -- though we would expect our count to be less than whatever the official estimate is, as our count only includes cardiologists who participate in Medicare...but maybe that's most of them? 
+
+Before we move on, let's do a `GROUP BY` aggregation that takes into account that `providers` has fields that differentiate between individual doctors and hospitals, and doctors and non-doctors. These fields, respectively, are `nppes_entity_code` and `nppes_credentials`:
+
+~~~sql
+SELECT provider_type,
+  nppes_credentials,
+  nppes_entity_code, 
+  COUNT(*) AS ct
+FROM providers
+WHERE provider_type LIKE '%Cardiology%'
+GROUP BY provider_type, nppes_credentials, nppes_entity_code
+ORDER BY ct DESC
+LIMIT 5;
+~~~
+
+|---------------|-------------------|-------------------|-------|
+| provider_type | nppes_credentials | nppes_entity_code |   ct  |
+|---------------|-------------------|-------------------|-------|
+| Cardiology    | MD                | I                 | 10448 |
+| Cardiology    | M.D.              | I                 |  9442 |
+| Cardiology    | DO                | I                 |   462 |
+| Cardiology    | D.O.              | I                 |   436 |
+| Cardiology    | NULL              | I                 |   363 |
+|---------------|-------------------|-------------------|-------|
+{:.table-sql}
+
+Well, the good news is that there is only one type of `'Cardiology'` descriptor. But the `nppes_credentials` is pretty messy, just in case you wanted to do something with that...
+
+Oh, it's also possible that "cardiology providers", as the WSJ phrases it, is something distinct from a doctor specializing in Cardiology...Anyway, moving on -- I think we've established the Medicare data has "thousands" of cardiologists, who fall under the category of "cardiology providers".
+
+
+### 1E. "Just 239 [cardiology providers] billed for the procedure [coded `G0166`]"
+
+We actually don't need to join against `providers` since `payments` has its own `provider_type` column. Also, we assume that all `hcpcs_code` and `npi` combinations happen exactly once, so no need to do some kind of `GROUP BY`:
+
+~~~sql
+SELECT COUNT(*)
+FROM payments
+WHERE hcpcs_code = 'G0166' 
+  AND provider_type = 'Cardiology';
+~~~
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  200       |
+|------------|
+{:.table-sql}
+
+
+200 does not equal 239. What are we missing here? Let's remove the `WHERE` condition to get a count of _all_ doctors:
+
+~~~sql
+SELECT COUNT(*)
+FROM payments
+WHERE hcpcs_code = 'G0166';
+~~~
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  239       |
+|------------|
+{:.table-sql}
+
+There's our answer -- the phrase "cardiology providers" includes anyone who is happening to provide this particular procedure. 
+
+Out of curiosity, what is the breakdown by `provider_type` for the "counterpulse" procedure, i.e. HCPCS `G0166`? 
+
+In other words, is Dr. Weaver the lone internal medicine doctor who bills for this procedure?
+
+Now we need a `GROUP BY`:
+
+
+~~~sql
+SELECT provider_type, 
+  COUNT(*) AS provider_count
+FROM payments
+WHERE hcpcs_code = 'G0166'
+GROUP BY provider_type
+ORDER BY provider_count DESC;
+~~~
+
+
+|---------------------------------------+-----------------|
+|  provider_type                        | provider_count  |
+|---------------------------------------+-----------------|
+|  Cardiology                           | 200             |
+|  Internal Medicine                    | 17              |
+|  Cardiac Electrophysiology            | 4               |
+|  Family Practice                      | 4               |
+|  Nurse Practitioner                   | 4               |
+|  Hematology/Oncology                  | 2               |
+|  Physical Medicine and Rehabilitation | 2               |
+|  Pulmonary Disease                    | 2               |
+|  Anesthesiology                       | 1               |
+|  General Practice                     | 1               |
+|  General Surgery                      | 1               |
+|  Orthopedic Surgery                   | 1               |
+|---------------------------------------+-----------------|
+{:.table-sql}
+
+
+Besides cardiology, internal medicine is the specialty most associated with this procedure. So Dr. Weaver's practice isn't completely out of left field...
+
+### 1F. "Dr. Weaver’s clinic administered it to 99.5% of his Medicare patients — 615 in all...""
+
+Skipping a bit out of order, trying to verify this assertion will confirm which of the `payments` and `providers` columns correspond to the number of individual patients and the number of times the service was rendered.
+
+(Again, Dr. Weaver's `npi` is `1669465928`)
+
+
+Best to split this assertion into 2 queries:
+
+#### 99.5% of the total number of Dr. Weaver's Medicare patients is 615 
+
+The previous assertion doesn't tell us how many patients Dr. Weaver has -- though we could obviously find out by looking at what he has in the `total_unique_benes` column. The number `615` is what we get if we were to take 99.5 percent of `total_unique_benes`.
+
+So, return a single number, compare it to 615:
+
+~~~sql
+SELECT total_unique_benes * 0.995
+FROM providers WHERE
+npi = 1669465928;
+~~~
+
+Close enough:
+
+|------------------------------|
+|  total_unique_benes * 0.995  |
+|------------------------------|
+|  614.91                      |
+|------------------------------|
+{:.table-sql}
+
+
+#### Dr. Weaver administered the counterpulse procedure on 615 of his patients:
+
+This can be confirmed in the `payments` table. Again, the relevant HCPCS code is `G0166`. I think `bene_unique_cnt` is the important column, but let's include the other counts as a comparison:
+
+~~~sql
+SELECT bene_unique_cnt, bene_day_srvc_cnt, line_srvc_cnt
+FROM payments
+WHERE hcpcs_code = 'G0166'
+  AND npi = 1669465928;
+~~~
+
+|------------------+-------------------+----------------|
+|  bene_unique_cnt | bene_day_srvc_cnt | line_srvc_cnt  |
+|------------------+-------------------+----------------|
+|  615             | 15792             | 16619.0        |
+|------------------+-------------------+----------------|
+{:.table-sql}
+
+- So `bene_unique_cnt` is the column that describes how many people the procedure was administered to. 
+
+- We already know that `line_srvc_cnt` is the total number of times the procedure was administered.
+
+- Since `bene_day_srvc_cnt` is _less_ than `line_srvc_cnt`, we might assume that it is refers to the number of _days_ that the procedure was administered. Since it is nearly equal to `line_srvc_cnt`, perhaps it indicates that this procedure is typically a one-a-day thing?
+
+
+### 1G. "— billing the federal health-insurance program for the elderly and disabled 16,619 times."
+
+We already covered this above, but to reiterate:
+
+
+~~~sql
+SELECT line_srvc_cnt
+FROM payments
+WHERE hcpcs_code = 'G0166'
+  AND npi = 1669465928;
+~~~
+
+|-----------------|
+|  line_srvc_cnt  |
+|-----------------|
+|  16619.0        |
+|-----------------|
+{:.table-sql}
+
+
+
+### 1H. "...And they used it on fewer than 5% of their patients on average"
+
+OK, this requires taking a step back in the text. Here's the assertion in its context:
+
+> The government data show that out of the thousands of cardiology providers who treated Medicare patients in 2012, just 239 billed for the procedure, __and they used it on fewer than 5% of their patients on average__. 
+
+This is easier to calculate now that we know how to query for total Medicare patients per provider and number of patients a procedure was administered to.
+
+The query is a little complicated in that it requires an `INNER JOIN` to get the two numerical fields -- `payments.bene_unique_cnt` and `providers.total_unique_benes` -- which we then perform arithmetic on to verify the "5% of their patients on average"
+
+~~~sql
+SELECT 
+  AVG(100.0 * payments.bene_unique_cnt / providers.total_unique_benes)
+    AS avg_pct_patients_treated_w_counterpulse
+FROM payments
+INNER JOIN providers
+  ON payments.npi = providers.npi
+WHERE hcpcs_code = 'G0166';
+~~~
+
+Woohoo:
+
+|-------------------------------------------|
+|  avg_pct_patients_treated_w_counterpulse  |
+|-------------------------------------------|
+|  4.55289829873767                         |
+|-------------------------------------------|
+{:.table-sql}
+
+### 1I. "The 141 cardiologists at the Cleveland Clinic, renowned for heart care, performed it on just six patients last year."
+
+This is mostly a trick question (I *think*, though I could be missing something blindingly obvious...). The affiliation with the Cleveland Clinic is not something that can be derived from the Medicare data -- as you've seen, identifying information is limited to doctors' names and locations.
+
+So where does this fact about the 141 Cleveland Clinic cardiologists come from? It's not hard to imagine the WSJ team either manually looking this up or finding the Cleveland Clinic affiliations in some other datafile that makes it easy to filter the `providers` table. 
+
+Or maybe they just called the Cleveland Clinic and asked for the number. The reporting doesn't stop at the database's limits.
+
+
+# So many queries, so few paragraphs
+
+So after what seems like countless SQL queries, how far did we get into the first story in the WSJ "Medicare Unmasked" series?
+
+Three paragraphs. 
+
+Well, actually _two_ paragraphs, but the second one didn't contain anything from the Medicare database. From the PDF version of the WSJ Pulitzer entry, I've highlighted the paragraphs in pink that we've covered so far:
+
+![image](/files/images/tutorials/sql-walk/wsj-medicare/wsj-first-story-first-3-grafs.png)
+
+
+## One doctor, a variety of statistical attacks
+
+But consider how much data-based evidence was crammed into those 2 paragraphs. Or, to put it another way, look at how many ways the WSJ managed to not just introduce Dr. Weaver, but impugn his professional practice:
+
+- Dr. Weaver received __$2.3 million__ in Medicare payments in 2012 alone. Though to be fair, we haven't been given context on how that compares to the median amount.
+- __98%__ of that __$2.3 million__ was for a single-type of procedure. OK, not damning enough on its own, but it better be a pretty _damn_ good procedure...
+- Only __239__ doctors bill for this procedure. __200__ of them are cardiologists. Dr. Weaver is not a cardiologist. 
+- And of the small group of cardiologists who do bill Medicare for this procedure, they use it for fewer than __5%__ of all their patients.
+- In contrast, Dr. Weaver used it on __99.5%__ of his patients.
+
+And, if you've read the full story by now, you know the WSJ reporters haven't even begun to scrutinize Dr. Weaver's practice.
+
+
+## What we've learned by following along
+
+If you knew almost nothing about the details of the Medicare data, this is what you could learn from the dataset in just those first 3 paragraphs:
+
+- How the NPI number is used to associate medical providers with services and reimbursements.
+- How to find the total number of Medicare patients a medical provider had in 2012.
+- How to find every procedure and treatment that any given doctor billed to Medicare.
+- How to calculate how much Medicare actually reimbursed a given doctor for their services.
+- How to calculate the average number of times a given procedure was administered in a day, or per patient -- is it notable when a doctor administers a procedure at a much higher rate than his/her peers?
+- Many of the text fields are not very reliable.
+- The HCPCS description field can be quite vague.
+
+
+We have 6 more pages to go in the WSJ's article...but from this first page, we've encountered many of the angles used by the WSJ team to analyze the dataset and apply it to their reporting. If some of this was intimidating to you, I would have to say that the first page is probably the most _difficult_, even in just writing the SQL queries.
+
+But things get much easier now that the dataset isn't so familar.
+
+Note: I've written out the SQL queries for the rest of the ["Taxpayers Face Big Tab For Unusual Doctor Billings"](http://www.pulitzer.org/files/2015/investigative-reporting/wsjmedicare/01wsjmedicare2015.pdf) article. [But I've posted it as a midterm for my data journalism class](/assignments/midterm-wsj-medicare-walkthrough/). I'll update this page with all of the queries once the midterm is done.
+
+
+Done with all the exercises. It's probably [the right time to check out the CMS's official documentation](https://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/Medicare-Provider-Charge-Data/Physician-and-Other-Supplier2012.html)
+

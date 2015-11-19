@@ -1,0 +1,1004 @@
+---
+title: |
+  Midterm: Fact-checking the WSJ's "Medicare Unmasked" Investigation with SQL
+description: |
+  A hands-on exploration using SQL to learn about Medicare data and controversial practices in Medicare billing, as well as to appreciate the Wall Street Journal's Pulitzer Prize winning data investigation. 
+date: 2015-12-03
+points: 15
+assigned: true
+deliverables: |
+  Create a Document in your PADJO2015 folder named: __PADJO2015-MIDTERM-WSJ-MEDICARE__.
+
+  Every problem should have its own page devoted to it. Just like in the [Midterm Babysteps assignment](/assignments/midterm-babysteps-sql), e.g. a separate page for problem 2A, and another page for problem 2B, etc.
+
+  Please do this assignment on your own.
+
+requirements:
+  - If you don't have a relatively new computer. Or you have less than 20GB of free disk space...you should do this exercise on the journalism lab computers. 
+  - |
+    Download the [medicare_providers_2012.sqlite.zip](http://stash.padjo.org/dumps/2015/medicare_providers_2012.sqlite.zip){:.url}, which I've indexed for your convenience. Be warned: it is nearly 700MB zipped and expands to more than 2 gigabytes. Again, probably prudent to use the journalism lab computers for this.
+  - For each problem, write the SQLite query that will return the given result.
+  - Your query must return the same results -- including the same column headers and format.
+  - Work on your own on this one. You can do it. [Start by reading the companion tutorial on the subject](/tutorials/sql-walks/exploring-wsj-medicare-investigation-with-sql).
+---
+
+
+## Quick instructions
+
+
+1. Read the Wall Street Journal article, [Taxpayers Face Big Tab For Unusual Doctor Billings](http://www.pulitzer.org/files/2015/investigative-reporting/wsjmedicare/01wsjmedicare2015.pdf)
+2. Then read the tutorial in which I explain the (surprisingly many) [SQL queries needed to fact check just the first 3 paragraphs](/tutorials/sql-walks/exploring-wsj-medicare-investigation-with-sql).
+3. Download the zipped SQLite database (2GB+ when unzipped): [medicare_providers_2012.sqlite.zip](http://stash.padjo.org/dumps/2015/medicare_providers_2012.sqlite.zip){:.url}
+4. Do the midterm.
+
+
+
+### More instructions
+
+
+
+The [first part of this midterm ](#mark-part-1)is simply writing the SQL queries that ostensibly back to the hard numbers and assertions in the first article in the WSJ's Medicare Unmasked series.
+
+The [second part of this midterm](#mark-part-2) is to read one of the other stories in the WSJ series -- or a story by any news organization about the same dataset. Then pick a (non-trivial) fact that you believe can be found in the Medicare database, and the query to replicate it (i.e. this part is much shorter than the first part).
+
+Download the zipped SQLite database (2GB+ when unzipped): [medicare_providers_2012.sqlite.zip](http://stash.padjo.org/dumps/2015/medicare_providers_2012.sqlite.zip){:.url}
+
+
+<%= render_toc %>
+
+
+
+
+<a id="mark-part-1"></a>
+
+# Part 1: Fact-check the first article in WSJ's "Medicare Unmasked" 
+
+![image](/files/images/tutorials/sql-walk/wsj-medicare/taxpayer-billings-pdf-sql-highlighted.jpg)
+
+In the image above, I've taken the [PDF that the WSJ submitted for its Pulitzer-winning entry](http://www.pulitzer.org/works/2015-Investigative-Reporting-Group2) and <strong style="color: purple;">highlighted in purple</strong> all of the assertions and facts that can be found directly in the 2012 Medicare payment database. While a significant portion of the article can be fact-checked via the raw data, as you re-read the WSJ article, take note of the things that require reporting and research independent of the database.
+
+
+
+
+
+<a id="mark-1"></a>
+
+## 1. About Dr. Weaver
+
+Here's the excerpt pertaining to __Dr. Weaver__:
+
+> Ronald S. Weaver isn’t a cardiologist. Yet 98% of the $2.3 million that the Los Angeles doctor’s practice received from Medicare in 2012 was for a cardiac procedure, according to recently released government data. The government data show that out of the thousands of cardiology providers who treated Medicare patients in 2012, just 239 billed for the procedure, and they used it on fewer than 5% of their patients on average. 
+
+> The 141 cardiologists at the Cleveland Clinic, renowned for heart care, performed it on just six patients last year. Dr. Weaver’s clinic administered it to 99.5% of his Medicare patients — 615 in all — billing the federal health-insurance program for the elderly and disabled 16,619 times, according to the data.
+
+Hello, you don't have to actually do any problems based on this excerpt. [It's all in the tutorial](/tutorials/sql-walks/exploring-wsj-medicare-investigation-with-sql). These first couple of paragraphs -- and the SQL needed to fact-check them -- will introduce you to most of the concepts needed to do the rest of this test.
+
+
+
+<a id="mark-2"></a>
+
+## 2. About Dr. Weaver's aggregate totals
+
+More about Dr. Weaver, except focusing on how his total payment received compares to the rest of Medicare providers:
+
+> More than 2,300 providers earned $500,000 or more from Medicare in 2012 from a single procedure or service, according to a Wall Street Journal analysis of Medicare physician-payment data made public for the first time in April. A few of those providers, including Dr. Weaver, collected more from the single procedures than anyone else who billed for them — by very large margins. The data release was prompted by a Journal legal effort to make the information public.
+
+<a id="mark-2A"></a>
+
+### 2A. "More than 2,300 providers earned $500,000 or more from Medicare in 2012 from a single procedure or service."
+
+Warning: on a relatively speedy laptop, the subquery can take as much as 40 seconds. Rather than have you worry about whether the query you wrote is taking a long time for the right reasons, I've provided the nested query for you as a warmup gift:
+
+
+~~~sql
+SELECT   
+  SUM(average_Medicare_payment_amt * line_srvc_cnt) 
+    AS total_hcpcs_medicare_payment_amt
+  FROM payments
+WHERE `nppes_entity_code` = 'I'
+  GROUP BY npi, hcpcs_code
+~~~
+
+Again, running that query will take as long as 40 seconds, even on a SSD-based Macbook Pro. It will also return 8.5 million rows.
+
+So you need to write the main query that aggregates the above query -- i.e. a  `SELECT COUNT` statement and `WHERE` condition -- to get the "2,300+ providers" statistic:
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  2377      |
+|------------|
+{:.table-sql}
+
+
+(Note: the derivation of `total_hcpcs_medicare_payment_amt` is used in _many_ of the queries for this story. Feel free to re-use it)
+
+
+
+<a id="mark-2B"></a>
+
+### 2B. "A few of those providers, including Dr. Weaver, collected more from the single procedures than anyone else who billed for them — by very large margins."
+
+This is a loaded statement, and one of the key assertions for the entire article. All of the providers profiled by the WSJ are seen as outliers in what they earn from Medicare, though for different reasons and metrics of comparison. 
+
+Dr. Weaver is the lead anecdote in the story for three apparent reasons:
+
+1. He collected more than $500,000 in Medicare payments for a single procedure.
+2. The amount he collected was far more than the amount collected by anyone else who billed for this particular procedure.
+3. This particular procedure is apparently uncommon for Dr. Weaver's specialty.
+
+So there are apparently a "few" other providers who fit criteria #1 and #2. But how many of these providers are receiving an unusually high amount of Medicare payments for a procedure _unusual_ for the providers' specialties? In fact, what does the WSJ consider to be "very large margins" -- and how unusual is the margin that Dr. Weaver has compared to other providers?
+
+At the very least, we would have to write a query that would find the top 2 providers per procedure, then calculate the average margin. This (as far as I know) is not easy in SQLite -- and maybe [slightly easier in more complicated SQL flavors](http://www.artfulsoftware.com/infotree/qrytip.php?id=104).
+
+For now, let's just get the other top providers for the specific procedure that Dr. Weaver is supposedly an outlier for so that we can see how large a "very large margin" is. 
+
+Here's the query to get the HCPCS code for Dr. Weaver's preferred procedure (we [learned in the previous section that his NPI](#mark-1) is `1669465928`):
+
+
+~~~sql
+SELECT hcpcs_code
+FROM payments
+WHERE npi = 1669465928
+ORDER BY 
+  (average_Medicare_payment_amt * line_srvc_cnt) DESC
+LIMIT 1;
+~~~
+
+Now use that `hcpcs_code` to find all the doctors that have also administered this specific procedure, and how they compare to Dr. Weaver in terms of the total Medicare payment received.
+
+#### Expected results
+
+Note: technically there's no reason to include the doctor names, which means there's no reason to join `payments` and `providers`. But I'm making you do it for this answer just for practice...notice that I've used aliases to shorten up the column names, e.g. `first_name` for `nppes_provider_first_name`:
+
+
+|------------|-----------|-------------------|----------------------------------|
+| first_name | last_name |   provider_type   | total_hcpcs_medicare_payment_amt |
+|------------|-----------|-------------------|----------------------------------|
+| RONALD     | WEAVER    | Internal Medicine |                        2274250.0 |
+| SANG       | KIM       | Internal Medicine |                         755989.0 |
+| JOSE       | CACERES   | Cardiology        |                         705895.0 |
+| RAJEN      | MANIAR    | Cardiology        |                         604547.0 |
+| BACK       | KIM       | Cardiology        |                         350389.0 |
+{:.table-sql}
+
+Looks like Dr. Weaver receives about 3 times as much for this specific procedure as the second-highest earner. I've included `provider_type` since the WSJ asserts that it is notable that Dr. Weaver is not a cardiologist.
+
+
+#### The query (hint)
+
+
+Here's a hint of the answer -- which should have an `INNER JOIN`
+
+~~~sql
+SELECT 
+  nppes_provider_first_name AS first_name,
+  nppes_provider_last_org_name AS last_name,
+  payments.provider_type,
+  ROUND(average_Medicare_payment_amt * line_srvc_cnt)
+                 AS total_hcpcs_medicare_payment_amt
+FROM payments
+~~~
+
+
+<a id="mark-3"></a>
+
+## 3. About Dr. Gerantotis
+
+> Among the doctors whose billings stand out is Evangelos G. Geraniotis, a urologist in Hyannis, Mass. Dr. Geraniotis received $2.1 million from Medicare in 2012, the most of any member of his specialty.
+> 
+> Nearly $1 million of that sum came from a procedure not considered routine in a urological practice. Known as a “cystoscopy and fulguration,” it involves threading a scope up the male urethra to burn potentially cancerous lesions inside the bladder. According to his Medicare billings, Dr. Geraniotis performed two variations of the procedure 1,757 times in 2012. 
+> 
+> Of the 8,791 providers whose specialty is listed in the Medicare data as urology, 973 billed for the procedure, doing so an average of 38 times. The urologist who billed for the second-most performed the procedure less than one-third as often as Dr. Geraniotis did, the data show.
+>
+> ...Dr. Geraniotis said the more than $500 he received from Medicare each time he billed for the procedure played no role in his medical judgment and, by performing the procedure in his office, he keeps patients out of the hospital.
+
+<a id="mark-3A"></a>
+
+### 3A. "Evangelos G. Geraniotis, a urologist in Hyannis, Mass"
+
+Query the `providers` table and confirm that someone with the name of "Evangelos Geraniotis" is indeed a urologist in Massachusetts. 
+
+
+#### Expected results
+
+|-------------+------------+------------+---------------+---------+--------|
+|  npi        | first_name | last_name  | provider_type | city    | state  |
+|-------------+------------+------------+---------------+---------+--------|
+|  1174500953 | EVANGELOS  | GERANIOTIS | Urology       | HYANNIS | MA     |
+|-------------+------------+------------+---------------+---------+--------|
+{:.table-sql}
+
+
+#### The query (hint)
+
+Write the minimal `WHERE` condition to get exactly one result row. Here's the `SELECT...FROM` clause I use:
+
+~~~sql
+SELECT npi,
+  nppes_provider_first_name AS first_name,
+  nppes_provider_last_org_name AS last_name,
+  provider_type,
+  nppes_provider_city AS city,
+  nppes_provider_state AS state
+FROM providers
+WHERE ...
+~~~
+
+
+
+<a id="mark-3B"></a>
+
+### 3B. "Nearly $1 million of that sum came from a procedure...known as a 'cystoscopy and fulguration'..."
+
+
+If you try to filter by `hcpcs_description` containing `'cystoscopy and fulguration'`, you'll come up empty. I think the best strategy is to just list the top few of Dr. Geraniotis's billed procedures (he has more than 40 in the 2012 dataset), and see if anything _like_ `'cystoscopy and fulguration'` shows up.
+
+#### First, a fact-finding query
+
+For your convenience, here's the query that will help you find the actual answer query:
+
+~~~sql
+SELECT 
+  hcpcs_code, hcpcs_description,
+  ROUND(SUM(average_Medicare_payment_amt * line_srvc_cnt))
+    AS total_hcpcs_medicare_payment_amt
+FROM payments
+WHERE 
+  npi = 1174500953
+GROUP BY 
+  hcpcs_code, hcpcs_description
+ORDER BY 
+  total_hcpcs_medicare_payment_amt DESC
+LIMIT 5;
+~~~
+
+
+And here's its result:
+
+|-------------+------------------------------+-----------------------------------|
+|  hcpcs_code | hcpcs_description            | total_hcpcs_medicare_payment_amt  |
+|-------------+------------------------------+-----------------------------------|
+|  52214      | Cystoscopy and treatment     | 753334.0                          |
+|  99214      | Office/outpatient visit est  | 273531.0                          |
+|  52214      | Cystoscopy and treatment     | 229452.0                          |
+|  J9217      | Leuprolide acetate suspnsion | 186560.0                          |
+|  88112      | Cytopath cell enhance tech   | 103240.0                          |
+{:.table-sql}
+
+
+It seems like HCPCS codes `52214` and `52214` are what we need.
+
+#### Now, for the actual answer
+
+
+For this exercise, write the query that collects these two line items from `payments` and adds their total payment together for Dr. Geraniotis -- yes, in other words, use a  sQL query to confirm that `753334 + 273531` is close to the "nearly $1 million" asserted by the WSJ.
+
+You need to use `SUM`, but not necessarily a `GROUP BY`.
+
+#### Expected result
+
+
+|------------------------------------|
+|  total_hcpcs_medicare_payment_amt  |
+|------------------------------------|
+|  982786.0                          |
+|------------------------------------|
+{:.table-sql}
+
+
+#### The query
+
+You don't even need a `JOIN` or nested query here.
+
+
+<a id="mark-3C"></a>
+
+### 3C. "According to his Medicare billings, Dr. Geraniotis performed two variations of the procedure 1,757 times in 2012." 
+
+Pretty much the same query from the previous question, except a summation of a different field:
+
+#### Expected result
+
+|-----------+---------------------|
+|  COUNT(*) | SUM(line_srvc_cnt)  |
+|-----------+---------------------|
+|  2        | 1757.0              |
+|-----------+---------------------|
+{:.table-sql}
+
+
+<a id="mark-3D"></a>
+
+### 3D. "Of the 8,791 providers whose specialty is listed in the Medicare data as urology..."
+
+Count the number of providers that are urologists:
+
+
+#### Expected result
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  8791      |
+|------------|
+{:.table-sql}
+
+
+#### Side question (i.e. you don't have to do anything)
+
+
+But does `'Urology'` catch all relevant urologists, i.e. are there any providers who are labeled `'Urologist'` or some other variation?
+
+~~~sql
+SELECT provider_type, COUNT(*)
+FROM providers
+WHERE provider_type LIKE '%Urolog%'
+  AND nppes_entity_code = 'I'
+  GROUP BY provider_type
+ORDER BY provider_type;
+~~~
+
+Sure seems like there's only one label for all urologists:
+
+|----------------+-----------|
+|  provider_type | COUNT(*)  |
+|----------------+-----------|
+|  Neurology     | 12421     |
+|  Urology       | 8791      |
+|----------------+-----------|
+{:.table-sql}
+
+
+<a id="mark-3E"></a>
+
+### 3E. "...973 billed for the procedure..."
+
+Just another type of counting
+
+#### Expected result
+
+(the column header should be a major hint)
+
+|-----------------------|
+|  COUNT(DISTINCT npi)  |
+|-----------------------|
+|  973                  |
+|-----------------------|
+{:.table-sql}
+
+
+
+<a id="mark-3F"></a>
+
+### 3F. "...doing so an average of 38 times."
+
+The WSJ asserts that this procedure is not routine. This query finds out how they quantify "not routine"
+
+
+#### Expected result
+
+|------------------------|
+|  AVG(procedure_count)  |
+|------------------------|
+|  38.3802672147996      |
+|------------------------|
+{:.table-sql}
+
+
+
+
+<a id="mark-3G"></a>
+
+### 3G. "The urologist who billed for the second-most performed the procedure less than one-third as often as Dr. Geraniotis did..."
+
+
+We just need to generate a list of the top 2 urologists: the first is ostensibly Dr. Geraniotis, of course.
+
+#### Expected result
+
+533 is less than one-third of 1757:
+
+|-------------+------------------|
+|  npi        | procedure_count  |
+|-------------+------------------|
+|  1174500953 | 1757.0           |
+|  1326058363 | 533.0            |
+|-------------+------------------|
+{:.table-sql}
+
+
+<a id="mark-3H"></a>
+
+### 3H. "Dr. Geraniotis said the more than $500 he received from Medicare each time he billed for the procedure..."
+
+#### Expected result
+
+|-------------+-------------------------------|
+|  hcpcs_code | average_Medicare_payment_amt  |
+|-------------+-------------------------------|
+|  52214      | 532.37238979                  |
+|  52224      | 568.12487934                  |
+|-------------+-------------------------------|
+{:.table-sql}
+
+Don't even need to do an aggregate for this query.
+
+
+<a id="mark-4"></a>
+
+## 4. About Dr. Marder
+
+> In Port St. Lucie, Fla., Gary L. Marder, a dermatologist, specializes in treating melanoma with radiation. Dr. Marder’s website, which features photos of smiling elderly couples, says he has cured more than 100,000 skin cancers.
+
+> Medicare paid Dr. Marder $3.7 million in 2012 — $2.41 million of which came from a radiation treatment billed by just two other doctors in the data, which doesn’t include hospital billings. Neither of them came close to billing as much for it as Dr. Marder.
+
+> ...Under Medicare guidelines, the lower-voltage machine pictured on Dr. Marder’s website was reimbursed at a rate of about $22 per treatment in 2012, radiation oncologists say. Dr. Marder received an average of $154 per treatment by billing under the code for the higher-voltage machine.
+
+> ...Dr. Marder billed for the procedure, using the more lucrative code, 15,610 times in 2012, and performed the procedure on 94 patients, according to the Medicare data. That works out to 166 treatments per patient, on average.
+
+
+<a id="mark-4A"></a>
+
+### 4A. "In Port St. Lucie, Fla., Gary L. Marder, a dermatologist..."
+
+Look at the previous queries we've done to pinpoint a provider by name.
+
+
+|-------------+------------+-----------+--------------------+------------------+--------|
+|  npi        | first_name | last_name | provider_type      | city             | state  |
+|-------------+------------+-----------+--------------------+------------------+--------|
+|  1730117003 | GARY       | MARDER    | Radiation Oncology | PORT SAINT LUCIE | FL     |
+|-------------+------------+-----------+--------------------+------------------+--------|
+{:.table-sql}
+
+
+<a id="mark-4B"></a>
+
+### 4B. "Medicare paid Dr. Marder $3.7 million in 2012"
+
+You can find this in the `providers` table without referring to `payments`:
+
+
+
+|-------------+------------+-----------+------------------------------------|
+|  npi        | first_name | last_name | ROUND(total_medicare_payment_amt)  |
+|-------------+------------+-----------+------------------------------------|
+|  1730117003 | GARY       | MARDER    | 3655683.0                          |
+|-------------+------------+-----------+------------------------------------|
+{:.table-sql}
+
+
+
+<a id="mark-4C"></a>
+
+### 4C. "$2.41 million of [Dr. Marder's Medicare payments] came from a radiation treatment..."
+
+What exactly is that "radiation treatment"? Who knows. So write a query using Dr. Marder's `npi` to list his procedures and what Medicare paid him. Whatever is at the top is probably this radiation treatment.
+
+
+
+#### Expected answer
+
+|-------------+------------------------------+-----------------------------------|
+|  hcpcs_code | hcpcs_description            | total_hcpcs_medicare_payment_amt  |
+|-------------+------------------------------+-----------------------------------|
+|  77402      | Radiation treatment delivery | 2406840.0                         |
+|-------------+------------------------------+-----------------------------------|
+{:.table-sql}
+
+It's actually worth listing the top 10 procedures by total payment for Dr. Marder, just to get some context. But if you want to limit it to the result solely based on the WSJ's assertion, you can use a `WHERE` condition like this:
+
+~~~sql
+        WHERE total_hcpcs_medicare_payment_amt BETWEEN 2405000 AND 2414990
+          AND ...
+~~~
+
+<a id="mark-4D"></a>
+
+### 4D. "...billed by just two other doctors in the data"
+
+In the previous answer, you found the `hcpcs_code` for the "radiation treatment" that is bringing Dr. Marder the big Medicare payment. Now use it to write a query to find all the other doctors that have ever billed for that exact same procedure.
+
+According to the WSJ, you should end up with a list of 3 doctors (if you include Dr. Marder)
+
+#### Expected result
+
+|-------------+------------+-----------+--------------------+-----------------------------------|
+|  npi        | first_name | last_name | provider_type      | total_hcpcs_medicare_payment_amt  |
+|-------------+------------+-----------+--------------------+-----------------------------------|
+|  1730117003 | GARY       | MARDER    | Radiation Oncology | 2406840.0                         |
+|  1962453795 | CRAIG      | ABBOTT    | Dermatology        | 1039210.0                         |
+|  1447272026 | ROBERT     | NORMAN    | Dermatology        | 51250.0                           |
+|-------------+------------+-----------+--------------------+-----------------------------------|
+{:.table-sql}
+
+
+That's right, I want you to write a query that `INNER JOIN`s against `providers`, just for fun, because we really don't need the doctor names...though getting their `provider_type` is useful.
+
+
+<a id="mark-4E"></a>
+
+### 4E. "Under Medicare guidelines, the lower-voltage machine pictured on Dr. Marder’s website was reimbursed at a rate of about $22 per treatment in 2012..."
+
+OK, so this is tricky because what is the HCPCS code for this "lower-voltage machine"? It might be fun to do a archive.org search for Dr. Marder's website. But you can do that on your own. I'm going to try to derive this with just SQL and the hard number of "$22 per treatment".
+
+It's worth noting the phrase _"Under Medicare guidelines"_...I interpret that to mean that the __$22 per treatment__ figure comes from `average_Medicare_allowed_amt`, rather than what we've been using so far, `average_Medicare_payment_amt`.
+
+However, I include both fields for comparison's sake:
+
+|-------------------+------------------+------------+-------------------------------|
+|  avg_avg_allowed  | avg_avg_payment  | hcpcs_code | hcpcs_description             |
+|-------------------+------------------+------------+-------------------------------|
+|  21.137257454092  | 16.5379122457126 | 77401      | Radiation treatment delivery  |
+|  14.1102372002831 | 11.2056990984501 | 77417      | Radiology port film(s)        |
+|  44.6459502983889 | 35.3444672554544 | 77421      | Stereoscopic x-ray guidance   |
+|  50.0             | 32.392444444     | 77499      | Radiation therapy management  |
+|  100.25534435     | 79.502910581093  | 77431      | Radiation therapy management  |
+{:.table-sql}
+
+So the code for this lower-voltage machine seems to be `77401`. Note that the `hcpcs_description` is still the vague `'Radiation treatment delivery'` -- but how were we supposed to know that?
+
+#### The query (hint)
+
+Check out my sorting condition -- because we really don't know how close to `$22` the actual value is:
+
+~~~sql
+SELECT 
+  AVG(average_Medicare_allowed_amt) AS avg_avg_allowed
+
+  /* you fill out the rest */
+
+ORDER BY ABS(avg_avg_allowed - 22) ASC
+LIMIT 5;
+~~~
+
+
+<a id="mark-4F"></a>
+
+### 4F. "Dr. Marder received an average of $154 per treatment by billing under the code for the higher-voltage machine...Dr. Marder billed for the procedure, using the more lucrative code, 15,610 times in 2012...[Dr. Marder] performed the procedure on 94 patients, according to the Medicare data."
+
+OK, back to using `hcpcs_code` of `77402`
+
+#### Expected result
+
+|-------------+------------+---------------+-----------------+-------------------------------|
+|  npi        | hcpcs_code | line_srvc_cnt | bene_unique_cnt | average_Medicare_payment_amt  |
+|-------------+------------+---------------+-----------------+-------------------------------|
+|  1730117003 | 77402      | 15610.0       | 94              | 154.0                  |
+|-------------+------------+---------------+-----------------+-------------------------------|
+{:.table-sql}
+
+
+<a id="mark-5"></a>
+
+## 5. About Dr. Beale
+
+> The practice of James E. Beale, an orthopedic surgeon in the Detroit area, received $3.7 million from Medicare in 2012, more than any other member of his specialty, according to the data.
+
+> Dr. Beale’s practice accomplished that despite not performing a single surgery on a Medicare patient. His chief Medicare revenue source was “manual therapy techniques,” which the coding manual used by Medicare to set reimbursements describes as a massage or manipulation of various regions of the body, lasting 15 minutes.
+
+> Dr. Beale’s practice billed Medicare for it 107,670 times and received $2.3 million. By contrast, the average doctor or physical therapist in the data who billed for the technique performed it 520 times and was reimbursed less than $11,000 for it.
+
+> ...The Medicare payment data show that Dr. Beale’s practice performed the 15-minute massage an average of 149 times per patient for average Medicare billings per patient of $3,155.
+
+
+<a id="mark-5A"></a>
+
+### 5A. "Dr. James E. Beale, an orthopedic surgeon in the Detroit area, received $3.7 million from Medicare in 2012"
+
+Does "Detroit area" mean that the listed city will be `'Detroit'`? Maybe, maybe not. Let's just use `nppes_provider_state = 'MI'` to be safe:
+
+
+#### Expected result
+
+|-------------+------------+-----------+--------------------+--------+-------+----------------|
+|  npi        | first_name | last_name | provider_type      | city   | state | total_payment  |
+|-------------+------------+-----------+--------------------+--------+-------+----------------|
+|  1316934409 | JAMES      | BEALE     | Orthopedic Surgery | WARREN | MI    | 3705702.0      |
+|-------------+------------+-----------+--------------------+--------+-------+----------------|
+{:.table-sql}
+
+
+<a id="mark-5B"></a>
+
+### 5B. "[Dr. Beale received] more [in Medicare payments in 2012] than any other member of his specialty"
+
+The previous answer has Dr. Beale's `npi` and his `provider_type`. So, write the query that shows that he's at the top of his profession in Medicare payments.
+
+
+#### Expected result
+
+|-------------+----------------|
+|  npi        | total_payment  |
+|-------------+----------------|
+|  1316934409 | 3705702.0      |
+|  1811183676 | 2302127.0      |
+|  1295921054 | 2089683.0      |
+|  1639185978 | 1934375.0      |
+|  1376594069 | 1528257.0      |
+|-------------+----------------|
+{:.table-sql}
+
+
+
+<a id="mark-5C"></a>
+
+### 5C. "Dr. Beale’s practice accomplished that despite not performing a single surgery on a Medicare patient."
+
+Hmmm...how to filter for non-surgeries? It's just safer to list all of his possible operations. Write a query that filters `payments` for rows belonging to Dr. Beale's `npi`.
+
+#### Expected result
+
+|------------|------------------------------|----------------------------------|
+| hcpcs_code |      hcpcs_description       | total_hcpcs_medicare_payment_amt |
+|------------|------------------------------|----------------------------------|
+| 97140      | Manual therapy               |                        2280800.0 |
+| 97110      | Therapeutic exercises        |                         845309.0 |
+| 97032      | Electrical stimulation       |                         203449.0 |
+| 99215      | Office/outpatient visit est  |                         182795.0 |
+| 99205      | Office/outpatient visit new  |                          45158.0 |
+| 99214      | Office/outpatient visit est  |                          36999.0 |
+| 97124      | Massage therapy              |                          19355.0 |
+| 95904      | Sense nerve conduction test  |                          12292.0 |
+| 95903      | Motor nerve conduction test  |                          11610.0 |
+| 93306      | Tte w/doppler complete       |                           9122.0 |
+| 99348      | Home visit est patient       |                           8914.0 |
+| G0181      | Home health care supervision |                           8790.0 |
+| 99213      | Office/outpatient visit est  |                           8449.0 |
+| 93970      | Extremity study              |                           5287.0 |
+| 93923      | Upr/lxtr art stdy 3+ lvls    |                           4563.0 |
+| 99343      | Home visit new patient       |                           4146.0 |
+| 99349      | Home visit est patient       |                           3638.0 |
+| 93880      | Extracranial study           |                           3321.0 |
+| 97016      | Vasopneumatic device therapy |                           3286.0 |
+| 99204      | Office/outpatient visit new  |                           2666.0 |
+| 95934      | H-reflex test                |                           1885.0 |
+| G0180      | MD certification HHA patient |                           1365.0 |
+| 99212      | Office/outpatient visit est  |                           1361.0 |
+| 99406      | Behav chng smoking 3-10 min  |                            854.0 |
+| 93000      | Electrocardiogram complete   |                            181.0 |
+| 93005      | Electrocardiogram tracing    |                            106.0 |
+|------------|------------------------------|----------------------------------|
+{:.table-sql}
+
+None of the descriptions have the word "surgery" in them, so I guess that checks out?
+
+
+<a id="mark-5D"></a>
+
+### 5D. "His chief Medicare revenue source was 'manual therapy techniques'...Dr. Beale’s practice billed Medicare for it 107,670 times and received $2.3 million."
+
+#### Expected result
+
+|-------------+------------+-------------------+---------------+-----------------------------------|
+|  npi        | hcpcs_code | hcpcs_description | line_srvc_cnt | total_hcpcs_medicare_payment_amt  |
+|-------------+------------+-------------------+---------------+-----------------------------------|
+|  1316934409 | 97140      | Manual therapy    | 107670.0      | 2280800.0                         |
+|-------------+------------+-------------------+---------------+-----------------------------------|
+{:.table-sql}
+
+
+<a id="mark-5E"></a>
+
+### 5E. "The average doctor or physical therapist in the data who billed for the technique performed it 520 times and was reimbursed less than $11,000 for it."
+
+#### Expected result
+
+|--------------------+--------------------|
+|  avg_service_count | avg_total_payment  |
+|--------------------+--------------------|
+|  520.0             | 10885.0            |
+|--------------------+--------------------|
+{:.table-sql}
+
+
+<a id="mark-5F"></a>
+
+### 5F. "Dr. Beale’s practice performed the 15-minute massage an average of 149 times per patient for average Medicare billings per patient of $3,155."
+
+
+#### Expected result
+
+
+|-------------+------------+----------------------+----------------------|
+|  npi        | hcpcs_code | services_per_patient | payment_per_patient  |
+|-------------+------------+----------------------+----------------------|
+|  1316934409 | 97140      | 149.0                | 3155.0               |
+|-------------+------------+----------------------+----------------------|
+{:.table-sql}
+
+#### The query (mostly a freebie)
+
+~~~sql
+SELECT 
+  npi, hcpcs_code,
+  ROUND(line_srvc_cnt / bene_unique_cnt) 
+    AS services_per_patient,
+  ROUND(average_Medicare_payment_amt * line_srvc_cnt / bene_unique_cnt )
+    AS payment_per_patient
+FROM payments
+WHERE  /* fill out the conditions for yourself */
+~~~
+
+
+
+
+## 6. About the management of Dr. Weaver's clinic
+
+This is the last paragraph in the story. There's a whole lot of paragraphs that precede it that are based on reporting, interviewing, and documentation external to the Medicare database. You should read it.
+
+> The government data show the lab collected nearly $1 million from Medicare in 2012. It billed the program for medical tests on 626 patients, roughly the same number as were treated with EECP at Dr. Weaver’s clinic.
+
+### 6A. "The government data show the lab collected nearly $1 million from Medicare in 2012. It billed the program for medical tests on 626 patients"
+
+Basically, look up the clinic by name:
+
+#### Expected result
+
+|------------|------------------|-------------------|-------------------|----------------|
+|    npi     |    last_name     | total_allowed_amt | total_payment_amt | total_patients |
+|------------|------------------|-------------------|-------------------|----------------|
+| 1578566808 | GCC IMAGING, LLC |         1049161.0 |          930349.0 |          626.0 |
+|------------|------------------|-------------------|-------------------|----------------|
+{:.table-sql}
+
+
+
+And __whew!__ -- we're done! That was a lot of database queries -- none of them particularly complicated in terms of pure SQL. But they all require a significant amount of attention to detail and awareness of the _domain_. Hopefully you got a good SQL workout _and_ a better appreciation of the nuances of the angles to the WSJ's investigation.
+
+--------------------
+
+
+
+<a id="mark-part-2"></a>
+
+# Part 2: Read another story about the 2012 Medicare data. Come up with your own query
+
+Honestly, the most time-consuming part of this problem is just reading the story. You've already written about 20 queries about Medicare data. Now you just have to come up with one -- but also do the work of identifying a part in a story that depended directly on the Medicare database.
+
+__You don't have to pick a WSJ story.__ Various news outlets joined the Medicare data party after the WSJ was successful in fighting for the release of the data. For example, here's a couple of contemporary New York Times articles:
+
+- [NYT: Sliver of Medicare Doctors Get Big Share of Payouts](http://www.nytimes.com/2014/04/09/business/sliver-of-medicare-doctors-get-big-share-of-payouts.html)
+- [NYT: The Medicare Data’s Pitfalls](http://www.nytimes.com/2014/04/10/business/the-medicare-datas-pitfalls.html)
+- [New Yorker: What Big Data Can’t Tell Us About Health Care](http://www.newyorker.com/business/currency/what-big-data-cant-tell-us-about-health-care)
+- [Bloomberg: Top Medicare Doctor Paid $21 Million in 2012, Data Show](http://www.bloomberg.com/news/articles/2014-04-09/top-medicare-doctor-paid-21-million-in-2012-data-shows)
+- [WaPo: The top 10 Medicare billers explain why they charged $121M in one year](https://www.washingtonpost.com/news/wonk/wp/2014/04/09/the-top-10-medicare-billers-explain-why-they-charged-121m-in-one-year/)
+- [WaPo: Data uncover nation’s top Medicare billers](https://www.washingtonpost.com/business/economy/data-uncover-nations-top-medicare-billers/2014/04/08/9101a77e-bf39-11e3-b574-f8748871856a_story.html)
+
+As with the previous problems, create a new page for this problem, and include the following:
+
+1. A URL to the story that you read.
+2. The excerpt from the story that contains a database-backed assertion.
+3. The SQL query that confirms the assertion.
+
+Please pick a __non-trivial__ assertion, e.g. _not_ "Dr. John Smith is a cardiologist who lives in Iowa". It should include at least either a `JOIN` or a nested-query. I include a couple examples below.
+
+
+__Word of warning:__ Be sure that the data-based fact/assertion that you attempt to reproduce via the provided 2012 Medicare dataset is actually __derived from the 2012 Medicare dataset__. Some of the stories in the WSJ investigation refer to different datasets to which they have special access, and for which no SQL mastery can actually replicate without the source data.
+
+For example, this [Bloomberg story](http://www.bloomberg.com/news/articles/2015-06-01/at-least-3-900-medicare-millionaires-revealed-in-u-s-pay-data) finds that "Medicare paid at least 3,900 individual health-care providers at least $1 million in 2013". However, that comes from the [2013 Medicare Dataset](https://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/Medicare-Provider-Charge-Data/Physician-and-Other-Supplier2013.html). I guess you could download that data and make your own database if you really want to, but it's not necessary for this exercise.
+
+(But obviously, the fact that Medicare will keep releasing these massive datasets on an annual basis means that the WSJ series, amazing as it is, is just the beginning of important stories and analyses that can be done with this data)
+
+
+## Examples
+
+Here's a couple of examples of what I would like to see you do:
+
+
+### Example 1: NYT "Sliver of Medicare Doctors"
+
+#### The story
+
+[Sliver of Medicare Doctors Get Big Share of Payouts](http://www.nytimes.com/2014/04/09/business/sliver-of-medicare-doctors-get-big-share-of-payouts.html) 
+
+#### The assertion
+
+The excerpt below contains lots of interesting assertions. But I will only show the query for the first one:
+
+> __In 2012, 100 doctors received a total of $610 million__, ranging from a Florida ophthalmologist who was paid $21 million by Medicare to dozens of doctors, eye and cancer specialists chief among them, who received more than $4 million each that year. While more money by far is spent for routine office visits than any other single expenditure, one of the most heavily reimbursed procedures — costing a total of $1 billion for 143,000 patients — is for a single treatment for an eye disorder common in the elderly.
+
+
+~~~sql
+SELECT ROUND(SUM(total_medicare_payment_amt))
+FROM (
+    SELECT total_medicare_payment_amt 
+    FROM providers 
+    WHERE nppes_entity_code = 'I'
+    ORDER BY total_medicare_payment_amt DESC
+    LIMIT 100) 
+  AS my_nested_query;
+~~~
+
+#### The result
+
+|------------------------------------------|
+|  ROUND(SUM(total_medicare_payment_amt))  |
+|------------------------------------------|
+|  610287430.0                             |
+|------------------------------------------|
+{:.table-sql}
+
+
+
+### Example 2: WSJ "Doctors Cash In on Drug Tests for Seniors"
+
+This is a multi-faceted -- and thus, a multi-step problem. It's a nice real-world example of how you can make-do when you are highly ignorant of the intricacies of the healthcare system. 
+
+#### The story
+
+[Doctors Bill Big For Tarnished Drug](http://www.pulitzer.org/files/2015/investigative-reporting/wsjmedicare/04wsjmedicare2015.pdf), another installment in the WSJ's "Medicare Unmasked" series.
+
+#### The assertion
+
+> One Florida oncology group stands out for how much it bills Medicare for the pricey drug. Medicare paid U.S. oncologists $128 million in 2012 to administer Procrit, federal data show. One-sixth of that money went to oncologists in the group, Florida Cancer Specialists. __Of the 20 oncologists whom Medicare paid most for Procrit, 11 belonged to the Florida group__.
+ 
+
+#### The query (or queries)
+
+By this point, you've looked through enough of the Medicare database to know that while individual doctor identities are included, _group or clinic affiliation is not shown_. In other words, querying for the term `'Florida Cancer Specialists'` won't find the data needed to back the WSJ's assertion.
+
+So I'll just aim to show that 11 of the top 20 oncologists receiving Medicare payments for administering Procrit are based in Florida. That's a start.
+
+(sidenote: so how did the WSJ link doctors to Florida Cancer Specialists? Well, you can always start with the group's [homepage](https://www.flcancer.com/) and doing an old-fashioned look-see.)
+
+But if you query for `hcpcs_description LIKE '%procrit%'`, you'll find zero results in the `payments` database. Knowing what to look for requires understanding the variations in how procedures and drugs are categorized via HCPCS...which is something beyond my knowledge level.
+
+So I Googled for __"HCPCS code for procrit medicare"__:
+
+![image](/files/images/tutorials/sql-walk/wsj-medicare/google-for-procrit.png)
+
+It took me longer than I care to admit that the very first [cms.gov URL](https://www.cms.gov/Outreach-and-Education/Medicare-Learning-Network-MLN/MLNMattersArticles/downloads/se0406.pdf) contained what I needed. Even though __"Procrit"__ isn't mentioned in the document, the name of its __active ingredient__ _is_: [Epoetin alfa](https://en.wikipedia.org/wiki/Epoetin_alfa), better known in sports media via the acronym [__EPO__ and its reputation in blood doping](https://en.wikipedia.org/wiki/Blood_doping#Erythropoietin_.28EPO.29), which should explain some of the WSJ's investigative team's particular interest.
+
+For our attempt to find the proper query to back the assertion, we just need to search for `'epoetin'` instead of `'Procrit'`.
+
+First, let's list all the possible HCPCS codes that involve epoetin:
+
+~~~sql
+SELECT 
+  DISTINCT hcpcs_description,
+  hcpcs_code
+FROM payments
+WHERE hcpcs_description LIKE '%epoetin%';
+~~~
+
+The result:
+
+|-------------------------------+-------------|
+|  hcpcs_description            | hcpcs_code  |
+|-------------------------------+-------------|
+|  Epoetin alfa, non-esrd       | J0885       |
+|  Darbepoetin alfa, non-esrd   | J0881       |
+|  Epoetin alfa 1000 units ESRD | J0886       |
+|-------------------------------+-------------|
+{:.table-sql}
+
+Now, another query to find which of these drugs correspond to this assertion:
+
+>  Medicare paid U.S. oncologists $128 million in 2012 to administer Procrit
+
+
+~~~sql
+SELECT hcpcs_description, hcpcs_code, 
+  ROUND(SUM(average_Medicare_payment_amt * line_srvc_cnt))
+    AS total_hcpcs_medicare_payment_amt
+FROM payments
+WHERE hcpcs_code IN ("J0881", "J0886", "J0885")
+  AND nppes_entity_code = 'I'
+  AND provider_type LIKE '%Oncology%'
+GROUP BY hcpcs_code;
+~~~
+
+The result:
+
+|-------------------------------+------------+-----------------------------------|
+|  hcpcs_description            | hcpcs_code | total_hcpcs_medicare_payment_amt  |
+|-------------------------------+------------+-----------------------------------|
+|  Darbepoetin alfa, non-esrd   | J0881      | 128129354.0                       |
+|  Epoetin alfa, non-esrd       | J0885      | 127936974.0                       |
+|  Epoetin alfa 1000 units ESRD | J0886      | 31236.0                           |
+|-------------------------------+------------+-----------------------------------|
+{:.table-sql}
+
+So it could be _either_ `J0881` or `J0885`. The easiest (and laziest) way to try to figure out the proper code would be to make an ad-hoc query based on this assertion:
+
+> ...Of the 20 oncologists whom Medicare paid most for Procrit, 11 belonged to the Florida group.
+
+
+This is going to be one gigantic query, so let me break it down ins teps:
+
+First, create a query on `payments` that finds `provider_type` of Oncology, the corresponding `npi`, and calculates the total Medicare payment received for either one of the codes `J0881` and `J0885`. Then do an `INNER JOIN` with `providers` based on `npi`, then sort the list by the total payment, limit by `20`
+
+Oh yeah, include the `nppes_provider_state` from `providers`:
+
+~~~sql
+SELECT
+  nppes_provider_state,
+  (average_Medicare_payment_amt * line_srvc_cnt) 
+    AS total_hcpcs_medicare_payment_amt
+FROM payments 
+INNER JOIN providers
+  ON payments.npi = providers.npi
+WHERE
+    payments.hcpcs_code = "J0881"
+    AND payments.nppes_entity_code = 'I'
+GROUP BY 
+  payments.npi, payments.hcpcs_code
+ORDER BY 
+  total_hcpcs_medicare_payment_amt DESC
+LIMIT 20;
+~~~
+
+_Then_, do a query on the above query results, but do a `COUNT` for when `nppes_provider_state` corresponds to Florida. And again, do this whole thing _twice_, once for `J0881` amd once for `J0885`.
+
+The query that returns a `COUNT` of `11` is the one that has the HCPCS code that the WSJ is using (we _think_). 
+
+The code that gets the answer that we want is `J0885`; try the query yourself:
+
+
+~~~sql
+SELECT COUNT(*)
+FROM (
+    SELECT
+      nppes_provider_state,
+      (average_Medicare_payment_amt * line_srvc_cnt) 
+        AS total_hcpcs_medicare_payment_amt
+    FROM payments 
+    INNER JOIN providers
+      ON payments.npi = providers.npi
+    WHERE
+        payments.hcpcs_code = "J0885"
+        AND payments.nppes_entity_code = 'I'
+    GROUP BY 
+      payments.npi, payments.hcpcs_code
+    ORDER BY 
+      total_hcpcs_medicare_payment_amt DESC
+    LIMIT 20) 
+    AS top_20_providers
+WHERE nppes_provider_state = 'FL';
+~~~
+
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  11        |
+|------------|
+{:.table-sql}
+
+
+OK, all of this work would qualify for a _great answer_ to this part of the midterm. It seems heavily contrived, but it's quite reasonable if you're trying to learn from the WSJ's work and you have no idea what Procrit is, or what the point of targeting these Florida doctors is (though [maybe you should read the entire story](http://www.pulitzer.org/files/2015/investigative-reporting/wsjmedicare/04wsjmedicare2015.pdf)?) 
+
+
+It's worth doing one more query: finding the `npi` numbers for the 11 Florida doctors and then re-joining against `providers` just to take a look at all of the other fields to see if they have any relevance to the WSJ story:
+
+
+
+~~~sql
+SELECT
+  providers.*
+FROM (
+    SELECT
+      providers.npi AS the_npi,
+      nppes_provider_state AS the_state,
+      (average_Medicare_payment_amt * line_srvc_cnt) 
+        AS total_hcpcs_medicare_payment_amt
+    FROM payments 
+    INNER JOIN providers
+      ON payments.npi = providers.npi
+    WHERE
+        payments.hcpcs_code = "J0885"
+        AND payments.nppes_entity_code = 'I'
+    GROUP BY 
+      payments.npi, payments.hcpcs_code
+    ORDER BY 
+      total_hcpcs_medicare_payment_amt DESC
+    LIMIT 20) 
+    AS top_20_providers
+INNER JOIN providers
+  ON the_npi = providers.npi
+WHERE the_state = 'FL';
+~~~
+
+You'll find that none of the fields refer to their affiliation with [Florida Cancer Specialists](https://www.flcancer.com/). But you can find their names on the FCS website. Which again, reaffirms my point that investigations aren't created from queries of a single database inside a vacuum, even when that database contains several gigabytes of data.

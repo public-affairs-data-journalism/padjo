@@ -1,0 +1,404 @@
+---
+title: Adding multiple dimensions of data to a single map
+previous: /tutorials/mapping/022-joining-crime-data-to-nypd-precinct-map
+description: |
+  How to go beyond the basic visual styles by bypassing the wizard and writing our own CartoCSS
+---
+
+
+# Comparing 2011 to 2014
+
+
+#### 2014 drug misdemeanors map
+
+From the previous tutorial:
+
+![img](/files/images/tutorials/cartodb/choropleth-precinct-misd-drugs-2014-finish.png)
+
+#### 2009 drug misdemeanors map
+
+You can repeat the previous tutorial and generate this map:
+
+![image red-choropleth-of-2009.png](/files/images/tutorials/cartodb/red-choropleth-of-2009.png)
+
+
+
+
+
+
+
+#### Getting the misdemeanor drug charges from 2014
+
+~~~sql
+SELECT
+  precinct,
+  incident_count AS misd_drugs_2014
+FROM nypd_crime_data
+WHERE
+    year = 2014 AND
+    category = 'MISDEMEANOR DANGEROUS DRUGS';
+~~~
+
+#### Getting the misdemeanor drug charges from 2009
+
+~~~sql
+SELECT
+  precinct,
+  incident_count AS misd_drugs_2009
+FROM nypd_crime_data
+WHERE
+    year = 2009 AND
+    category = 'MISDEMEANOR DANGEROUS DRUGS';
+~~~
+
+
+#### Joining the two years of data and adding a comparison column
+
+~~~sql
+SELECT
+  t_2014.precinct,
+  misd_drugs_2009,
+  misd_drugs_2014,
+  ROUND((misd_drugs_2014 - misd_drugs_2009) * 100.0 / misd_drugs_2009)
+    AS delta_2009_2014
+FROM (SELECT
+        precinct,
+        incident_count AS misd_drugs_2014
+      FROM nypd_crime_data
+      WHERE
+        year = 2014 AND
+        category = 'MISDEMEANOR DANGEROUS DRUGS')
+      AS t_2014
+INNER JOIN (SELECT
+    precinct,
+    incident_count AS misd_drugs_2009
+  FROM nypd_crime_data
+  WHERE
+    year = 2009 AND
+    category = 'MISDEMEANOR DANGEROUS DRUGS')
+  AS t_2009
+  ON t_2014.precinct = t_2009.precinct
+ORDER BY delta_2009_2014;
+~~~
+
+Because I ordered by `delta_2009_2014`, we see the most dramatic _drops_ at the top:
+
+![image table-of-2009-2014-delta.png](/files/images/tutorials/cartodb/table-of-2009-2014-delta.png)
+
+Before moving on, let's adjust the query to get the overall average change from 2009 to 2014. I calculate this by dividing the `SUM` of `misd_drugs_2014 - misd_drugs_2009` by the `SUM` of `misd_drugs_2009`:
+
+~~~sql
+SELECT
+  ROUND(SUM(misd_drugs_2014 - misd_drugs_2009) * 100.0 / SUM(misd_drugs_2009))
+    AS avg_delta_2009_2014
+FROM (SELECT
+        precinct,
+        incident_count AS misd_drugs_2014
+      FROM nypd_crime_data
+      WHERE
+        year = 2014 AND
+        category = 'MISDEMEANOR DANGEROUS DRUGS')
+      AS t_2014
+INNER JOIN (SELECT
+    precinct,
+    incident_count AS misd_drugs_2009
+  FROM nypd_crime_data
+  WHERE
+    year = 2009 AND
+    category = 'MISDEMEANOR DANGEROUS DRUGS')
+  AS t_2009
+  ON t_2014.precinct = t_2009.precinct
+~~~
+
+For number of drug misdemeanors, the average change from 2009 to 2014, citywide, appears to be about __-34 percent__.
+
+
+
+# Making new geojoin
+
+
+~~~sql
+SELECT
+  nypd_precincts.precinct,
+  misd_drugs_2009,
+  misd_drugs_2014,
+  ROUND((misd_drugs_2014 - misd_drugs_2009) * 100.0 / misd_drugs_2009)
+    AS delta_2009_2014,
+  nypd_precincts.cartodb_id,
+  nypd_precincts.the_geom_webmercator
+FROM nypd_precincts
+INNER JOIN (SELECT
+        precinct,
+        incident_count AS misd_drugs_2014
+      FROM nypd_crime_data
+      WHERE
+        year = 2014 AND
+        category = 'MISDEMEANOR DANGEROUS DRUGS')
+      AS t_2014
+  ON nypd_precincts.precinct = t_2014.precinct
+INNER JOIN (SELECT
+    precinct,
+    incident_count AS misd_drugs_2009
+  FROM nypd_crime_data
+  WHERE
+    year = 2009 AND
+    category = 'MISDEMEANOR DANGEROUS DRUGS')
+  AS t_2009
+  ON nypd_precincts.precinct = t_2009.precinct
+ORDER BY delta_2009_2014;
+~~~
+
+I created a new dataset from the above query and named it: [nypd_precincts_delta_misd_drugs_2009_2014](https://daannguyen.cartodb.com/tables/nypd_precincts_delta_misd_drugs_2009_2014/table)
+
+The map [from this is here](https://daannguyen.cartodb.com/viz/c508dbb0-8efd-11e5-9506-0ecd1babdde5/map):
+
+<a href="https://daannguyen.cartodb.com/viz/c508dbb0-8efd-11e5-9506-0ecd1babdde5/map">
+  <img src="/files/images/tutorials/cartodb/initial-choropleth-of-2009-2014-delta.png" alt="initial choropleth">
+</a>
+
+
+
+
+# Learning CartoCSS and moving beyond the wizard
+
+Open the panel
+
+![GIF: cartodb-cartocss-panel.gif](/files/images/tutorials/cartodb/cartodb-cartocss-panel.gif)
+
+
+Here's what it looks like in full:
+
+~~~css
+/** choropleth visualization */
+
+#nypd_precincts_delta_misd_drugs_2009_2014{
+  polygon-fill: #EDF8FB;
+  polygon-opacity: 0.8;
+  line-color: #FFF;
+  line-width: 0.5;
+  line-opacity: 1;
+}
+
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= 149] {
+   polygon-fill: #006D2C;
+}
+
+
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= 149] {
+   polygon-fill: #006D2C;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= 69] {
+   polygon-fill: #2CA25F;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= 36] {
+   polygon-fill: #66C2A4;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= -3] {
+   polygon-fill: #B2E2E2;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= -41] {
+   polygon-fill: #EDF8FB;
+}
+~~~
+
+
+## Interactively editing the CartoCSS
+
+Change one thing at a time:
+
+Here's the first element
+
+~~~css
+#nypd_precincts_delta_misd_drugs_2009_2014{
+  polygon-fill: #EDF8FB;
+  polygon-opacity: 0.8;
+  line-color: #FFF;
+  line-width: 0.5;
+  line-opacity: 1;
+}
+~~~
+
+Let's make that `line-color` attribute a shade of <strong style="color: red;">red</strong>. You can do this interactively simply by clicking the current value of `line-color` to bring up a color panel. Choose the red swatch. The map should automatically refresh, but if not, hit the __Apply Style__ button to apply the change:
+
+![GIF: cartodb-cartocss-change-red-line.gif](/files/images/tutorials/cartodb/cartodb-cartocss-change-red-line.gif)
+
+And that's how easy it is to customize the default wizard styles. Play around with the different attributes and get a feel for how the syntax maps to the configuration you've seen in the Wizard.
+
+## Manually editing the CartoCSS
+
+After clicking your way through the CartoCSS, try __changing the values by typing them out manually__. Because not only does it end up being a bit more precise, writing our own CartoCSS styles is the only way to create entirely new visual functionality that the Choropleth wizard doesn't provide by default.
+
+Try making these changes:
+
+- For every precinct shape, a __black outline that is 0.5 units wide and an opacity of 0.7__ 
+- For the precincts that had an _increase_ in drug misdemeanors from 2009 to 2014, shade them in increasingly intense shades of <strong style="color: red;">red</strong>.
+- For the precincts that had a _decrease_ of drug misdemeanors, shade them in increasingly intense shades of <strong style="color: green;">green</strong>.
+- And for precincts in which the change was near 0, they should appear close to plain __white__.
+
+There's multiple ways to achieve this effect. Give it a go.
+
+~~~css
+/** choropleth visualization */
+
+#nypd_precincts_delta_misd_drugs_2009_2014{
+  polygon-fill: #EDF8FB;
+  polygon-opacity: 0.8;
+  line-color: #000;
+  line-width: 0.5;
+  line-opacity: 0.7;
+}
+
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 > 30] {
+   polygon-fill: #900;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= 30] {
+   polygon-fill: #C88;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= 5] {
+   polygon-fill: #FDD;
+}
+
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= -5] {
+   polygon-fill: #CFC;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= -30] {
+   polygon-fill: #8C8;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= -60] {
+   polygon-fill: #090;
+}
+
+#nypd_precincts_delta_misd_drugs_2009_2014::labels {
+  text-name: [precinct];
+  text-face-name: 'DejaVu Sans Book';
+  text-size: 10;
+  text-label-position-tolerance: 10;
+  text-fill: #000;
+  text-halo-fill: #FFFFFF;
+  text-halo-radius: 2.5;
+  text-dy: -10;
+  text-allow-overlap: true;
+  text-placement: point;
+  text-placement-type: simple;
+}
+~~~
+
+
+
+My result:
+
+![image red-green-choropleth-of-2009-2014-delta.png](/files/images/tutorials/cartodb/red-green-choropleth-of-2009-2014-delta.png)
+
+
+Things to note:
+
+- Didn't have to change the data layer
+
+
+# Adding our own CartoCSS logic
+
+
+Going back to the wizard will __wipe out__ all of our manual CartoCSS changes. So copy-paste them into a file.
+
+This time around, I make a choropleth, except I want to base it again on the raw counts of `misd_drugs_2014`, which I specify in the __Column__ dropdown:
+
+![image grayscale-choropleth-2014-misdrugs-nypd.png](/files/images/tutorials/cartodb/grayscale-choropleth-2014-misdrugs-nypd.png)
+
+This map, at a glance, gives us a decent overview of where these crimes happen _the most_. However, we've lost the ability to see the _change_ over time.
+
+How can we get both insights?
+
+By setting a visual attribute -- _other_ than the `polygon-fill` -- to vary on the value of `delta_2009_2014_misd_drugs`.
+
+But we can't do this through the wizard. But we _can_ do it through the __CartoCSS panel__.
+
+There are many approaches you can take to this. I've opted to copy all of the CartoCSS code from the red-green example, but change the instances of `polygon-fill` to `line-color`. And then I've tacked it onto the end of the file.
+
+Here is all of my CartoCSS:
+
+~~~css
+/** choropleth visualization */
+
+#nypd_precincts_delta_misd_drugs_2009_2014{
+  polygon-fill: #F7F7F7;
+  polygon-opacity: 0.8;
+  line-color: #f7f7f7;
+  line-width: 2.0;
+  line-opacity: 1;
+}
+
+#nypd_precincts_delta_misd_drugs_2009_2014::labels {
+  text-name: [precinct];
+  text-face-name: 'DejaVu Sans Book';
+  text-size: 10;
+  text-label-position-tolerance: 10;
+  text-fill: #000;
+  text-halo-fill: #FFFFFF;
+  text-halo-radius: 2.5;
+  text-dy: -10;
+  text-allow-overlap: true;
+  text-placement: point;
+  text-placement-type: simple;
+}
+
+#nypd_precincts_delta_misd_drugs_2009_2014 [ misd_drugs_2014 <= 2594] {
+   polygon-fill: #252525;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ misd_drugs_2014 <= 1292] {
+   polygon-fill: #525252;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ misd_drugs_2014 <= 942] {
+   polygon-fill: #737373;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ misd_drugs_2014 <= 707] {
+   polygon-fill: #969696;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ misd_drugs_2014 <= 467] {
+   polygon-fill: #BDBDBD;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ misd_drugs_2014 <= 318] {
+   polygon-fill: #D9D9D9;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ misd_drugs_2014 <= 168] {
+   polygon-fill: #F7F7F7;
+}
+
+
+
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 > 30] {
+   line-color: #900;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= 30] {
+   line-color: #C88;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= 5] {
+   line-color: #FDD;
+}
+
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= -5] {
+   line-color: #CFC;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= -30] {
+   line-color: #8C8;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= -60] {
+   line-color: #090;
+}
+~~~
+
+
+
+Applying those styles [gets us this multi-layered map](https://daannguyen.cartodb.com/viz/a040477a-8f05-11e5-801f-0e674067d321/map):
+
+![image outlined-grayscale-choropleth-2014-misdrugs-nypd.png](/files/images/tutorials/cartodb/outlined-grayscale-choropleth-2014-misdrugs-nypd.png)
+
+<iframe width="100%" height="520" frameborder="0" src="https://daannguyen.cartodb.com/viz/a040477a-8f05-11e5-801f-0e674067d321/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+
+
+It's not pretty, but it's not bad for a first pass at hand-coding data values. At a glance, though, we get a _new_ insight: for the most part, the drop in enforcement of drug misdemeanors isn't restricted to precincts in which such busts were rare -- precincts of all levels of drug activity experience a drop. 
+
+Some of the precincts where the drug busts have _increased_ are in lower Manhattan, where the number of incidents is relatively low. However, there is one precinct in which drug busts are frequent and in which they've _increased_: [Precinct 48, in the Bronx](http://www.nyc.gov/html/nypd/html/precincts/precinct_048.shtml).
+
+What's going on? While the apparent trend stands out, we _still_ don't know for sure. It could be that that precinct is having more misdemeanors for reasons independent of changes in policing strategy. Or, the precinct commander has decided that it is necessary to maintain the same strictness in policing. Or maybe 2014 is a fluke, in which case, we have all the other years to look at.
+
+
