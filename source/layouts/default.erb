@@ -1,6 +1,10 @@
 <!-- bare minimum, with container -->
 <% wrap_layout :layout do %>
   <%= partial "/layouts/onthestreet/partials/site/header" %>
+  <% if (banner = current_page.data.banner) %>
+    <%= partial "/layouts/onthestreet/partials/snippets/banner", locals: {banner: banner} %>
+  <% end %>
+
   <% container_tag do %>
     <%= yield %>
   <% end %>

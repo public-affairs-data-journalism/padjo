@@ -1,33 +1,163 @@
 ---
-title: Adding multiple dimensions of data to a single map
+title: How to map both the quantity and change of NYPD precinct-level crime data
 previous: /tutorials/mapping/022-joining-crime-data-to-nypd-precinct-map
 description: |
-  How to go beyond the basic visual styles by bypassing the wizard and writing our own CartoCSS
+  Did 2009 statewide reforms change how the NYPD polices misdemeanor drug crimes? How to go beyond the CartoDB map wizard and write our own CartoCSS to show greater depth of data.
+banner:
+  iframe_url: https://daannguyen.cartodb.com/viz/0f288cc2-8f35-11e5-8082-0e31c9be1b51/embed_map
+references:
+  - url: http://www.nyclu.org/issues/racial-justice/rockefeller-drug-law-reform
+    source: NYCLU
+    title: State Lawmakers Pass Historic Drug Law Reforms
+  - url: http://www.npr.org/2013/02/14/171822608/the-drug-laws-that-changed-how-we-punish
+    source: NPR
+    title: The Drug Laws That Changed How We Punish
+  - title: "Times Topics: Rockefeller Drug Laws"
+    source: New York Times
+    url: http://topics.nytimes.com/top/reference/timestopics/subjects/d/drug_abuse_and_traffic/rockefeller_drug_laws/index.html  
 ---
 
+The [above embedded map](https://daannguyen.cartodb.com/viz/0f288cc2-8f35-11e5-8082-0e31c9be1b51/public_map) shows the number of __2014__ drug misdemeanors by [NYPD precinct](https://github.com/datahoarder/nypd-historical-crime-stats) as a choropleth. The color of the labels indicate whether the number is a net _decrease_ (in <strong style="color:green;">green</strong>) or _increase_ (in <strong style="color:red;">red</strong>) since __2009__.
 
-# Comparing 2011 to 2014
+Did statewide drug law reforms change NYPD policing of low-level drug crimes? [Short answer/spoiler: probably not](#mark-correlation-not) -- but read on for a tutorial on how to make more maps.
 
+This tutorial describes one way of showing multiple dimensions of data on a single map -- in this case, the current _absolute number_ of crimes (as we [did in the previous tutorial](/tutorials/mapping/022-joining-crime-data-to-nypd-precinct-map)) _and_ the change in number of crimes. The approach we take to this is to go beyond the Map Layer Wizard and write our own CartoCSS conditional styles.
+
+As in the previous tutorial, the crime data comes from [this compilation of NYPD spreadsheets](https://github.com/datahoarder/nypd-historical-crime-stats).
+
+<%= render_toc %>
+
+# Overview of map iterations
+
+There's a lot of code in this tutorial, much of which I don't go into full detail. So it's helpful to see the overall strategy in iteration.
+
+### 2014 drug misdemeanors by NYPD precinct
+
+Recall in the [previous tutorial](/tutorials/mapping/022-joining-crime-data-to-nypd-precinct-map), we generated a choropleth map showing just the 2014 drug misdemeanors:
+
+![img](/files/images/tutorials/cartodb/choropleth-precinct-misd-drugs-2014-finish.png)
+
+Unfortunately, such a visualization doesn't make use of the [15 years of precinct-level data that we have](https://github.com/datahoarder/nypd-historical-crime-stats). And when evaluating crime data, we often care about the _change_ in crime rates over time.
+
+### 2009 drug misdemeanors by NYPD precinct
+
+Here's what the map of 2009 drug misdemeanors look like:
+
+![image red-choropleth-of-2009.png](/files/images/tutorials/cartodb/red-choropleth-of-2009.png)
+
+### Change in drug misdemeanors, 2009 to 2014, by NYPD precinct
+
+
+However, looking at two different maps is a very laborious way for users to determine _change_. So we use SQL to derive a dataset that has both 2014 and 2009 numbers, and then create a column that has the difference between both columns. The choropleth of that map can be seen below:
+
+<iframe width="100%" height="520" frameborder="0" src="https://daannguyen.cartodb.com/viz/c508dbb0-8efd-11e5-9506-0ecd1babdde5/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+
+Not bad, except that with a single-color choropleth, _negative_ change is represented by _less_ color. In our real-world scenario, though, it seems that precincts in which drug misdemeanors should be a whole different _category_ from precincts in which drug misdemeanors _increased_. 
+
+### Change in drug misdemeanors, 2009 to 2014, by NYPD precinct, as a double-color choropleth
+
+
+So we create a two-color choropleth, in which <strong style="color:green;">green</strong> and <strong style="color:red;">red</strong> are used to indicate negative and positive growth in drug misdemeanors, respectively, between 2009 and 2014:
+
+<iframe width="100%" height="520" frameborder="0" src="https://daannguyen.cartodb.com/viz/9a61cbfe-8f04-11e5-a3d8-0e674067d321/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+
+
+However, now we've lost the context of _absolute number of drug misdemeanors_ -- after all, the implications of a historically high-crime precinct decreasing (or increasing) its drug misdemeanors count is different than they are for a precinct which doesn't have many drug misdemeanors, period.
+
+
+### Single-color choropleth for 2014 drug misdemanors by precinct, with colored labels to indicate net increase/decrease since 2009 
+
+In the final map we create, we attempt to depict absolute number of drug misdemeanors for 2014 as a white-to-black choropleth, and use the __text labels__ to indicate whether that precinct has experienced a decrease or increase in drug misdemeanors since 2009. We can see that precincts with overall high numbers of drug misdemeanors also experienced large drops in reporting such crimes:
+
+<iframe width="100%" height="640" frameborder="0" src="https://daannguyen.cartodb.com/viz/0f288cc2-8f35-11e5-8082-0e31c9be1b51/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+
+
+It's not pretty, because showing both dimensions is inherently difficult with a single map. But this is just an example of the many insights we can get from a single dataset.
+
+
+### Single-color choropleth as above, but showing 2009 drug misdemeanors
+
+Note: It's probably more relevant to have the choropleth show the __2009__ drug misdemeanors, as to show the precincts in which these crimes _used_ to be more prevalent. Here's what that variation looks like:
+
+<iframe width="100%" height="640" frameborder="0" src="https://daannguyen.cartodb.com/viz/4774dd2c-92c5-11e5-b365-0ecd1babdde5/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+
+Note that the right-side limit of the scale in 2009 is __4,700+__, which is an indication that at least in one precinct, the number of drug misdemeanors has dropped drastically in 2014.
+
+
+
+
+
+(note: this tutorial is a little unfinished in its explanation, but the code is all here)
+
+
+
+
+
+
+
+
+# The Rockefeller Drug Law Reform of 2009
+
+I hypothesize that the number of reported drug misdemeanors in 2009 _might_ be more than they are in 2014, given statewide reforms in deprioritizing the enforcement of low-level drug crimes.
+
+Some background from the [New York Civil Liberties Union](http://www.nyclu.org/issues/racial-justice/rockefeller-drug-law-reform):
+
+> On April 2, 2009, the State Legislature passed legislation that embraces two important principles of drug law reform: It includes an elimination of mandatory minimum sentences, and it includes a restoration of judges’ authority to send many drug offenders to treatment programs instead of jail.
+
+## The effect on NYPD policing
+
+Did the change in state legislation affect the NYPD's policing of misdemeanor drug crimes? If we look at only recent news stories, we'll see that the current administration is making efforts to reduce arrests for low-level drug crimes.
+
+Overall [misdemeanor arrests fell from 2014 to 2013](http://www.newsweek.com/nypd-race-arrest-numbers-309686).
+
+In November 2014, the NYPD announced that [minor marijuana possession would no longer result in an arrest](http://www.nydailynews.com/new-york/nyc-crime/nypd-stop-arrests-low-level-marijuana-charges-source-article-1.2005222). 
+
+Via the [New York Daily News](http://www.nydailynews.com/new-york/nyc-crime/nypd-stop-arrests-low-level-marijuana-charges-source-article-1.2005222):
+
+> As it is, misdemeanor marijuana arrests are down citywide through the first 10 months of the year: through Nov. 10, there have been 24,081 arrests for smoking weed or possessing pot in public view. That’s about 3% lower than the 24,838 arrests through the same point last year, police said.
+
+
+But none of this really refers to the Rockefeller reforms...
+
+
+### Definition of misdemeanor drug crimes
+
+From the [Historical New York City Crime Data files](http://www.nyc.gov/html/nypd/html/analysis_and_planning/historical_nyc_crime_data.shtml), drug misdemeanors are defined as:
+
+>  Total of all top charge Misdemeanor Dangerous Drugs arrests made by all arresting agencies. Contains Criminal Possession of Controlled Substance, Criminally Possessing a Hypodermic Instrument, Criminally using Drug Paraphernalia, Criminal Possession of Methamphetamine Manufacturing Material, Criminal Possession of Marijuana, Criminal Sale of Marijuana 
+
+
+# The problem of map comparisons
+
+It's trivial to create two different maps for two different years. But it's difficult to see the actual difference between both maps:
 
 #### 2014 drug misdemeanors map
 
-From the previous tutorial:
+From the [previous tutorial](/tutorials/mapping/022-joining-crime-data-to-nypd-precinct-map):
 
 ![img](/files/images/tutorials/cartodb/choropleth-precinct-misd-drugs-2014-finish.png)
 
 #### 2009 drug misdemeanors map
 
-You can repeat the previous tutorial and generate this map:
+You can repeat the SQL in [previous tutorial](/tutorials/mapping/022-joining-crime-data-to-nypd-precinct-map) and modify it to filter for 2009 crimes to generate this map:
 
 ![image red-choropleth-of-2009.png](/files/images/tutorials/cartodb/red-choropleth-of-2009.png)
 
 
+If you look at both maps for a very, very long time, you might be able to pick out exactly which precincts have increased or decreased in the 5-year period. But wouldn't it be nicer to see the quantity of change on a single map? 
 
+
+
+# Writing nested queries and one big query
+
+Before we write the one big SQL query to get us the dataset for this map, let's think about them as individual queries.
 
 
 
 
 #### Getting the misdemeanor drug charges from 2014
+
+The simple `SELECT` to get all of the drug misdemeanors for 2014:
 
 ~~~sql
 SELECT
@@ -41,6 +171,9 @@ WHERE
 
 #### Getting the misdemeanor drug charges from 2009
 
+The simple `SELECT` to get all of the drug misdemeanors for 2009:
+
+
 ~~~sql
 SELECT
   precinct,
@@ -51,8 +184,9 @@ WHERE
     category = 'MISDEMEANOR DANGEROUS DRUGS';
 ~~~
 
-
 #### Joining the two years of data and adding a comparison column
+
+And now for the ugliness: joining the results of those two queries together to get `misd_drugs_2009` and `misd_drugs_2014` into a single table, plus another column that calculates the percentage of change between the two values:
 
 ~~~sql
 SELECT
@@ -112,9 +246,9 @@ INNER JOIN (SELECT
 
 For number of drug misdemeanors, the average change from 2009 to 2014, citywide, appears to be about __-34 percent__.
 
+# Making a new geospatial dataset
 
-
-# Making new geojoin
+Below I've joined the above query with `nypd_precincts` to be able to associate `misd_drugs_2009`, `misd_drugs_2014`, and `delta_2009_2014` with their respective NYPD precinct shapefiles:
 
 
 ~~~sql
@@ -148,23 +282,36 @@ INNER JOIN (SELECT
 ORDER BY delta_2009_2014;
 ~~~
 
-I created a new dataset from the above query and named it: [nypd_precincts_delta_misd_drugs_2009_2014](https://daannguyen.cartodb.com/tables/nypd_precincts_delta_misd_drugs_2009_2014/table)
+I created a new dataset from the above query and named it: [nypd_precincts_delta_misd_drugs_2009_2014](https://daannguyen.cartodb.com/tables/nypd_precincts_delta_misd_drugs_2009_2014/table).
 
-The map [from this is here](https://daannguyen.cartodb.com/viz/c508dbb0-8efd-11e5-9506-0ecd1babdde5/map):
+Then I've configured the Map Layer Wizard to create a __Choropleth__ in which the __darker__ shade of green, the _more_ the drug misdemeanors increased in 2014 compared to 2009 (i.e. `delta_2009_2014`).
 
-<a href="https://daannguyen.cartodb.com/viz/c508dbb0-8efd-11e5-9506-0ecd1babdde5/map">
-  <img src="/files/images/tutorials/cartodb/initial-choropleth-of-2009-2014-delta.png" alt="initial choropleth">
-</a>
+The map [that results from this is here](https://daannguyen.cartodb.com/viz/c508dbb0-8efd-11e5-9506-0ecd1babdde5/map):
 
+<iframe width="100%" height="520" frameborder="0" src="https://daannguyen.cartodb.com/viz/c508dbb0-8efd-11e5-9506-0ecd1babdde5/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
 
+It's not terrible, but not ideal either. Having this single-color choropleth doesn't quite work in a situation in which we have _negative_ change, which is in this scenario, something different than having _less_ of an increase. In this kind of situation, we hypothesize that there is something fundamentally different between precincts that have _increased_ in drug misdemeanors and those that have _decreased_ -- i.e. have a _negative_ `delta_2009_2014`.
 
+In this situation, it is better to use __two__ colors, for negative and positive changes, respectively.
 
 # Learning CartoCSS and moving beyond the wizard
 
-Open the panel
+There's several ways to approach this problem, including writing a lot more SQL and learning about CartoDB's multiple layers option. However, for this tutorial, I've chosen to configure the _CartoCSS_ code.
+
+[CartoCSS](https://www.mapbox.com/tilemill/docs/manual/carto/) is a language for defining the visual style of the map. For those of you familiar with CSS as it pertains to normal webpage styling, CartoCSS has a similar syntax and concept. However, CartoCSS allows for some programmatic-like syntax, so that styles for shapes can be defined on a conditional basis.
+
+This is pertinent to our situation, because this is what we fundamentally want to do (expressed as pseudocode): for precincts in which `delta_2009_2014` is _negative_, make their fill color <strong style="color: green;">green</strong>. For precincts in which `delta_2009_2014` has _increased_, make their fill color <strong style="color: red;">red</strong>.
+
+Describing [all of CartoCSS](https://www.mapbox.com/tilemill/docs/manual/carto/), or even the concept of CSS in general, is beyond the scope of this tutorial. However, see if you can figure out the pattern and structure by first examining the kind of code created by the Map Layer Wizard, and then tweaking it for yourself.
+
+
+## Accessing the CartoCSS panel
+
+Click the icon that has the letters, __CSS__:
 
 ![GIF: cartodb-cartocss-panel.gif](/files/images/tutorials/cartodb/cartodb-cartocss-panel.gif)
 
+Here, we see a little bit beyond the wizard's curtain. When generating a __Choropleth__ map, the wizard creates that CartoCSS code that describes exactly what the lines and polygons should look like.
 
 Here's what it looks like in full:
 
@@ -293,7 +440,7 @@ My result:
 Things to note:
 
 - Didn't have to change the data layer
-
+- TK(will explain later)
 
 # Adding our own CartoCSS logic
 
@@ -401,4 +548,147 @@ Some of the precincts where the drug busts have _increased_ are in lower Manhatt
 
 What's going on? While the apparent trend stands out, we _still_ don't know for sure. It could be that that precinct is having more misdemeanors for reasons independent of changes in policing strategy. Or, the precinct commander has decided that it is necessary to maintain the same strictness in policing. Or maybe 2014 is a fluke, in which case, we have all the other years to look at.
 
+<a id="mark-correlation-not"></a>
 
+## Correlation, causation, etc.
+
+Did the 2009 reforms change things? This kind of multi-year data comparison is not something a map can explain well. In fact, a much simpler SQL query -- a group count by year -- will give us better insights:
+
+~~~sql
+SELECT
+  year,
+  SUM(incident_count) AS total_incidents
+FROM nypd_crime_data
+WHERE
+    category = 'MISDEMEANOR DANGEROUS DRUGS'
+GROUP BY year
+ORDER BY year;
+~~~
+
+
+![image group-drug-misd-by-year.png](/files/images/tutorials/cartodb/group-drug-misd-by-year.png)
+
+We can see that drug misdemeanors held steady through 2010, and _peaked_ in __2011__ with __80,000+__ such reports. In __2012__, the number dropped drastically to __67,000+__, and has fallen each year since. So it doesn't seem likely that the Rockefeller Drug Laws were the main factor. However, [there was something else about NYPD policy that changed drastically in 2012](http://www.nytimes.com/interactive/2014/09/19/nyregion/stop-and-frisk-is-all-but-gone-from-new-york.html)...
+
+
+## More polished version of the map
+
+Here I do a few more edits to the CartoCSS, so that the __text labels__ reflect the change over time.
+
+The [map can be seen here](https://daannguyen.cartodb.com/viz/0f288cc2-8f35-11e5-8082-0e31c9be1b51/map).
+
+<iframe width="100%" height="520" frameborder="0" src="https://daannguyen.cartodb.com/viz/0f288cc2-8f35-11e5-8082-0e31c9be1b51/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+
+
+And here's the CSS and custom HTML to generate it:
+
+~~~css
+/** choropleth visualization */
+
+#nypd_precincts_delta_misd_drugs_2009_2014{
+  polygon-fill: #F7F7F7;
+  polygon-opacity: 0.8;
+  line-color: #000000;
+  line-width: 1.0;
+  line-opacity: 1;
+}
+
+#nypd_precincts_delta_misd_drugs_2009_2014 {
+  text-name: [precinct];
+  text-face-name: 'Lato Bold';
+  text-size: 12;
+  text-label-position-tolerance: 10;
+  text-fill: #000;
+  text-halo-fill: #FFFFFF;
+  text-halo-radius: 4.5;
+  text-dy: -0;
+  text-allow-overlap: true;
+  text-placement: point;
+  text-placement-type: simple;
+}
+
+#nypd_precincts_delta_misd_drugs_2009_2014 [ misd_drugs_2014 <= 2594] {
+   polygon-fill: #252525;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ misd_drugs_2014 <= 1292] {
+   polygon-fill: #525252;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ misd_drugs_2014 <= 942] {
+   polygon-fill: #737373;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ misd_drugs_2014 <= 707] {
+   polygon-fill: #969696;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ misd_drugs_2014 <= 467] {
+   polygon-fill: #BDBDBD;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ misd_drugs_2014 <= 318] {
+   polygon-fill: #D9D9D9;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ misd_drugs_2014 <= 168] {
+   polygon-fill: #F7F7F7;
+}
+
+
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 > 30] {
+   text-halo-fill: #900;
+   text-fill: #FFF;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= 30] {
+   text-halo-fill: #C88;
+   text-fill: #FFF;
+}
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 < 5] {
+   text-halo-fill: #FDD;
+   text-fill: #000;
+}
+
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= 2] {
+   text-halo-fill: #FFFFFF;
+   text-fill: #000;
+}
+
+
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= -2] {
+   text-halo-fill: #ddffdd;
+   text-fill: #000;
+}
+
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= -30] {
+   text-halo-fill: #55bb55;
+   text-fill: #FFF;
+}
+
+#nypd_precincts_delta_misd_drugs_2009_2014 [ delta_2009_2014 <= -60] {
+   text-halo-fill: #090;
+   text-fill: #FFF;
+}
+~~~
+
+
+(yeah, this HTML is pretty ugly -- not sure if there's a better way to do styling)
+
+~~~html
+<div class="cartodb-tooltip-content-wrapper foo">
+  <div class="cartodb-tooltip-content">
+    <h4>Precinct {{precinct}}</h4>
+    <table class="data-table" style="width: 100%;">
+      <thead style="border-bottom: thin solid #999;">
+        <tr>
+           <th style="border-right: thin solid #999;">2009</th>
+           <th style="border-right: thin solid #999;">2014</th>
+           <th style=""></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border-right: thin solid #999; text-align: right; padding-right: 2px;">{{misd_drugs_2009}}</td>
+          <td style="border-right: thin solid #999; text-align: right; padding-right: 2px;">{{misd_drugs_2014}}</td>
+          <td style="text-align: right;">{{delta_2009_2014}}%</td>
+        </tr>
+      </tbody>
+    </table>  
+  </div>
+</div>
+
+~~~

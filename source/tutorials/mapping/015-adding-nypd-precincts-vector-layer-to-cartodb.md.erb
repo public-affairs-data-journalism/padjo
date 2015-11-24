@@ -2,76 +2,153 @@
 title: Mapping NYPD precincts with CartoDB 
 next: /tutorials/mapping/022-joining-crime-data-to-nypd-precinct-map
 listed: true
+description: |
+   How to map simple geographic shapefiles with CartoDB and do some basic customization of visual features.
+image_url: /files/images/tutorials/cartodb/finished-map-with-precincts.jpg
+banner:
+  iframe_url: 'https://daannguyen.cartodb.com/viz/53fecb14-8e9e-11e5-95c0-0ea31932ec1d/embed_map'
+references:
+  - title: The CartoDB Academy
+    url: http://academy.cartodb.com/
+  - title: "NYC Planning Department: Political and Administrative Districts"
+    url: http://www.nyc.gov/html/dcp/html/bytes/districts_download_metadata.shtml
+
 ---
 
 
-![image finished-map-with-precincts.jpg](/files/images/tutorials/cartodb/finished-map-with-precincts.jpg)
+In this tutorial, we learn how to add shapefiles for [NYPD precincts](http://www.nyc.gov/html/dcp/html/bytes/districts_download_metadata.shtml#shfp) onto a CartoDB map and then how to style them and add some interactivity.
+
+The [finished map can be found here](https://daannguyen.cartodb.com/viz/53fecb14-8e9e-11e5-95c0-0ea31932ec1d/public_map).
+
+<%= render_toc %>
 
 
-https://daannguyen.cartodb.com/viz/53fecb14-8e9e-11e5-95c0-0ea31932ec1d/public_map
+# The data
+
+The shapefiles can be found among those listed on the [NYC Planning Department: Political and Administrative Districts page](http://www.nyc.gov/html/dcp/html/bytes/districts_download_metadata.shtml#shfp). 
+
+The actual zip file: [Police Precincts (Clipped to Shoreline)](http://www.nyc.gov/html/dcp/download/bytes/nypp_15c.zip) 
 
 
+# Upload shapefiles to CartoDB as a dataset
 
-  - Source: [NYC Planning Department: Political and Administrative Districts](http://www.nyc.gov/html/dcp/html/bytes/districts_download_metadata.shtml#shfp) 
-  - Download: [Police Precincts (Clipped to Shoreline)](http://www.nyc.gov/html/dcp/download/bytes/nypp_15c.zip) 
+The link to your __Datasets__ page can be found in the top menu bar:
 
-# Download the shapefiles
+![image](/files/images/tutorials/cartodb/menu-your-datasets.png){:.bordered}
 
-# Upload to CartoDB as a dataset
-
-![image](/files/images/tutorials/cartodb/menu-your-datasets.png)
+Clicking __Your datasets__ will take you to a listing of the datasets you've uploaded so far. 
 
 ## Make a new dataset
 
-![image new-dataset-button.png](/files/images/tutorials/cartodb/new-dataset-button.png)
+You can create a new dataset from scratch, but you'll typically find yourself uploading data files you've already created into CartoDB. These include anything from CSV text files to Excel spreadsheets to zipped folders of shapefiles.
 
-You can even paste the URL of the [zip file](http://www.nyc.gov/html/dcp/download/bytes/nypp_15c.zip):
+Click the <strong style="color: #0A0;">green button</strong> titled __NEW DATASET__ to bring up the page for uploading new datasets:
+
+![image new-dataset-button.png](/files/images/tutorials/cartodb/new-dataset-button.png){:.bordered}
+
+You can even save yourself the step of downloading the data file, as CartoDB lets you paste in the URL of the [zip file](http://www.nyc.gov/html/dcp/download/bytes/nypp_15c.zip) to be uploaded. However, I *highly* suggest taking the time to actual download and open data files rather than blindly send them into your applications:
 
 ![image upload-dataset-screen.png](/files/images/tutorials/cartodb/upload-dataset-screen.png)
 
+# The Views 
+
+CartoDB has the concept of a __Data View__ and a __Map View__. For every dataset you create -- even before you create what CartoDB technically considers to be a publishable _map_ -- you can view what the data _looks_ like on a map. Conversely, for every published map you make, there is an underlying spreadsheet-like dataset.
+
+It's not too different from QGIS in which you find yourself creating multiple variations (i.e. copies) of datasets and layers before creating the final publishable map.
+
+
 ## The Data View
+
+Upon uploading the precinct shapefiles, CartoDB takes us to the __Data View__ of this newly created dataset. This is a nice feature for seeing shapefile data as a spreadsheet, even though shapefiles contain complicated, nested data structures needed to define visual polygons.
 
 ![image data-view-of-nypd-precincts.png](/files/images/tutorials/cartodb/data-view-of-nypd-precincts.png)
 
+You can see the dataset I've uploaded and named as [nypd_precincts here](https://daannguyen.cartodb.com/tables/nypd_precincts). In your own version of the dataset, if you double-click any of the values in the column titled, `the_geom` -- they're all named `Polygon` -- you'll see the underlying geospatial data (I do not recommend actually editing such data by hand):
+
+![image seeing-the_geom-polygon-data-value.png](/files/images/tutorials/cartodb/seeing-the_geom-polygon-data-value.png)
+
+
 ## The Map View
+
+Because the precincts shapefile is inherently geospatial, clicking on the __MAP VIEW__ button in the top navigation will take you to an interactive map in which the precincts are automatically and conveniently rendered:
 
 ![image map-view-of-nypd-precincts.png](/files/images/tutorials/cartodb/map-view-of-nypd-precincts.png)
 
 
-Checking out the auto-creatingTK feature:
+### The auto-dataset analysis feature
+
+Usually, after uploading a new dataset and attempting to map it, CartoDB will attempt to analyze it and then suggest "interesting" maps for you to try out.
+
+My suggestion is __to close that box__ (by clicking the __X__ icon). First of all, the feature seems to add a slight performance drag as it attempts to read the data. But more importantly, there should never be a situation in which you are so ignorant of what's in your own data that you need a computer's general algorithm to tell you what to do -- [akin to having Clippy write your entire resumé for you](https://en.wikipedia.org/wiki/Office_Assistant).
+
+But if you're curious, go ahead and see what interesting maps CartoDB has found for you in the precincts shapefile:
 
 ![image map-view-auto-wizard-creating.png](/files/images/tutorials/cartodb/map-view-auto-wizard-creating.png)
 
+Not entirely compelling -- though it's not CartoDB's fault, of course. It's just that there's nothing inherently interesting about the precincts data except for the shapefiles being linked to each precinct number. But you should've already known that by looking at the __DATA VIEW__.
 
-# Style the colors and the lines
+# Basic map styling
+
+We're actually almost done with the objective of this tutorial. The convenience of CartoDB allows us to render a map of NYPD precinct shapefiles basically as soon as we've finished uploading the shapefiles.
+
+With the "data" part of this tutorial done, let's explore some of the styling options we have in CartoDB.
+
+## The Map Layer Wizard
+
+On the __right__ side of the screen, you should see a list of icons. Clicking on any of them will roll out a side panel full of new ways to configure and wrangle both the map and the underlying data.
+
+For now, click on the __paintbrush icon__ to bring up the __Map Layer Wizard__:
+
 
 ![GIF: cartodb-open-wizard.gif](/files/images/tutorials/cartodb/cartodb-open-wizard.gif)
 
+This wizard allows you to choose from a variety of stock templates for maps. Keep in mind that the featureset of your map's interactivity is highly dependent on its underlying data. The more complicated the data, the more complicated the kinds of maps you can build.
+
+Conversely, when your data is _simple_ -- as it is with the precincts shapefile -- you can only make simple maps. By default, the wizard will have chosen to make the __Simple__ type of map. You can try out the other maps types, such as __Choropleth__ and __Category__ -- but you'll see that there's not much point. After all, the precincts data contains no other data besides `precinct` numbers and their corresponding geospatial boundaries.
+
 ## Changing polygon color and fill
+
+
+
+The options are pretty self explanatory. Below I've configured the map to __fill__ each shape with a purple color, with a transparency/opacity value of __0.5__ (i.e. halfway translucent). I've also used the __Polygon Stroke__ option to draw a 1-pixel black line that is also partially translucent:
 
 ![image wizard-editing-polygon-fill-stroke.png](/files/images/tutorials/cartodb/wizard-editing-polygon-fill-stroke.png)
 
+## Adding labels
 
-### Adding labels
+The Map Layer Wizard contains a number of options for adding and styling __text__ labels for each geospatial feature on our map layer. Typically, these labels come from the underlying data. 
+
+Since our only textual data in the precincts shapefile are the `precinct` numbers, that's pretty much our only option for text labels here. It's not necessary to have text labels for every map that you do, as they necessarily add clutter. In this case, it may seem like a worthwhile option, as most people aren't able to look at a map of NYPD precincts and identify which shape belongs to which precinct.
+
+The label options are pretty straightforward. One nice styling option is the __Label Halo__: I've created a <strong style="background: yellow;">yellow halo</strong> around the text labels to make them more readable against the purple shapes:
 
 ![image wizard-editing-label-font-halo.png](/files/images/tutorials/cartodb/wizard-editing-label-font-halo.png)
 
 
-
-
 # Add a hover/popup effect
+
+One of the nicest features of CartoDB is the ability to add interactivity to the map in the form of click/hover interactions. Again, like text labels, this isn't always necessary. In fact, I believe a core part of map design is creating a visualization that tells a story without requiring a user to click dozens of shapes/dots to find out important information. 
+
+That said, sometimes the details of the data are interesting on their own but cannot be fully explained in the visual layer. This map of precinct shapes __is not__ such a scenario.
+
+However, we might as well try out the __Infowindow Panel__, which can be accessed by clicking the __word-balloon icon__.
 
 ![image wizard-showing-infowindow-panel.png](/files/images/tutorials/cartodb/wizard-showing-infowindow-panel.png)
 
+You can configure both the __Click__ and the __Hover__ option -- though I suggest doing only one or the other -- there's never really a reason to have two different things to happen when a user attempts to interact with an object on a map.
 
-Here I've added a precinct label and chosen the "dark" theme:
+Below, I've configured the __Hover__ handler to display the `precinct` label with a "dark" theme:
 
-![image wizard-infowindow-adding-hover.png](/files/images/tutorials/cartodb/wizard-infowindow-adding-hover.png)
+![image wizard-infowindow-adding-hover.png](/files/images/tutorials/cartodb/wizard-infowindow-adding-hover.png){:.bordered}
 
 
-### Customizing HTML
+## Customizing HTML for an infowindow
+
+CartoDB allows for much more customization of the info window, even allowing you to write your own raw HTML. You can access this feature by clicking the very tiny icon represented by two angle brackets and a slash: `</>`
 
 ![GIF: cartodb-open-custom-html-tooltip.gif](/files/images/tutorials/cartodb/cartodb-open-custom-html-tooltip.gif)
+
+Below is the raw HTML needed to display some obnoxiously all-caps text and a picture of Nicolas Cage in some movie in which he plays a cop:
 
 
 ~~~html
@@ -88,17 +165,27 @@ Here I've added a precinct label and chosen the "dark" theme:
 ![image wizard-adding-custom-html-for-tooltip.png](/files/images/tutorials/cartodb/wizard-adding-custom-html-for-tooltip.png)
 
 
+# Publishing a map
+
+If you turn your attention to the main map view, you'll see a few buttons and menus that allow further configuration of the map, as it will be seen by your users. In fact, however you choose to zoom and pan the map, that will be the default view when you finally publish the map and make it public.
+
 ## Changing the base map
+
+One of the main visual publishing options you'll want to play with is changing the __base layer__ of the map. There's more than a dozen layers and variations for the map style upon which your data is rendered. Below, I've shown how to access that menu and change the style to [Stamen Toner](http://maps.stamen.com/toner/#12/37.7706/-122.3782):
 
 ![GIF: cartodb-changing-basemap-to-stamen-toner.gif](/files/images/tutorials/cartodb/cartodb-changing-basemap-to-stamen-toner.gif)
 
+## Making the map public
 
+Up to this point, we've been playing around with the __Map View__ of our data, but we haven't technically created a publishable map.  In the __top right__ of the page, click the __Visualize__ button.
 
-# Publishing a map
-
+This will create a __Map__ which will now be listed in your account's listing of maps. 
 
 ![GIF: cartodb-creating-map-from-viz-button.gif](/files/images/tutorials/cartodb/cartodb-creating-map-from-viz-button.gif)
 
+You'll also see a __Publish__ button which will reveal the shortlink to your map as well as an __embed code__. Below, I've pasted the [embed code for my finished map](https://daannguyen.cartodb.com/viz/53fecb14-8e9e-11e5-95c0-0ea31932ec1d/map):
+
+<iframe width="100%" height="520" frameborder="0" src="https://daannguyen.cartodb.com/viz/53fecb14-8e9e-11e5-95c0-0ea31932ec1d/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
 
 
-
+And that's it, we've learned how to import shapefiles and create a publishable map. Of course, NYPD precinct shapefiles aren't interesting on their own. In the next tutorial, we'll learn how to join [crime data by precinct to the precinct shapefiles to create a Choropleth map](/tutorials/mapping/022-joining-crime-data-to-nypd-precinct-map).

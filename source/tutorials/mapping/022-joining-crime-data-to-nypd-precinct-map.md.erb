@@ -2,10 +2,9 @@
 title: Joining crime data to NYPD precincts to create a choropleth map in CartoDB
 previous: /tutorials/mapping/015-adding-nypd-precincts-vector-layer-to-cartodb
 next: /tutorials/mapping/033-cartodb-adding-multiple-layers-to-show-diffs-by-precinct
-image:
-  url: /files/images/tutorials/cartodb/choropleth-precinct-misd-drugs-2014-finish.png
-  lede: true
-  click_thru_url: https://daannguyen.cartodb.com/viz/aea6b4de-8ef6-11e5-8b95-0ecd1babdde5/public_map
+image_url: /files/images/tutorials/cartodb/choropleth-precinct-misd-drugs-2014-finish.png
+banner:
+  iframe_url: https://daannguyen.cartodb.com/viz/aea6b4de-8ef6-11e5-8b95-0ecd1babdde5/embed_map
 
 previous: 
   - /tutorials/mapping/022-joining-crime-data-to-nypd-precinct-map
@@ -20,13 +19,17 @@ references:
     url: http://docs.cartodb.com/tutorials/projections/
 ---
 
-![image choropleth-precinct-misd-drugs-2014-finish.png](/files/images/tutorials/cartodb/choropleth-precinct-misd-drugs-2014-finish.png)
+
+<%= render_toc %>
 
 
+# Uploading the NYPD historical crime data by precinct
 
-# Upload dataset
+The [NYPD publishes a few spreadsheets](http://www.nyc.gov/html/nypd/html/analysis_and_planning/historical_nyc_crime_data.shtml) containing historical tallies of crimes per precinct. I've created a [separate repo](https://github.com/datahoarder/nypd-historical-crime-stats) that details the steps needed to get the data into database form. 
 
-https://github.com/datahoarder/nypd-historical-crime-stats/raw/master/data/compiled/nypd-precinct-historical-crime-data.csv
+However, [you can access the database-ready compiled CSV at this URL](https://github.com/datahoarder/nypd-historical-crime-stats/raw/master/data/compiled/nypd-precinct-historical-crime-data.csv), which you can upload directly to CartoDB.
+
+
 
 I'm calling this table __[nypd_crime_data](https://daannguyen.cartodb.com/tables/nypd_crime_data/table)__.
 

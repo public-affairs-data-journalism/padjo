@@ -76,4 +76,10 @@ body{
   .title{
     font-weight: bold;
   }
+
+  .image{
+    img{
+      max-width: 100%;
+    }
+  }
 }
