@@ -2,7 +2,7 @@
 
 This is the Github repository for the __Fall 2015__ class site of __Public Affairs Data Journalism I__, as taught at [Stanford University's Graduate Journalism Program.](http://journalism.stanford.edu/)
 
-The site currently lives at: [fall2015.padjo.org](//fall2015.padjo.org) and is currently maintained by lecturer [Dan Nguyen](//www.stanford.edu/~dun).
+The site currently lives at: [2015.padjo.org](//2015.padjo.org) and is currently maintained by lecturer [Dan Nguyen](//www.stanford.edu/~dun).
 
 ## Schedule
 
