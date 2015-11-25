@@ -1,0 +1,100 @@
+---
+title: Creating a multi-layered CartoDB map of Census household incomes and Starbucks locations
+image_url: /files/images/tutorials/cartodb/household-income-starbucks-lede.png
+banner:
+  iframe_url: https://daannguyen.cartodb.com/viz/3de1d1f6-9393-11e5-b7b7-0e3ff518bd15/embed_map
+description: |
+  How to combine a point data with shapefile data on the same CartoDB map (tutorial in progress)
+listed: true
+---
+
+
+The [CartoDB map embedded above](https://daannguyen.cartodb.com/viz/3de1d1f6-9393-11e5-b7b7-0e3ff518bd15/public_map) overlays the location of present-day Starbucks locations on top of a choropleth map of Census 2000 data for median household income by Census tract.
+
+
+This is a tutorial on how to use CartoDB's multiple layers feature to combine point and shapefile data.
+
+(in progress, the barebones steps are described below)
+
+# Data
+
+
+
+## Census 2000 tract shapefiles
+
+- Source: [NYC Planning Department: Political and Administrative Districts](http://www.nyc.gov/html/dcp/html/bytes/districts_download_metadata.shtml#cbt)
+- Download: [Census Tracts 2000 (Clipped to Shoreline) (.zip)](http://www.nyc.gov/html/dcp/download/bytes/nyct2000_15d.zip)
+
+## Census 2000 household incomes
+
+Note, I've used a Python script to collate these five files into one. It's easy enough to do by hand, but you can just use my collated file:
+
+[/files/data/cartodb/census_2000_household_incomes.csv](census_2000_household_incomes.csv){:.url}
+
+
+If you're interested in collating the files yourself:
+
+Source: [NYC Planning Department socioeconomics page, 2000 Census](http://www.nyc.gov/html/dcp/html/census/socio_tables.shtml)
+Download: 
+  - Household Income in 1999, 2000:
+    + [Bronx](http://www.nyc.gov/html/dcp/download/census/sf3incp1bx.xls)
+    + [Brooklyn](http://www.nyc.gov/html/dcp/download/census/sf3incp1bk.xls)
+    + [Manhattan](http://www.nyc.gov/html/dcp/download/census/sf3incp1mn.xls)
+    + [Queens](http://www.nyc.gov/html/dcp/download/census/sf3incp1qn.xls)
+    + [Staten Island](http://www.nyc.gov/html/dcp/download/census/sf3incp1si.xls)
+
+## Present-day Starbucks locations
+
+I derived a list of Starbucks locations in New York by filtering the [database of the city's restaurant inspections](https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/xx67-kt59) for businesses with `"STARBUCKS"` in the name.
+
+The inspection dataset does not include geospatial data, so I wrote a Python script to use the [Mapzen Search API](https://mapzen.com/documentation/search/search/) to get latitude and longitude for each address -- [you can see the script here](https://gist.github.com/dannguyen/036a62e32fc9f6765b82). It's not completely correct, for example, some LaGuardia locations are geocoded to JFK Airport. But it's pretty good for a free service with barely any configuration on my part.
+
+You can download the geocoded Starbucks locations as a CSV here:
+
+[/files/data/cartodb/geocoded_starbucks.csv](geocoded_starbucks.csv){:.url}
+
+
+
+
+# Adding the Census tract shapefiles
+
+Here's the simple map of just the 2000 census tracts:
+
+![image census-tracts-2000-nyc-plain.png](/files/images/tutorials/cartodb/census-tracts-2000-nyc-plain.png)
+
+
+# Adding the Census households income data
+
+After uploading the 2000 household income data, we can join it to the census tract shapefiles with this SQL:
+
+~~~sql
+SELECT nyct2000.*,
+  total_households, median_household_income
+FROM nyct2000
+INNER JOIN household_incomes
+ON household_incomes.borough = nyct2000.boroname
+AND household_incomes.census_tract = nyct2000.ct2000;
+~~~
+
+The resulting choropleth:
+
+![image census-tracts-household-incomes-2000-choropleth.png](/files/images/tutorials/cartodb/census-tracts-household-incomes-2000-choropleth.png)
+
+
+# Adding the Starbucks point data
+
+Upload the Starbucks data
+
+## Add a new layer
+
+In the sidepanel, click on the top panel labeled __Add layer__
+
+![image add-layer.png](/files/images/tutorials/cartodb/add-layer.png){:.bordered}
+
+This will prompt you to create an actual map:
+
+![image a-map-is-required-to-create-layers.png](/files/images/tutorials/cartodb/a-map-is-required-to-create-layers.png){:.bordered}
+
+Then it will take you to your list of datasets. Add the geocoded Starbucks dataset.
+
+
