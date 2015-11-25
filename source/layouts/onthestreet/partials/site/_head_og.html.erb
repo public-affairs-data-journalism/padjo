@@ -5,3 +5,10 @@
 <%- if meta_image_url -%>
   <meta property="og:image" content="<%=meta_image_url%>" />
 <%- end -%>
+
+<meta name="twitter:card" value="summary" />
+<meta name="twitter:site" value="@dancow" />
+<meta content="<%= meta_url %>" property="twitter:url"/>
+<meta property="twitter:title" content="<%= truncate(meta_title, length: 70) %>" />
+<meta property="twitter:description" content="<%= truncate(meta_description, length: 200) %>" />
+<meta property="twitter:image" content="<%= meta_image_url %>" />

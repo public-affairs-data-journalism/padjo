@@ -8,7 +8,7 @@ site:
     github:
       id: public-affairs-data-journalism
       repo: padjo
-  image_url: /assets/images/footer-logo.png # TODO: add image meta tag
+  image_url: http://2015.padjo.org/assets/images/footer-logo.png # TODO: add image meta tag
 
 
 services:
