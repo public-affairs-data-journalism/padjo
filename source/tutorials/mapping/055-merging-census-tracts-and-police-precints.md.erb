@@ -1,0 +1,38 @@
+~~~sql
+SELECT
+  borocode,
+  ct2010 AS tract_id,
+  precinct AS precinct_id
+FROM census_tracts
+INNER JOIN nypd_precincts 
+  ON ST_WITHIN(
+                ST_Centroid(census_tracts.the_geom), 
+                nypd_precincts.the_geom);
+~~~
+
+
+
+~~~sql
+SELECT 
+  precinct_id,
+  precinct_pop,
+  cartodb_id,
+  the_geom_webmercator
+FROM nypd_precincts
+INNER JOIN  
+    (SELECT 
+      precinct_id,
+      SUM(total_pop) AS precinct_pop
+    FROM 
+      pretracts_lookup
+    INNER JOIN census_pop
+      ON
+        pretracts_lookup.tract_id = census_pop.census_tract_code
+         AND 
+        pretracts_lookup.borocode = census_pop.dcp_borough_code
+    GROUP BY precinct_id) 
+  AS tx
+  ON tx.precinct_id = nypd_precincts.precinct;
+~~~
+
+

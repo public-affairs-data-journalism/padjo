@@ -2,7 +2,7 @@
 title: |
   Midterm: Fact-checking the WSJ's "Medicare Unmasked" Investigation with SQL
 description: |
-  A hands-on exploration using SQL to learn about Medicare data and controversial practices in Medicare billing, as well as to appreciate the Wall Street Journal's Pulitzer Prize winning data investigation. 
+  A hands-on exploration using SQL to learn about Medicare data and controversial practices in Medicare billing, as well as to appreciate the Wall Street Journal's Pulitzer Perize winning data investigation. 
 date: 2015-12-03
 points: 15
 assigned: true
@@ -373,7 +373,17 @@ Just another type of counting
 
 ### 3F. "...doing so an average of 38 times."
 
-The WSJ asserts that this procedure is not routine. This query finds out how they quantify "not routine"
+The WSJ asserts that this procedure is not routine. This query finds out how they quantify "not routine" -- i.e. how much is `973` more than the average number of times that this procedure is done by other doctors?
+
+Hint: You'll probably need a nested query for this, with the outer query looking something like:
+
+~~~sql
+SELECT AVG(procedure_count)
+...
+~~~
+
+
+
 
 
 #### Expected result

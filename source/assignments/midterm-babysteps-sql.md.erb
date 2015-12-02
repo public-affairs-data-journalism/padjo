@@ -53,12 +53,20 @@ __Give each exercise its own page in your document.__
 - <%=described_inline_link_to_resource "/tutorials/babynames-and-college-salaries/011-querying-2014-baby-names"%>
 
 
+#### Result
+
 |---------------|
 |  SUM(babies)  |
 |---------------|
 |  3950252      |
 |---------------|
 {:.table-sql}
+
+#### Query
+
+~~~sql
+SELECT SUM(babies) FROM babynames_1990;
+~~~
 
 
 ### 2. How many boy and girl babies are there in 2010?
@@ -76,6 +84,9 @@ GROUP BY sex;
 ~~~
 
 
+
+#### Result
+
 |------+--------------|
 |  sex | SUM(babies)  |
 |------+--------------|
@@ -85,6 +96,11 @@ GROUP BY sex;
 {:.table-sql}
 
 
+#### Query
+
+~~~sql
+SELECT sex, SUM(babies) FROM babynames_2010 GROUP BY sex;
+~~~
 
 
 ### 3. How many unique names are there in 2010?
@@ -100,6 +116,8 @@ GROUP BY sex;
 SELECT COUNT(DISTINCT name) FROM babynames_1990;
 ~~~
 
+#### Result
+
 |------------------------|
 |  COUNT(DISTINCT name)  |
 |------------------------|
@@ -109,8 +127,16 @@ SELECT COUNT(DISTINCT name) FROM babynames_1990;
 
 
 
+#### Query
+
+~~~sql
+SELECT COUNT(DISTINCT name) FROM babynames_2010;
+~~~
+
+
 ### 4. How many unique names are there in 1990 that start with the letter 'A'?
 
+#### Result
 
 |------------------------|
 |  COUNT(DISTINCT name)  |
@@ -119,9 +145,18 @@ SELECT COUNT(DISTINCT name) FROM babynames_1990;
 |------------------------|
 {:.table-sql}
 
+#### Query
+
+~~~sql
+SELECT COUNT(DISTINCT name) 
+FROM babynames_1990
+WHERE name LIKE 'A%';
+~~~
+
 
 ### 5. Show the 5 most popular girl names in 1990
 
+#### Result
 
 |-----------+-----+---------|
 |  name     | sex | babies  |
@@ -133,9 +168,20 @@ SELECT COUNT(DISTINCT name) FROM babynames_1990;
 |  Samantha | F   | 25864   |
 {:.table-sql}
 
+#### Query
+
+~~~sql
+SELECT * FROM babynames_1990
+WHERE sex = 'F'
+ORDER BY babies  DESC
+LIMIT 5;
+~~~
 
 
 ### 6. For the year 2010, show the first 5 most popular boy names that begin with a vowel
+
+
+#### Result
 
 |------------+-----+---------|
 |  name      | sex | babies  |
@@ -147,8 +193,19 @@ SELECT COUNT(DISTINCT name) FROM babynames_1990;
 |  Andrew    | M   | 14221   |
 {:.table-sql}
 
+#### Query
+
+~~~sql
+SELECT * FROM babynames_2010
+WHERE sex = 'M'
+  AND SUBSTR(name, 1, 1) IN ('A', 'E', 'I', 'O', 'U')
+ORDER BY babies  DESC
+LIMIT 5;
+~~~
+
 ### 7. For the year 2010, show the first 5 most popular letters for a boy's name to end with
 
+#### Result
 
 |--------------+---------------|
 |  last_letter | total_babies  |
@@ -159,6 +216,19 @@ SELECT COUNT(DISTINCT name) FROM babynames_1990;
 |  e           | 130073        |
 |  s           | 124710        |
 {:.table-sql}
+
+
+#### Query
+
+~~~sql
+SELECT SUBSTR(name, -1) AS last_letter, 
+  SUM(babies) AS total_babies 
+FROM babynames_2010
+WHERE sex = 'M'
+GROUP BY last_letter
+ORDER BY total_babies  DESC
+LIMIT 5;
+~~~
 
 
 ### 8. The 5 most popular girl names in 1990, with number of babies in 1990 and 2010
@@ -183,6 +253,8 @@ ORDER BY b1990.babies DESC
 LIMIT 5;
 ~~~
 
+#### Result
+
 |-----------+-------------+--------------|
 |  name     | babies_1990 | babies_2010  |
 |-----------+-------------+--------------|
@@ -193,11 +265,30 @@ LIMIT 5;
 |  Samantha | 25864       | 8396         |
 {:.table-sql}
 
+#### Query
+
+~~~sql
+SELECT b1990.name, 
+  b1990.babies AS babies_1990, 
+  b2010.babies AS babies_2010
+FROM babynames_1990 AS b1990
+INNER JOIN
+babynames_2010 AS b2010 
+  ON 
+  b1990.name = b2010.name AND
+  b1990.sex = b2010.sex
+WHERE b1990.sex = 'F'
+ORDER BY b1990.babies DESC
+LIMIT 5;
+~~~
+
+
 
 ### 9. The top 5 boy names with fewer than 10,000 babies in 1990, sorted by biggest drop in popularity in 2010
 
 - <%=described_inline_link_to_resource "/tutorials/babynames-and-college-salaries/030-all-about-inner-joins"%>
 
+#### Result
 
 |----------+-------------+-------------+-------------|
 |  name    | babies_1990 | babies_2010 | diffbabies  |
@@ -209,12 +300,31 @@ LIMIT 5;
 |  Paul    | 8578        | 2120        | -6458       |
 {:.table-sql}
 
+#### Query
+
+~~~sql
+SELECT b1990.name, 
+  b1990.babies AS babies_1990, 
+  b2010.babies AS babies_2010,
+  b2010.babies - b1990.babies AS diffbabies
+FROM babynames_1990 AS b1990
+INNER JOIN
+babynames_2010 AS b2010 
+  ON 
+  b1990.name = b2010.name AND
+  b1990.sex = b2010.sex
+WHERE b1990.sex = 'M' AND b1990.babies < 10000
+ORDER BY diffbabies ASC
+LIMIT 5;
+~~~
+
+
 
 ### 10. The top 5 girl names that have been given to least 500 babies in both 1990 and 2010, sorted by popularity in 2010
 
 - <%=described_inline_link_to_resource "/tutorials/babynames-and-college-salaries/030-all-about-inner-joins"%>
 
-
+#### Result
 
 |----------+-------------+--------------|
 |  name    | babies_1990 | babies_2010  |
@@ -225,6 +335,25 @@ LIMIT 5;
 |  Emily   | 19358       | 14260        |
 |  Abigail | 3719        | 14228        |
 {:.table-sql}
+
+
+#### Query
+
+~~~sql
+SELECT b2010.name, 
+  b1990.babies AS babies_1990,
+  b2010.babies AS babies_2010
+FROM babynames_2010 AS b2010 
+INNER JOIN babynames_1990 AS b1990
+  ON 
+  b1990.name = b2010.name AND
+  b1990.sex = b2010.sex
+WHERE b2010.sex = 'F' 
+  AND babies_2010 >= 500
+  AND babies_1990 >= 500
+ORDER BY babies_2010 DESC
+LIMIT 5;
+~~~
 
 
 ### 11. The 5 most popular names in 2010 that don't show up at all in 1990
@@ -247,6 +376,8 @@ ORDER BY babies_2010 DESC
 LIMIT 982394;
 ~~~
 
+#### Result
+
 |---------+-----+--------------|
 |  name   | sex | babies_2010  |
 |---------+-----+--------------|
@@ -257,18 +388,28 @@ LIMIT 982394;
 |  Jaiden | M   | 2203         |
 {:.table-sql}
 
+#### Query
+
+~~~sql
+SELECT b2010.name, 
+  b2010.sex,
+  b2010.babies AS babies_2010
+FROM babynames_2010 AS b2010 
+LEFT JOIN babynames_1990 AS b1990
+  ON 
+  b1990.name = b2010.name AND
+  b1990.sex = b2010.sex
+WHERE b1990.name IS NULL
+ORDER BY babies_2010 DESC
+LIMIT 5;
+~~~
+
 
 ### 12. How many boy names in 1990 don't appear in the list of boy names for 2010?
 
 - <%=described_inline_link_to_resource "/tutorials/babynames-and-college-salaries/035-left-joins-and-join-practice"%>
 
 
-|------------|
-|  COUNT(*)  |
-|------------|
-|  2910      |
-|------------|
-{:.table-sql}
 
 
 __Note:__ previously, I mistakenly had the answer as this:
@@ -289,11 +430,37 @@ That's because I stupidly had this as my join constraint, thanks to sloppy and p
 
 You can probably figure out what's wrong with that. And now I've re-learned my lesson of not copy-pasting code just to safe a few keystrokes.
 
+#### Result
+
+
+|------------|
+|  COUNT(*)  |
+|------------|
+|  2910      |
+|------------|
+{:.table-sql}
+
+
+
+#### Query
+
+~~~sql
+SELECT COUNT(*)
+FROM babynames_1990 AS b1990
+LEFT JOIN babynames_2010 AS b2010
+ON b2010.name = b1990.name
+  AND b1990.sex = b2010.sex
+WHERE b1990.sex = 'M'
+  AND b2010.name IS NULL;
+~~~
+
+
 
 ### 13. Show the 5 most popular names in 1990 that were given to at least 1,000 boys and 1,000 girls in 1990
 
 - <%=described_inline_link_to_resource "/tutorials/babynames-and-college-salaries/045-self-joins-and-nested-joins"%>
 
+#### Result
 
 |---------+------------+-------------+---------------|
 |  name   | boy_babies | girl_babies | total_babies  |
@@ -307,6 +474,23 @@ You can probably figure out what's wrong with that. And now I've re-learned my l
 {:.table-sql}
 
 
+#### Query
+
+
+
+~~~sql
+SELECT x.name, x.babies AS boy_babies,
+  y.babies AS girl_babies,
+  x.babies + y.babies AS total_babies
+FROM babynames_1990 AS x
+INNER JOIN babynames_1990 AS y
+ON x.name = y.name
+  AND x.name = y.name
+WHERE x.sex = 'M' AND y.sex = 'F'
+  AND boy_babies >= 1000 AND girl_babies >= 1000
+ORDER BY total_babies DESC
+LIMIT 5;
+~~~
 
 
 
@@ -314,6 +498,7 @@ You can probably figure out what's wrong with that. And now I've re-learned my l
 
 - <%=described_inline_link_to_resource "/tutorials/babynames-and-college-salaries/045-self-joins-and-nested-joins"%>
 
+#### Query
 
 |------------|
 |  COUNT(*)  |
@@ -321,6 +506,19 @@ You can probably figure out what's wrong with that. And now I've re-learned my l
 |  324       |
 |------------|
 {:.table-sql}
+
+#### Result
+
+~~~sql
+SELECT COUNT(*)
+FROM (SELECT name FROM babynames_2010
+      WHERE sex = 'M' ORDER BY babies DESC LIMIT 500)
+       AS b2010
+INNER JOIN (SELECT name FROM babynames_1990
+      WHERE sex = 'M' ORDER BY babies DESC LIMIT 500)
+       AS b1990
+  ON b1990.name = b2010.name;
+~~~
 
 
 
@@ -330,6 +528,8 @@ You can probably figure out what's wrong with that. And now I've re-learned my l
 - <%=described_inline_link_to_resource "/tutorials/babynames-and-college-salaries/045-self-joins-and-nested-joins"%>
 
 
+#### Result
+
 |------------|
 |  COUNT(*)  |
 |------------|
@@ -337,6 +537,17 @@ You can probably figure out what's wrong with that. And now I've re-learned my l
 |------------|
 {:.table-sql}
 
+#### Query
+
+~~~sql
+SELECT COUNT(*) 
+ FROM (SELECT * FROM babynames_2010
+  WHERE sex = 'F'
+  ORDER BY babies DESC
+  LIMIT 100) as topnames
+WHERE SUBSTR(name, 1, 1)  IN ('A', 'E', 'I', 'O', 'U')
+  AND SUBSTR(name, -1)  IN ('a', 'e', 'i', 'o', 'u');
+~~~
 
 
 
@@ -356,6 +567,7 @@ SELECT m.name,
   /* you do the rest... */
 ~~~
 
+#### Result
 
 |----------+------------+-------------+--------------|
 |  m.name  | boy_babies | girl_babies | gender_diff  |
@@ -366,3 +578,56 @@ SELECT m.name,
 |  Amari   | 1004       | 661         | 343          |
 |  Rowan   | 954        | 608         | 346          |
 {:.table-sql}
+
+#### Query
+
+~~~sql
+SELECT m.name, m.babies AS boy_babies,
+  f.babies AS girl_babies,
+  ABS(m.babies - f.babies) AS gender_diff
+FROM (SELECT * FROM babynames_2010 AS m WHERE babies >= 500 AND sex = 'M')
+  AS m
+INNER JOIN 
+  (SELECT * FROM babynames_2010 AS f WHERE babies >= 500 AND sex = 'F')
+  AS f
+  ON f.name = m.name
+ORDER by gender_diff  ASC
+LIMIT 5;
+~~~
+
+
+### 17. (Bonus) List the names that were among the 5 most popular in 1990, in the order of their popularity in 2010
+
+I left this out of the test. Just another test of your ability to untangle nested queries.
+
+#### Result
+
+|--------------+-------------+--------------|
+|  name        | babies_1990 | babies_2010  |
+|--------------+-------------+--------------|
+|  Michael     | 65274       | 17308        |
+|  Christopher | 52323       | 14243        |
+|  Matthew     | 44794       | 14099        |
+|  Ashley      | 45549       | 6305         |
+|  Jessica     | 46466       | 3192         |
+{:.table-sql}
+
+
+#### Query
+
+
+~~~sql
+SELECT b1990.name, 
+  b1990.babies AS babies_1990, 
+  b2010.babies AS babies_2010
+FROM babynames_2010 AS b2010
+INNER JOIN (SELECT * FROM babynames_1990
+  ORDER BY babies DESC
+  LIMIT 5) AS b1990
+  ON b1990.name = b2010.name
+    AND b1990.sex = b2010.sex
+ORDER BY babies_2010 DESC
+LIMIT 5;
+~~~
+
+

@@ -1,0 +1,106 @@
+---
+title: Oklahoma earthquakes and schools and CartoDB Spatial Joins
+listed: true
+references: 
+  - title: Learning SQL through the CartoDB Editor
+    url: http://academy.cartodb.com/courses/sql-postgis/intro-to-sql-and-postgis/
+    description: A video tutorial on basic SQL in CartoDB
+  - title: PostGIS in CartoDB
+    url: http://academy.cartodb.com/courses/sql-postgis/postgis-in-cartodb/
+    description: |
+      via the CartoDB summary text: "This lesson introduces several commonly used functions in PostGIS with the goal of extending your geospatial analysis of data within CartoDB and show you some of the analysis you can do with your geospatial data."
+---
+
+
+# Geospatial operations in CartoDB
+
+Check out their tutorial video -- embedded below -- and [read the walkthrough here](http://academy.cartodb.com/courses/sql-postgis/postgis-in-cartodb/).
+
+<iframe src="https://player.vimeo.com/video/120176143" width="500" height="282" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+
+
+# Datasets
+
+- Oklahoma schools directory
+  + [Landing page](http://www.ok.gov/sde/sites/ok.gov.sde/files/documents/files/2015_Oklahoma_Public_School_SITE_Directory.csv)
+  + [Original CSV](http://www.ok.gov/sde/state-school-directory)
+  + [Geocoding script](https://gist.github.com/dannguyen/31f747419caba40f83e4)
+  + [Geocoded CSV](/files/data/cartodb/geocoded_ok_schools.csv)
+- USGS Earthquake Archive
+  + [Landing page](http://earthquake.usgs.gov/earthquakes/search/
+)
+  + [CSV](http://earthquake.usgs.gov/fdsnws/event/1/query.csv?starttime=2008-01-01%2000:00:00&maxlatitude=37.321&minlatitude=33.306&maxlongitude=-93.933&minlongitude=-103.293&minmagnitude=2&eventtype=earthquake&endtime=2015-11-30%2023:59:59&orderby=time) 
+- County shape files
+  + [Landing page](http://geo.ou.edu/cgi-bin/redesign.cgi?ft=db&template=DataLayer.htm&DataLayersID=17) 
+  + [Zip file](http://geo.ou.edu/oeb/Statewide/COUNTY.zip)
+- USGS fault lines for Oklahoma:
+  + [Landing page](https://mrdata.usgs.gov/geology/state/state.php?state=OK) 
+  + [Zip file](http://pubs.usgs.gov/of/2005/1351/data/OKfaults_dd.zip)
+
+
+# Walkthrough
+
+
+## Uploading the datasets to CartoDB
+
+Upload the data to CartoDB with these direct URLs:
+
+- [OK schools as geocoded by Mapzen](/files/data/cartodb/geocoded_ok_schools.csv)
+- [OK county shapefiles](http://geo.ou.edu/oeb/Statewide/COUNTY.zip)
+- [OK quakes via USGS](/files/data/cartodb/usgs_ok_quakes.csv)
+- [OK fault lines via USGS](http://pubs.usgs.gov/of/2005/1351/data/OKfaults_dd.zip)
+
+
+## Use a geospatial join to show only earthquakes in Oklahoma
+
+The USGS earthquake data was collected by drawing a rectangle around Oklahoma that encompassed nearby states. 
+
+![image ok-quakes-no-borders.png](/files/images/tutorials/cartodb/ok-quakes-no-borders.png)
+
+
+We just want Oklahoma quakes for now. We need to use a spatial join, which is a feature of the PostgreSQL on CartoDB -- [checkout their tutorial here](http://academy.cartodb.com/courses/sql-postgis/intro-to-sql-and-postgis/):
+
+~~~sql
+SELECT ok_quakes.*
+FROM ok_quakes
+INNER JOIN ok_counties 
+  ON ST_WITHIN(ok_quakes.the_geom, 
+                ok_counties.the_geom);
+~~~
+
+![image ok-quakes-within-borders.png](/files/images/tutorials/cartodb/ok-quakes-within-borders.png)
+
+## Add a buffer around earthquakes
+
+More [info can be found at the CartoDB tutorial](http://academy.cartodb.com/courses/sql-postgis/postgis-in-cartodb/#show-buffers). I adapt their code to mark a 10-mile radius around each quake:
+
+~~~sql
+SELECT
+  ok_quakes.cartodb_id,
+  ST_Buffer(ok_quakes.the_geom_webmercator, 10 * 1609)
+    AS the_geom_webmercator
+FROM ok_quakes
+INNER JOIN ok_counties 
+  ON ST_WITHIN(ok_quakes.the_geom, 
+                ok_counties.the_geom);
+~~~
+
+
+![image ok-quakes-within-borders-10-mile-radius.png](/files/images/tutorials/cartodb/ok-quakes-within-borders-10-mile-radius.png)
+
+
+## Buffer just the big ones
+
+~~~sql
+SELECT
+  ok_quakes.cartodb_id,
+  ST_Buffer(ok_quakes.the_geom_webmercator, 
+            55 * 1609)
+    AS the_geom_webmercator
+FROM ok_quakes
+INNER JOIN ok_counties 
+  ON ST_WITHIN(ok_quakes.the_geom, 
+                ok_counties.the_geom)
+WHERE ok_quakes.mag > 4.0
+~~~
