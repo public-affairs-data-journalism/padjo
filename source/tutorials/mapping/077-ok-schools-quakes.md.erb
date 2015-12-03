@@ -92,15 +92,155 @@ INNER JOIN ok_counties
 
 ## Buffer just the big ones
 
+http://docs.cartodb.com/tutorials/circle_point_radius/
+
 ~~~sql
 SELECT
   ok_quakes.cartodb_id,
-  ST_Buffer(ok_quakes.the_geom_webmercator, 
-            55 * 1609)
+  ST_Buffer(ok_quakes.the_geom_webmercator::geography, 
+            55 * 1609)::geometry
     AS the_geom_webmercator
 FROM ok_quakes
 INNER JOIN ok_counties 
   ON ST_WITHIN(ok_quakes.the_geom, 
                 ok_counties.the_geom)
 WHERE ok_quakes.mag > 4.0
+~~~
+
+
+-----------
+
+http://cse.ssl.berkeley.edu/segwayed/lessons/earthquake_country/5eqcountry.b2abaginfo.html
+
+
+
+
+
+# Filter and display some dots
+
+As always, we start with the simplest way to get things to show up on a map. Let's show _all_ (6,000+) of the earthquake points:
+
+~~~sql
+SELECT *
+FROM ok_quakes;
+~~~
+
+
+![image ok_quakes_all_of_em.png](/files/images/tutorials/cartodb/ok_quakes_all_of_em.png)
+
+
+
+## First, show the "big" earthquakes
+
+It's a cool visual, but it has about __zero__ actual information value to those who aren't impressed with seeing a bunch of dots. So let's filter for just the _major_ earthquakes.
+
+
+### What kind of quakes does Oklahoma normally have?
+
+Well, how do we define "normal"? Not just for Oklahoma and earthquakes, but for anything in life? I honestly don't know. And honestly, I don't have the attention span to think about it while I'm trying to figure out SQL and spreadsheets.
+
+So I'm just going to get a __group count__ of all the earthquakes, according to _groups_ of their __magnitude__, rounded to the nearest __integer__:
+
+
+
+~~~sql
+SELECT 
+  ROUND(mag) AS rounded_mag,
+  COUNT(*)
+FROM ok_quakes
+GROUP BY rounded_mag
+ORDER by rounded_mag;
+~~~
+
+![image ok_quakes_histogram_mag.png](/files/images/tutorials/cartodb/ok_quakes_histogram_mag.png)
+
+
+(Note: why do I convert `mag`, a column that is already a number, to `numeric`? I don't know enough about [PostgreSQL's number types](http://www.postgresql.org/docs/8.1/static/functions-math.html) but without that conversion, I was getting an error when trying to call the `ROUND` function with 2 arguments. So, this works for now...)
+
+~~~sql
+SELECT 
+  ROUND(mag::numeric, 2) AS rounded_mag,
+  COUNT(*)
+FROM ok_quakes
+WHERE mag >= 4.0
+GROUP BY rounded_mag
+ORDER by rounded_mag;
+~~~
+
+
+![image ok_quakes_histogram_mag_tenths.png](/files/images/tutorials/cartodb/ok_quakes_histogram_mag_tenths.png)
+
+Just to keep things visually simple, I think we can define "major" earthquakes to be of at least __M4.5__. That means we can expect to see `8` earthquake points on the map:
+
+~~~sql
+SELECT *
+FROM ok_quakes
+WHERE mag >= 4.5;
+~~~
+
+![image ok_quakes_4-5-above.png](/files/images/tutorials/cartodb/ok_quakes_4-5-above.png)
+
+
+
+### Trim the fields we SELECT
+
+And now, be less lazy and select only the fields we need:
+
+~~~sql
+SELECT
+  cartodb_id,
+  the_geom_webmercator
+FROM ok_quakes
+WHERE mag >= 4.5;
+~~~
+
+The map view won't change -- though there will be no earthquake-specific data (e.g. specific magnitude or dates) since we've left out those columns:
+
+![image ok_quakes_4-5-above-no-detail.png](/files/images/tutorials/cartodb/ok_quakes_4-5-above-no-detail.png)
+
+-----------
+
+
+
+# Boundaries
+
+
+Now we're ready to run some geospatial-specific queries. You may have noticed that at least one of our __M4.5+__ earthquakes is not actually within Oklahoma's boundaries:
+
+
+
+
+
+Let's start by adding Oklahoma-related shapefiles, i.e. the state and county boundaries.
+
+
+
+
+# Population
+
+![image ok-census-tracts-form.png](/files/images/tutorials/cartodb/ok-census-tracts-form.png)
+
+
+
+
+# Drawing some "buffered" dots
+
+
+
+Let's start with the __ST_BUFFER__ function , which 
+
+
+##
+
+
+http://docs.cartodb.com/tips-and-tricks/geospatial-analysis/
+
+~~~sql
+SELECT
+  cartodb_id,
+  ST_Transform(
+        ST_Buffer(the_geom::geography, 1609 * 10)::geometry, 
+                  3857) AS the_geom_webmercator
+FROM ok_quakes
+WHERE mag >= 4.5;
 ~~~
