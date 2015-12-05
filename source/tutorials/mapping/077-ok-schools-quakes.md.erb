@@ -12,105 +12,9 @@ references:
 ---
 
 
-# Geospatial operations in CartoDB
-
-Check out their tutorial video -- embedded below -- and [read the walkthrough here](http://academy.cartodb.com/courses/sql-postgis/postgis-in-cartodb/).
-
-<iframe src="https://player.vimeo.com/video/120176143" width="500" height="282" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-
-
-
-# Datasets
-
-- Oklahoma schools directory
-  + [Landing page](http://www.ok.gov/sde/sites/ok.gov.sde/files/documents/files/2015_Oklahoma_Public_School_SITE_Directory.csv)
-  + [Original CSV](http://www.ok.gov/sde/state-school-directory)
-  + [Geocoding script](https://gist.github.com/dannguyen/31f747419caba40f83e4)
-  + [Geocoded CSV](/files/data/cartodb/geocoded_ok_schools.csv)
-- USGS Earthquake Archive
-  + [Landing page](http://earthquake.usgs.gov/earthquakes/search/
-)
-  + [CSV](http://earthquake.usgs.gov/fdsnws/event/1/query.csv?starttime=2008-01-01%2000:00:00&maxlatitude=37.321&minlatitude=33.306&maxlongitude=-93.933&minlongitude=-103.293&minmagnitude=2&eventtype=earthquake&endtime=2015-11-30%2023:59:59&orderby=time) 
-- County shape files
-  + [Landing page](http://geo.ou.edu/cgi-bin/redesign.cgi?ft=db&template=DataLayer.htm&DataLayersID=17) 
-  + [Zip file](http://geo.ou.edu/oeb/Statewide/COUNTY.zip)
-- USGS fault lines for Oklahoma:
-  + [Landing page](https://mrdata.usgs.gov/geology/state/state.php?state=OK) 
-  + [Zip file](http://pubs.usgs.gov/of/2005/1351/data/OKfaults_dd.zip)
-
-
-# Walkthrough
-
-
-## Uploading the datasets to CartoDB
-
-Upload the data to CartoDB with these direct URLs:
-
-- [OK schools as geocoded by Mapzen](/files/data/cartodb/geocoded_ok_schools.csv)
-- [OK county shapefiles](http://geo.ou.edu/oeb/Statewide/COUNTY.zip)
-- [OK quakes via USGS](/files/data/cartodb/usgs_ok_quakes.csv)
-- [OK fault lines via USGS](http://pubs.usgs.gov/of/2005/1351/data/OKfaults_dd.zip)
-
-
-## Use a geospatial join to show only earthquakes in Oklahoma
-
-The USGS earthquake data was collected by drawing a rectangle around Oklahoma that encompassed nearby states. 
-
-![image ok-quakes-no-borders.png](/files/images/tutorials/cartodb/ok-quakes-no-borders.png)
-
-
-We just want Oklahoma quakes for now. We need to use a spatial join, which is a feature of the PostgreSQL on CartoDB -- [checkout their tutorial here](http://academy.cartodb.com/courses/sql-postgis/intro-to-sql-and-postgis/):
-
-~~~sql
-SELECT ok_quakes.*
-FROM ok_quakes
-INNER JOIN ok_counties 
-  ON ST_WITHIN(ok_quakes.the_geom, 
-                ok_counties.the_geom);
-~~~
-
-![image ok-quakes-within-borders.png](/files/images/tutorials/cartodb/ok-quakes-within-borders.png)
-
-## Add a buffer around earthquakes
-
-More [info can be found at the CartoDB tutorial](http://academy.cartodb.com/courses/sql-postgis/postgis-in-cartodb/#show-buffers). I adapt their code to mark a 10-mile radius around each quake:
-
-~~~sql
-SELECT
-  ok_quakes.cartodb_id,
-  ST_Buffer(ok_quakes.the_geom_webmercator, 10 * 1609)
-    AS the_geom_webmercator
-FROM ok_quakes
-INNER JOIN ok_counties 
-  ON ST_WITHIN(ok_quakes.the_geom, 
-                ok_counties.the_geom);
-~~~
-
-
-![image ok-quakes-within-borders-10-mile-radius.png](/files/images/tutorials/cartodb/ok-quakes-within-borders-10-mile-radius.png)
-
-
-## Buffer just the big ones
-
-http://docs.cartodb.com/tutorials/circle_point_radius/
-
-~~~sql
-SELECT
-  ok_quakes.cartodb_id,
-  ST_Buffer(ok_quakes.the_geom_webmercator::geography, 
-            55 * 1609)::geometry
-    AS the_geom_webmercator
-FROM ok_quakes
-INNER JOIN ok_counties 
-  ON ST_WITHIN(ok_quakes.the_geom, 
-                ok_counties.the_geom)
-WHERE ok_quakes.mag > 4.0
-~~~
-
 
 -----------
 
-http://cse.ssl.berkeley.edu/segwayed/lessons/earthquake_country/5eqcountry.b2abaginfo.html
 
 
 
@@ -182,14 +86,14 @@ WHERE mag >= 4.5;
 
 
 
-### Trim the fields we SELECT
+### Trim and specify the fields we SELECT
 
 And now, be less lazy and select only the fields we need:
 
 ~~~sql
 SELECT
-  cartodb_id,
-  the_geom_webmercator
+  ok_quakes.cartodb_id,
+  ok_quakes.the_geom_webmercator
 FROM ok_quakes
 WHERE mag >= 4.5;
 ~~~
@@ -201,31 +105,117 @@ The map view won't change -- though there will be no earthquake-specific data (e
 -----------
 
 
-
 # Boundaries
 
+You may have noticed that at least one of our __M4.5+__ earthquakes is not actually within Oklahoma's boundaries:
 
-Now we're ready to run some geospatial-specific queries. You may have noticed that at least one of our __M4.5+__ earthquakes is not actually within Oklahoma's boundaries:
+![image ok_quakes_4-5-above-no-detail.png](/files/images/tutorials/cartodb/ok_quakes_4-5-above-no-detail.png)
 
-
-
-
-
-Let's start by adding Oklahoma-related shapefiles, i.e. the state and county boundaries.
+Or maybe you didn't. Because you aren't even able to pick Oklahoma from a state map. And the contrast of the map tiles, in which state lines are _not_ emphasized, isn't making it any easier.
 
 
+So let's start our geospatial-querying with the very limited goal of just making the darn state of Oklahoma actually visible to normal-sighted human beings. 
+
+## Adding a layer of county boundaries
+
+Note: In this section, I talk about using the [__Add Layer__ feature of CartoDB](http://docs.cartodb.com/tutorials/multilayer_overview/). This has _nothing_ to do with SQL or geospatial analysis. It is simply a CartoDB-specific feature for their [interactive maps](http://docs.cartodb.com/tutorials/multilayer_overview/), to allow casual users to add multiple layers of visual imagery onto a map without doing any type of logical SQL joining.
+
+I use the __Add Layer__ feature here just to remind you what shapefiles look like when rendered on a map, that's all. And also, that there's a difference between what we _see_, and what we tell the computer to _geospatially filter_.
+
+After uploading the Oklahoma county boundaries -- [which can be found at this URL](http://geo.ou.edu/oeb/Statewide/COUNTY.zip) -- as a __new dataset__, I can go back to whatever map I was using to show the `M4.5` earthquakes.
+
+In the sidepanel, I click on the top panel labeled __Add layer__
+
+![image ok-add-new-layer.png](/files/images/tutorials/cartodb/ok-add-new-layer.png)
+
+This will prompt me to create an actual map -- (but aren't we already on a map? Well, not technically -- and yes, that will seem confusing...):
+
+![image a-map-is-required-to-create-layers.png](/files/images/tutorials/cartodb/a-map-is-required-to-create-layers.png){:.bordered}
+
+Anyway, after creating a new map, I'm presented with my list of datasets, from which I add the Oklahoma county shapefiles. And here's the result:
+
+![image ok-new-map-layer-counties.png](/files/images/tutorials/cartodb/ok-new-map-layer-counties.png)
+
+OK, we've accomplished our goal: we can clearly see that one earthquake that is _north_ of Oklahoma. Now, let's __filter__ it out with SQL.
+
+(At this point, I can just remove the counties layer...it was just a visual thing anyway...but I leave it in the following examples as a visual reference point)
 
 
-# Population
+## Geo-filtering with ST_WITHIN
+
+Let's actually take a step back and think of the _pseudo-code_ -- i.e. the plain English steps of what we intend to do:
+
+> Show only the earthquakes in which the latitude and longitude are _inside_ -- i.e. __within__-- the boundaries of the __state__ of Oklahoma.
+
+Actually, we don't have the state boundaries, and I don't feel like looking up a new shapefile to download. But we can still use the _counties_ shapefile to the same effect:
+
+> Show only the earthquakes in which the latitude and longitude are within any of the boundaries of Oklahoma's _counties_.
+
+It's computationally different, but the effect is the same. Now let's think about the query. We can basically think of it as an `INNER JOIN` with the `ok_counties` dataset/table, with some kind of function/conditional statement in the constraint:
+
+~~~sql
+SELECT
+  ok_quakes.cartodb_id,
+  ok_quakes.the_geom_webmercator
+FROM ok_quakes
+INNER JOIN ok_counties
+  ON SOMETHING_SOMETHING_SOMETHING
+WHERE mag >= 4.5;
+~~~
+
+
+What is that `SOMETHING_SOMETHING_SOMETHING`? Well, just a placeholder for now, while we figure out the name of the geospatial function will do the job that we've described in pseudocode.
+
+### The ST_WITHIN geospatial function
+
+It's worth reading more CartoDB tutorials for the bigger picture; for example, this [example uses a function named __ST_INTERSECTS__](http://academy.cartodb.com/courses/sql-postgis/joining-data/#join-two-tables-by-geospatial-intersection).
+
+For our purposes, the function [__ST_WITHIN__](http://postgis.net/docs/ST_Within.html) will serve the same purpose. This is how it's described:
+
+> `boolean ST_Within(geometry A, geometry B);` -- Returns true if the geometry __A__ is completely inside geometry __B__
+
+Whatever. But at least we can see that it returns `true` -- which is something we need a function to do when doing a `JOIN`. What is `geometry A` -- i.e. what are the names of the columns in our __ok_quakes__ and __ok_counties__ tables?
+
+These are things related to CartoDB's specific operation. Go ahead and skim through their tutorial titled __[Geospatial Analysis](http://docs.cartodb.com/tips-and-tricks/geospatial-analysis/)__.
+
+Then see if the following query makes sense to you (if not, re-read the tutorial, repeat, etc.):
+
+~~~sql
+SELECT
+  ok_quakes.cartodb_id,
+  ok_quakes.the_geom_webmercator
+FROM ok_quakes
+INNER JOIN ok_counties
+  ON ST_WITHIN(ok_quakes.the_geom, ok_counties.the_geom)
+WHERE mag >= 4.5;
+~~~
+
+Begone Kansas quake:
+
+![image ok-county-join-quakesst-within.png](/files/images/tutorials/cartodb/ok-county-join-quakesst-within.png)
+
+And thus, we've successfully told CartoDB, via SQL, how to filter geospatial data based on _logic and math_.
+
+As you can see, we had to learn a new function -- `ST_WITHIN` -- but we used the basic SQL concepts we've used plenty of times before.
+
+
+# Census population
+
+Showing _where_ big earthquakes have happened in Oklahoma is not particularly newsworthy. To paraphrase one of those websites with Zen quotes, if a big earthquake happens and there's nothing to shake, did it really happen?
+
+In other words, big earthquakes in unpopulated areas -- for which there might be substantial quantities of in Oklahoma -- aren't particularly newsworthy. So let's get some population data via the [U.S. Census's Download Center](http://factfinder.census.gov/faces/nav/jsf/pages/download_center.xhtml):
 
 ![image ok-census-tracts-form.png](/files/images/tutorials/cartodb/ok-census-tracts-form.png)
+
+
+http://www2.census.gov/geo/tiger/TIGER_DP/2013ACS/ACS_2013_5YR_TRACT_40.gdb.zip
 
 
 
 
 # Drawing some "buffered" dots
 
-
+TKTK
 
 Let's start with the __ST_BUFFER__ function , which 
 
@@ -244,3 +234,6 @@ SELECT
 FROM ok_quakes
 WHERE mag >= 4.5;
 ~~~
+
+
+http://cse.ssl.berkeley.edu/segwayed/lessons/earthquake_country/5eqcountry.b2abaginfo.html
