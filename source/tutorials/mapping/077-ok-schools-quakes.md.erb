@@ -12,11 +12,9 @@ references:
 ---
 
 
+[USGS official map of M4.5+ earthquakes around Oklahoma](http://earthquake.usgs.gov/earthquakes/map/#%7B%22feed%22%3A%221449549499693%22%2C%22sort%22%3A%22newest%22%2C%22mapposition%22%3A%5B%5B33.472%2C-103.074%5D%2C%5B37.058%2C-94.241%5D%5D%2C%22viewModes%22%3A%7B%22help%22%3Afalse%2C%22list%22%3Atrue%2C%22map%22%3Atrue%2C%22settings%22%3Afalse%7D%2C%22autoUpdate%22%3Afalse%2C%22search%22%3A%7B%22id%22%3A%221449549499693%22%2C%22name%22%3A%22Search%20Results%22%2C%22isSearch%22%3Atrue%2C%22params%22%3A%7B%22starttime%22%3A%222008-11-30%2000%3A00%3A00%22%2C%22maxlatitude%22%3A37.058%2C%22minlatitude%22%3A33.472%2C%22maxlongitude%22%3A-94.241%2C%22minlongitude%22%3A-103.074%2C%22minmagnitude%22%3A4.5%2C%22eventtype%22%3A%22earthquake%22%2C%22endtime%22%3A%222015-12-07%2023%3A59%3A59%22%2C%22orderby%22%3A%22time%22%7D%7D%7D)
 
------------
-
-
-
+![image usgs-map-of-M45-quakes-near-ok.png](/files/images/tutorials/cartodb/usgs-map-of-M45-quakes-near-ok.png)
 
 
 
@@ -83,6 +81,8 @@ WHERE mag >= 4.5;
 ~~~
 
 ![image ok_quakes_4-5-above.png](/files/images/tutorials/cartodb/ok_quakes_4-5-above.png)
+
+
 
 
 
@@ -208,9 +208,113 @@ In other words, big earthquakes in unpopulated areas -- for which there might be
 ![image ok-census-tracts-form.png](/files/images/tutorials/cartodb/ok-census-tracts-form.png)
 
 
-http://www2.census.gov/geo/tiger/TIGER_DP/2013ACS/ACS_2013_5YR_TRACT_40.gdb.zip
+## By county
 
 
+~~~sql
+SELECT
+  ok_counties.cartodb_id,
+  ok_counties.the_geom_webmercator,
+  ok_county_pop.population_estimate_as_of_july_1___2014 
+    AS pop2014
+FROM ok_counties
+INNER JOIN ok_county_pop
+  ON 
+    (ok_counties.state * 1000) + ok_counties.county = 
+    ok_county_pop.id2;
+~~~
+
+
+![image ok-count-pop-by-county.png](/files/images/tutorials/cartodb/ok-count-pop-by-county.png)
+
+
+## Census tracts
+
+
+https://www.census.gov/geo/maps-data/data/kml/kml_tracts.html
+
+~~~sql
+SELECT 
+  ok_tracts.cartodb_id,
+  ok_tracts.the_geom_webmercator,
+  ok_pop_2000.total AS total_pop
+FROM 
+   ok_tracts
+INNER JOIN ok_pop_2000
+    ON ok_pop_2000.id = ok_tracts.affgeoid
+~~~
+
+
+![image ok-count-pop-by-tract.png](/files/images/tutorials/cartodb/ok-count-pop-by-tract.png)
+
+
+
+
+There's no need to join the `ok_county_pop` table to the `ok_quakes` table -- we can simply add the population choropleth as a __new layer__, so that we can see where the big earthquakes fall in relation to the population centers:
+
+~~~sql
+SELECT
+  ok_quakes.*
+FROM ok_quakes
+INNER JOIN ok_counties
+  ON ST_WITHIN(ok_quakes.the_geom, ok_counties.the_geom)
+WHERE mag >= 4.5;
+~~~
+
+Unfortunately, it looks like the big earthquakes are near some of Oklahoma's most population-dense centers.
+
+
+# Adding schools
+
+http://nces.ed.gov/ccd/pubschuniv.asp
+
+~~~sh
+csvgrep -c LSTATE -m OK -t sc131a_supp.txt | 
+  csvcut -c SURVYEAR,NCESSCH,LEANM,SCHNAM,LCITY,LSTATE,LZIP,TYPE,STATUS,LATCOD,LONCOD,GSLO,GSHI,LEVEL,TITLEISTAT,TITLEI,CHARTR,FRELCH,REDLCH,TOTFRL,MEMBER,VIRTUALSTAT \
+  >  ok_schools_directory.csv
+~~~
+
+~~~sql
+ALTER TABLE ok_schools_directory
+ADD COLUMN pct_free_reduced_lunch FLOAT;
+
+UPDATE ok_schools_directory
+SET pct_free_reduced_lunch = ROUND(TOTFRL * 100 / MEMBER);
+
+
+SELECT
+  ok_schools_directory.*
+FROM ok_schools_directory
+
+INNER JOIN ok_quakes
+ON ST_WITHIN(ok_schools_directory.the_geom,
+
+             
+        ST_Buffer(ok_quakes.the_geom::geography, 1609 * 10)::geometry)
+             
+            
+
+WHERE mag >= 4.5
+~~~
+
+
+Or:
+
+
+http://postgis.net/docs/manual-dev/ST_DWithin.html
+
+~~~sql
+
+SELECT * 
+FROM ok_schools_directory
+WHERE NCESSCH IN
+(SELECT DISTINCT(NCESSCH)
+FROM ok_schools_directory
+INNER JOIN ok_quakes
+ON ST_DWithin(ok_quakes.the_geom_webmercator, ok_schools_directory.the_geom_webmercator, 32000)
+ AND ok_quakes.mag >= 4.5)          
+          
+~~~
 
 
 # Drawing some "buffered" dots
@@ -233,7 +337,21 @@ SELECT
                   3857) AS the_geom_webmercator
 FROM ok_quakes
 WHERE mag >= 4.5;
+
+# adding median layer
+SELECT 
+  ok_tracts.cartodb_id,
+  ok_tracts.the_geom_webmercator,
+  ok_median_incomes.hd01_vd01  AS median_income
+FROM 
+   ok_tracts
+INNER JOIN ok_median_incomes
+    ON ok_median_incomes.id = ok_tracts.affgeoid
+
 ~~~
+
+
+
 
 
 http://cse.ssl.berkeley.edu/segwayed/lessons/earthquake_country/5eqcountry.b2abaginfo.html
