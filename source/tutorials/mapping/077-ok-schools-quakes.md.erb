@@ -199,69 +199,130 @@ And thus, we've successfully told CartoDB, via SQL, how to filter geospatial dat
 As you can see, we had to learn a new function -- `ST_WITHIN` -- but we used the basic SQL concepts we've used plenty of times before.
 
 
-# Census population
+# Census population with U.S. Census FactFinder
 
 Showing _where_ big earthquakes have happened in Oklahoma is not particularly newsworthy. To paraphrase one of those websites with Zen quotes, if a big earthquake happens and there's nothing to shake, did it really happen?
 
-In other words, big earthquakes in unpopulated areas -- for which there might be substantial quantities of in Oklahoma -- aren't particularly newsworthy. So let's get some population data via the [U.S. Census's Download Center](http://factfinder.census.gov/faces/nav/jsf/pages/download_center.xhtml):
+In other words, big earthquakes in unpopulated areas -- for which there might be substantial quantities of in Oklahoma -- aren't particularly newsworthy. So let's get some population data via the [U.S. Census's FactFinder](http://factfinder.census.gov/):
 
-![image ok-census-tracts-form.png](/files/images/tutorials/cartodb/ok-census-tracts-form.png)
-
-
-## By county
+I suggest using the [Advanced Search](http://factfinder.census.gov/faces/nav/jsf/pages/searchresults.xhtml), which I detail below:
 
 
-~~~sql
-SELECT
-  ok_counties.cartodb_id,
-  ok_counties.the_geom_webmercator,
-  ok_county_pop.population_estimate_as_of_july_1___2014 
-    AS pop2014
-FROM ok_counties
-INNER JOIN ok_county_pop
-  ON 
-    (ok_counties.state * 1000) + ok_counties.county = 
-    ok_county_pop.id2;
+
+### Pick a topic
+
+People > Basic Count/Estimate > Population Total
+
+![image census-factfinder-menu-topic-pop.png](/files/images/tutorials/cartodb/census-factfinder-menu-topic-pop.png)
+
+
+After closing the dialog box:
+
+![image census-factfinder-menu-topic-pop-selected.png](/files/images/tutorials/cartodb/census-factfinder-menu-topic-pop-selected.png)
+
+### Pick geography
+
+![image census-factfinder-menu-geographies-census-tracts.png](/files/images/tutorials/cartodb/census-factfinder-menu-geographies-census-tracts.png)
+
+
+#### Pick a state
+
+All tracts, Add to your selections:
+
+![image census-factfinder-menu-geographies-census-tracts-all-ok.png](/files/images/tutorials/cartodb/census-factfinder-menu-geographies-census-tracts-all-ok.png)
+
+Close dialog
+
+
+Pick Total Population
+
+![image census-factfinder-menu-geographies-census-tracts-all-ok-total-pop.png](/files/images/tutorials/cartodb/census-factfinder-menu-geographies-census-tracts-all-ok-total-pop.png)
+
+You can View it, to get a web-page friendly data:
+
+![image census-factfinder-menu-view-total-pop.png](/files/images/tutorials/cartodb/census-factfinder-menu-view-total-pop.png)
+
+
+
+
+Download it:
+
+
+![image census-factfinder-menu-downloading.png](/files/images/tutorials/cartodb/census-factfinder-menu-downloading.png)
+
+
+![image census-factfinder-menu-view-total-pop-download-unzipped.png](/files/images/tutorials/cartodb/census-factfinder-menu-view-total-pop-download-unzipped.png)
+
+
+~~~
+GEO.id,GEO.id2,GEO.display-label,HD01_VD01,HD02_VD01
+Id,Id2,Geography,Estimate; Total,Margin of Error; Total
+1400000US40001376600,40001376600,"Census Tract 3766, Adair County, Oklahoma",2707,246
+1400000US40001376700,40001376700,"Census Tract 3767, Adair County, Oklahoma",5538,376
+1400000US40001376800,40001376800,"Census Tract 3768, Adair County, Oklahoma",4522,269
+1400000US40001376900,40001376900,"Census Tract 3769, Adair County, Oklahoma",4450,137
+1400000US40001377000,40001377000,"Census Tract 3770, Adair County, Oklahoma",5163,304
 ~~~
 
 
-![image ok-count-pop-by-county.png](/files/images/tutorials/cartodb/ok-count-pop-by-county.png)
+This is what it looks like as a table:
+
+| GEO.id               | GEO.id2     | GEO.display-label  | HD01_VD01       | HD02_VD01              | 
+| Id                   | Id2         | Geography          | Estimate; Total | Margin of Error; Total |    
+| 1400000US40001376600 | 40001376600 | "Census Tract 3766, Adair County, Oklahoma"              | 2707 | 246 |
+| 1400000US40001376700 | 40001376700 | "Census Tract 3767, Adair County, Oklahoma"              | 5538 | 376 |
+| 1400000US40001376800 | 40001376800 | "Census Tract 3768, Adair County, Oklahoma"              | 4522 | 269 |
+| 1400000US40001376900 | 40001376900 | "Census Tract 3769, Adair County, Oklahoma"              | 4450 | 137 |
+| 1400000US40001377000 | 40001377000 | "Census Tract 3770, Adair County, Oklahoma"              | 5163 | 304 |
+{:.table-sql}  
 
 
-## Census tracts
+Delete the second row, which contains human-friendly annotations (e.g. "Estimate; Total" and "Margin of Error; Total") before uploading to CartoDB. The result will look like this:
 
+![image uploaded-acs-14-5yr-table.png](/files/images/tutorials/cartodb/uploaded-acs-14-5yr-table.png)
 
-https://www.census.gov/geo/maps-data/data/kml/kml_tracts.html
+Joining it to the existing Census tracts shapefile (in my example, named `ok_tracts`) requires a simple `INNER JOIN` based on the two common fields:
+
+- [acs_14_5yr_b01003](https://daannguyen.cartodb.com/tables/acs_14_5yr_b01003):  `geo_id`
+- [ok_tracts](https://daannguyen.cartodb.com/tables/ok_tracts): `affgeoid`
 
 ~~~sql
 SELECT 
   ok_tracts.cartodb_id,
   ok_tracts.the_geom_webmercator,
-  ok_pop_2000.total AS total_pop
-FROM 
-   ok_tracts
-INNER JOIN ok_pop_2000
-    ON ok_pop_2000.id = ok_tracts.affgeoid
+  acs_14_5yr_b01003.geo_display_label,
+  acs_14_5yr_b01003.hd01_vd01 AS population
+FROM ok_tracts
+INNER JOIN acs_14_5yr_b01003 
+  ON acs_14_5yr_b01003.geo_id = ok_tracts.affgeoid;
 ~~~
 
-
-![image ok-count-pop-by-tract.png](/files/images/tutorials/cartodb/ok-count-pop-by-tract.png)
-
+<iframe width="100%" height="600" frameborder="0" src="https://daannguyen.cartodb.com/viz/94c9e2be-9dda-11e5-8955-0ecfd53eb7d3/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
 
 
 
-There's no need to join the `ok_county_pop` table to the `ok_quakes` table -- we can simply add the population choropleth as a __new layer__, so that we can see where the big earthquakes fall in relation to the population centers:
+There's no need to join the `acs_14_5yr_b01003` table to the `ok_quakes` table -- we can simply add the population choropleth as a __new layer__, so that we can see where the big earthquakes fall in relation to the population centers:
+
+https://modern-sql.com/feature/with
 
 ~~~sql
-SELECT
-  ok_quakes.*
-FROM ok_quakes
+WITH big_ok_quakes AS (
+  SELECT 
+    time, mag, depth, place,
+    cartodb_id, the_geom, the_geom_webmercator
+  FROM ok_quakes
+  WHERE mag >= 4.5
+)
+SELECT 
+  big_ok_quakes.*
+FROM big_ok_quakes
 INNER JOIN ok_counties
-  ON ST_WITHIN(ok_quakes.the_geom, ok_counties.the_geom)
-WHERE mag >= 4.5;
+  ON ST_WITHIN(big_ok_quakes.the_geom, ok_counties.the_geom);
 ~~~
 
-Unfortunately, it looks like the big earthquakes are near some of Oklahoma's most population-dense centers.
+Unfortunately, it looks like the big earthquakes are near some of Oklahoma's most population-dense centers:
+
+<iframe width="100%" height="520" frameborder="0" src="https://daannguyen.cartodb.com/viz/94c9e2be-9dda-11e5-8955-0ecfd53eb7d3/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
 
 
 # Adding schools
