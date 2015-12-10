@@ -62,5 +62,13 @@
 - title: List of school shootings in the United States
   url: https://en.wikipedia.org/wiki/List_of_school_shootings_in_the_United_States
   image_url: /files/images/briefs/mass-shootings/wiki-school-shootings-table.png
+  source: Wikipedia
   description: |
     [Unlike with U.S. police-involved homicides](https://en.wikipedia.org/wiki/List_of_killings_by_law_enforcement_officers_in_the_United_States), Wikipedia users have not initiated a seperate project for general mass killings in the United States.
+
+
+- title: "How Many People Have Been Shot Near You This Year?"
+  url: http://www.thetrace.org/2015/12/gun-deaths-interactive-map-2015/
+  source: The Trace
+  description: |
+    An interactive map of American gun violence based off of the The Gun Violence Archive.
