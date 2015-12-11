@@ -88,8 +88,9 @@ h2#table-of-contents{
   .description{
     font-size: 1.2rem;
     font-style: italic;
-    border-bottom: thin solid #aaa;
-    padding-bottom: 0.5em;
+/*    border-bottom: thin solid #aaa;*/
+    padding: 0.5em;
+    background: #eee;
   }
 }
 

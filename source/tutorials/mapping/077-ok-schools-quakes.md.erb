@@ -1,8 +1,9 @@
 ---
-title: Oklahoma earthquakes and schools and CartoDB Spatial Joins
+title: "Using PostGIS, SQL, and CartoDB to locate schools impacted by Oklahoma's earthquakes"
 listed: true
+description: A walkthrough of querying and filtering Census and federal datasets to visualize
 banner:
-  iframe_url: https://daannguyen.cartodb.com/viz/e7b64fe8-9ebc-11e5-883d-0e3ff518bd15/embed_map
+  iframe_url: https://daannguyen.cartodb.com/viz/79519482-9f88-11e5-969f-0e5db1731f59/embed_map
 references: 
   - title: Learning SQL through the CartoDB Editor
     url: http://academy.cartodb.com/courses/sql-postgis/intro-to-sql-and-postgis/
@@ -13,77 +14,108 @@ references:
       via the CartoDB summary text: "This lesson introduces several commonly used functions in PostGIS with the goal of extending your geospatial analysis of data within CartoDB and show you some of the analysis you can do with your geospatial data."
 ---
 
+This [CartoDB map](https://daannguyen.cartodb.com/viz/79519482-9f88-11e5-969f-0e5db1731f59/map) shows the location of Oklahoma schools that are within areas in which USGS instruments measured an [Modified Mercalli Intensity of at least __4.5__ ](http://earthquake.usgs.gov/research/shakemap/#intmaps) from the most powerful of Oklahoma's recent surge of earthquakes. 
+
+The __school locations__ are color-coded relative to the percentage of their students eligible for free or reduced lunch (a [proxy for estimating the poverty level among students](http://nces.ed.gov/programs/coe/indicator_clb.asp)). The __U.S. Census tracts__ are color-coded relative to the median household income, as measured by the American Community Survey, <a href="http://censusreporter.org/data/table/?table=B19013&geo_ids=04000US40,140|04000US40&primary_geo_id=04000US40">Table B19013</a>.
+
+This visualization is the result of an __exploratory exercise__ and so it  comes with a lot of caveats that are explained below. However, it's meant to be an example of both the visualization and investigative possibilities when using geospatial queries. This tutorial assumes you're [already well-versed in basic SQL (particularly joins)](http://2015.padjo.org/tutorials/sql-walks/exploring-wsj-medicare-investigation-with-sql/), and have also perused [a few of my past CartoDB tutorials](http://2015.padjo.org/tutorials/mapping/022-joining-crime-data-to-nypd-precinct-map/), as well as [CartoDB's excellent resources](http://academy.cartodb.com/courses/sql-postgis/postgis-in-cartodb/).
+
+<%= render_toc %>
+
+# The background and investigative hypothesis
+
+In 2011, the Center for Investigative Reporting [found "systemic failures" in how California officials safeguard schools from earthquakes](http://californiawatch.org/earthquakes). CIR's indepth project, which was a [Pulitzer finalist](http://www.pulitzer.org/citation/2012-Local-Reporting), [spurred statewide policy changes](http://californiawatch.org/node/9630/) for uncovering how lax oversight allowed "children and teachers to occupy buildings with structural flaws and potential safety hazards reported during construction."
+
+In a state with a sesmic history as storied and diasastarous as California's, such revelations of neglect are a surprise. But what about other states with lesser construction standards? Well, it's generally not an issue because state's without a history of earthquakes, well, don't need to have the same kind of regulations.
+
+But what if a previously-quiet state were to suddenly find itself to be earthquake-prone, but without the decades of lessons and building regulations that California has? Then the story isn't about lax oversight, but more: who is at-most risk of being harmed?
+
+This is the real-life scenario for Oklahoma. Before 2010, Oklahoma had just a handful of earthquakes in its recorded history. Now, it experiences more 3.0+ magnitude earthquakes than the other 48 contiguous states -- including California -- _combined_:
+
+![r chart](https://raw.githubusercontent.com/dannguyen/ok-earthquakes-RNotebook/master/images/optimized-movie-quakes-OK.gif)
+
+So far, the Oklahoman earthquakes are blips compared to what California buildings are designed to withstand. But they are enough to cause significant damage to Oklahoma's buildings. This past July, a mere 4.5-magnitude earthquake caused enough damage to a high school [to require the state to file an earthquake insurance claim, the first time ever for a public school in Oklahoma's history](http://kfor.com/2015/07/28/crescent-earthquakes-damage-schools-and-a-grocery-store/):
+
+> The 4.5 earthquake left a large crack that now runs along the gym wall and on the opposite side of the wall a large art room, the counseling office and the girls fitness center also have visible damage.
+
+> "We've sealed the building off evacuated the common wall classrooms and the kids are safe right now," Superintendent Hart said.
+
+The [Oklahoma earthquake surge appears to be the new normal](https://stateimpact.npr.org/oklahoma/tag/earthquakes/), at least for the near future. But the vast majority of Oklahoma's present construction hasn't prepared for this. In fact, much of the deep reporting that CIR did for its ["On Shaky Ground" project](http://californiawatch.org/earthquakes) -- including [reviewing documentation of enforcement actions and construction funds](http://californiawatch.org/node/9535/) -- isn't relevant in a state without that regulatory framework. 
+
+But this also means that our initial investigative heuristics can be more blunt: if a school built to Oklahoma's past standards suffered damage from a M4.5 earthquake, _then all other schools may be at risk from earthquakes of similar magnitude_.
+
+We [don't have scientific expertise](http://news.sciencemag.org/earth/2015/04/heartland-danger-zones-emerge-new-u-s-earthquake-hazard-map) to predict where Oklahoma's next big earthquakes will happen. They don't appear to fall along Oklahoma's known historical fault lines, and their cause has been [linked to wastewater disposal activity from drilling](http://www.newyorker.com/magazine/2015/04/13/weather-underground). The [U.S. Geological Survey announced earlier this year](http://newsok.com/article/5402676) it would release a new hazard map.
+
+So let's start with the major earthquakes that have already occurred in Oklahoma, then find the schools situated in the zones of seismic activity that _could have_ potentially resulted in damage, [according to the USGS](http://earthquake.usgs.gov/research/shakemap/). We do this with the understanding that past seismic activity may not directly correlate with future activity when it comes to _induced_ earthquakes. But we can update the map as new information comes in.
+
+And to further refine our possible investigative leads, let's apply another broad, if simplistic filter: poorer schools may have poorer construction and maintenance, as [has been observed elsewhere in America's public school system](http://nces.ed.gov/pubs2000/2000032.pdf).
+
+# Technical walkthrough
+
+This next section describes where to get the relevant data, how to filter and join it logically and spatially, and how to visualize the results using CartoDB. Again, [refer to previous tutorials](/tutorials) for more detailed explanations of the SQL and CartoDB functionality.
 
 
+## The boundaries of Oklahoma's Census tracts
+
+Let's first add Oklahoma's Census tract boundary data so that we get a loose sense of population distribution and, for starters, where exactly Oklahoma's boundaries are, as CartoDB's map tiles don't highlight state boundaries:
+
+![image carto_map_plain.png](/files/images/tutorials/cartodb/ok-schoolquakes/carto_map_plain.png)
 
 
-# All over again
+### Downloading the tract boundary shapefiles
 
+The U.S. Census website has a section for [Cartographic Boundary Shapefiles](https://www.census.gov/geo/maps-data/data/tiger-cart-boundary.html).
 
+The subpage, [Cartographic Boundary Shapefiles - Census Tracts](https://www.census.gov/geo/maps-data/data/cbf/cbf_tracts.html), contains a listing of zip files of tract data for each individual state: Here's [Oklahoma](http://www2.census.gov/geo/tiger/GENZ2014/shp/cb_2014_40_tract_500k.zip) ([mirror here](/files/data/cartodb/ok-schoolquakes/oklahoma--cb_2014_40_tract_500k.zip)).
 
-## Add Census tract shapefiles
+### Mapping the ok_tracts dataset
 
-
-Add the Census tract boundary data.
-
-### Download the tract boundary shapefiles
-
-[Cartographic Boundary Shapefiles](https://www.census.gov/geo/maps-data/data/tiger-cart-boundary.html)
-
-Specifically here:
-
-[Cartographic Boundary Shapefiles - Census Tracts](https://www.census.gov/geo/maps-data/data/cbf/cbf_tracts.html)
-
-And Oklahoma: http://www2.census.gov/geo/tiger/GENZ2014/shp/cb_2014_40_tract_500k.zip
- 
-([mirror here](/files/data/cartodb/ok-schoolquakes/oklahoma--cb_2014_40_tract_500k.zip))
-
-### Creating the ok_tracts dataset
-
-The resulting map:
+Uploading the shapefile (as a zip file) as a dataset named __ok_tracts__ generates a map that looks like this:
 
 ![image ok_tracts_uploaded.png](/files/images/tutorials/cartodb/ok-schoolquakes/ok_tracts_uploaded.png)
 
 
+## The American Community Survey Median Household Income data
 
+Tract boundaries by themselves are boring, so let's add a layer of census data. Since relative income/poverty levels are relevant to my initial investigative inquiry, I've chosen table __B19013__, which is the <a href="http://censusreporter.org/data/table/?table=B19013&geo_ids=04000US40,140|04000US40&primary_geo_id=04000US40">American Community Survey's estimate of Median Household Income In the Past 12 Months</a>
 
-## Add American Community Survey Median Household Income data
+### Downloading ACS data from the American FactFinder
 
 Go to the [American FactFinder](http://factfinder.census.gov/faces/nav/jsf/pages/index.xhtml) and choose the __Advanced search__ option.
 
+Then choose these filters:
 
-Via the Advanced search:
+- __Geographies__ 
+  - Census Tract
+    - Oklahoma
+      - __All Census Tracts within Oklahoma__
+- __Topics__ 
+  - People 
+    - Income & Earnings 
+      - __Income/Earnings (Households)__
 
-Geographies > Census Tract > Oklahoma > All Census Tracts within Oklahoma
-
-Topics > People > Income & Earnings > Income/Earnings (Households)
+Then look for the row with the entry:
 
 
-B19013 - MEDIAN HOUSEHOLD INCOME IN THE PAST 12 MONTHS (IN 2014 INFLATION-ADJUSTED DOLLARS) 
-Universe: Households
-2014 ACS 5-year estimates
+| B19013 - MEDIAN HOUSEHOLD INCOME IN THE PAST 12 MONTHS (IN 2014 INFLATION-ADJUSTED DOLLARS) | 2014 ACS 5-year estimates |
+{:.table-sql}
 
-Selecting that table in the view
 
 ![image ok-schoolquakes-map-acs-selected-data.png](/files/images/tutorials/cartodb/ok-schoolquakes-map-acs-selected-data.png)
 
-Here's the detailed view
+Here's the detailed view of that data:
 
 ![image ok-schoolquakes-map-acs-selected-data-detailed-view.png](/files/images/tutorials/cartodb/ok-schoolquakes-map-acs-selected-data-detailed-view.png)
 
-Downloading the file, a copy of which I have here: 
-
-[ACS_14_5YR_B19013.zip](/files/data/cartodb/ok-schoolquakes/ACS_14_5YR_B19013.zip){:.url}
+Here's a mirror of the file I downloaded: [ACS_14_5YR_B19013.zip](/files/data/cartodb/ok-schoolquakes/ACS_14_5YR_B19013.zip){:.url}
 
 Unzipping, and opening __ACS_14_5YR_B19013_with_ann.csv__:
 
 ![image ok-schoolquakes-downloaded-b19013-with-ann-csv.png](/files/images/tutorials/cartodb/ok-schoolquakes-downloaded-b19013-with-ann-csv.png)
 
-I edited the `ACS_14_5YR_B19013_with_ann.csv` file and removed the second line, which is just an annotation, and uploaded to CartoDB as a table named __ok_median_household_incomes__. You can download the CSV here:
+I edited the `ACS_14_5YR_B19013_with_ann.csv` file and removed the second line, which is just an annotation, and uploaded to CartoDB as a table named __ok_median_household_incomes__. You can download the CSV here: [ok_median_household_incomes.csv](/files/data/cartodb/ok-schoolquakes/ok_median_household_incomes.csv){:.url}
 
-[ok_median_household_incomes.csv](/files/data/cartodb/ok-schoolquakes/ok_median_household_incomes.csv)
-
-### Creating the ok_median_household_incomes dataset and joining it to ok_tracts
+### Joining the median income data to the Census tract boundaries to make a choropleth
 
 Remember that the median household incomes dataset contains no geospatial shape or coordinate data itself. But it contains a column -- `geo_id` -- that can be joined with `ok_tracts.affgeoid`:
 
@@ -99,29 +131,46 @@ INNER JOIN ok_tracts ON
 ~~~
 
 
-Making a choropleth so that the darker green regions represent higher-income areas:
+Viewing the data as a choropleth map; the darker green regions represent higher-income areas:
 
 ![image ok_median_household_incomes_choropleth.png](/files/images/tutorials/cartodb/ok-schoolquakes/ok_median_household_incomes_choropleth.png)
 
-At this point, we can hit the __Visualize__ or (__Publish__) button to turn this into what CartoDB considers to be an actual __map__ -- which allows us to add additional data layers.
+At this point, we can hit the __Visualize__ or (__Publish__) button to turn this into what CartoDB considers to be an actual __map__ -- which allows us to add additional data layers. This is a purely CartoDB convention so refer to their [tutorials for more information](http://docs.cartodb.com/tutorials/multilayer_overview/).
 
 
-## Add the earthquakes
+## The USGS Earthquake Archive Data
+
+Now let's get the locations and magnitudes for Oklahoma's earthquakes. This data is exhaustively documented by the [U.S. Geological Survey's Earthquake Hazards Program](http://earthquake.usgs.gov/). Here's a map [of M4.5+ earthquakes around Oklahoma](http://earthquake.usgs.gov/earthquakes/map/#%7B%22feed%22%3A%221449549499693%22%2C%22sort%22%3A%22newest%22%2C%22mapposition%22%3A%5B%5B33.472%2C-103.074%5D%2C%5B37.058%2C-94.241%5D%5D%2C%22viewModes%22%3A%7B%22help%22%3Afalse%2C%22list%22%3Atrue%2C%22map%22%3Atrue%2C%22settings%22%3Afalse%7D%2C%22autoUpdate%22%3Afalse%2C%22search%22%3A%7B%22id%22%3A%221449549499693%22%2C%22name%22%3A%22Search%20Results%22%2C%22isSearch%22%3Atrue%2C%22params%22%3A%7B%22starttime%22%3A%222008-11-30%2000%3A00%3A00%22%2C%22maxlatitude%22%3A37.058%2C%22minlatitude%22%3A33.472%2C%22maxlongitude%22%3A-94.241%2C%22minlongitude%22%3A-103.074%2C%22minmagnitude%22%3A4.5%2C%22eventtype%22%3A%22earthquake%22%2C%22endtime%22%3A%222015-12-07%2023%3A59%3A59%22%2C%22orderby%22%3A%22time%22%7D%7D%7D)
+
+
+
 
 ### Getting the earthquake data from USGS 
 
-[CSV](http://earthquake.usgs.gov/fdsnws/event/1/query.csv?starttime=2008-01-01%2000:00:00&maxlatitude=37.321&minlatitude=33.306&maxlongitude=-93.933&minlongitude=-103.293&minmagnitude=2&eventtype=earthquake&endtime=2015-11-30%2023:59:59&orderby=time) 
+The USGS provides a handy web form for querying its archive of earthquake data and fetching records as CSV. Each query is limited to 20,000 results, so we have to [make use of the various filters](http://earthquake.usgs.gov/earthquakes/search/). It's not worth limiting by date, as Oklahoma's pre-2010 seismic history is basically non-existent. I've opted to limit the search to earthquakes of at least __magnitude 2.0__, and -- using the handy USGS map-picker tool -- in a rectangular region that encompasses Oklahoma and a bit of space around its borders:
 
-Mirror: [ok_earthquakes.csv](files/data/cartodb/ok-schoolquakes/ok_earthquakes.csv)
+![image usgs_rect_drawer.png](/files/images/tutorials/cartodb/ok-schoolquakes/usgs_rect_drawer.png){:.bordered}
 
-### Creating the ok_earthquakes dataset and adding it as a layer
+You can use the [exact same queries I used to get the CSV data](http://earthquake.usgs.gov/fdsnws/event/1/query.csv?starttime=2008-01-01%2000:00:00&maxlatitude=37.321&minlatitude=33.306&maxlongitude=-93.933&minlongitude=-103.293&minmagnitude=2&eventtype=earthquake&endtime=2015-11-30%2023:59:59&orderby=time) from the USGS site. Or you could download my mirror here: [ok_earthquakes.csv](files/data/cartodb/ok-schoolquakes/ok_earthquakes.csv){:.url}
+
+
+### Mapping all the earthquakes as a layer
+
+My loose query of the USGS archive resulted in 6,400+ earthquakes, most of which are so light as to not disturb a sleeping cat, and a few which aren't even inside Oklahoma's borders (not that tremors obey political lines, but that's an epistemological issue that we'll ignore for now):
 
 ![image ok_earthquakes_new_layer.png](/files/images/tutorials/cartodb/ok-schoolquakes/ok_earthquakes_new_layer.png)
 
+More to the point: there's just too many dots for this visualization to make any sense, so we need to do some filtering.
 
-### Filtering for just the big ones
 
-The SQL to include only M4.5+ earthquakes:
+### Filtering earthquakes by magnitude
+
+There are several variables that determine what makes an earthquake "significant." While earthquakes of M3.0+ are sometimes given an online mention in the [Los Angeles Times earthquakes coverage](http://www.latimes.com/local/earthquakes/), they generally don't cause any damage. Also, the actual shaking intensity of an earthquake is not solely dictated by magnitude, but by the [composition of geological composition](http://cse.ssl.berkeley.edu/segwayed/lessons/earthquake_country/5eqcountry.b2abaginfo.html), among other factors.
+
+So let's keep things simple: what is the weakest earthquake that caused newsworthy damage in Oklahoma? Last week (Nov. 30, 2015), a [M4.7 quake](http://earthquake.usgs.gov/earthquakes/eventpage/us1000424d#general_summary) is suspected to have caused some bricks to fall off the [tallest building in Enid](http://kfor.com/2015/12/03/damage-to-downtown-enid-building-caused-by-earthquake/). A few years after Oklahoma's biggest recorded quake -- a M5.7 in November 2011 -- a [small college is still cleaning up the mess](https://stateimpact.npr.org/oklahoma/2015/07/16/years-after-earthquake-oklahoma-college-still-shaken-by-cracked-budgets-and-broken-buildings/). A M4.7 that struck nearby days later [caused ceilings to fall down in a Meeker school](http://newsok.com/article/3621379?embeddedLinkType=article). And there's that previously discussed M4.5 in July 2015 [that cracked Crescent High's gymnasium](http://kfor.com/2015/07/28/crescent-earthquakes-damage-schools-and-a-grocery-store/).
+
+So let's look at only M4.5+ earthquakes:
+
 
 ~~~sql
 SELECT *
@@ -129,13 +178,13 @@ FROM ok_earthquakes
 WHERE mag >= 4.5;
 ~~~
 
-What the result looks like on a map:
+So from 2008 through November 2015, our dataset includes __8__ such earthquakes -- all of them in 2011 or after, and 3 of them in 2015 alone. Here's what the result looks like on a map:
 
 ![image ok_earthquakes_m4-5_quakes_only.png](/files/images/tutorials/cartodb/ok-schoolquakes/ok_earthquakes_m4-5_quakes_only.png)
 
-### Filtering for Oklahoma-only quakes via ST_WITHIN spatial join to ok_tracts
+### Filtering for Oklahoma-only quakes via a spatial join
 
-Because of the sloppy selection job I did on the USGS Earthquake Archive form, one of these earthquakes actually took place in Kansas. Using the PostGIS [__ST_WITHIN__](http://postgis.net/docs/ST_Within.html function) as a constraint, I filter out non-Oklahoman earthquakes using the geospatial boundary data found in `ok_tracts` (I keep the `WHERE` clause to keep filtering for M4.5 earthquakes):
+Because of the sloppy selection job I did on the USGS Earthquake Archive form, one of these earthquakes actually took place in Kansas. Using the PostGIS [__ST_WITHIN__](http://postgis.net/docs/ST_Within.html function) as a constraint, we can use the geospatial boundaries in the __ok_tracts__ dataset to filter out non-Oklahoman earthquakes. Note that we keep the `WHERE` clause to keep filtering for M4.5+ earthquakes:
 
 ~~~sql
 SELECT
@@ -153,7 +202,26 @@ Begone Kansas quake:
 
 ### Add the 4-mile circle
 
-Using the ST_BUFFER function to change the geometry of each earthquake point into a circle with a radius of 4-miles, and then using ST_TRANSFORM function to translate it to the projection used by CartoDB:
+So how close does a building have to be from an earthquake's epicenter to risk getting damaged? The answer is: it's complicated -- certainly more complicated than imagining earthquakes to be a simple point on a 2-dimensional plane like our map. 
+
+But let's keep things simple for now: Crescent High [is a little less than 4 miles from the epicenter of the M4.5 earthquake](https://www.google.com/maps/dir/Crescent+High+School,+106+North+Magnolia+Street,+Crescent,+OK+73028/35.9889,-97.5717/@35.968517,-97.6046676,12.99z/data=!4m8!4m7!1m5!1m1!1s0x87b1e8c0aeee8d5b:0xde6c5fae26d96f12!2m2!1d-97.5889936!2d35.9532966!1m0) that damaged it. 
+
+We can use the [PostGIS __ST_BUFFER__ function](http://www.postgis.org/docs/ST_Buffer.html) to extrapolate a circle around each earthquake, effectively turning our _point_ data into _polygon_ data, i.e. _circles_.
+
+The CartoDB tutorials explain it better, but using the previous SQL snippet, we specify the selection of useful columns from __ok_earthquakes__ (such as time, magnitude, and place).
+
+And then we calculate a _new_ value for `the_geom_webmercator` -- which is the hidden field that, by convention, CartoDB uses to project geometric data onto its web maps (here's [a video tutorial/explanation](http://docs.cartodb.com/tutorials/projections/)). 
+
+
+This derived calculation involves several functions and conversions, so here are the steps:
+
+1. Convert `ok_earthquakes.the_geom` (which is basically just a latitude/longitude point) into a `geography` data type.
+2. Call the [`ST_BUFFER` function](http://www.postgis.org/docs/ST_Buffer.html) on that `the_geom`-as-`geography` value and pass in `1609 * 4`, which is the conversion of 4 miles to meters (the distance unit used by PostGIS). This `ST_BUFFER` call is what effectively turns each _point_ into a geometric _circle_.
+3. Convert the result of `ST_BUFFER` into a `geometry` datatype, because, well, see the next step:
+4. Use the [__ST_TRANSFORM__ function](http://postgis.org/docs/ST_Transform.html) to project our newly-created circles to the map projection used by CartoDB, i.e. [EPSG:3857](http://spatialreference.org/ref/sr-org/7483/), aka WGS84, aka ["Web Mercator"](https://en.wikipedia.org/wiki/Web_Mercator).
+5. Alias the result as `the_geom_webmercator` so CartoDB knows to project it onto our web map.
+
+For more information, CartoDB has a tutorial on [Drawing a circle from a point and radius](http://docs.cartodb.com/tutorials/circle_point_radius/). And a more thorough [tutorial involving buffers](http://academy.cartodb.com/courses/sql-postgis/postgis-in-cartodb/#show-buffers). Check them out, and then see if the following query makes sense, because it works for me:
 
 ~~~sql
 SELECT
@@ -172,31 +240,28 @@ WHERE mag >= 4.5;
 ~~~
 
 
-And here's the earthquakes, now as 4-mile-radius polygon circles:
+And here are the earthquakes, rendered as  4-mile-radius circles:
 
 ![image ok_earthquakes_m4-5_quakes_4mile_radius.png](/files/images/tutorials/cartodb/ok-schoolquakes/ok_earthquakes_m4-5_quakes_4mile_radius.png)
 
-At this point, I've taken advantage of CartoDB's option to __create a new dataset__ from my now-convoluted query of `ok_earthquakes`. The new dataset I have named __ok_earthquakes_radii__, which has a schema that consists of only a few fields from __ok_quakes__ (e.g. `time`, `place`, `id` and `mag`); CartoDB has automatically set the `the_geom` column to have the coordinate data that draws those 4-mile circles.
+At this point, I've taken advantage of CartoDB's option to __create a new dataset__ from my now-convoluted query that filters and joins __ok_earthquakes__. 
+
+This new dataset -- which again, is just the result of the previous SQL query -- I have named __ok_earthquakes_radii__. Its schema includes a few fields from __ok_quakes__ (e.g. `time`, `place`, `id` and `mag`). When the "create a new dataset" from query feature is used, CartoDB will helpfully create and set the `cartodb_id` and `the_geom` columns as needed, i.e. `the_geom` contains the Polygon data that draws those 4-mile circles.
 
 
+## Locations of Oklahoma's public schools
 
+What we have so far is not bad -- we see where Oklahoma's past major earthquakes have occurred in relation to the state's population and wealth centers. Adding school location data will gives us specific _points of interest_
 
-
-
-
-
-
-## Adding the schools data
-
-
-
-### Get the schools data
+### Download school data from the National Center for Education Statistics
 
 The National Center for Education Statistics publishes the [Public Elementary/Secondary School Universe Survey Data](http://nces.ed.gov/ccd/pubschuniv.asp), which includes the names, addresses, and demographics of every school in the United States. 
 
+As you can imagine, this is a lot of rows and columns. The [documentation of its fields is here](http://nces.ed.gov/ccd/pdf/2015150_2013-14_School_documentation_v1a.pdf). A plaintext description of the [record layout is here](http://nces.ed.gov/ccd/Data/txt/sc131alay.txt).
+
 The data file for [2013-2014 is 14.1MB zipped](http://nces.ed.gov/ccd/Data/zip/sc131a_supp_txt.zip)/107MB unzipped tab-delimited file.
 
-### Trim the schools data
+### Trimming the schools data
 
 Ideally we could just upload the tab-delimited file straight into CartoDB; it might work for you; for me, it did not. So I just imported the file into my own SQL database, ran the following query, and saved the results as new CSV file, which I then uploaded to CartoDB:
 
@@ -213,23 +278,58 @@ WHERE LSTATE = 'OK';
 
 The filtered file can be found here: [ok_schools.csv](/files/data/cartodb/ok-schoolquakes/ok_schools.csv){:.url}
 
-### Show all schools
+#### Pro-tip: csvkit is awesome
+
+As a quick aside, I used the awesome [csvsql command-line tool](https://csvkit.readthedocs.org/en/0.9.1/scripts/csvsql.html) (which is part of the [csvkit toolkit](https://csvkit.readthedocs.org/en/0.9.1/)). Making a database just to clean up and export data into a database can cause serious anger issues, so learning about csvkit (and command-line operations in general) is _highly_ recommended. 
+
+For reference sake, here's the command I used to get the trimmed [ok_schools.csv](/files/data/cartodb/ok-schoolquakes/ok_schools.csv){:.url}:
+
+~~~sh
+csvsql --no-inference --snifflimit 0 --no-constraints --tabs \
+--query "
+SELECT
+  SURVYEAR,NCESSCH,LEANM,SCHNAM,LCITY,LSTATE,LZIP,TYPE,STATUS,
+  GSLO,GSHI,LEVEL,TITLEISTAT,TITLEI,CHARTR,VIRTUALSTAT,
+  FRELCH,REDLCH,TOTFRL,MEMBER,
+  LATCOD AS latitude,
+  LONCOD AS longitude
+FROM sc131a_supp
+WHERE LSTATE = 'OK';" sc131a_supp.txt > ok_schools.csv
+~~~
+
+
+
+
+### Mapping all of Oklahoma's schools
+
+There are 1,800+ schools in our list, though some of them are on top of each other -- for instance, [Crescent High](http://crescentok.com/hs/chsindex.htm) is in the same building as Crescent Middle and Crescent Elementary:
 
 ![image ok_schools_uploaded.png](/files/images/tutorials/cartodb/ok-schoolquakes/ok_schools_uploaded.png)
 
 
+### Visualizing Oklahoma's schools as a choropleth of free/reduced lunch ratio
+
+Let's add a little visual variety to our school dots. In the introduction, I hypothesize that while all schools and children are important, schools that serve poorer populations _might_ be more affected by earthquakes because, well, [poorer schools tend to get the short-end in other areas of educational resources](http://www.urban.org/features/closer-look-income-and-race-concentration-public-schools) -- though ideally, every public school has the same access to public funds for construction and facility maintenance. (So, we're being a bit cynical here).
+
+A [common proxy for estimating student poverty](http://nces.ed.gov/blogs/nces/post/free-or-reduced-price-lunch-a-proxy-for-poverty) is to look at the number of students eligible for the federally-funded free/reduced lunch program, which is a number that the federal education department conveniently tracks.
+
+Calculating the percentage of students at a given school who are eligible for free or reduced lunch is a simple formula involving two columns; `MEMBER` is the school's total population, and `TOTFRL` is the number of students eligible for the program:
+
+    ROUND(TOTFRL * 100 / MEMBER)
 
 
-### Show by free lunch
+#### Creating a column for `frlp_ratio`
 
-#### Create a new column
+To keep things cleaner in subsequent queries, I'm going to add a _new column_ named `frlp_ratio` to the __ok_schools__ table:
+
 
 ~~~sql
 ALTER TABLE ok_schools
 ADD COLUMN frlp_ratio INTEGER;
 ~~~
 
-#### Add that ratio
+To populate that column with values:
+
 
 ~~~sql
 UPDATE ok_schools
@@ -241,9 +341,11 @@ The resulting choropleth:
 ![image ok_schools_frlp_choropleth.png](/files/images/tutorials/cartodb/ok-schoolquakes/ok_schools_frlp_choropleth.png)
 
 
+### Filtering schools by proximity to earthquakes
 
+OK, now we have to deal with the fact that our map devotes far too much ink to schools that are, for the time being, not near the locations of previous major earthquakes. So let's reduce the list of schools to just the ones that are located within the geometry of the 4-mile circles we constructed around each earthquake's epicenter, i.e. the __ok_earthquakes_radii__ dataset.
 
-### Filter for being near earthquake
+This is a matter of doing a geospatial join using the [__ST_WITHIN__ function](http://postgis.net/docs/ST_Within.html), which we used previously to constrain earthquakes to being within Oklahoman boundaries:
 
 ~~~sql
 SELECT ok_schools.* 
@@ -254,15 +356,119 @@ ON ST_WITHIN(
   ok_earthquakes_radii.the_geom);
 ~~~
 
+That cleaned things up:
 
 ![image ok_schools_within_4_miles_of_quakes.png](/files/images/tutorials/cartodb/ok-schoolquakes/ok_schools_within_4_miles_of_quakes.png)
 
-A closeup with Crescent High School highlighted:
+And here's a closeup with Crescent High School highlighted:
 
 ![image ok_schools_within_4_miles_of_quakes_closeup.png](/files/images/tutorials/cartodb/ok-schoolquakes/ok_schools_within_4_miles_of_quakes_closeup.png)
 
-
-Dataset:
+Our list of impacted schools contains only 6 schools in 3 separate locations. It's worth noting that our 4-mile criteria leaves out [Meeker High, which was damaged in the M4.7 in November 2011](http://newsok.com/article/3621379?embeddedLinkType=article):
 
 ![image ok_schools_within_4_miles_of_quakes_dataset.png](/files/images/tutorials/cartodb/ok-schoolquakes/ok_schools_within_4_miles_of_quakes_dataset.png)
 
+OK, so let's try a geospatial analysis that treats earthquakes as being a little more complicated than circles on a map.
+
+## The USGS Shakemaps
+
+The [USGS ShakeMap program](http://earthquake.usgs.gov/earthquakes/shakemap/) is described as an online reference that provides:
+
+> near-real-time maps of ground motion and shaking intensity following significant earthquakes. These maps are used by federal, state, and local organizations, both public and private, for post-earthquake response and recovery, public and scientific information, as well as for preparedness exercises and disaster planning.
+
+Each "significant" earthquake has its own shakemap. For instance, [here is the Shakemap for the M5.6 that hit Oklahoma](http://earthquake.usgs.gov/earthquakes/shakemap/global/shake/b0006klz/) -- note how the [URL](http://earthquake.usgs.gov/earthquakes/shakemap/global/shake/b0006klz/) is derived from the earthquake's `id` column, in this case, `b0006klz`:
+
+[earthquake.usgs.gov/earthquakes/shakemap/global/shake/b0006klz/](http://earthquake.usgs.gov/earthquakes/shakemap/global/shake/b0006klz/){:.url}
+
+
+### The Modified Mercalli Intensity Scale
+
+Each shakemap page contains a trove of data and calculations, including __intensity maps__:
+
+![b0006klz intensity map](http://earthquake.usgs.gov/earthquakes/shakemap/global/shake/b0006klz/download/intensity.jpg)
+
+That looks more complicated and interesting than a simple circle. [Intensity is described by the USGS as this](http://earthquake.usgs.gov/earthquakes/shakemap/background.php#intmaps):
+
+> As an effort to simplify and maximize the flow of information to the public, we have developed a means of generating estimated __Modified Mercalli Intensity__ maps based on instrumental ground motion recordings (Wald et al., 1999). These "Instrumental Intensities" are based on a combined regression of peak acceleration and velocity amplitudes vs. observed intensity for eight significant California earthquakes
+> 
+> From the comparison with observed intensity maps, we find that a regression based on peak velocity for intensity > VII and on peak acceleration for intensity < VII is most suitable. This is consistent with the notion that low intensities are determined by felt accounts (sensitive to acceleration). Moderate damage, at intensity VI-VII, typically occurs in rigid structures (masonry walls, chimneys, etc.) which also are sensitive to high-frequency (acceleration) ground motions...
+
+
+OK, that's more detail than I can confidently interpret or meaningfully use. But the main gist of the __Modified Mercalli Intensity (MMI) Scale__ seems to be summarized in this table:
+
+![intensity scale chart](http://earthquake.usgs.gov/earthquakes/shakemap/images/scale.jpg)
+
+A more fun and [descriptive table of MMI can be found here](http://resilience.abag.ca.gov/shaking/mmi/):
+
+![image mmi_ilustrated_chart.jpg](/files/images/tutorials/cartodb/ok-schoolquakes/mmi_ilustrated_chart.jpg)
+
+Basically, anything under a MMI value of __5.0__ is barely worth tracking. _At_ 5.0, the potential damage is described as __"Light"__: such as pictures being moved and pendulum clocks failing to swing their pendulums.
+
+
+### Downloading the MMI shapefiles for each earthquake
+
+Each ShakeMap page contains various data downloads. The ones we want are labeled __"General-purpose GIS shape files"__, which you kind of have to dig around to find on each page. Here's the one for the [Nov. 30, 2015 M4.7 quake](http://earthquake.usgs.gov/earthquakes/eventpage/us1000424d#impact_shakemap):
+
+![image usgs_shakemap_gis_download_linktext.png](/files/images/tutorials/cartodb/ok-schoolquakes/usgs_shakemap_gis_download_linktext.png){:.bordered}
+
+
+Maybe there's a more efficient way of getting this data. Because there are so few quakes we care about right now, I ended up just visiting each shakemap and downloading the zip file directly. Actually, for the 3 earthquakes that are geolocated next to each other, I just got one of their data files. I'm sure it's easy to write a script to automate this but for your convenience, here's a mirror of those zips:
+
+- [shape-us10003zgz.zip](/files/data/cartodb/ok-schoolquakes/shape-us10003zgz.zip){:.url}
+- [shape-us1000424d.zip](/files/data/cartodb/ok-schoolquakes/shape-us1000424d.zip){:.url}
+- [shape-us200030gd.zip](/files/data/cartodb/ok-schoolquakes/shape-us200030gd.zip){:.url}
+- [shape-usb000ldeh.zip](/files/data/cartodb/ok-schoolquakes/shape-usb000ldeh.zip){:.url}
+- [shape-usp000jadn.zip](/files/data/cartodb/ok-schoolquakes/shape-usp000jadn.zip){:.url}
+
+
+
+#### Customizing the CartoCSS
+
+~~~css
+/** choropleth visualization */
+
+#ok_shakemaps{
+  polygon-fill: #FFFFB2;
+    line-color: #FFFFB2;
+
+  polygon-opacity: 0.1;
+  line-color: #FFF;
+  line-width: 0.5;
+  line-opacity: 1;
+}
+#ok_shakemaps [ intensity <= 6.5] {
+   polygon-fill: #B10026;
+    line-color: #B10026;
+
+}
+#ok_shakemaps [ intensity <= 6.2] {
+   polygon-fill: #E31A1C;
+    line-color: #E31A1C;
+
+}
+#ok_shakemaps [ intensity <= 5.8] {
+   polygon-fill: #FC4E2A;
+    line-color: #FC4E2A;
+
+}
+#ok_shakemaps [ intensity <= 5.6] {
+   polygon-fill: #FD8D3C;
+    line-color: #FD8D3C;
+
+}
+#ok_shakemaps [ intensity <= 5.2] {
+   polygon-fill: #FEB24C;
+    line-color: #FEB24C;
+
+}
+#ok_shakemaps [ intensity <= 5] {
+   polygon-fill: #FED976;
+    line-color: #FED976;
+
+}
+#ok_shakemaps [ intensity <= 4.7] {
+   polygon-fill: #FFFFB2;
+    line-color: #FFFFB2;
+
+}
+~~~
