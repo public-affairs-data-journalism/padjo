@@ -1,10 +1,25 @@
 ---
-title: "Using PostGIS, SQL, and CartoDB to locate schools impacted by Oklahoma's earthquakes"
+title: "Using PostGIS, SQL, and CartoDB to identify schools at risk from Oklahoma's earthquakes"
 listed: true
-description: A walkthrough of querying and filtering Census and federal datasets to visualize
+image_url: /files/images/tutorials/cartodb/ok-schoolquakes/usgs_shakemap_main_image.png
+description: |
+  A tutorial on using geospatial analysis, shapefiles and datasets from the U.S. Geological Survey, Census, and Department of Education to visualize the impact of Oklahoma's earthquakes and explore possible investigative projects.
 banner:
   iframe_url: https://daannguyen.cartodb.com/viz/79519482-9f88-11e5-969f-0e5db1731f59/embed_map
 references: 
+  - title: USGS ShakeMap Background
+    url: http://earthquake.usgs.gov/research/shakemap/
+  - title: Weather Underground
+    url: http://www.newyorker.com/magazine/2015/04/13/weather-underground
+    source: The New Yorker
+  - title: "Quake Debate: Science questioned while state's earthquake studies go unfinished"
+    source: Tulsa World
+    url: http://www.tulsaworld.com/newshomepage1/quake-debate-science-questioned-while-state-s-earthquake-studies-go/article_eedb5ada-46eb-5550-8f56-04c5cc9966b4.html
+  - title: Exploring the Link Between Earthquakes and Oil and Gas Disposal Wells
+    url: https://stateimpact.npr.org/oklahoma/tag/earthquakes/
+    source: NPR's StateImpact
+  - title: The Oklahoman's Earthquake Coverage
+    url: http://newsok.com/earthquakes
   - title: Learning SQL through the CartoDB Editor
     url: http://academy.cartodb.com/courses/sql-postgis/intro-to-sql-and-postgis/
     description: A video tutorial on basic SQL in CartoDB
@@ -14,7 +29,7 @@ references:
       via the CartoDB summary text: "This lesson introduces several commonly used functions in PostGIS with the goal of extending your geospatial analysis of data within CartoDB and show you some of the analysis you can do with your geospatial data."
 ---
 
-This [CartoDB map](https://daannguyen.cartodb.com/viz/79519482-9f88-11e5-969f-0e5db1731f59/map) shows the location of Oklahoma schools that are within areas in which USGS instruments measured an [Modified Mercalli Intensity of at least __4.5__ ](http://earthquake.usgs.gov/research/shakemap/#intmaps) from the most powerful of Oklahoma's recent surge of earthquakes. 
+This [CartoDB map](https://daannguyen.cartodb.com/viz/79519482-9f88-11e5-969f-0e5db1731f59/public_map) shows the location of Oklahoma schools that are within areas in which USGS instruments measured an [Modified Mercalli Intensity of at least __4.5__ ](http://earthquake.usgs.gov/research/shakemap/#intmaps) from the most powerful of Oklahoma's recent surge of earthquakes. 
 
 The __school locations__ are color-coded relative to the percentage of their students eligible for free or reduced lunch (a [proxy for estimating the poverty level among students](http://nces.ed.gov/programs/coe/indicator_clb.asp)). The __U.S. Census tracts__ are color-coded relative to the median household income, as measured by the American Community Survey, <a href="http://censusreporter.org/data/table/?table=B19013&geo_ids=04000US40,140|04000US40&primary_geo_id=04000US40">Table B19013</a>.
 
@@ -22,33 +37,37 @@ This visualization is the result of an __exploratory exercise__ and so it  comes
 
 <%= render_toc %>
 
-# The background and investigative hypothesis
+# Investigating earthquakes and schools
 
 In 2011, the Center for Investigative Reporting [found "systemic failures" in how California officials safeguard schools from earthquakes](http://californiawatch.org/earthquakes). CIR's indepth project, which was a [Pulitzer finalist](http://www.pulitzer.org/citation/2012-Local-Reporting), [spurred statewide policy changes](http://californiawatch.org/node/9630/) for uncovering how lax oversight allowed "children and teachers to occupy buildings with structural flaws and potential safety hazards reported during construction."
 
-In a state with a sesmic history as storied and diasastarous as California's, such revelations of neglect are a surprise. But what about other states with lesser construction standards? Well, it's generally not an issue because state's without a history of earthquakes, well, don't need to have the same kind of regulations.
+If such neglect can happen in a state like California, with its long and well-known seismic history, what can we expect from other states? Well, _neglect_ is not the issue because those states -- not having many earthquakes to protect from -- generally don't have expansive regulations to be neglectful _of_.
 
-But what if a previously-quiet state were to suddenly find itself to be earthquake-prone, but without the decades of lessons and building regulations that California has? Then the story isn't about lax oversight, but more: who is at-most risk of being harmed?
+## Oklahoma's new normal
 
-This is the real-life scenario for Oklahoma. Before 2010, Oklahoma had just a handful of earthquakes in its recorded history. Now, it experiences more 3.0+ magnitude earthquakes than the other 48 contiguous states -- including California -- _combined_:
+But what if a previously seismically-safe state were to suddenly find itself to _not_ be safe, and thus without the decades of lessons and laws that California has developed? 
+
+This [is the real-life scenario for Oklahoma](http://www.newyorker.com/magazine/2015/04/13/weather-underground). Before 2010, Oklahoma had just a handful of earthquakes in its recorded history. Now it experiences more 3.0+ magnitude earthquakes than the other 48 contiguous states -- including California -- _combined_:
 
 ![r chart](https://raw.githubusercontent.com/dannguyen/ok-earthquakes-RNotebook/master/images/optimized-movie-quakes-OK.gif)
 
-So far, the Oklahoman earthquakes are blips compared to what California buildings are designed to withstand. But they are enough to cause significant damage to Oklahoma's buildings. This past July, a mere 4.5-magnitude earthquake caused enough damage to a high school [to require the state to file an earthquake insurance claim, the first time ever for a public school in Oklahoma's history](http://kfor.com/2015/07/28/crescent-earthquakes-damage-schools-and-a-grocery-store/):
+_(the above chart was created with R and ggplot, and I'll someday finish writing the walkthrough on that...)_
+
+So far, the Oklahoman earthquakes are blips compared to what California buildings are designed to withstand. But they are enough to cause significant damage to Oklahoma's buildings. This past July, a relatively small -- for California, anyway -- 4.5 magnitude earthquake caused enough damage to a high school [to require officials to file an earthquake insurance claim, the first time ever for a public school in Oklahoma's history](http://kfor.com/2015/07/28/crescent-earthquakes-damage-schools-and-a-grocery-store/):
 
 > The 4.5 earthquake left a large crack that now runs along the gym wall and on the opposite side of the wall a large art room, the counseling office and the girls fitness center also have visible damage.
 
 > "We've sealed the building off evacuated the common wall classrooms and the kids are safe right now," Superintendent Hart said.
 
-The [Oklahoma earthquake surge appears to be the new normal](https://stateimpact.npr.org/oklahoma/tag/earthquakes/), at least for the near future. But the vast majority of Oklahoma's present construction hasn't prepared for this. In fact, much of the deep reporting that CIR did for its ["On Shaky Ground" project](http://californiawatch.org/earthquakes) -- including [reviewing documentation of enforcement actions and construction funds](http://californiawatch.org/node/9535/) -- isn't relevant in a state without that regulatory framework. 
+The [Oklahoma earthquake surge appears to be the new normal](https://stateimpact.npr.org/oklahoma/tag/earthquakes/), at least for the near future. But the vast majority of Oklahoma's present construction hasn't prepared for this. Much of the kind of deep reporting that CIR did for its ["On Shaky Ground" project](http://californiawatch.org/earthquakes) -- including [reviewing documentation of enforcement actions and construction funds](http://californiawatch.org/node/9535/) -- isn't relevant in a state without that regulatory framework. 
 
-But this also means that our initial investigative heuristics can be more blunt: if a school built to Oklahoma's past standards suffered damage from a M4.5 earthquake, _then all other schools may be at risk from earthquakes of similar magnitude_.
+But this also means that our initial investigative heuristics can be a little more blunt: if a school built to Oklahoma's past standards suffered damage from a M4.5 earthquake, then we might hypothesize that _all other schools may be at risk from earthquakes of similar magnitude_.
 
-We [don't have scientific expertise](http://news.sciencemag.org/earth/2015/04/heartland-danger-zones-emerge-new-u-s-earthquake-hazard-map) to predict where Oklahoma's next big earthquakes will happen. They don't appear to fall along Oklahoma's known historical fault lines, and their cause has been [linked to wastewater disposal activity from drilling](http://www.newyorker.com/magazine/2015/04/13/weather-underground). The [U.S. Geological Survey announced earlier this year](http://newsok.com/article/5402676) it would release a new hazard map.
+We [don't have scientific expertise](http://news.sciencemag.org/earth/2015/04/heartland-danger-zones-emerge-new-u-s-earthquake-hazard-map) to predict where Oklahoma's next big earthquakes will happen. They don't appear to fall along Oklahoma's known historical fault lines, and their cause has been [linked to wastewater disposal activity from drilling](http://www.tulsaworld.com/newshomepage1/quake-debate-science-questioned-while-state-s-earthquake-studies-go/article_eedb5ada-46eb-5550-8f56-04c5cc9966b4.html). The [U.S. Geological Survey announced earlier this year](http://newsok.com/article/5402676) it would release a new hazard map.
 
-So let's start with the major earthquakes that have already occurred in Oklahoma, then find the schools situated in the zones of seismic activity that _could have_ potentially resulted in damage, [according to the USGS](http://earthquake.usgs.gov/research/shakemap/). We do this with the understanding that past seismic activity may not directly correlate with future activity when it comes to _induced_ earthquakes. But we can update the map as new information comes in.
+So let's start with the major earthquakes that have _already_ occurred in Oklahoma, then find the schools situated in the zones of seismic activity that _could have_ potentially resulted in damage, [according to the USGS](http://earthquake.usgs.gov/research/shakemap/). We do this with the understanding that past seismic activity may not directly correlate with future activity when it comes to _induced_ earthquakes. But we can update the map as new information comes in.
 
-And to further refine our possible investigative leads, let's apply another broad, if simplistic filter: poorer schools may have poorer construction and maintenance, as [has been observed elsewhere in America's public school system](http://nces.ed.gov/pubs2000/2000032.pdf).
+And to further refine our potential investigative leads, let's apply another broad, if simplistic filter: poorer schools may have poorer construction and maintenance, as [has been observed elsewhere in America's public school system](http://nces.ed.gov/pubs2000/2000032.pdf).
 
 # Technical walkthrough
 
@@ -167,7 +186,7 @@ More to the point: there's just too many dots for this visualization to make any
 
 There are several variables that determine what makes an earthquake "significant." While earthquakes of M3.0+ are sometimes given an online mention in the [Los Angeles Times earthquakes coverage](http://www.latimes.com/local/earthquakes/), they generally don't cause any damage. Also, the actual shaking intensity of an earthquake is not solely dictated by magnitude, but by the [composition of geological composition](http://cse.ssl.berkeley.edu/segwayed/lessons/earthquake_country/5eqcountry.b2abaginfo.html), among other factors.
 
-So let's keep things simple: what is the weakest earthquake that caused newsworthy damage in Oklahoma? Last week (Nov. 30, 2015), a [M4.7 quake](http://earthquake.usgs.gov/earthquakes/eventpage/us1000424d#general_summary) is suspected to have caused some bricks to fall off the [tallest building in Enid](http://kfor.com/2015/12/03/damage-to-downtown-enid-building-caused-by-earthquake/). A few years after Oklahoma's biggest recorded quake -- a M5.7 in November 2011 -- a [small college is still cleaning up the mess](https://stateimpact.npr.org/oklahoma/2015/07/16/years-after-earthquake-oklahoma-college-still-shaken-by-cracked-budgets-and-broken-buildings/). A M4.7 that struck nearby days later [caused ceilings to fall down in a Meeker school](http://newsok.com/article/3621379?embeddedLinkType=article). And there's that previously discussed M4.5 in July 2015 [that cracked Crescent High's gymnasium](http://kfor.com/2015/07/28/crescent-earthquakes-damage-schools-and-a-grocery-store/).
+So let's keep things simple: what is the weakest earthquake that caused newsworthy damage in Oklahoma? Last week (Nov. 30, 2015), a [M4.7 quake](http://earthquake.usgs.gov/earthquakes/eventpage/us1000424d#general_summary) is suspected to have caused some bricks to fall off the [tallest building in Enid](http://kfor.com/2015/12/03/damage-to-downtown-enid-building-caused-by-earthquake/). A few years after Oklahoma's biggest recorded quake -- a M5.6 in November 2011 -- a [small college is still cleaning up the mess](https://stateimpact.npr.org/oklahoma/2015/07/16/years-after-earthquake-oklahoma-college-still-shaken-by-cracked-budgets-and-broken-buildings/). A M4.7 that struck nearby days later [caused ceilings to fall down in a Meeker school](http://newsok.com/article/3621379?embeddedLinkType=article). And there's that previously discussed M4.5 in July 2015 [that cracked Crescent High's gymnasium](http://kfor.com/2015/07/28/crescent-earthquakes-damage-schools-and-a-grocery-store/).
 
 So let's look at only M4.5+ earthquakes:
 
@@ -200,7 +219,7 @@ Begone Kansas quake:
 ![image ok_earthquakes_m4-5_quakes_within_tracts_only.png](/files/images/tutorials/cartodb/ok-schoolquakes/ok_earthquakes_m4-5_quakes_within_tracts_only.png)
 
 
-### Add the 4-mile circle
+### Representing earthquakes with a 4-mile buffer
 
 So how close does a building have to be from an earthquake's epicenter to risk getting damaged? The answer is: it's complicated -- certainly more complicated than imagining earthquakes to be a simple point on a 2-dimensional plane like our map. 
 
@@ -420,9 +439,53 @@ Maybe there's a more efficient way of getting this data. Because there are so fe
 - [shape-usb000ldeh.zip](/files/data/cartodb/ok-schoolquakes/shape-usb000ldeh.zip){:.url}
 - [shape-usp000jadn.zip](/files/data/cartodb/ok-schoolquakes/shape-usp000jadn.zip){:.url}
 
+But we can't just upload all of those into CartoDB, because they each contain separate shapefiles. The only ones we need are the shapefiles that are prefixed with `mi`:
+
+![image usgs_shakemap_unzipped_contents.png](/files/images/tutorials/cartodb/ok-schoolquakes/usgs_shakemap_unzipped_contents.png)
+
+Suffice to say, doing this at scale is going to require some kind of automated script. For your convenience, a zip file that contains _only_ the MMI data for each earthquake:
+
+[/files/data/cartodb/ok-schoolquakes/usgs-intensity-maps-ok.zip](usgs-intensity-maps-ok.zip){:.url}
+
+If you upload that to CartoDB, you will get 5 separate tables (one for each earthquake). You can join them into a single table -- which I refer to as __ok_shakemaps__ -- with this SQL:
+
+~~~sql
+SELECT 'usp000jadn' AS id, the_geom, value AS intensity FROM mi_usp000jadn UNION ALL
+SELECT 'usb000ldeh' AS id, the_geom, value AS intensity FROM mi_usb000ldeh UNION ALL
+SELECT 'us1000424d' AS id, the_geom, paramvalue AS intensity FROM mi_us1000424d UNION ALL
+SELECT 'us200030gd' AS id, the_geom, paramvalue AS intensity FROM mi_us200030gd UNION ALL
+SELECT 'us10003zgz' AS id, the_geom, paramvalue AS intensity FROM mi_us10003zgz;
+~~~
 
 
-#### Customizing the CartoCSS
+### Visualizing the earthquake intensity measurements
+
+When mapped, the intensity measurements are rendered as contour lines. The level and amount of detail is quite intricate, which means that visualizing all of it -- which I've done below as a choropleth based on the `intensity` column -- results in a complete mess:
+
+![image usgs_shakemap_allofem.png](/files/images/tutorials/cartodb/ok-schoolquakes/usgs_shakemap_allofem.png)
+
+So referring to the [MMI scale](http://resilience.abag.ca.gov/shaking/mmi/), it seems we should use SQL to filter for `intensity` values 5.0+, which involve a level of shaking that can cause "light" damage. _However_, Crescent High School -- the school that necessitated the [first ever earthquake insurance claim for an Oklahoma public school](http://kfor.com/2015/07/28/crescent-earthquakes-damage-schools-and-a-grocery-store/) -- was situated in an intensity zone of __4.6__.
+
+So let's just use the value __4.5__ -- which, yes, is confusingly coincidentally the same as the cutoff value we used for filtering earthquakes by __magnitude__, but whatever -- as a cutoff for __intensity__ values:
+
+~~~sql
+SELECT * FROM ok_shakemaps
+WHERE intensity >= 4.5;
+~~~
+
+And now we have a pretty sweet-looking -- and hopefully more scientifically-relevant map:
+
+![image usgs_shakemap_just45andabove.png](/files/images/tutorials/cartodb/ok-schoolquakes/usgs_shakemap_just45andabove.png)
+
+
+### Customizing the CartoCSS
+
+OK, a quick detour into design considerations. The __fill color__ for the intensity contour lines obscures the __median household income__ data that we mapped earlier before. Maybe the household income data is not particularly relevant? Or, if we feel like we _must_ have that context, then we can compromise by rendering the intensity data as simply color-coded _lines_, and reduce (or eliminate) their corresponding fill color.
+
+This kind of customization can be done with the CartoCSS panel. Standard CSS, nevermind CartoCSS, nevermind CartoDB's implementation of CartoCSS, is far beyond the scope of this tutorial. I direct you to [CartoDB's writeup](http://blog.cartodb.com/advanced-cartocss/) and my [previous tutorial](/tutorials/mapping/033-cartodb-adding-multiple-layers-to-show-diffs-by-precinct/).
+
+Here's the [CartoCSS I used for the finished map](https://daannguyen.cartodb.com/viz/79519482-9f88-11e5-969f-0e5db1731f59/map):
+
 
 ~~~css
 /** choropleth visualization */
@@ -472,3 +535,98 @@ Maybe there's a more efficient way of getting this data. Because there are so fe
 
 }
 ~~~
+
+Here is the less-cluttered result: 
+
+![image usgs_shakemap_just45andabove-outlined.png](/files/images/tutorials/cartodb/ok-schoolquakes/usgs_shakemap_just45andabove-outlined.png)
+
+Note that I've left the 4-mile-circular representations of each earthquake to show how different the visualization for our simplified model ("each earthquake is just a big circle!") versus what we can get from the USGS ShakeMap program. The __ok_earthquakes_radii__ dataset is not particularly worth keeping in the final visualization so we can go ahead and take it out.
+
+However, it _is_ worth keeping the earthquake characteristics, such as `time` and `mag`, none of which are included in the ShakeMap intensity tables. So let's do a join:
+
+~~~sql
+SELECT ok_shakemaps.*, 
+  ok_earthquakes.time, ok_earthquakes.place,
+  ok_earthquakes.mag
+FROM ok_shakemaps
+INNER JOIN ok_earthquakes 
+ON ok_earthquakes.id = ok_shakemaps.id
+WHERE ok_shakemaps.intensity >= 4.5;
+~~~
+
+This doesn't inherently change the data visualization, but it allows us to configure the CartoDB interactive layer to provide a popup infowindow when a user clicks on one of the contours:
+
+![image usgs_shakemap_just45andabove-outlined-popup.png](/files/images/tutorials/cartodb/ok-schoolquakes/usgs_shakemap_just45andabove-outlined-popup.png)
+
+
+## Recalculating the list of schools potentially at-risk for earthquake damage
+
+The area encompassed by the intensity contour layer is significantly larger than the area encircled by our simplified, now-obsolete visualization of earthquake epicenters. This means that we need to write a new query to find all the schools within intensity zones of 4.5+. 
+
+This is just another call to the __ST_WITHIN__ function. If you've built your map like I have, you'll want to execute this SQL in the _layer_ for __ok_schools__:
+
+~~~sql
+SELECT ok_schools.* 
+FROM ok_schools
+INNER JOIN ok_shakemaps
+ON ST_WITHIN(
+  ok_schools.the_geom, 
+  ok_shakemaps.the_geom)
+  AND ok_shakemaps.intensity >= 4.5
+ORDER BY SCHNAM, LCITY;
+~~~
+
+The resulting list contains more than __450__ schools. To make the final map more user-friendly, I've written some custom HTML for the pop-up window when a user hovers over each school location:
+
+~~~html
+<div class="cartodb-tooltip-content-wrapper">
+  <div class="cartodb-tooltip-content">
+    <h5><strong>{{schnam}}</strong></h5>
+    <h4>{{lcity}}, OK {{lzip}}</h4>
+
+    <p>Number of students: <strong>{{member}}</strong></p>
+
+    <p>Free/Reduced Lunch Ratio: <strong>{{frlp_ratio}}%</strong></p>
+
+
+  </div>
+</div>
+~~~
+
+Note: I don't quite get the limitations of CartoDB's inline-HTML. I wouldn't spend too much time obsessing over it:
+
+![image usgs_shakemap_popup_html.png](/files/images/tutorials/cartodb/ok-schoolquakes/usgs_shakemap_popup_html.png)
+
+
+## Oklahoma's fault lines
+
+The [USGS](https://mrdata.usgs.gov/geology/state/state.php?state=OK) and Oklahoma Geological Survey (OGS) both have more [specific geological datasets](http://www.ou.edu/content/ogs/data.html). I'm not a geologist so I have even less of a clue of how to appropriately apply the data.
+
+The OGS and USGS were [previously and famously at odds about the cause of Oklahoma's earthquake surge](http://www.newyorker.com/magazine/2015/04/13/weather-underground). I'm not sure if the [OGS fault map](http://www.ou.edu/content/ogs/data/fault.html) is different than the [one](http://pubs.usgs.gov/of/2005/1351/data/OKfaults_dd.zip) produced by the [USGS Mineral Resources On-Line Spatial Data page](https://mrdata.usgs.gov/geology/state/state.php?state=OK).
+
+I've uploaded and mapped the OGS's file that is labeled [Compressed directory containing GIS-compatible files (ZIP)](http://www.ogs.ou.edu/docs/openfile/OF3-2015.zip), and the result looks like this bloody streak of a mess:
+
+![image usgs_shakemap_faultlines_via_ogs.png](/files/images/tutorials/cartodb/ok-schoolquakes/usgs_shakemap_faultlines_via_ogs.png)
+
+I don't know what insights to draw from the fault lines, particularly what's to be made of the fact that none of the major earthquakes [have occurred near the areas of most concentrated fault lines](http://www.weather.com/safety/earthquake/news/oklahoma-fault-map) (if that's even the correct way to interpret the fault lines). So I've hidden the layer by default from my final visualization, but you can turn it on (by clicking the thingy in the top right of the interactive map). And I might update this section whenever USGS gets around to releasing its ["new hazard map for earthquakes from induced seismicity"](http://newsok.com/article/5402676), if they haven't already (who knows, I'm not a geo-seismic-ologist).
+
+
+
+# Conclusion
+
+After all that work, [here's the final map](https://daannguyen.cartodb.com/viz/79519482-9f88-11e5-969f-0e5db1731f59/public_map) (just in case you missed it in the embed at the top of this page):
+
+
+<iframe width="100%" height="700" frameborder="0" src="https://daannguyen.cartodb.com/viz/79519482-9f88-11e5-969f-0e5db1731f59/embed_map" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+
+Whew, that was a lot of work. But even after all of those steps, it's important to realize how _narrow_ and _limited_ its conclusions are. In fact, I would argue that it hardly makes _any_ strong conclusions, given that we visually _imply_ but can't actually _back_ these key assertions: 
+
+1. That the locations of _past_ Oklahoma earthquakes correlates with _future_ Oklahoma earthquakes.
+2. That concentration of poverty in a student population correlates with a school's level of maintenance and repair.
+3. That areas with similar Modified Mercalli Intensity measurements experience the same potential risk of damage (they don't -- such a calculation has many other variables).
+
+We might go as far as to argue that since _the vast majority_ of schools in our geospatial analysis have not reported _any_ damage, that would seem to make our geospatial analysis pretty useless. 
+
+And that would be a fair point. But it's worth noting that both schools we _know_ to be damaged -- Crescent and Meeker schools -- are both included in our geospatial analysis. So that's not _nothing_. And of course, as is the inherent nature of self-reported incidents -- we don't know if there are schools that suffered deeper, structural damage that may become visually evident over time, or when other earthquakes hit. In [the news report of the Meeker school damage](http://newsok.com/article/3621379?embeddedLinkType=article), the M5.6 earthquake may have caused damage that was only noticed in the later, but weaker M4.7 quake.
+
+But we didn't have to set out to prove _anything_. In some investigative projects, it's helpful to at least narrow down a list of leads and work from there. And the goal doesn't have to be investigative -- there's nothing wrong with doing an inquiry that helps to guide proactive, precautionary safety measures. And hell, maybe everything will just work out and we're actually at the tail end of Oklahoma's earthquake swarm. But if this geological trend continues -- and the number of earthquakes is already too many to easily count -- it's worth considering the important insights that geospatial analysis and public data can reveal.

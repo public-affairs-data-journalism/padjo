@@ -113,6 +113,20 @@ So you need to write the main query that aggregates the above query -- i.e. a  `
 
 (Note: the derivation of `total_hcpcs_medicare_payment_amt` is used in _many_ of the queries for this story. Feel free to re-use it)
 
+#### Answer query
+
+~~~sql
+SELECT COUNT(*)
+FROM(
+  SELECT   
+    SUM(average_Medicare_payment_amt * line_srvc_cnt) 
+      AS total_hcpcs_medicare_payment_amt
+    FROM payments
+  WHERE `nppes_entity_code` = 'I'
+    GROUP BY npi, hcpcs_code) AS my_sub_query
+WHERE total_hcpcs_medicare_payment_amt > 500000;
+~~~
+{:.answer}
 
 
 <a id="mark-2B"></a>
@@ -181,6 +195,29 @@ FROM payments
 ~~~
 
 
+#### Answer query
+
+~~~sql
+SELECT 
+  nppes_provider_first_name AS first_name,
+  nppes_provider_last_org_name AS last_name,
+  payments.provider_type,
+  ROUND(average_Medicare_payment_amt * line_srvc_cnt)
+                 AS total_hcpcs_medicare_payment_amt
+FROM payments
+INNER JOIN providers
+  ON providers.npi = payments.npi
+WHERE hcpcs_code = 'G0166'
+GROUP BY payments.npi, hcpcs_code
+ORDER BY total_hcpcs_medicare_payment_amt DESC
+LIMIT 5;
+~~~
+{:.answer}
+
+
+
+
+
 <a id="mark-3"></a>
 
 ## 3. About Dr. Gerantotis
@@ -224,6 +261,23 @@ SELECT npi,
 FROM providers
 WHERE ...
 ~~~
+
+#### Answer query
+
+~~~sql
+SELECT npi,
+  nppes_provider_first_name AS first_name,
+  nppes_provider_last_org_name AS last_name,
+  provider_type,
+  nppes_provider_city AS city,
+  nppes_provider_state AS state
+FROM providers
+WHERE 
+  first_name LIKE 'EVAN%'
+  AND  last_name = 'GERANIOTIS'
+  AND state = 'MA';
+~~~
+{:.answer}
 
 
 
@@ -292,6 +346,22 @@ You need to use `SUM`, but not necessarily a `GROUP BY`.
 You don't even need a `JOIN` or nested query here.
 
 
+#### Answer query
+
+~~~sql
+SELECT 
+  ROUND(SUM(average_Medicare_payment_amt * line_srvc_cnt))
+    AS total_hcpcs_medicare_payment_amt
+FROM payments
+WHERE 
+  npi = 1174500953
+  AND hcpcs_code IN('52214', '52224');
+~~~
+{:.answer}
+
+
+
+
 <a id="mark-3C"></a>
 
 ### 3C. "According to his Medicare billings, Dr. Geraniotis performed two variations of the procedure 1,757 times in 2012." 
@@ -306,6 +376,21 @@ Pretty much the same query from the previous question, except a summation of a d
 |  2        | 1757.0              |
 |-----------+---------------------|
 {:.table-sql}
+
+
+#### Answer query
+
+~~~sql
+SELECT
+  COUNT(*),
+  SUM(line_srvc_cnt)
+FROM payments
+WHERE 
+  npi = 1174500953
+  AND hcpcs_code IN('52214', '52224');
+~~~
+{:.answer}
+
 
 
 <a id="mark-3D"></a>
@@ -350,6 +435,18 @@ Sure seems like there's only one label for all urologists:
 {:.table-sql}
 
 
+#### Answer query
+
+~~~sql
+SELECT COUNT(*)
+FROM providers
+WHERE provider_type LIKE 'Urology'
+  AND nppes_entity_code = 'I';
+~~~
+{:.answer}
+
+
+
 <a id="mark-3E"></a>
 
 ### 3E. "...973 billed for the procedure..."
@@ -366,6 +463,17 @@ Just another type of counting
 |  973                  |
 |-----------------------|
 {:.table-sql}
+
+#### Answer query
+
+~~~sql
+SELECT COUNT(DISTINCT npi)
+FROM payments 
+WHERE provider_type ='Urology'
+  AND nppes_entity_code = 'I'
+  AND hcpcs_code IN('52214', '52224');
+~~~
+{:.answer}
 
 
 
@@ -396,7 +504,21 @@ SELECT AVG(procedure_count)
 {:.table-sql}
 
 
+#### Answer query
 
+~~~sql
+SELECT AVG(procedure_count)
+FROM(
+SELECT 
+  SUM(line_srvc_cnt) AS procedure_count
+FROM payments 
+WHERE provider_type ='Urology'
+  AND nppes_entity_code = 'I'
+  AND hcpcs_code IN('52214', '52224')
+  AND npi != '1174500953'
+GROUP BY npi);
+~~~
+{:.answer}
 
 <a id="mark-3G"></a>
 
@@ -418,6 +540,22 @@ We just need to generate a list of the top 2 urologists: the first is ostensibly
 {:.table-sql}
 
 
+#### Answer query
+
+~~~sql
+SELECT 
+  npi,
+  SUM(line_srvc_cnt) AS procedure_count
+FROM payments 
+WHERE provider_type ='Urology'
+  AND nppes_entity_code = 'I'
+  AND hcpcs_code IN('52214', '52224')
+GROUP BY npi
+ORDER BY procedure_count DESC
+LIMIT 2;
+~~~
+{:.answer}
+
 <a id="mark-3H"></a>
 
 ### 3H. "Dr. Geraniotis said the more than $500 he received from Medicare each time he billed for the procedure..."
@@ -433,6 +571,21 @@ We just need to generate a list of the top 2 urologists: the first is ostensibly
 {:.table-sql}
 
 Don't even need to do an aggregate for this query.
+
+
+#### Answer query
+
+~~~sql
+SELECT hcpcs_code,
+  average_Medicare_payment_amt
+FROM payments
+WHERE 
+  npi = 1174500953
+  AND hcpcs_code IN('52214', '52224');
+~~~
+{:.answer}
+
+
 
 
 <a id="mark-4"></a>
@@ -463,6 +616,25 @@ Look at the previous queries we've done to pinpoint a provider by name.
 {:.table-sql}
 
 
+#### Answer query
+
+~~~sql
+SELECT npi,
+  nppes_provider_first_name AS first_name,
+  nppes_provider_last_org_name AS last_name,
+  provider_type,
+  nppes_provider_city AS city,
+  nppes_provider_state AS state
+FROM providers
+WHERE 
+  first_name = 'GARY'
+  AND  last_name = 'MARDER'
+  AND state = 'FL';
+~~~
+{:.answer}
+
+
+
 <a id="mark-4B"></a>
 
 ### 4B. "Medicare paid Dr. Marder $3.7 million in 2012"
@@ -478,6 +650,18 @@ You can find this in the `providers` table without referring to `payments`:
 |-------------+------------+-----------+------------------------------------|
 {:.table-sql}
 
+
+#### Answer query
+
+~~~sql
+SELECT npi,
+  nppes_provider_first_name AS first_name,
+  nppes_provider_last_org_name AS last_name,
+  ROUND(total_medicare_payment_amt)
+FROM providers
+WHERE npi = '1730117003';
+~~~
+{:.answer}
 
 
 <a id="mark-4C"></a>
@@ -504,6 +688,26 @@ It's actually worth listing the top 10 procedures by total payment for Dr. Marde
           AND ...
 ~~~
 
+#### Answer query
+
+~~~sql
+SELECT 
+  hcpcs_code, hcpcs_description,
+  ROUND(SUM(average_Medicare_payment_amt * line_srvc_cnt))
+    AS total_hcpcs_medicare_payment_amt
+FROM payments
+WHERE 
+  npi = 1730117003
+GROUP BY 
+  hcpcs_code, hcpcs_description
+ORDER BY 
+  total_hcpcs_medicare_payment_amt DESC
+LIMIT 10;
+~~~
+{:.answer}
+
+
+
 <a id="mark-4D"></a>
 
 ### 4D. "...billed by just two other doctors in the data"
@@ -525,6 +729,29 @@ According to the WSJ, you should end up with a list of 3 doctors (if you include
 
 
 That's right, I want you to write a query that `INNER JOIN`s against `providers`, just for fun, because we really don't need the doctor names...though getting their `provider_type` is useful.
+
+
+#### Answer query
+
+~~~sql
+SELECT 
+  providers.npi,
+  nppes_provider_first_name AS first_name,
+  nppes_provider_last_org_name AS last_name,
+  providers.provider_type,
+  ROUND(SUM(average_Medicare_payment_amt * line_srvc_cnt))
+    AS total_hcpcs_medicare_payment_amt
+FROM payments
+INNER JOIN providers
+  ON providers.npi = payments.npi
+WHERE 
+  hcpcs_code = 77402
+GROUP BY 
+  providers.npi
+ORDER BY 
+  total_hcpcs_medicare_payment_amt DESC;
+~~~
+{:.answer}
 
 
 <a id="mark-4E"></a>
@@ -564,6 +791,22 @@ LIMIT 5;
 ~~~
 
 
+#### Answer query
+
+~~~sql
+SELECT 
+  AVG(average_Medicare_allowed_amt) AS avg_avg_allowed,
+  AVG(average_Medicare_payment_amt) AS avg_avg_payment, 
+  hcpcs_code, hcpcs_description 
+FROM payments 
+WHERE hcpcs_code LIKE '774%'
+GROUP BY hcpcs_code, hcpcs_description
+ORDER BY ABS(avg_avg_allowed - 22) ASC
+LIMIT 5;
+~~~
+{:.answer}
+
+
 <a id="mark-4F"></a>
 
 ### 4F. "Dr. Marder received an average of $154 per treatment by billing under the code for the higher-voltage machine...Dr. Marder billed for the procedure, using the more lucrative code, 15,610 times in 2012...[Dr. Marder] performed the procedure on 94 patients, according to the Medicare data."
@@ -578,6 +821,20 @@ OK, back to using `hcpcs_code` of `77402`
 |  1730117003 | 77402      | 15610.0       | 94              | 154.0                  |
 |-------------+------------+---------------+-----------------+-------------------------------|
 {:.table-sql}
+
+
+#### Answer query
+
+~~~sql
+SELECT npi, hcpcs_code,
+  line_srvc_cnt, 
+  bene_unique_cnt,
+  average_Medicare_payment_amt
+FROM payments
+WHERE npi = 1730117003
+  AND hcpcs_code = 77402;
+~~~
+{:.answer}
 
 
 <a id="mark-5"></a>
@@ -610,6 +867,24 @@ Does "Detroit area" mean that the listed city will be `'Detroit'`? Maybe, maybe 
 {:.table-sql}
 
 
+#### Answer query
+
+~~~sql
+SELECT npi,
+  nppes_provider_first_name AS first_name,
+  nppes_provider_last_org_name AS last_name,
+  provider_type,
+  nppes_provider_city AS city,
+  nppes_provider_state AS state,
+  ROUND(total_medicare_payment_amt) AS total_payment
+FROM providers
+WHERE 
+  first_name = 'JAMES'
+  AND  last_name = 'BEALE'
+  AND state = 'MI';
+~~~
+{:.answer}
+
 <a id="mark-5B"></a>
 
 ### 5B. "[Dr. Beale received] more [in Medicare payments in 2012] than any other member of his specialty"
@@ -630,6 +905,19 @@ The previous answer has Dr. Beale's `npi` and his `provider_type`. So, write the
 |-------------+----------------|
 {:.table-sql}
 
+
+#### Answer query
+
+~~~sql
+SELECT npi,
+  ROUND(total_medicare_payment_amt) AS total_payment
+FROM providers
+WHERE 
+  provider_type = 'Orthopedic Surgery'
+ORDER BY total_payment DESC
+LIMIT 5;
+~~~
+{:.answer}
 
 
 <a id="mark-5C"></a>
@@ -675,6 +963,24 @@ Hmmm...how to filter for non-surgeries? It's just safer to list all of his possi
 None of the descriptions have the word "surgery" in them, so I guess that checks out?
 
 
+#### Answer query
+
+~~~sql
+SELECT 
+  hcpcs_code, hcpcs_description,
+  ROUND(SUM(average_Medicare_payment_amt * line_srvc_cnt))
+    AS total_hcpcs_medicare_payment_amt
+FROM payments
+WHERE 
+  npi = 1316934409
+GROUP BY 
+  hcpcs_code, hcpcs_description
+ORDER BY 
+  total_hcpcs_medicare_payment_amt DESC;
+~~~
+{:.answer}
+
+
 <a id="mark-5D"></a>
 
 ### 5D. "His chief Medicare revenue source was 'manual therapy techniques'...Dr. Beale’s practice billed Medicare for it 107,670 times and received $2.3 million."
@@ -689,6 +995,22 @@ None of the descriptions have the word "surgery" in them, so I guess that checks
 {:.table-sql}
 
 
+#### Answer query
+
+~~~sql
+SELECT 
+  npi, hcpcs_code, hcpcs_description,
+  line_srvc_cnt,
+  ROUND(average_Medicare_payment_amt * line_srvc_cnt)
+    AS total_hcpcs_medicare_payment_amt
+FROM payments
+WHERE 
+  npi = 1316934409
+  AND hcpcs_code = '97140';
+~~~
+{:.answer}
+
+
 <a id="mark-5E"></a>
 
 ### 5E. "The average doctor or physical therapist in the data who billed for the technique performed it 520 times and was reimbursed less than $11,000 for it."
@@ -701,6 +1023,20 @@ None of the descriptions have the word "surgery" in them, so I guess that checks
 |  520.0             | 10885.0            |
 |--------------------+--------------------|
 {:.table-sql}
+
+
+#### Answer query
+
+~~~sql
+SELECT 
+  ROUND(AVG(line_srvc_cnt)) AS avg_service_count,
+  ROUND(AVG(average_Medicare_payment_amt * line_srvc_cnt))
+    AS avg_total_payment
+FROM payments
+WHERE 
+  hcpcs_code = '97140';
+~~~
+{:.answer}
 
 
 <a id="mark-5F"></a>
@@ -731,7 +1067,21 @@ FROM payments
 WHERE  /* fill out the conditions for yourself */
 ~~~
 
+#### Answer query
 
+~~~sql
+SELECT 
+  npi, hcpcs_code,
+  ROUND(line_srvc_cnt / bene_unique_cnt) 
+    AS services_per_patient,
+  ROUND(average_Medicare_payment_amt * line_srvc_cnt / bene_unique_cnt )
+    AS payment_per_patient
+FROM payments
+WHERE 
+  npi = 1316934409
+  AND hcpcs_code = '97140';
+~~~
+{:.answer}
 
 
 ## 6. About the management of Dr. Weaver's clinic
@@ -753,6 +1103,19 @@ Basically, look up the clinic by name:
 |------------|------------------|-------------------|-------------------|----------------|
 {:.table-sql}
 
+
+#### Answer query
+
+~~~sql
+SELECT npi, 
+  nppes_provider_last_org_name AS last_name,
+  ROUND(total_medicare_allowed_amt) AS total_allowed_amt,
+  ROUND(total_medicare_payment_amt) AS total_payment_amt,
+  total_unique_benes AS total_patients
+  FROM providers
+WHERE nppes_provider_last_org_name LIKE 'GCC%';
+~~~
+{:.answer}
 
 
 And __whew!__ -- we're done! That was a lot of database queries -- none of them particularly complicated in terms of pure SQL. But they all require a significant amount of attention to detail and awareness of the _domain_. Hopefully you got a good SQL workout _and_ a better appreciation of the nuances of the angles to the WSJ's investigation.
