@@ -2,7 +2,7 @@
 title: |
   Midterm: Fact-checking the WSJ's "Medicare Unmasked" Investigation with SQL
 description: |
-  A hands-on exploration using SQL to learn about Medicare data and controversial practices in Medicare billing, as well as to appreciate the Wall Street Journal's Pulitzer Perize winning data investigation. 
+  A hands-on exploration using SQL to learn about Medicare data and controversial practices in Medicare billing, as well as to appreciate the Wall Street Journal's Pulitzer Prize winning data investigation. 
 date: 2015-12-03
 points: 15
 assigned: true
@@ -19,7 +19,8 @@ requirements:
     Download the [medicare_providers_2012.sqlite.zip](http://stash.padjo.org/dumps/2015/medicare_providers_2012.sqlite.zip){:.url}, which I've indexed for your convenience. Be warned: it is nearly 700MB zipped and expands to more than 2 gigabytes. Again, probably prudent to use the journalism lab computers for this.
   - For each problem, write the SQLite query that will return the given result.
   - Your query must return the same results -- including the same column headers and format.
-  - Work on your own on this one. You can do it. [Start by reading the companion tutorial on the subject](/tutorials/sql-walks/exploring-wsj-medicare-investigation-with-sql).
+  - |
+    Work on your own on this one. You can do it. __[Start by reading the companion tutorial on the subject](/tutorials/sql-walks/exploring-wsj-medicare-investigation-with-sql)__.
 ---
 
 
@@ -27,14 +28,13 @@ requirements:
 
 
 1. Read the Wall Street Journal article, [Taxpayers Face Big Tab For Unusual Doctor Billings](http://www.pulitzer.org/files/2015/investigative-reporting/wsjmedicare/01wsjmedicare2015.pdf)
-2. Then read the tutorial in which I explain the (surprisingly many) [SQL queries needed to fact check just the first 3 paragraphs](/tutorials/sql-walks/exploring-wsj-medicare-investigation-with-sql).
+2. Then [read the tutorial](/tutorials/sql-walks/exploring-wsj-medicare-investigation-with-sql) in which I explain the (surprisingly many) SQL queries needed to fact check just the first 3 paragraphs.
 3. Download the zipped SQLite database (2GB+ when unzipped): [medicare_providers_2012.sqlite.zip](http://stash.padjo.org/dumps/2015/medicare_providers_2012.sqlite.zip){:.url}
 4. Do the midterm.
 
 
 
 ### More instructions
-
 
 
 The [first part of this midterm ](#mark-part-1)is simply writing the SQL queries that ostensibly back to the hard numbers and assertions in the first article in the WSJ's Medicare Unmasked series.
@@ -706,6 +706,7 @@ LIMIT 10;
 ~~~
 {:.answer}
 
+Note: `GROUP BY` and `SUM` aggregate not needed, as there is exactly one row for each combination of doctor and `hcpcs_code`.
 
 
 <a id="mark-4D"></a>
@@ -752,6 +753,8 @@ ORDER BY
   total_hcpcs_medicare_payment_amt DESC;
 ~~~
 {:.answer}
+
+Note: `GROUP BY` and `SUM` aggregate not needed, as there is exactly one row for each combination of doctor and `hcpcs_code`.
 
 
 <a id="mark-4E"></a>
@@ -979,6 +982,9 @@ ORDER BY
   total_hcpcs_medicare_payment_amt DESC;
 ~~~
 {:.answer}
+
+Note: `GROUP BY` and `SUM` aggregate not needed, as there is exactly one row for each combination of doctor and `hcpcs_code`.
+
 
 
 <a id="mark-5D"></a>
