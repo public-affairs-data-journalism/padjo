@@ -32,6 +32,13 @@
   description: |
     Out of the 213 people killed by police in Washington from 2005 to 2014, the Seattle Times found that just one officer was ever charged.
 
+- title: Officer Involved (Los Angeles County)
+  url: http://projects.scpr.org/officer-involved/
+  source: KPCC
+  image_url: /files/images/briefs/police/scpr-kpcc-officer-involved-chart.jpg
+  description: |
+    Between Jan. 1, 2010 and Dec. 31, 2014, Los Angeles County district attorney records show at least 375 people were shot by on-duty officers.
+
 - title: "Deadly Force: When Las Vegas Police Shoot, And Kill"
   url: http://www.reviewjournal.com/news/deadly-force
   source: Las Vegas Review-Journal
