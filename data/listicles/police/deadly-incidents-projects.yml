@@ -62,6 +62,13 @@
     A Daily News analysis of NYPD-involved deaths starts with the 1999 slaying of unarmed Amadou Diallo in a hail of bullets in the Bronx and ends with the November 2014 shooting death of Akai Gurley in a Brooklyn stairwell.
 
 
+- title: Police Killings in Context
+  url: http://www.streetcredsoftware.com/pkic/
+  description: |
+    The StreetCred® Police Killings in Context (PKIC) database is an open-standard data set that includes incidents (other than traffic accidents) in which an unarmed civilian was killed during an encounter with American police who (whether on-, or off-duty) were acting in an official capacity, from the time of first contact through booking.
+  source: StreetCred
+
+
 - title: "Line of Fire: Bullets, badges, and death on the street"
   source: Palm Beach Post and WPTV5
   url: http://www.mypalmbeachpost.com/policeshootings/
